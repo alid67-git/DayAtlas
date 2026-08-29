@@ -1,0 +1,110 @@
+# DayAtlas
+
+Hafif **günlük iz defteri** — Android. Amaç: nereye ve ne kadar gidildiğinin seyrek, pil dostu kaydı.
+
+Paket: `com.dayatlas.app` · Dil: Türkçe (v0.1) · Sürüm: 0.1.0
+
+Bu depo **RideAtlas değildir**. RideAtlas sık GPS, canlı harita ve zengin sürüş kaydıdır. DayAtlas ayrı bir ürün: seyrek örnekleme, özet iz, az pil. RideAtlas kodu kopyalanmaz; monorepo yoktur.
+
+## Neden native Kotlin?
+
+Flutter motoru (~4–8 MB) ve harita / Play Services yığını yok. AlarmManager, konum, boot ve pil muafiyeti doğrudan platform API’si. v1 hedefi küçük APK ve kolay bakım.
+
+## Ne yapar (v1)
+
+- **Opsiyonel günlük mod** (Ayarlar): açıkken uygulama veya telefon açılınca onay sormadan bugünün kaydına başlar / devam eder.
+- **Seyrek GPS:** varsayılan **5 dakika** (3 / 4 / 5 ayarlanabilir). Sürekli location stream yok.
+- **Gün dosyası:** her **cihaz yerel** takvim günü (`yyyy-MM-dd`) ayrı kayıt. Gece yarısında yeni dosya. UTC ile gün bölünmez.
+- **İçerik:** zaman damgalı az nokta + mesafe özeti. `files/days/yyyy-MM-dd.json` ve `.gpx`.
+- **UI:** bugün kayıtta mı, mesafe, son nokta saati, başlat/durdur (günlük mod kapalıyken). Harita yok.
+
+## Ne yapmaz
+
+Analiz, foto, Android Auto, topo harita, canlı harita, sık GPS, dışa aktar/paylaş UI (dosyalar diskte; paylaşım sonra eklenebilir).
+
+## Nasıl çalışır (örnekleme)
+
+1. `AlarmManager.setExactAndAllowWhileIdle` bir sonraki örneği planlar (tam alarm yoksa `setAndAllowWhileIdle`).
+2. Alarm `SampleReceiver` → kısa ömürlü `SampleService` (foreground type `location`).
+3. Servis `LocationManager.getCurrentLocation` ile **tek nokta** alır (Play Services yok), gün dosyasına yazar, kendini kapatır.
+4. WorkManager kullanılmaz (minimum periyot 15 dk; 3–5 dk için uygun değil).
+
+Kısa FGS, sürekli yüksek frekanslı servis değildir. Doze altında 3–5 dk tam tutmayabilir; pil muafiyeti bunu iyileştirir.
+
+## İzinler (ilk açılış, bir kez)
+
+| İzin | Neden |
+| --- | --- |
+| Konum (kesin / yaklaşık) | Nokta almak |
+| **Her zaman izin ver** (`ACCESS_BACKGROUND_LOCATION`) | Ekran kapalıyken / arka planda örnek |
+| Bildirimler (Android 13+) | Kısa FGS bildirimi (zorunlu) |
+| Pil optimizasyonu muafiyeti | Alarm’ın uyku modunda çalışması |
+| Tam alarm (`SCHEDULE_EXACT_ALARM`) | 3–5 dk aralığına yaklaşmak |
+
+Sistem izin pencereleri kaçınılmazdır. Günlük mod açıkken **“kayıt başlasın mı?”** diye sormayız.
+
+## OEM / reboot notları
+
+`BOOT_COMPLETED` ile günlük mod açıksa kayıt sessizce yeniden planlanır. Birçok üretici bunu keser:
+
+| Üretici | Tipik ayar |
+| --- | --- |
+| Xiaomi / HyperOS / MIUI | Otomatik başlat, pil tasarrufu istisnası |
+| Huawei / Honor | Korumalı uygulamalar, “manuel olarak yönet” |
+| Oppo / Realme / ColorOS | Uygulama başlatma / arka plan dondurma |
+| Samsung | Uyku modu / kullanılmayan uygulamaları derin uyutma — DayAtlas’ı hariç tut |
+| OnePlus | Pille optimize etme, otomatik başlat |
+
+Pil bitip telefon açılınca: kilidi açın (dosyalar kullanıcı şifresine bağlı), uygulamayı bir kez açmanız gerekebilir. OEM “otomatik başlat” kapalıysa BootReceiver hiç çalışmaz — bu Android sınırıdır, uygulama aşamaz.
+
+## Derleme
+
+JDK 17 + Android SDK (compile/target SDK 35).
+
+```bash
+./gradlew assembleDebug assembleRelease
+```
+
+Windows: `gradlew.bat assembleDebug`
+
+APK:
+
+- Debug: `app/build/outputs/apk/debug/`
+- Release: `app/build/outputs/apk/release/` (v0.1 debug keystore ile imzalı; üretim keystore sonra)
+
+CI her push’ta aynı APK’ları artifact olarak yükler.
+
+## Nasıl test edilir
+
+1. Debug APK kur, uygulamayı aç.
+2. Konum: **Her zaman izin ver**. Pil: **optimize etme**. Gerekirse tam alarm izni.
+3. OEM ise “otomatik başlat”ı aç.
+4. Ayarlar → **Günlük mod** açık, aralık 3 dk (hızlı deneme).
+5. Ana ekranda “Günlük mod — otomatik kayıt”, mesafe/son nokta bir süre sonra dolmalı. Onay diyaloğu olmamalı.
+6. Dosyalar:
+   ```bash
+   adb shell run-as com.dayatlas.app ls files/days
+   ```
+   `yyyy-MM-dd.json` ve `.gpx` beklenir. JSON `date` alanı yerel gündür.
+7. **Reboot:** günlük mod açıkken yeniden başlat, kilidi aç, ~bir aralık bekle. Uygulama açılmadan nokta düşmeli (OEM izin veriyorsa). Düşmezse otomatik başlat/pil ayarını kontrol et; README’deki beklenti budur, garanti değil.
+8. Günlük modu kapat: kayıt durur. Manuel **Başlat** / **Durdur** görünür. Gece yarısı yine yerel güne göre yeni dosya.
+
+## Kayıt formatı
+
+JSON özeti:
+
+```json
+{
+  "version": 1,
+  "date": "2026-08-28",
+  "title": "Günlük 28 Ağu 2026",
+  "distanceMeters": 1234.5,
+  "points": [{ "t": 1756512000000, "lat": 41.01, "lon": 29.02, "acc": 12.3 }]
+}
+```
+
+`t` Unix milisaniye (anlık zaman). Gün anahtarı yerel takvim tarihidir.
+
+## Lisans
+
+MIT — bakınız `LICENSE`.

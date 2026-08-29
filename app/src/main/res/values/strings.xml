@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DayAtlas</string>
+    <string name="settings">Ayarlar</string>
+    <string name="status_recording">Kayıt açık</string>
+    <string name="status_stopped">Kayıt kapalı</string>
+    <string name="status_daily">Günlük mod — otomatik kayıt</string>
+    <string name="today_distance">Bugünkü mesafe</string>
+    <string name="last_point">Son nokta</string>
+    <string name="point_count">Nokta sayısı</string>
+    <string name="em_dash">—</string>
+    <string name="start">Başlat</string>
+    <string name="stop">Durdur</string>
+    <string name="daily_mode_hint">Günlük mod açıkken kayıt sessizce devam eder. Durdurmak için Ayarlar’dan günlük modu kapatın.</string>
+    <string name="manual_hint">Günlük mod kapalı. İzlemek istediğinizde Başlat’a basın (3–5 dk’da bir nokta).</string>
+    <string name="need_location">Konum izni olmadan nokta alınamaz.</string>
+    <string name="settings_daily_mode">Günlük mod</string>
+    <string name="settings_daily_mode_summary">Açıkken uygulama veya telefon açılınca bugünün kaydı onay sormadan başlar / devam eder.</string>
+    <string name="settings_interval">Örnekleme aralığı</string>
+    <string name="interval_3">3 dakika</string>
+    <string name="interval_4">4 dakika</string>
+    <string name="interval_5">5 dakika (önerilen)</string>
+    <string name="settings_permissions">İzinler ve pil</string>
+    <string name="open_location_settings">Konum izinleri</string>
+    <string name="open_battery_settings">Pil optimizasyonu</string>
+    <string name="open_alarm_settings">Tam alarm izni</string>
+    <string name="request_battery_exemption">Pil muafiyeti iste</string>
+    <string name="oem_note">Bazı telefonlarda (Xiaomi, Huawei, Oppo, Samsung) “otomatik başlat” veya uyku koruması kapatılmazsa reboot sonrası kayıt devam etmeyebilir.</string>
+    <string name="today_files">Bugünün dosyaları uygulama deposunda: files/days/</string>
+    <string name="notif_channel">Konum örneği</string>
+    <string name="notif_sampling">Konum alınıyor</string>
+    <string name="notif_daily">Günlük iz</string>
+    <string name="perm_rationale_location">DayAtlas seyrek konum noktası almak için konuma ihtiyaç duyar. Arka planda çalışması için “Her zaman izin ver” gerekir.</string>
+    <string name="perm_rationale_background">Arka planda (ekran kapalıyken) nokta almak için konum iznini “Her zaman izin ver” yapın.</string>
+</resources>

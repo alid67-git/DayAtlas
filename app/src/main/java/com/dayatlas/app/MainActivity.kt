@@ -1,0 +1,206 @@
+package com.dayatlas.app
+
+import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import android.view.View
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.dayatlas.app.data.DayStore
+import com.dayatlas.app.data.DayTitle
+import com.dayatlas.app.databinding.ActivityMainBinding
+import com.dayatlas.app.location.Intents
+import com.dayatlas.app.location.PermissionHelper
+import com.dayatlas.app.location.TrackingController
+import com.dayatlas.app.prefs.AppPrefs
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var prefs: AppPrefs
+    private val store by lazy { DayStore(this) }
+    private var pendingStart = false
+    private var askedBatteryThisSession = false
+    private var askedExactThisSession = false
+
+    private val locationLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+    ) { granted ->
+        val ok = granted[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            granted[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        if (ok) {
+            continuePermissionChain()
+        } else {
+            pendingStart = false
+            Toast.makeText(this, R.string.need_location, Toast.LENGTH_LONG).show()
+            refresh()
+        }
+    }
+
+    private val backgroundLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { continuePermissionChain() }
+
+    private val notificationLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { continuePermissionChain() }
+
+    private val pointReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) = refresh()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        prefs = AppPrefs(this)
+
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.action_settings) {
+                startActivity(Intent(this, SettingsActivity::class.java))
+                true
+            } else {
+                false
+            }
+        }
+
+        binding.toggle.setOnClickListener {
+            if (prefs.trackingEnabled) {
+                TrackingController.stop(this, prefs)
+                refresh()
+            } else {
+                ensurePermissionsThenStart()
+            }
+        }
+
+        if (prefs.dailyMode) {
+            // Günlük mod: onay diyaloğu yok; yalnızca sistem izinleri.
+            ensurePermissionsThenStart()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        ContextCompat.registerReceiver(
+            this,
+            pointReceiver,
+            IntentFilter(Intents.ACTION_POINT_SAVED),
+            ContextCompat.RECEIVER_NOT_EXPORTED,
+        )
+        refresh()
+    }
+
+    override fun onStop() {
+        runCatching { unregisterReceiver(pointReceiver) }
+        super.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refresh()
+    }
+
+    private fun ensurePermissionsThenStart() {
+        pendingStart = true
+        continuePermissionChain()
+    }
+
+    private fun continuePermissionChain() {
+        if (!PermissionHelper.hasLocation(this)) {
+            locationLauncher.launch(PermissionHelper.foregroundLocationPermissions())
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+            !PermissionHelper.hasBackgroundLocation(this)
+        ) {
+            backgroundLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !PermissionHelper.hasNotifications(this)
+        ) {
+            notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            return
+        }
+        maybeRequestBatteryExemption()
+        maybeRequestExactAlarms()
+        if (pendingStart || prefs.dailyMode) {
+            TrackingController.start(this, prefs, sampleSoon = true)
+        }
+        pendingStart = false
+        refresh()
+    }
+
+    private fun maybeRequestBatteryExemption() {
+        if (askedBatteryThisSession) return
+        if (PermissionHelper.isIgnoringBatteryOptimizations(this)) return
+        askedBatteryThisSession = true
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+            data = Uri.parse("package:$packageName")
+        }
+        runCatching { startActivity(intent) }
+    }
+
+    private fun maybeRequestExactAlarms() {
+        if (askedExactThisSession) return
+        if (PermissionHelper.canScheduleExactAlarms(this)) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
+        askedExactThisSession = true
+        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+            data = Uri.parse("package:$packageName")
+        }
+        runCatching { startActivity(intent) }
+    }
+
+    private fun refresh() {
+        val record = store.loadToday()
+        binding.dayTitle.text = record.title
+        val recording = prefs.trackingEnabled || prefs.dailyMode
+        binding.status.text = when {
+            prefs.dailyMode -> getString(R.string.status_daily)
+            recording -> getString(R.string.status_recording)
+            else -> getString(R.string.status_stopped)
+        }
+        binding.status.setTextColor(
+            ContextCompat.getColor(
+                this,
+                if (recording) R.color.status_on else R.color.status_off,
+            ),
+        )
+        binding.distance.text = if (record.points.isEmpty()) {
+            getString(R.string.em_dash)
+        } else {
+            DayTitle.formatDistance(record.distanceMeters)
+        }
+        binding.lastPoint.text = record.points.lastOrNull()?.let { point ->
+            Instant.ofEpochMilli(point.timeMillis)
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime()
+                .format(TIME_FMT)
+        } ?: getString(R.string.em_dash)
+        binding.pointCount.text = record.points.size.toString()
+
+        if (prefs.dailyMode) {
+            binding.toggle.visibility = View.GONE
+            binding.hint.text = getString(R.string.daily_mode_hint)
+        } else {
+            binding.toggle.visibility = View.VISIBLE
+            binding.toggle.setText(if (prefs.trackingEnabled) R.string.stop else R.string.start)
+            binding.hint.text = getString(R.string.manual_hint)
+        }
+    }
+
+    companion object {
+        private val TIME_FMT = DateTimeFormatter.ofPattern("HH:mm")
+    }
+}

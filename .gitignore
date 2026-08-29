@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+**/build/
+local.properties
+
+# Android Studio / IDEA
+.idea/
+*.iml
+.cxx/
+captures/
+.navigation/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Keystores / secrets
+*.jks
+*.keystore
+keystore.properties
+.env
+.env.*
+
+# APK / outputs (CI uploads artifacts)
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Logs
+*.log
