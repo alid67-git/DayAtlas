@@ -25,6 +25,11 @@ class AppPrefs(context: Context) {
             prefs.edit().putInt(INTERVAL, clamped).apply()
         }
 
+    /** versionName of the build whose "what's new" dialog has already been shown. */
+    var lastSeenBuildNoteVersion: String?
+        get() = prefs.getString(LAST_SEEN_BUILD_NOTE, null)
+        set(value) = prefs.edit().putString(LAST_SEEN_BUILD_NOTE, value).apply()
+
     companion object {
         const val DEFAULT_INTERVAL_MINUTES = 5
         val ALLOWED_INTERVALS = intArrayOf(3, 4, 5)
@@ -33,5 +38,6 @@ class AppPrefs(context: Context) {
         private const val DAILY_MODE = "daily_mode"
         private const val TRACKING = "tracking_enabled"
         private const val INTERVAL = "interval_minutes"
+        private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"
     }
 }

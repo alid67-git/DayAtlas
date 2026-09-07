@@ -127,6 +127,29 @@
                 android:text="@string/today_files"
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textColor="@color/md_theme_outline" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/settings_update"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <TextView
+                android:id="@+id/versionLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="@color/md_theme_outline" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/checkUpdates"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/check_for_updates" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

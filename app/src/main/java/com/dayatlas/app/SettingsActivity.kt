@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.location.PermissionHelper
@@ -12,6 +13,8 @@ import com.dayatlas.app.data.DayTitle
 import com.dayatlas.app.databinding.ActivitySettingsBinding
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
+import com.dayatlas.app.update.UpdateChecker
+import com.dayatlas.app.update.UpdateInstaller
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -79,5 +82,25 @@ class SettingsActivity : AppCompatActivity() {
         val today = DayTitle.iso(DayTitle.localToday())
         val dir = DayStore(this).daysDir().absolutePath
         binding.filesHint.text = getString(R.string.today_files) + "\n$dir\n$today.json / $today.gpx"
+
+        binding.versionLabel.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
+        binding.checkUpdates.setOnClickListener {
+            Toast.makeText(this, R.string.checking_for_updates, Toast.LENGTH_SHORT).show()
+            UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
+                if (isFinishing) return@check
+                if (info == null) {
+                    Toast.makeText(this, R.string.up_to_date, Toast.LENGTH_SHORT).show()
+                } else {
+                    AlertDialog.Builder(this)
+                        .setTitle(R.string.update_available_title)
+                        .setMessage(getString(R.string.update_available_message, info.version))
+                        .setPositiveButton(R.string.update_download) { _, _ ->
+                            UpdateInstaller.download(this, info)
+                        }
+                        .setNegativeButton(R.string.update_later, null)
+                        .show()
+                }
+            }
+        }
     }
 }

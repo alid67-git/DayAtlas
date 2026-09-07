@@ -6,6 +6,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,3 +43,33 @@ jobs:
             app/build/outputs/apk/debug/*.apk
             app/build/outputs/apk/release/*.apk
           if-no-files-found: error
+
+      # Embeds the build's own versionName into the release name so the app
+      # itself (see UpdateChecker.kt) can tell whether this release is newer
+      # than the one currently running, without a separate tagging scheme.
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(grep -oP '(?<=versionName = ")[^"]+' app/build.gradle.kts)
+          echo "version=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Rename release APK
+        run: cp app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/DayAtlas.apk
+
+      # Overwrites a single rolling "android-latest" release on every main
+      # push, so there's always one stable download link with the newest
+      # build - rather than accumulating a new release per push. Uses the
+      # debug signing key (see app/build.gradle.kts), so this is a
+      # sideload-only build, not something publishable to the Play Store.
+      - name: Publish latest APK
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-latest
+          name: "DayAtlas Android (latest) - ${{ steps.version.outputs.version }}"
+          body: |
+            Otomatik olarak main dalındaki en son koddan derlendi.
+            Kurmak için DayAtlas.apk dosyasını telefonunuza indirip açın
+            (gerekirse "bilinmeyen kaynaklardan yükleme" iznini verin).
+          files: app/build/outputs/apk/release/DayAtlas.apk
+          make_latest: false
