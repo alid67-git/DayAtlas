@@ -42,6 +42,9 @@ android {
 
     buildFeatures {
         viewBinding = true
+        // BuildConfig generation is opt-in since AGP 8 - needed for
+        // BuildConfig.VERSION_NAME/DEBUG used by the update checker.
+        buildConfig = true
     }
 }
 
