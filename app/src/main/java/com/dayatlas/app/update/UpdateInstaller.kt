@@ -20,7 +20,14 @@ import java.io.File
 object UpdateInstaller {
     private const val FILE_NAME = "DayAtlas-update.apk"
 
-    fun download(context: Context, info: UpdateInfo) {
+    /**
+     * [silent] suppresses this class's own toasts (used for the automatic
+     * launch-time check, which by design never asks or announces anything).
+     * The manual "check for updates" button in Settings passes false so it
+     * still confirms what happened. Either way, Android's own install
+     * screen still appears once the APK is downloaded - no app can skip it.
+     */
+    fun download(context: Context, info: UpdateInfo, silent: Boolean = false) {
         val appContext = context.applicationContext
         val dir = appContext.getExternalFilesDir("apk")?.apply { mkdirs() }
         val target = File(dir, FILE_NAME)
@@ -42,7 +49,7 @@ object UpdateInstaller {
                 val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 if (id != downloadId) return
                 runCatching { ctx.unregisterReceiver(this) }
-                promptInstall(ctx, target)
+                promptInstall(ctx, target, silent)
             }
         }
         ContextCompat.registerReceiver(
@@ -51,12 +58,16 @@ object UpdateInstaller {
             IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
             ContextCompat.RECEIVER_NOT_EXPORTED,
         )
-        Toast.makeText(appContext, R.string.update_downloading_toast, Toast.LENGTH_SHORT).show()
+        if (!silent) {
+            Toast.makeText(appContext, R.string.update_downloading_toast, Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun promptInstall(context: Context, file: File) {
+    private fun promptInstall(context: Context, file: File, silent: Boolean) {
         if (!file.exists() || file.length() < 1024) {
-            Toast.makeText(context, R.string.update_download_failed, Toast.LENGTH_LONG).show()
+            if (!silent) {
+                Toast.makeText(context, R.string.update_download_failed, Toast.LENGTH_LONG).show()
+            }
             return
         }
         val uri = FileProvider.getUriForFile(
@@ -70,7 +81,9 @@ object UpdateInstaller {
         }
         runCatching { context.startActivity(intent) }
             .onFailure {
-                Toast.makeText(context, R.string.update_install_failed, Toast.LENGTH_LONG).show()
+                if (!silent) {
+                    Toast.makeText(context, R.string.update_install_failed, Toast.LENGTH_LONG).show()
+                }
             }
     }
 }

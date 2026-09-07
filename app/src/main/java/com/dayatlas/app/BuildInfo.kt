@@ -9,6 +9,8 @@ package com.dayatlas.app
 object BuildInfo {
     const val BUILD_NOTE =
         "Uygulama artık kendini güncelleyebiliyor: açılışta GitHub'daki en " +
-            "son sürüm kontrol ediliyor, yeni bir sürüm varsa indirip kurman " +
-            "için soruyor. Ayarlar'a da elle kontrol için bir düğme eklendi."
+            "son sürüm sessizce kontrol ediliyor, yeni bir sürüm varsa hiç " +
+            "sormadan indiriliyor. Kurulum anında Android'in kendi kurulum " +
+            "ekranı yine de çıkar - bunu hiçbir uygulama atlayamaz. " +
+            "Ayarlar'a da elle kontrol için bir düğme eklendi."
 }

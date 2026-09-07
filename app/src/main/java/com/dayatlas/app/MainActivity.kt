@@ -105,19 +105,19 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    /** Best-effort, silent-on-failure background check; skipped for debug builds. */
+    /**
+     * Best-effort, silent-on-failure background check; skipped for debug
+     * builds. No confirmation dialog here by design: a newer build starts
+     * downloading the moment it's found, with no prompt. The one thing this
+     * can't skip is Android's own install screen - the OS always shows that
+     * when installing an APK, with no way for a normal (non-system) app to
+     * bypass it.
+     */
     private fun checkForUpdate() {
         if (BuildConfig.DEBUG) return
         UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
             if (info == null || isFinishing) return@check
-            AlertDialog.Builder(this)
-                .setTitle(R.string.update_available_title)
-                .setMessage(getString(R.string.update_available_message, info.version))
-                .setPositiveButton(R.string.update_download) { _, _ ->
-                    UpdateInstaller.download(this, info)
-                }
-                .setNegativeButton(R.string.update_later, null)
-                .show()
+            UpdateInstaller.download(this, info, silent = true)
         }
     }
 
