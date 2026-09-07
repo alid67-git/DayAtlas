@@ -55,4 +55,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
     implementation("androidx.activity:activity-ktx:1.9.3")
     testImplementation("junit:junit:4.13.2")
+    // Local unit tests run against the mockable android.jar, whose
+    // org.json.* methods all throw RuntimeException("Stub!"). This puts the
+    // real JSON-java implementation on the test classpath ahead of that
+    // stub, so DayJson's round-trip test actually parses instead of
+    // exploding on the first JSONObject call.
+    testImplementation("org.json:json:20250517")
 }
