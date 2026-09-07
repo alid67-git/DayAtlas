@@ -12,6 +12,7 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.dayatlas.app.data.DayStore
@@ -21,6 +22,8 @@ import com.dayatlas.app.location.Intents
 import com.dayatlas.app.location.PermissionHelper
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
+import com.dayatlas.app.update.UpdateChecker
+import com.dayatlas.app.update.UpdateInstaller
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -86,6 +89,35 @@ class MainActivity : AppCompatActivity() {
         if (prefs.dailyMode) {
             // Günlük mod: onay diyaloğu yok; yalnızca sistem izinleri.
             ensurePermissionsThenStart()
+        }
+
+        maybeShowChangelog()
+        checkForUpdate()
+    }
+
+    private fun maybeShowChangelog() {
+        if (prefs.lastSeenBuildNoteVersion == BuildConfig.VERSION_NAME) return
+        prefs.lastSeenBuildNoteVersion = BuildConfig.VERSION_NAME
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.changelog_title, BuildConfig.VERSION_NAME))
+            .setMessage(BuildInfo.BUILD_NOTE)
+            .setPositiveButton(R.string.ok, null)
+            .show()
+    }
+
+    /**
+     * Best-effort, silent-on-failure background check; skipped for debug
+     * builds. No confirmation dialog here by design: a newer build starts
+     * downloading the moment it's found, with no prompt. The one thing this
+     * can't skip is Android's own install screen - the OS always shows that
+     * when installing an APK, with no way for a normal (non-system) app to
+     * bypass it.
+     */
+    private fun checkForUpdate() {
+        if (BuildConfig.DEBUG) return
+        UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
+            if (info == null || isFinishing) return@check
+            UpdateInstaller.download(this, info, silent = true)
         }
     }
 

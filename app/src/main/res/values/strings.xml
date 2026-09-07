@@ -32,4 +32,20 @@
     <string name="notif_daily">Günlük iz</string>
     <string name="perm_rationale_location">DayAtlas seyrek konum noktası almak için konuma ihtiyaç duyar. Arka planda çalışması için “Her zaman izin ver” gerekir.</string>
     <string name="perm_rationale_background">Arka planda (ekran kapalıyken) nokta almak için konum iznini “Her zaman izin ver” yapın.</string>
+
+    <string name="ok">Tamam</string>
+    <string name="changelog_title">Yenilikler — v%1$s</string>
+    <string name="update_available_title">Yeni sürüm var</string>
+    <string name="update_available_message">%1$s sürümü hazır. İndirip kurmak ister misiniz?</string>
+    <string name="update_download">İndir</string>
+    <string name="update_later">Daha sonra</string>
+    <string name="update_downloading_title">DayAtlas güncelleme %1$s</string>
+    <string name="update_downloading_toast">Güncelleme indiriliyor…</string>
+    <string name="update_download_failed">İndirilen dosya geçersiz veya boş.</string>
+    <string name="update_install_failed">Kurulum başlatılamadı.</string>
+    <string name="settings_update">Güncelleme</string>
+    <string name="current_version">Sürüm %1$s</string>
+    <string name="check_for_updates">Güncellemeleri kontrol et</string>
+    <string name="checking_for_updates">Kontrol ediliyor…</string>
+    <string name="up_to_date">En güncel sürümdesiniz.</string>
 </resources>

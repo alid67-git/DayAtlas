@@ -57,6 +57,18 @@ Sistem izin pencereleri kaçınılmazdır. Günlük mod açıkken **“kayıt ba
 
 Pil bitip telefon açılınca: kilidi açın (dosyalar kullanıcı şifresine bağlı), uygulamayı bir kez açmanız gerekebilir. OEM “otomatik başlat” kapalıysa BootReceiver hiç çalışmaz — bu Android sınırıdır, uygulama aşamaz.
 
+## Güncelleme
+
+RideAtlas/MediaAtlas ile aynı kurgu: CI (`android.yml`) her `main` push’unda
+`DayAtlas.apk`’yi tek bir rolling `android-latest` GitHub release’ine
+yüklüyor. Uygulama açılışta (yalnızca release build’de) bu release’i sessizce
+kontrol ediyor; daha yeni bir sürüm varsa hiç sormadan/uyarı vermeden
+indirmeye başlıyor. Kurulum anında Android’in kendi “bu uygulamayı yükle”
+ekranı yine de çıkar — bu işletim sistemi kısıtıdır, hiçbir normal (root
+olmayan) uygulama atlayamaz. Ayarlar’da elle kontrol için de bir düğme var;
+o akış bulduğunda indirmeden önce sorar. Debug-keystore ile imzalı sideload
+build’dir, Play Store’a yayın için değildir.
+
 ## Derleme
 
 JDK 17 + Android SDK (compile/target SDK 35).
