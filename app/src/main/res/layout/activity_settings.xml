@@ -111,6 +111,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/open_alarm_settings" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/autostartSettings"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/open_autostart_settings" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

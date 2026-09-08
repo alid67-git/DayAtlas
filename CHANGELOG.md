@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+- **iOS companion app eklendi** (`ios/`): Swift/SwiftUI, Android ile aynı
+  gün dosyası formatı (`days/yyyy-MM-dd.json` + `.gpx`). Arka plan
+  tetikleyicisi Android'den farklı — Apple sabit zamanlı arka plan
+  örneklemeye izin vermediği için `CLLocationManager` significant-location-
+  change (mesafe bazlı, ~500 m) kullanılıyor; ön planda ek bir zamanlayıcı
+  ile 3/4/5 dk aralığı korunuyor. Reboot sonrası devam etme için üç şart
+  (Her Zaman izni önceden verilmiş, cihazın bir kez kilidi açılmış,
+  uygulama force-quit edilmemiş) `ios/README.md`'de ve Ayarlar ekranında
+  açıklanıyor. Henüz Xcode projesi yok; `ios/project.yml`'den XcodeGen ile
+  üretiliyor. Dağıtım şimdilik ücretsiz kişisel imzalama ile Xcode'dan
+  cihaza kurulum (TestFlight/App Store yok).
+- Android: cihaz üreticisi biliniyorsa (Xiaomi, Huawei/Honor, Oppo/Realme,
+  Vivo, Samsung, OnePlus, Meizu, Asus) Ayarlar'a doğrudan o üreticinin
+  otomatik başlatma/korumalı uygulamalar ekranına götüren bir kısayol
+  düğmesi eklendi (`OemAutostart`). Reboot sonrası kaydın OEM tarafından
+  kesilmesi riskini azaltmaya yardımcı olur; izni açmak yine kullanıcının
+  elinde.
+
 ## 0.2.0 — 2026-09-07
 
 - Klasik RideAtlas/MediaAtlas versiyon-yükseltme kurgusu eklendi: CI artık her

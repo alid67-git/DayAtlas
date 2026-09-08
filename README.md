@@ -6,6 +6,14 @@ Paket: `com.dayatlas.app` · Dil: Türkçe (v0.1) · Sürüm: 0.1.0
 
 Bu depo **RideAtlas değildir**. RideAtlas sık GPS, canlı harita ve zengin sürüş kaydıdır. DayAtlas ayrı bir ürün: seyrek örnekleme, özet iz, az pil. RideAtlas kodu kopyalanmaz; monorepo yoktur.
 
+İki platform, iki ayrı native uygulama, aynı gün dosyası formatı:
+
+- **Android** (bu dosyanın geri kalanı) — `app/`, Kotlin.
+- **iOS** — `ios/`, Swift/SwiftUI. Kurulum, arka plan modeli ve reboot
+  sonrası devam etme kısıtları için bkz. [`ios/README.md`](ios/README.md).
+  Apple'ın platform kuralları yüzünden arka plan tetiklemesi Android'den
+  farklıdır (sabit dakika yerine ~500 m hareket eşiği) — ayrıntı ios/README.md'de.
+
 ## Neden native Kotlin?
 
 Flutter motoru (~4–8 MB) ve harita / Play Services yığını yok. AlarmManager, konum, boot ve pil muafiyeti doğrudan platform API’si. v1 hedefi küçük APK ve kolay bakım.
@@ -56,6 +64,13 @@ Sistem izin pencereleri kaçınılmazdır. Günlük mod açıkken **“kayıt ba
 | OnePlus | Pille optimize etme, otomatik başlat |
 
 Pil bitip telefon açılınca: kilidi açın (dosyalar kullanıcı şifresine bağlı), uygulamayı bir kez açmanız gerekebilir. OEM “otomatik başlat” kapalıysa BootReceiver hiç çalışmaz — bu Android sınırıdır, uygulama aşamaz.
+
+Ayarlar ekranında, cihaz üreticisi yukarıdaki listede tanınıyorsa bir
+“Otomatik başlatmayı aç” düğmesi belirir; bu düğme o üreticinin otomatik
+başlatma/korumalı uygulamalar ekranına doğrudan götürür (dokümante edilmemiş
+sistem ekranlarına best-effort deep link — bulunamazsa kullanıcıyı üretici
+ayarlarında elle aramaya yönlendirir). İzni açık hâle getirmek yine kullanıcının
+elinde; uygulama bunu zorlayamaz.
 
 ## Güncelleme
 

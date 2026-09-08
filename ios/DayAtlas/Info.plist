@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>DayAtlas</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>location-services</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+
+	<!--
+	 Konum izin metinleri: DayAtlas seyrek, tek noktalık örnekler alır; canlı
+	 harita veya sürekli takip yoktur. "Her Zaman" izni yalnızca günlük mod
+	 açıkken, reboot/uygulama-yeniden-başlatma sonrası significant-location-
+	 change olaylarını arka planda alabilmek için gerekir.
+	-->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>DayAtlas, uygulama açıkken seyrek bir konum noktası almak için konumunuzu kullanır.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Günlük mod açıkken DayAtlas, telefon kilitliyken veya uygulama arka plandayken de seyrek konum noktası alabilmek için "Her Zaman" izni ister. Sürekli takip yapılmaz.</string>
+</dict>
+</plist>
