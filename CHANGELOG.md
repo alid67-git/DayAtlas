@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.2 — 2026-09-08
+
+- **Görev değiştiriciden çıkarma (`excludeFromRecents`) güçlendirildi.**
+  Kullanıcı, uygulamayı görev değiştiriciden tamamen kapatıp ana ekran
+  simgesinden tekrar açtıktan sonra hâlâ ara sıra tam bir kart bıraktığını
+  bildirdi — aynı derlemede daha önce bu sorun görülmemişti. Manifest'teki
+  statik `android:excludeFromRecents="true"` bayrağının bazı OEM
+  arayüzlerinde (bu durumda muhtemelen Samsung One UI) tutarsız
+  uygulandığı biliniyor. `MainActivity` artık `onCreate`/`onResume`'da
+  `ActivityManager.AppTask.setExcludeFromRecents(true)`'ı da çağırıyor —
+  ayrı bir kod yolu, bazı OEM arayüzlerinin statik bayraktan daha
+  güvenilir bulduğu bir çalışma zamanı çağrısı. Kesin garanti değil; bu
+  bir platform/OEM tutarsızlığı, README'deki otomatik-başlat/pil
+  optimizasyonu notlarıyla aynı kategoride.
+
 ## 0.5.1 — 2026-09-08
 
 - **Güncelleme kurulumu, "Bilinmeyen uygulamalar yükle" izni verilmeden

@@ -1,6 +1,7 @@
 package com.dayatlas.app
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         prefs = AppPrefs(this)
+        excludeSelfFromRecents()
 
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -99,6 +101,22 @@ class MainActivity : AppCompatActivity() {
 
         maybeShowChangelog()
         checkForUpdate()
+    }
+
+    /**
+     * android:excludeFromRecents on this activity should already keep the
+     * task out of the overview screen, but that manifest-only declaration
+     * is reportedly inconsistent on some OEM skins (e.g. Samsung One UI) -
+     * it can drop out on one launch and reappear on the next. Calling the
+     * equivalent runtime API is a separate code path some of those skins
+     * honor more reliably; harmless if it's redundant, no guarantee if the
+     * OEM skin ignores both.
+     */
+    private fun excludeSelfFromRecents() {
+        runCatching {
+            val am = getSystemService(ActivityManager::class.java) ?: return
+            am.appTasks.forEach { it.setExcludeFromRecents(true) }
+        }
     }
 
     private fun maybeShowChangelog() {
@@ -145,6 +163,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        excludeSelfFromRecents()
         refresh()
     }
 
