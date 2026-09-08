@@ -4,9 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.dayatlas.app.boot.OemAutostart
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.location.PermissionHelper
 import com.dayatlas.app.data.DayTitle
@@ -77,6 +79,13 @@ class SettingsActivity : AppCompatActivity() {
                 data = Uri.parse("package:$packageName")
             }
             runCatching { startActivity(intent) }
+        }
+
+        binding.autostartSettings.visibility = if (OemAutostart.isKnownOem()) View.VISIBLE else View.GONE
+        binding.autostartSettings.setOnClickListener {
+            if (!OemAutostart.open(this)) {
+                Toast.makeText(this, R.string.autostart_not_found, Toast.LENGTH_LONG).show()
+            }
         }
 
         val today = DayTitle.iso(DayTitle.localToday())

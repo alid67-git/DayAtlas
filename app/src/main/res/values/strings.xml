@@ -25,7 +25,9 @@
     <string name="open_battery_settings">Pil optimizasyonu</string>
     <string name="open_alarm_settings">Tam alarm izni</string>
     <string name="request_battery_exemption">Pil muafiyeti iste</string>
-    <string name="oem_note">Bazı telefonlarda (Xiaomi, Huawei, Oppo, Samsung) “otomatik başlat” veya uyku koruması kapatılmazsa reboot sonrası kayıt devam etmeyebilir.</string>
+    <string name="open_autostart_settings">Otomatik başlatmayı aç</string>
+    <string name="autostart_not_found">Bu cihaz için otomatik başlatma ekranı bulunamadı; üretici ayarlarında elle arayın.</string>
+    <string name="oem_note">Bazı telefonlarda (Xiaomi, Huawei, Oppo, Samsung) “otomatik başlat” veya uyku koruması kapatılmazsa reboot sonrası kayıt devam etmeyebilir. Cihazınız destekleniyorsa yukarıdaki düğme doğrudan o ekranı açar.</string>
     <string name="today_files">Bugünün dosyaları uygulama deposunda: files/days/</string>
     <string name="notif_channel">Konum örneği</string>
     <string name="notif_sampling">Konum alınıyor</string>

@@ -1,0 +1,56 @@
+name: DayAtlas
+options:
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "16.0"
+
+configs:
+  Debug: debug
+  Release: release
+
+targets:
+  DayAtlas:
+    type: application
+    platform: iOS
+    sources:
+      - path: DayAtlas
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dayatlas.app
+        PRODUCT_NAME: DayAtlas
+        INFOPLIST_FILE: DayAtlas/Info.plist
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_PREVIEWS: YES
+        # Free personal Apple ID signing (7-day on-device provisioning) works
+        # fine with automatic signing; set DEVELOPMENT_TEAM in Xcode once you
+        # pick your team in Signing & Capabilities.
+        CODE_SIGN_STYLE: Automatic
+
+  DayAtlasTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: DayAtlasTests
+    dependencies:
+      - target: DayAtlas
+    settings:
+      base:
+        SWIFT_VERSION: "5.0"
+        PRODUCT_BUNDLE_IDENTIFIER: com.dayatlas.app.tests
+        CODE_SIGN_STYLE: Automatic
+
+schemes:
+  DayAtlas:
+    build:
+      targets:
+        DayAtlas: all
+        DayAtlasTests: [test]
+    test:
+      targets:
+        - DayAtlasTests
+    run:
+      config: Debug
