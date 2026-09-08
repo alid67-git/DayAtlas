@@ -1,7 +1,18 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — 2026-09-08
 
+- **Sürüm numarası artırıldı (0.2.0 → 0.3.0).** Bu, sıradan bir bakım
+  detayı değil: CI, rolling `android-latest` release'inin adına
+  `versionName`'i gömüyor (`v0.2.0` gibi) ve `UpdateChecker` de "zaten
+  güncel misin" kararını tam olarak bu isim karşılaştırmasıyla veriyor.
+  Önceki birkaç commit (iOS uygulaması, OEM otomatik-başlat kısayolu,
+  görev değiştiriciden çıkarma) `versionName`'i artırmadan main'e gitmişti
+  — yani release'in APK içeriği değişmiş olsa da adı hâlâ `v0.2.0`
+  kalıyordu ve kurulu 0.2.0 sürümü kendini hep "zaten güncel" sanıp hiç
+  güncelleme göstermiyordu. Sürüm sabit kaldığı sürece bu döngü kırılmaz;
+  bundan sonra gerçek bir davranış değişikliği içeren her commit'te
+  `versionName`/`versionCode` de artırılmalı.
 - Android: güncelleme kontrolü artık yalnızca uygulama açılışında değil,
   arka planda da çalışıyor. `SampleService`'in zaten her 3–5 dk'da bir
   çalışan döngüsüne günde en fazla bir kez sessiz bir kontrol eklendi
