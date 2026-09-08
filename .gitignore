@@ -22,6 +22,12 @@ Desktop.ini
 keystore.properties
 .env
 .env.*
+# Exception: app/dayatlas-debug.keystore is intentionally committed - it's
+# a sideload-only signing key (not for the Play Store), needed so every CI
+# build is signed identically and installs cleanly as an update instead of
+# each fresh CI runner auto-generating its own random debug key. See the
+# comment next to its use in app/build.gradle.kts.
+!app/dayatlas-debug.keystore
 
 # APK / outputs (CI uploads artifacts)
 *.apk
