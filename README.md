@@ -88,6 +88,16 @@ eklenmedi — mevcut örnekleme tetiklemesine, zaten tutulan wake-lock’a binen
 ek adım. Yalnızca günlük mod veya manuel kayıt açıkken çalışır; ikisi de
 kapalıyken uygulamayı hiç açmıyorsanız güncelleme kontrolü de olmaz.
 
+`release` build tipi, repoya bilerek commit edilmiş sabit bir keystore ile
+imzalanıyor (`app/dayatlas-debug.keystore`) — Android'in kendiliğinden
+oluşturduğu varsayılan debug anahtarıyla değil. O varsayılan anahtar her CI
+runner'ında sıfırdan üretildiği için, onunla imzalarsak her CI derlemesi
+farklı bir anahtarla çıkar ve Android imzası eşleşmeyen bir APK'yı
+"güncelleme" olarak kabul etmez (indirme biter, kurulum sessizce başarısız
+olur). Sabit keystore bunu çözer; RideAtlas/MediaAtlas'ta da aynı kurgu var.
+Sideload-only bir anahtar (Play Store için değil), commit edilmesi bu yüzden
+sorun değil.
+
 Kurulum anında Android’in kendi “bu uygulamayı yükle”
 ekranı yine de çıkar — bu işletim sistemi kısıtıdır, hiçbir normal (root
 olmayan) uygulama atlayamaz. Ayarlar’da elle kontrol için de bir düğme var;

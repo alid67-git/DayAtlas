@@ -16,6 +16,24 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // A committed, stable keystore - NOT Android's default auto-generated
+    // debug.keystore. That default is regenerated (with a new random key)
+    // whenever it doesn't already exist on the build machine, which is
+    // every single time on a fresh CI runner - so every CI-built release
+    // APK ended up signed with a different key, and Android refuses to
+    // install an update over an app signed with a different key (the
+    // download would silently succeed while the install failed, leaving
+    // the old version in place). This is a sideload-only key (not for the
+    // Play Store), so committing it is fine - same as RideAtlas/MediaAtlas.
+    signingConfigs {
+        create("release") {
+            storeFile = file("dayatlas-debug.keystore")
+            storePassword = "dayatlas123"
+            keyAlias = "dayatlas"
+            keyPassword = "dayatlas123"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -24,7 +42,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             versionNameSuffix = "-debug"

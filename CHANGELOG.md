@@ -2,6 +2,25 @@
 
 ## 0.3.0 — 2026-09-08
 
+- **Kalıcı imzalama anahtarı eklendi (`app/dayatlas-debug.keystore`).**
+  Reponun public yapılması ve sürüm numarasının artırılması self-update'i
+  hâlâ çalıştırmadı — asıl sebep şuydu: `release` build tipi Android'in
+  varsayılan `debug` imzalama yapılandırmasını kullanıyordu, ve o
+  varsayılan anahtar her CI runner'ında yoktan var edildiği için (her
+  runner'da o dosya baştan oluşturuluyor) **her CI derlemesi farklı bir
+  anahtarla imzalanıyordu**. Android, mevcut kurulu uygulamayla imzası
+  eşleşmeyen bir APK'yı "güncelleme" olarak kabul etmiyor — indirme
+  başarıyla bitiyor ama kurulum sessizce başarısız oluyor, eski sürüm
+  yerinde kalıyordu. RideAtlas/MediaAtlas'takiyle aynı çözüm: sabit,
+  repoya bilerek commit edilmiş bir sideload-only keystore (Play Store'a
+  yayın için değil, üretim keystore'u ayrı bir konudur). **Tek seferlik
+  bedel:** telefonda hâlâ eski (rastgele anahtarla imzalı) bir sürüm
+  kuruluysa, bu geçişte de imza uyuşmayacak — o yüzden bu güncellemeye
+  geçerken bir kez elle kaldırıp yeniden kurmak gerekiyor
+  (`files/days/*.json`/`.gpx` uygulama iç deposunda olduğu için kaldırma
+  sırasında silinir — önemsiyorsan önce `adb pull` ile yedekle). Bundan
+  sonraki tüm güncellemeler bu sabit anahtarla imzalanacağı için sorunsuz
+  kurulacak.
 - **Sürüm numarası artırıldı (0.2.0 → 0.3.0).** Bu, sıradan bir bakım
   detayı değil: CI, rolling `android-latest` release'inin adına
   `versionName`'i gömüyor (`v0.2.0` gibi) ve `UpdateChecker` de "zaten
