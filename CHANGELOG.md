@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.5.2 — 2026-09-08
+
+- **Görev değiştiriciden çıkarma (`excludeFromRecents`) güçlendirildi.**
+  Kullanıcı, uygulamayı görev değiştiriciden tamamen kapatıp ana ekran
+  simgesinden tekrar açtıktan sonra hâlâ ara sıra tam bir kart bıraktığını
+  bildirdi — aynı derlemede daha önce bu sorun görülmemişti. Manifest'teki
+  statik `android:excludeFromRecents="true"` bayrağının bazı OEM
+  arayüzlerinde (bu durumda muhtemelen Samsung One UI) tutarsız
+  uygulandığı biliniyor. `MainActivity` artık `onCreate`/`onResume`'da
+  `ActivityManager.AppTask.setExcludeFromRecents(true)`'ı da çağırıyor —
+  ayrı bir kod yolu, bazı OEM arayüzlerinin statik bayraktan daha
+  güvenilir bulduğu bir çalışma zamanı çağrısı. Kesin garanti değil; bu
+  bir platform/OEM tutarsızlığı, README'deki otomatik-başlat/pil
+  optimizasyonu notlarıyla aynı kategoride.
+
+## 0.5.1 — 2026-09-08
+
+- **Güncelleme kurulumu, "Bilinmeyen uygulamalar yükle" izni verilmeden
+  sessizce takılabiliyordu.** Manifest'teki `REQUEST_INSTALL_PACKAGES`
+  izni Android 8+'ta tek başına yetmiyor — kullanıcının bu izni DayAtlas
+  için ayrıca Ayarlar'dan açması gerekiyor, ama uygulama bunu hiç kontrol
+  etmiyordu: indirme bitip kurulum denendiğinde izin yoksa bazı
+  cihazlarda görünür bir hata/ekran çıkmadan hiçbir şey olmuyordu.
+  `UpdateInstaller` artık kurmadan önce `canRequestPackageInstalls()`'ı
+  kontrol ediyor; izin yoksa (yalnızca elle "Güncellemeleri kontrol et"
+  akışında — sessiz arka plan kontrolü hâlâ hiçbir şey sormuyor)
+  kullanıcıyı doğrudan o izin ekranına yönlendiriyor.
+
+## 0.5.0 — 2026-09-08
+
+- **Rota ekranı artık gerçek bir OpenStreetMap haritası kullanıyor**
+  (osmdroid), 0.4.0'daki sade-çizgi görünümün yerine. Play Services yok,
+  API key yok. Harita tamamen ön plan bileşeni — yalnızca Rota ekranı
+  açıkken karo indirir/çizer (`MapView.onResume`/`onPause`e bağlı), arka
+  planda hiçbir şey çalışmaz; DayAtlas'ın pil profiline etkisi yok. Canlı
+  konum/pusula overlay'i bilerek eklenmedi (rota ekranı bitmiş bir günü
+  gösterir, GPS'i tekrar açmaz). `RoutePathView` kaldırıldı, `DayAtlasApp`
+  osmdroid'in User-Agent'ını ve karo önbellek yolunu (uygulama içi, izin
+  gerektirmeyen bir dizin) bir kez yapılandırıyor.
+
 ## 0.4.0 — 2026-09-08
 
 - **Rota ekranı eklendi.** Araç çubuğundaki yeni simge, günün kaydedilen
