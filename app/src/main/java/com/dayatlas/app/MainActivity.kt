@@ -22,6 +22,7 @@ import com.dayatlas.app.location.Intents
 import com.dayatlas.app.location.PermissionHelper
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
+import com.dayatlas.app.route.RouteActivity
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
 import java.time.Instant
@@ -69,11 +70,16 @@ class MainActivity : AppCompatActivity() {
         prefs = AppPrefs(this)
 
         binding.toolbar.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.action_settings) {
-                startActivity(Intent(this, SettingsActivity::class.java))
-                true
-            } else {
-                false
+            when (item.itemId) {
+                R.id.action_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                R.id.action_route -> {
+                    RouteActivity.start(this)
+                    true
+                }
+                else -> false
             }
         }
 
