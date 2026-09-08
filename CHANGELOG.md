@@ -19,6 +19,12 @@
   düğmesi eklendi (`OemAutostart`). Reboot sonrası kaydın OEM tarafından
   kesilmesi riskini azaltmaya yardımcı olur; izni açmak yine kullanıcının
   elinde.
+- Android: `MainActivity` görev değiştirici (son kullanılan uygulamalar)
+  ekranında artık kart bırakmıyor (`android:excludeFromRecents="true"`).
+  Bu yalnızca o kalabalık listeyi temizler — bildirim, sistem konum
+  göstergesi, Ayarlar'daki uygulama kaydı gibi hiçbir şeffaflık öğesi
+  etkilenmez, uygulama gizlenmiyor. Bedeli: uygulamayı tekrar açmak için
+  görev değiştirici yerine ana ekran simgesi kullanılmalı.
 
 ## 0.2.0 — 2026-09-07
 
