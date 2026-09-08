@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 — 2026-09-08
+
+- **Rota ekranı eklendi.** Araç çubuğundaki yeni simge, günün kaydedilen
+  noktalarını sade bir çizgi olarak (harita/tile arka planı yok, tamamen
+  yerel çizim — `RoutePathView`, yeni bağımlılık veya internet gerekmez)
+  ekrana sığdırılmış şekilde gösteriyor. Açılışta bugünü gösterir; ok
+  düğmeleriyle önceki günlere gidilebilir (o gün için kayıt yoksa boş durum
+  mesajı çıkar, geleceğe gidilemez). Başlangıç noktası yeşil, son nokta
+  kırmızı ile işaretleniyor.
+
 ## 0.3.0 — 2026-09-08
 
 - **Kalıcı imzalama anahtarı eklendi (`app/dayatlas-debug.keystore`).**

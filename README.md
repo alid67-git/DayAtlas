@@ -24,11 +24,16 @@ Flutter motoru (~4–8 MB) ve harita / Play Services yığını yok. AlarmManage
 - **Seyrek GPS:** varsayılan **5 dakika** (3 / 4 / 5 ayarlanabilir). Sürekli location stream yok.
 - **Gün dosyası:** her **cihaz yerel** takvim günü (`yyyy-MM-dd`) ayrı kayıt. Gece yarısında yeni dosya. UTC ile gün bölünmez.
 - **İçerik:** zaman damgalı az nokta + mesafe özeti. `files/days/yyyy-MM-dd.json` ve `.gpx`.
-- **UI:** bugün kayıtta mı, mesafe, son nokta saati, başlat/durdur (günlük mod kapalıyken). Harita yok.
+- **UI:** bugün kayıtta mı, mesafe, son nokta saati, başlat/durdur (günlük mod kapalıyken).
+- **Rota ekranı:** araç çubuğundaki rota simgesi, o günün noktalarını sade bir
+  çizgi olarak çizer — sokak/coğrafya arka planı yok, sadece kaydedilen
+  şeklin ekrana sığdırılmış hâli (`RoutePathView`, harici kütüphane/internet
+  gerektirmez). Açılışta bugünü gösterir; ok düğmeleriyle önceki günlere
+  gidilebilir, kayıt olmayan bir günde boş durum mesajı çıkar.
 
 ## Ne yapmaz
 
-Analiz, foto, Android Auto, topo harita, canlı harita, sık GPS, dışa aktar/paylaş UI (dosyalar diskte; paylaşım sonra eklenebilir).
+Analiz, foto, Android Auto, topo/sokak haritası (tile tabanlı gerçek harita), canlı harita, sık GPS, dışa aktar/paylaş UI (dosyalar diskte; paylaşım sonra eklenebilir). Rota ekranı bir harita değil — sadece kaydedilen noktaların kendi aralarındaki şeklini gösteren bir çizim.
 
 ## Nasıl çalışır (örnekleme)
 
