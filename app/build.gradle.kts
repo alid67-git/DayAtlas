@@ -11,8 +11,8 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "0.4.0"
+        versionCode = 5
+        versionName = "0.5.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -72,6 +72,11 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
     implementation("androidx.activity:activity-ktx:1.9.3")
+    // OpenStreetMap tile rendering for the route screen - no Google Play
+    // Services, no API key. Purely a view component: it only fetches/draws
+    // tiles while the map screen is on screen, nothing runs in the
+    // background or costs battery outside of that.
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
     testImplementation("junit:junit:4.13.2")
     // Local unit tests run against the mockable android.jar, whose
     // org.json.* methods all throw RuntimeException("Stub!"). This puts the

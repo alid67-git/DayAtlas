@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.0 — 2026-09-08
+
+- **Rota ekranı artık gerçek bir OpenStreetMap haritası kullanıyor**
+  (osmdroid), 0.4.0'daki sade-çizgi görünümün yerine. Play Services yok,
+  API key yok. Harita tamamen ön plan bileşeni — yalnızca Rota ekranı
+  açıkken karo indirir/çizer (`MapView.onResume`/`onPause`e bağlı), arka
+  planda hiçbir şey çalışmaz; DayAtlas'ın pil profiline etkisi yok. Canlı
+  konum/pusula overlay'i bilerek eklenmedi (rota ekranı bitmiş bir günü
+  gösterir, GPS'i tekrar açmaz). `RoutePathView` kaldırıldı, `DayAtlasApp`
+  osmdroid'in User-Agent'ını ve karo önbellek yolunu (uygulama içi, izin
+  gerektirmeyen bir dizin) bir kez yapılandırıyor.
+
 ## 0.4.0 — 2026-09-08
 
 - **Rota ekranı eklendi.** Araç çubuğundaki yeni simge, günün kaydedilen

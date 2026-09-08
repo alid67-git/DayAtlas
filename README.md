@@ -16,7 +16,7 @@ Bu depo **RideAtlas değildir**. RideAtlas sık GPS, canlı harita ve zengin sü
 
 ## Neden native Kotlin?
 
-Flutter motoru (~4–8 MB) ve harita / Play Services yığını yok. AlarmManager, konum, boot ve pil muafiyeti doğrudan platform API’si. v1 hedefi küçük APK ve kolay bakım.
+Flutter motoru (~4–8 MB) ve Google Play Services yığını yok. AlarmManager, konum, boot ve pil muafiyeti doğrudan platform API’si. v1 hedefi küçük APK ve kolay bakım. Rota ekranındaki OpenStreetMap haritası (osmdroid) bunun tek istisnası — o da Play Services/API key gerektirmez, bkz. aşağı.
 
 ## Ne yapar (v1)
 
@@ -25,15 +25,27 @@ Flutter motoru (~4–8 MB) ve harita / Play Services yığını yok. AlarmManage
 - **Gün dosyası:** her **cihaz yerel** takvim günü (`yyyy-MM-dd`) ayrı kayıt. Gece yarısında yeni dosya. UTC ile gün bölünmez.
 - **İçerik:** zaman damgalı az nokta + mesafe özeti. `files/days/yyyy-MM-dd.json` ve `.gpx`.
 - **UI:** bugün kayıtta mı, mesafe, son nokta saati, başlat/durdur (günlük mod kapalıyken).
-- **Rota ekranı:** araç çubuğundaki rota simgesi, o günün noktalarını sade bir
-  çizgi olarak çizer — sokak/coğrafya arka planı yok, sadece kaydedilen
-  şeklin ekrana sığdırılmış hâli (`RoutePathView`, harici kütüphane/internet
-  gerektirmez). Açılışta bugünü gösterir; ok düğmeleriyle önceki günlere
+- **Rota ekranı:** araç çubuğundaki rota simgesi, o günün noktalarını
+  gerçek bir OpenStreetMap haritası üzerinde çizgi olarak gösterir
+  (osmdroid — Play Services yok, API key yok). Başlangıç yeşil, son nokta
+  kırmızı; harita karoları yalnızca bu ekran açıkken indirilir/çizilir,
+  arka planda hiçbir şey çalışmaz (bkz. aşağıdaki "Rota ekranı ve pil"
+  notu). Açılışta bugünü gösterir; ok düğmeleriyle önceki günlere
   gidilebilir, kayıt olmayan bir günde boş durum mesajı çıkar.
 
 ## Ne yapmaz
 
-Analiz, foto, Android Auto, topo/sokak haritası (tile tabanlı gerçek harita), canlı harita, sık GPS, dışa aktar/paylaş UI (dosyalar diskte; paylaşım sonra eklenebilir). Rota ekranı bir harita değil — sadece kaydedilen noktaların kendi aralarındaki şeklini gösteren bir çizim.
+Analiz, foto, Android Auto, topo harita, canlı harita/canlı konum takibi, sık GPS, dışa aktar/paylaş UI (dosyalar diskte; paylaşım sonra eklenebilir). Rota ekranı geçmiş bir günün *bitmiş* rotasını gösterir — RideAtlas'taki gibi canlı, takip eden bir harita değildir.
+
+## Rota ekranı ve pil
+
+Harita (osmdroid) tamamen bir ön plan görünüm bileşenidir: yalnızca Rota
+ekranı açık ve görünürken karo indirir/çizer (`onResume`/`onPause` ile
+bağlı). Uygulama arka plandayken veya başka bir ekrandayken haritanın hiçbir
+kodu çalışmaz — sıfır pil, sıfır ağ. DayAtlas'ın gerçek arka plan pil
+maliyeti tamamen `SampleService`'ten gelir (bkz. "Nasıl çalışır"), harita bunu
+etkilemez. Canlı konum/pusula takibi bilerek eklenmedi — rota ekranı bitmiş
+bir günü gösterir, GPS'i tekrar açmaz.
 
 ## Nasıl çalışır (örnekleme)
 
