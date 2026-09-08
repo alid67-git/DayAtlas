@@ -13,11 +13,15 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
 import androidx.core.app.NotificationCompat
+import com.dayatlas.app.BuildConfig
 import com.dayatlas.app.R
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.prefs.AppPrefs
+import com.dayatlas.app.update.UpdateChecker
+import com.dayatlas.app.update.UpdateInstaller
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 class SampleService : Service() {
     private val io = Executors.newSingleThreadExecutor()
@@ -38,6 +42,29 @@ class SampleService : Service() {
             finish(reschedule = false)
             return START_NOT_STICKY
         }
+
+        // The app may run unattended for days in daily mode with the UI never
+        // opened, so MainActivity's launch-time update check may never fire.
+        // Piggyback a once-a-day check on this already-scheduled, already
+        // wake-locked tick instead of adding a separate alarm/receiver.
+        val pending = AtomicInteger(1)
+        fun stepDone() {
+            if (pending.decrementAndGet() == 0) {
+                finish(reschedule = true)
+            }
+        }
+
+        if (shouldCheckForUpdate(prefs)) {
+            prefs.lastUpdateCheckMillis = System.currentTimeMillis()
+            pending.incrementAndGet()
+            UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
+                if (info != null) {
+                    UpdateInstaller.download(applicationContext, info, silent = true)
+                }
+                stepDone()
+            }
+        }
+
         val lm = getSystemService(LocationManager::class.java)
         LocationSampler.request(lm, io) { location ->
             main.post {
@@ -45,10 +72,15 @@ class SampleService : Service() {
                     runCatching { DayStore(applicationContext).append(location) }
                     sendBroadcast(Intents.pointSaved(this))
                 }
-                finish(reschedule = true)
+                stepDone()
             }
         }
         return START_NOT_STICKY
+    }
+
+    private fun shouldCheckForUpdate(prefs: AppPrefs): Boolean {
+        if (BuildConfig.DEBUG) return false
+        return System.currentTimeMillis() - prefs.lastUpdateCheckMillis >= UPDATE_CHECK_INTERVAL_MS
     }
 
     private fun finish(reschedule: Boolean) {
@@ -111,5 +143,6 @@ class SampleService : Service() {
     companion object {
         private const val CHANNEL_ID = "dayatlas_sample"
         private const val NOTIF_ID = 42
+        private const val UPDATE_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000L
     }
 }
