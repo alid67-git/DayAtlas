@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.1 — 2026-09-08
+
+- **Güncelleme kurulumu, "Bilinmeyen uygulamalar yükle" izni verilmeden
+  sessizce takılabiliyordu.** Manifest'teki `REQUEST_INSTALL_PACKAGES`
+  izni Android 8+'ta tek başına yetmiyor — kullanıcının bu izni DayAtlas
+  için ayrıca Ayarlar'dan açması gerekiyor, ama uygulama bunu hiç kontrol
+  etmiyordu: indirme bitip kurulum denendiğinde izin yoksa bazı
+  cihazlarda görünür bir hata/ekran çıkmadan hiçbir şey olmuyordu.
+  `UpdateInstaller` artık kurmadan önce `canRequestPackageInstalls()`'ı
+  kontrol ediyor; izin yoksa (yalnızca elle "Güncellemeleri kontrol et"
+  akışında — sessiz arka plan kontrolü hâlâ hiçbir şey sormuyor)
+  kullanıcıyı doğrudan o izin ekranına yönlendiriyor.
+
 ## 0.5.0 — 2026-09-08
 
 - **Rota ekranı artık gerçek bir OpenStreetMap haritası kullanıyor**

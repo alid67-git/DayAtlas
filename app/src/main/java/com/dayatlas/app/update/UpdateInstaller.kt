@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.provider.Settings
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -67,6 +68,28 @@ object UpdateInstaller {
         if (!file.exists() || file.length() < 1024) {
             if (!silent) {
                 Toast.makeText(context, R.string.update_download_failed, Toast.LENGTH_LONG).show()
+            }
+            return
+        }
+        // The manifest's REQUEST_INSTALL_PACKAGES permission alone is not
+        // enough since Android 8 - the user must separately grant "install
+        // unknown apps" for this app. Without this check, ACTION_VIEW below
+        // can just silently stall on some OEMs instead of showing anything.
+        // Only surface this on the non-silent (manual button) path - the
+        // automatic background check never asks or announces anything by
+        // design, so it just leaves the APK downloaded for next time.
+        if (!context.packageManager.canRequestPackageInstalls()) {
+            if (!silent) {
+                Toast.makeText(
+                    context,
+                    R.string.update_install_permission_needed,
+                    Toast.LENGTH_LONG,
+                ).show()
+                val settingsIntent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
+                    data = Uri.parse("package:${context.packageName}")
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                runCatching { context.startActivity(settingsIntent) }
             }
             return
         }

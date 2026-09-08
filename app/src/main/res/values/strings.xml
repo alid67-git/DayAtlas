@@ -51,6 +51,7 @@
     <string name="update_downloading_toast">Güncelleme indiriliyor…</string>
     <string name="update_download_failed">İndirilen dosya geçersiz veya boş.</string>
     <string name="update_install_failed">Kurulum başlatılamadı.</string>
+    <string name="update_install_permission_needed">DayAtlas\'ın güncelleme kurabilmesi için "Bilinmeyen uygulamalar yükle" iznine ihtiyacı var. Açılan ekrandan izin verin, sonra tekrar deneyin.</string>
     <string name="settings_update">Güncelleme</string>
     <string name="current_version">Sürüm %1$s</string>
     <string name="check_for_updates">Güncellemeleri kontrol et</string>
