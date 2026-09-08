@@ -30,6 +30,11 @@ class AppPrefs(context: Context) {
         get() = prefs.getString(LAST_SEEN_BUILD_NOTE, null)
         set(value) = prefs.edit().putString(LAST_SEEN_BUILD_NOTE, value).apply()
 
+    /** epoch millis of the last background (SampleService-driven) update check. */
+    var lastUpdateCheckMillis: Long
+        get() = prefs.getLong(LAST_UPDATE_CHECK, 0L)
+        set(value) = prefs.edit().putLong(LAST_UPDATE_CHECK, value).apply()
+
     companion object {
         const val DEFAULT_INTERVAL_MINUTES = 5
         val ALLOWED_INTERVALS = intArrayOf(3, 4, 5)
@@ -39,5 +44,6 @@ class AppPrefs(context: Context) {
         private const val TRACKING = "tracking_enabled"
         private const val INTERVAL = "interval_minutes"
         private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"
+        private const val LAST_UPDATE_CHECK = "last_update_check_millis"
     }
 }

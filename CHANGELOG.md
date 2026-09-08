@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Android: güncelleme kontrolü artık yalnızca uygulama açılışında değil,
+  arka planda da çalışıyor. `SampleService`'in zaten her 3–5 dk'da bir
+  çalışan döngüsüne günde en fazla bir kez sessiz bir kontrol eklendi
+  (`AppPrefs.lastUpdateCheckMillis`) — yeni alarm/servis yok, mevcut
+  wake-lock'a biniyor. Böylece günlerce hiç açılmadan çalışan bir kurulum
+  da yeni sürümü fark edip indirebiliyor (yalnızca günlük mod/manuel kayıt
+  açıkken; ikisi de kapalıysa hâlâ uygulamayı açmak gerekir).
 - **iOS companion app eklendi** (`ios/`): Swift/SwiftUI, Android ile aynı
   gün dosyası formatı (`days/yyyy-MM-dd.json` + `.gpx`). Arka plan
   tetikleyicisi Android'den farklı — Apple sabit zamanlı arka plan

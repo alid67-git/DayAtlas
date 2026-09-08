@@ -78,7 +78,17 @@ RideAtlas/MediaAtlas ile aynı kurgu: CI (`android.yml`) her `main` push’unda
 `DayAtlas.apk`’yi tek bir rolling `android-latest` GitHub release’ine
 yüklüyor. Uygulama açılışta (yalnızca release build’de) bu release’i sessizce
 kontrol ediyor; daha yeni bir sürüm varsa hiç sormadan/uyarı vermeden
-indirmeye başlıyor. Kurulum anında Android’in kendi “bu uygulamayı yükle”
+indirmeye başlıyor.
+
+Uygulama günlerce hiç açılmadan (yalnızca günlük mod arka planda) çalışabildiği
+için bu açılış-anı kontrolü tek başına yetmez: `SampleService` de zaten her
+3–5 dk’da bir çalıştığı için, günde en fazla bir kez aynı sessiz kontrolü o
+döngüye de ekliyor (`AppPrefs.lastUpdateCheckMillis`). Yeni alarm/servis
+eklenmedi — mevcut örnekleme tetiklemesine, zaten tutulan wake-lock’a binen bir
+ek adım. Yalnızca günlük mod veya manuel kayıt açıkken çalışır; ikisi de
+kapalıyken uygulamayı hiç açmıyorsanız güncelleme kontrolü de olmaz.
+
+Kurulum anında Android’in kendi “bu uygulamayı yükle”
 ekranı yine de çıkar — bu işletim sistemi kısıtıdır, hiçbir normal (root
 olmayan) uygulama atlayamaz. Ayarlar’da elle kontrol için de bir düğme var;
 o akış bulduğunda indirmeden önce sorar. Debug-keystore ile imzalı sideload
