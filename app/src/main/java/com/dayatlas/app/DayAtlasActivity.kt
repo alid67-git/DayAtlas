@@ -37,7 +37,11 @@ open class DayAtlasActivity : AppCompatActivity() {
         val baseRight = toolbar.paddingRight
         val baseBottom = toolbar.paddingBottom
         ViewCompat.setOnApplyWindowInsetsListener(toolbar) { v, insets ->
-            val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout(),
+            )
+            // Extra 4dp so the title clears the clock on notched devices.
+            val top = bars.top + (4 * v.resources.displayMetrics.density).toInt()
             v.setPadding(baseLeft, top, baseRight, baseBottom)
             insets
         }

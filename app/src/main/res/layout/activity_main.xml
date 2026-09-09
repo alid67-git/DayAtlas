@@ -158,6 +158,17 @@
             tools:text="Günlük 8 Eyl 2026" />
 
         <ImageButton
+            android:id="@+id/goToday"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/route_go_today"
+            android:src="@drawable/ic_today"
+            android:visibility="gone"
+            app:tint="@color/md_theme_primary"
+            tools:visibility="visible" />
+
+        <ImageButton
             android:id="@+id/nextDay"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -182,9 +193,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@drawable/bg_map_empty_label"
+            android:elevation="4dp"
             android:text="@string/route_empty"
-            android:textAppearance="?attr/textAppearanceBodyLarge"
-            android:textColor="@color/md_theme_outline"
-            android:visibility="gone" />
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@color/md_theme_on_surface"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </FrameLayout>
 </LinearLayout>

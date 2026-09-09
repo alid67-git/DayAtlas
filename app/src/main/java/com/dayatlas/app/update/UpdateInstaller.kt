@@ -1,13 +1,18 @@
 package com.dayatlas.app.update
 
 import android.app.DownloadManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.dayatlas.app.R
@@ -21,13 +26,14 @@ import java.io.File
  */
 object UpdateInstaller {
     private const val FILE_NAME = "DayAtlas-update.apk"
+    private const val CHANNEL_ID = "dayatlas_update"
+    private const val NOTIF_ID_INSTALL = 43
+    private const val NOTIF_ID_PERMISSION = 44
 
     /**
-     * [silent] suppresses this class's own toasts (used for the automatic
-     * launch-time check, which by design never asks or announces anything).
-     * The manual "check for updates" button in Settings passes false so it
-     * still confirms what happened. Either way, Android's own install
-     * screen still appears once the APK is downloaded - no app can skip it.
+     * [silent] suppresses toast/dialog prompts. When the activity is gone
+     * (RecentsHider / background SampleService), install is offered via a
+     * tap-to-install notification instead of a blocked background startActivity.
      */
     fun download(context: Context, info: UpdateInfo, silent: Boolean = false) {
         val appContext = context.applicationContext
@@ -51,7 +57,7 @@ object UpdateInstaller {
                 val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 if (id != downloadId) return
                 runCatching { ctx.unregisterReceiver(this) }
-                promptInstall(ctx, target, silent)
+                promptInstall(ctx.applicationContext, target, info.version, silent)
             }
         }
         ContextCompat.registerReceiver(
@@ -65,36 +71,45 @@ object UpdateInstaller {
         }
     }
 
-    private fun promptInstall(context: Context, file: File, silent: Boolean) {
+    private fun promptInstall(
+        context: Context,
+        file: File,
+        version: String,
+        silent: Boolean,
+    ) {
         if (!file.exists() || file.length() < 1024) {
             if (!silent) {
                 Toast.makeText(context, R.string.update_download_failed, Toast.LENGTH_LONG).show()
             }
             return
         }
-        // The manifest's REQUEST_INSTALL_PACKAGES permission alone is not
-        // enough since Android 8 - the user must separately grant "install
-        // unknown apps" for this app. Without this check, ACTION_VIEW below
-        // can just silently stall on some OEMs instead of showing anything.
-        // Only surface this on the non-silent (manual button) path - the
-        // automatic background check never asks or announces anything by
-        // design, so it just leaves the APK downloaded for next time.
+        ensureUpdateChannel(context)
+
         if (!context.packageManager.canRequestPackageInstalls()) {
+            val settingsIntent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
+                data = Uri.parse("package:${context.packageName}")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
             if (!silent) {
                 Toast.makeText(
                     context,
                     R.string.update_install_permission_needed,
                     Toast.LENGTH_LONG,
                 ).show()
-                val settingsIntent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
-                    data = Uri.parse("package:${context.packageName}")
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
                 RecentsHider.retainForExternalNavigation()
                 runCatching { context.startActivity(settingsIntent) }
+            } else {
+                notifyAction(
+                    context,
+                    NOTIF_ID_PERMISSION,
+                    context.getString(R.string.notif_update_permission_title),
+                    context.getString(R.string.notif_update_permission_text),
+                    settingsIntent,
+                )
             }
             return
         }
+
         val uri = FileProvider.getUriForFile(
             context,
             "${context.packageName}.fileprovider",
@@ -103,13 +118,68 @@ object UpdateInstaller {
         val intent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(uri, "application/vnd.android.package-archive")
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            clipData = android.content.ClipData.newUri(context.contentResolver, file.name, uri)
         }
         RecentsHider.retainForExternalNavigation()
-        runCatching { context.startActivity(intent) }
-            .onFailure {
-                if (!silent) {
-                    Toast.makeText(context, R.string.update_install_failed, Toast.LENGTH_LONG).show()
-                }
+        val started = runCatching { context.startActivity(intent) }.isSuccess
+        if (!started) {
+            if (!silent) {
+                Toast.makeText(context, R.string.update_install_failed, Toast.LENGTH_LONG).show()
             }
+            notifyAction(
+                context,
+                NOTIF_ID_INSTALL,
+                context.getString(R.string.notif_update_ready_title),
+                context.getString(R.string.notif_update_ready_text, version),
+                intent,
+            )
+        } else if (silent) {
+            // Background startActivity often "succeeds" without showing UI on
+            // Android 10+. Always leave a tap-to-install notification as backup.
+            notifyAction(
+                context,
+                NOTIF_ID_INSTALL,
+                context.getString(R.string.notif_update_ready_title),
+                context.getString(R.string.notif_update_ready_text, version),
+                intent,
+            )
+        }
+    }
+
+    private fun ensureUpdateChannel(context: Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val nm = context.getSystemService(NotificationManager::class.java) ?: return
+        nm.createNotificationChannel(
+            NotificationChannel(
+                CHANNEL_ID,
+                context.getString(R.string.notif_update_channel),
+                NotificationManager.IMPORTANCE_DEFAULT,
+            ),
+        )
+    }
+
+    private fun notifyAction(
+        context: Context,
+        id: Int,
+        title: String,
+        text: String,
+        action: Intent,
+    ) {
+        val pending = PendingIntent.getActivity(
+            context,
+            id,
+            action,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_stat_dot)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setContentIntent(pending)
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
+        ContextCompat.getSystemService(context, NotificationManager::class.java)
+            ?.notify(id, notification)
     }
 }
