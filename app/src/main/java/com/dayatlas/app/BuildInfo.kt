@@ -8,8 +8,8 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Haritada başka bir güne geçince o günün mesafesi, son noktası ve " +
-            "nokta sayısı artık gün seçicinin hemen altında, üç hücreli " +
-            "şeritte görünüyor. Üst blok bugünün kaydına ait kalmaya devam " +
-            "eder."
+        "Otomatik güncelleme indirdikten sonra kurulum ekranı / “kurmak " +
+            "için dokun” bildirimi artık geliyor (önceden indirme bitince " +
+            "sessizce kalıyordu). Uygulamayı tekrar açınca da bekleyen " +
+            "kurulum hatırlatılır."
 }
