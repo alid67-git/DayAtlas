@@ -1,7 +1,6 @@
 package com.dayatlas.app
 
 import android.Manifest
-import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
@@ -30,7 +28,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DayAtlasActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var prefs: AppPrefs
     private val store by lazy { DayStore(this) }
@@ -69,7 +67,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         prefs = AppPrefs(this)
-        excludeSelfFromRecents()
 
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -101,22 +98,6 @@ class MainActivity : AppCompatActivity() {
 
         maybeShowChangelog()
         checkForUpdate()
-    }
-
-    /**
-     * android:excludeFromRecents on this activity should already keep the
-     * task out of the overview screen, but that manifest-only declaration
-     * is reportedly inconsistent on some OEM skins (e.g. Samsung One UI) -
-     * it can drop out on one launch and reappear on the next. Calling the
-     * equivalent runtime API is a separate code path some of those skins
-     * honor more reliably; harmless if it's redundant, no guarantee if the
-     * OEM skin ignores both.
-     */
-    private fun excludeSelfFromRecents() {
-        runCatching {
-            val am = getSystemService(ActivityManager::class.java) ?: return
-            am.appTasks.forEach { it.setExcludeFromRecents(true) }
-        }
     }
 
     private fun maybeShowChangelog() {
@@ -163,7 +144,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        excludeSelfFromRecents()
         refresh()
     }
 
@@ -174,18 +154,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun continuePermissionChain() {
         if (!PermissionHelper.hasLocation(this)) {
+            // Permission UI is not started via startActivity, so mark retain
+            // explicitly - otherwise RecentsHider would tear the task down
+            // while the system dialog is up.
+            RecentsHider.retainForExternalNavigation()
             locationLauncher.launch(PermissionHelper.foregroundLocationPermissions())
             return
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
             !PermissionHelper.hasBackgroundLocation(this)
         ) {
+            RecentsHider.retainForExternalNavigation()
             backgroundLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
             return
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             !PermissionHelper.hasNotifications(this)
         ) {
+            RecentsHider.retainForExternalNavigation()
             notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             return
         }

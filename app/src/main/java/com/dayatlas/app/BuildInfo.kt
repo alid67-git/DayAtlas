@@ -8,9 +8,10 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Uygulama artık kendini güncelleyebiliyor: açılışta GitHub'daki en " +
-            "son sürüm sessizce kontrol ediliyor, yeni bir sürüm varsa hiç " +
-            "sormadan indiriliyor. Kurulum anında Android'in kendi kurulum " +
-            "ekranı yine de çıkar - bunu hiçbir uygulama atlayamaz. " +
-            "Ayarlar'a da elle kontrol için bir düğme eklendi."
+        "Görev değiştiricide (son uygulamalar) kart bırakma sorunu için " +
+            "daha kesin yöntem: uygulama arka plana geçince görev artık " +
+            "yalnızca gizlenmiyor, tamamen kaldırılıyor. Ana ekran " +
+            "simgesinden yeniden açılır; AlarmManager ile günlük kayıt " +
+            "arka planda aynı şekilde devam eder. Sistem ayarları / izin " +
+            "ekranlarından Geri ile dönüş korunuyor."
 }

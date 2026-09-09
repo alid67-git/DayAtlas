@@ -5,8 +5,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.dayatlas.app.DayAtlasActivity
 import com.dayatlas.app.R
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
@@ -26,7 +26,7 @@ import java.time.LocalDate
  * so it adds no battery cost in the background (see onResume/onPause).
  * Opens on today by default; previous/next-day arrows browse other days.
  */
-class RouteActivity : AppCompatActivity() {
+class RouteActivity : DayAtlasActivity() {
     private lateinit var binding: ActivityRouteBinding
     private val store by lazy { DayStore(this) }
     private lateinit var shownDate: LocalDate

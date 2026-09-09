@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.dayatlas.app.R
+import com.dayatlas.app.RecentsHider
 import java.io.File
 
 /**
@@ -89,6 +90,7 @@ object UpdateInstaller {
                     data = Uri.parse("package:${context.packageName}")
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
+                RecentsHider.retainForExternalNavigation()
                 runCatching { context.startActivity(settingsIntent) }
             }
             return
@@ -102,6 +104,7 @@ object UpdateInstaller {
             setDataAndType(uri, "application/vnd.android.package-archive")
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
+        RecentsHider.retainForExternalNavigation()
         runCatching { context.startActivity(intent) }
             .onFailure {
                 if (!silent) {

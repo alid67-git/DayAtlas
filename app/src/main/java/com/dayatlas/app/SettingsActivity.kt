@@ -7,7 +7,6 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import com.dayatlas.app.boot.OemAutostart
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.location.PermissionHelper
@@ -18,7 +17,7 @@ import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : DayAtlasActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var prefs: AppPrefs
 

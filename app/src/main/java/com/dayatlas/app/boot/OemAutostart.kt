@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import com.dayatlas.app.RecentsHider
 
 /**
  * Best-effort deep links into OEM-specific "autostart" / "protected apps" screens.
@@ -68,6 +69,8 @@ object OemAutostart {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             try {
+                // May be called with applicationContext (no Activity override).
+                RecentsHider.retainForExternalNavigation()
                 context.startActivity(intent)
                 return true
             } catch (_: ActivityNotFoundException) {
