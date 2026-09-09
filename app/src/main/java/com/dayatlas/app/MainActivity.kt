@@ -99,6 +99,10 @@ class MainActivity : DayAtlasActivity() {
                 refreshMap()
             }
         }
+        binding.goToday.setOnClickListener {
+            mapDate = DayTitle.localToday()
+            refreshMap()
+        }
 
         binding.toggle.setOnClickListener {
             if (prefs.trackingEnabled) {
@@ -129,18 +133,16 @@ class MainActivity : DayAtlasActivity() {
     }
 
     /**
-     * Best-effort, silent-on-failure background check; skipped for debug
-     * builds. No confirmation dialog here by design: a newer build starts
-     * downloading the moment it's found, with no prompt. The one thing this
-     * can't skip is Android's own install screen - the OS always shows that
-     * when installing an APK, with no way for a normal (non-system) app to
-     * bypass it.
+     * Best-effort background check; skipped for debug builds. Uses
+     * applicationContext so RecentsHider finishing this activity does not
+     * cancel the download. Install UI (if needed) is surfaced via notification
+     * when the activity is no longer in the foreground.
      */
     private fun checkForUpdate() {
         if (BuildConfig.DEBUG) return
         UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
-            if (info == null || isFinishing) return@check
-            UpdateInstaller.download(this, info, silent = true)
+            if (info == null) return@check
+            UpdateInstaller.download(applicationContext, info, silent = true)
         }
     }
 
@@ -273,8 +275,10 @@ class MainActivity : DayAtlasActivity() {
     }
 
     private fun refreshMap() {
+        val today = DayTitle.localToday()
         binding.mapDayTitle.text = DayTitle.format(mapDate)
-        binding.nextDay.isEnabled = mapDate < DayTitle.localToday()
+        binding.nextDay.isEnabled = mapDate < today
+        binding.goToday.visibility = if (mapDate == today) View.GONE else View.VISIBLE
         val points = store.load(DayTitle.iso(mapDate))?.points.orEmpty()
         RouteMapController.show(binding.routeMap, this, points, binding.emptyState)
     }

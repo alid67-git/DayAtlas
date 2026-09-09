@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.2 — 2026-09-09
+
+- **Harita boş durumu:** “Bu gün için kayıt yok” yarı saydam kutuda, koyu
+  yazı — harita üzerinde okunur.
+- **Bugüne dön:** harita gün gezicisinde, bugün dışındayken takvim ikonu.
+- **Otomatik güncelleme:** `isFinishing` yüzünden RecentsHider sonrası
+  sessiz indirme iptal oluyordu — `applicationContext` ile devam ediyor.
+  Arka planda kurulum için “Güncelleme hazır / dokunun” bildirimi.
+  Arka plan kontrolü başarısız olunca 24 saat beklemeyi bırakıyor (stamp
+  check sonrasına alındı). Üst çubuk inset güçlendirildi.
+
 ## 0.6.1 — 2026-09-09
 
 - **GPX aralık dışa aktarma:** her gün ayrı `<trk>` (tek güne yığılma

@@ -8,9 +8,8 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "GPX aralık dışa aktarmada her gün ayrı iz olarak yazılıyor; " +
-            "noktaların gerçek UTC zaman damgası korunuyor. Dosya adına " +
-            ".gpx otomatik ekleniyor. Üst çubuk saatle çakışmasın diye " +
-            "aşağı alındı. Örnekleme aralıkları: 30 sn, 1 dk (önerilen), " +
-            "3 dk, 5 dk — daha sık nokta, daha düzgün çizgi."
+        "Haritada “kayıt yok” yazısı okunaklı kutuda. Farklı güne gidince " +
+            "yanında bugüne dön ikonu. Otomatik güncelleme, görev " +
+            "değiştiriciden çıkınca iptal olmuyor; kurulum için bildirim " +
+            "çıkıyor. Üst çubuk saatle daha net ayrıldı."
 }
