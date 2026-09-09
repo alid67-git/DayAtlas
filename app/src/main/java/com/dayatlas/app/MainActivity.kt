@@ -280,7 +280,20 @@ class MainActivity : DayAtlasActivity() {
         binding.mapDayTitle.text = DayTitle.format(mapDate)
         binding.nextDay.isEnabled = mapDate < today
         binding.goToday.visibility = if (mapDate == today) View.GONE else View.VISIBLE
-        val points = store.load(DayTitle.iso(mapDate))?.points.orEmpty()
+        val record = store.load(DayTitle.iso(mapDate))
+        val points = record?.points.orEmpty()
+        binding.mapDistance.text = if (points.isEmpty()) {
+            getString(R.string.em_dash)
+        } else {
+            DayTitle.formatDistance(record?.distanceMeters ?: 0.0)
+        }
+        binding.mapLastPoint.text = points.lastOrNull()?.let { point ->
+            Instant.ofEpochMilli(point.timeMillis)
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime()
+                .format(TIME_FMT)
+        } ?: getString(R.string.em_dash)
+        binding.mapPointCount.text = points.size.toString()
         RouteMapController.show(binding.routeMap, this, points, binding.emptyState)
     }
 

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.4 — 2026-09-09
+
+- **Otomatik güncelleme kurulumu:** indirme bitince sistem kurulum ekranı /
+  “kurmak için dokun” bildirimi geliyor (Android 13+ `DOWNLOAD_COMPLETE`
+  receiver + süreç ölümü yüzünden sessiz kalıyordu). Bekleyen APK uygulama
+  açılınca hatırlatılıyor.
+
+## 0.6.3 — 2026-09-09
+
+- **Seçilen gün özeti:** harita gün gezicinin altında yumuşak yeşil tonlu
+  üç hücre (mesafe / son nokta / nokta sayısı). Üst blok bugünün kaydı;
+  oklarla gezerken alt şerit o günü gösterir.
+
 ## Web PWA — 2026-09-09
 
 - **DayAtlas Web (PWA)** eklendi (`web/`): Safari’den açılıp Ana Ekrana Ekle
