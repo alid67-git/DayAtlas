@@ -6,11 +6,13 @@ ikon gibi kullanılır.
 
 ## Adres
 
-CI `main`'e `web/` push’landığında GitHub Pages’e yayınlar:
+Pages şu an `main` dalının kökünden yayınlanıyor:
 
-**https://alid67-git.github.io/DayAtlas/**
+- **Uygulama:** https://alid67-git.github.io/DayAtlas/web/
+- Kök adres (`…/DayAtlas/`) uygulamaya yönlendirir.
 
-İlk seferde repo → Settings → Pages → Source: **GitHub Actions** seçili olmalı.
+(İsteğe bağlı: Settings → Pages → Source = GitHub Actions seçilirse
+`.github/workflows/pages.yml` `web/` klasörünü doğrudan kökte yayınlar.)
 
 ## Ana ekrana ekleme (iPhone)
 
