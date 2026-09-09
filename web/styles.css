@@ -1,0 +1,246 @@
+:root {
+  --primary: #1f6f5b;
+  --on-primary: #ffffff;
+  --surface: #f6fbf8;
+  --on-surface: #161d1a;
+  --outline: #6f7a75;
+  --status-on: #1f6f5b;
+  --status-off: #6f7a75;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--surface);
+  color: var(--on-surface);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(10px + var(--safe-top)) 14px 10px;
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.brand {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.top-actions { display: flex; gap: 4px; }
+
+.icon-btn {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.top .icon-btn { color: var(--on-primary); }
+.day-nav .icon-btn { color: var(--on-surface); }
+.day-nav .today { color: var(--primary); font-weight: 700; }
+
+.summary {
+  padding: 12px 16px 8px;
+}
+
+.day-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 650;
+}
+
+.status {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+}
+.status.on { color: var(--status-on); }
+.status.off { color: var(--status-off); }
+
+.stats {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.8fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.stats .label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--outline);
+}
+
+.stats strong {
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+.primary {
+  margin-top: 12px;
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary:disabled { opacity: 0.5; }
+
+.hint {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--outline);
+}
+
+.day-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px 6px;
+}
+
+.day-nav span {
+  flex: 1;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.map-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 220px;
+}
+
+#map {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.empty {
+  position: absolute;
+  z-index: 500;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--on-surface);
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+}
+
+dialog {
+  border: 0;
+  border-radius: 16px;
+  padding: 0;
+  max-width: 420px;
+  width: calc(100% - 32px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+dialog::backdrop { background: rgba(0, 0, 0, 0.35); }
+
+.sheet {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sheet h2 { margin: 0 0 4px; font-size: 1.2rem; }
+
+.sheet .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sheet label { font-size: 0.95rem; }
+
+.sheet input[type="date"],
+.sheet input[type="text"] {
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px;
+  border: 1px solid #c9d5cf;
+  border-radius: 10px;
+  font: inherit;
+}
+
+.radios {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.muted, .sheet .label {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--outline);
+}
+
+.install-tip {
+  margin-top: 8px;
+  padding: 12px;
+  background: #e8f5f0;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.install-tip ol { margin: 8px 0 0; padding-left: 1.2rem; }
+
+.sheet menu {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.ghost {
+  border: 0;
+  background: transparent;
+  color: var(--outline);
+  padding: 10px 14px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.suffix { color: var(--outline); font-size: 0.9rem; }
+
+@media (min-width: 900px) {
+  body {
+    max-width: 480px;
+    margin: 0 auto;
+    border-inline: 1px solid #d7e4de;
+  }
+}

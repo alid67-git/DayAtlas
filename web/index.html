@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1F6F5B" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="DayAtlas" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <title>DayAtlas</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top">
+    <h1 class="brand">DayAtlas</h1>
+    <div class="top-actions">
+      <button type="button" id="btnExport" class="icon-btn" aria-label="GPX dışa aktar" title="GPX">⇪</button>
+      <button type="button" id="btnSettings" class="icon-btn" aria-label="Ayarlar" title="Ayarlar">⚙</button>
+    </div>
+  </header>
+
+  <section class="summary">
+    <p id="dayTitle" class="day-title">—</p>
+    <p id="status" class="status off">Kayıt kapalı</p>
+    <div class="stats">
+      <div>
+        <span class="label">Bugünkü mesafe</span>
+        <strong id="distance">—</strong>
+      </div>
+      <div>
+        <span class="label">Son nokta</span>
+        <strong id="lastPoint">—</strong>
+      </div>
+      <div>
+        <span class="label">Nokta</span>
+        <strong id="pointCount">0</strong>
+      </div>
+    </div>
+    <button type="button" id="btnToggle" class="primary">Başlat</button>
+    <p id="hint" class="hint">Safari’de arka plan kaydı sınırlıdır; kayıt için uygulamayı açık tutun veya ana ekrana ekleyip ara sıra açın.</p>
+  </section>
+
+  <div class="day-nav">
+    <button type="button" id="btnPrev" class="icon-btn" aria-label="Önceki gün">‹</button>
+    <span id="mapDayTitle">—</span>
+    <button type="button" id="btnToday" class="icon-btn today" aria-label="Bugüne dön" hidden>▣</button>
+    <button type="button" id="btnNext" class="icon-btn" aria-label="Sonraki gün">›</button>
+  </div>
+
+  <div class="map-wrap">
+    <div id="map"></div>
+    <div id="emptyState" class="empty" hidden>Bu gün için kayıt yok.</div>
+  </div>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" class="sheet">
+      <h2>Ayarlar</h2>
+      <label class="row">
+        <span>Günlük mod</span>
+        <input type="checkbox" id="dailyMode" />
+      </label>
+      <p class="muted">Açıkken bu sayfa görünürken otomatik örnekler. iPhone Safari arka planda sabit aralıkla GPS çalıştıramaz.</p>
+      <p class="label">Örnekleme aralığı (ön plan)</p>
+      <div class="radios" id="intervalGroup">
+        <label><input type="radio" name="interval" value="30" /> 30 sn</label>
+        <label><input type="radio" name="interval" value="60" checked /> 1 dk</label>
+        <label><input type="radio" name="interval" value="180" /> 3 dk</label>
+        <label><input type="radio" name="interval" value="300" /> 5 dk</label>
+      </div>
+      <div class="install-tip">
+        <strong>Ana ekrana ekle (iPhone)</strong>
+        <ol>
+          <li>Safari’de paylaş (□↑)</li>
+          <li><em>Ana Ekrana Ekle</em></li>
+          <li>DayAtlas simgesinden aç</li>
+        </ol>
+      </div>
+      <menu>
+        <button value="cancel" class="ghost">Kapat</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="exportDialog">
+    <form method="dialog" class="sheet" id="exportForm">
+      <h2>GPX dışa aktar</h2>
+      <label class="row"><input type="radio" name="mode" value="single" checked /> Tek gün</label>
+      <label class="row"><input type="radio" name="mode" value="range" /> Tarih aralığı</label>
+      <label>Başlangıç <input type="date" id="exportFrom" required /></label>
+      <label id="exportToWrap" hidden>Bitiş <input type="date" id="exportTo" /></label>
+      <label>Dosya adı <input type="text" id="exportName" inputmode="text" /> <span class="suffix">.gpx</span></label>
+      <menu>
+        <button value="cancel" class="ghost">İptal</button>
+        <button id="btnDoExport" value="default" class="primary">Paylaş / indir</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js" type="module"></script>
+</body>
+</html>
