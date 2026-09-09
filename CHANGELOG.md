@@ -4,8 +4,9 @@
 
 - **DayAtlas Web (PWA)** eklendi (`web/`): Safari’den açılıp Ana Ekrana Ekle
   ile kullanılabilir. Ön planda seyrek GPS, harita, gün gezme, GPX dışa
-  aktarma. GitHub Pages: `https://alid67-git.github.io/DayAtlas/`.
-  iPhone Safari arka plan GPS’e izin vermez — Android’in yerini tutmaz.
+  aktarma. Canlı adres: `https://alid67-git.github.io/DayAtlas/web/`
+  (kök URL uygulamaya yönlendirir). iPhone Safari arka plan GPS’e izin
+  vermez — Android’in yerini tutmaz.
 
 ## 0.6.2 — 2026-09-09
 

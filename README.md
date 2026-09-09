@@ -15,7 +15,7 @@ Bu depo **RideAtlas değildir**. RideAtlas sık GPS, canlı harita ve zengin sü
   farklıdır (sabit dakika yerine ~500 m hareket eşiği) — ayrıntı ios/README.md'de.
 - **Web PWA (iPhone Safari / ana ekran)** — [`web/`](web/README.md).
   Native uygulama kurmadan tarayıcıdan çalışır; Ana Ekrana Ekle ile ikon
-  gibi kullanılır. Yayın: https://alid67-git.github.io/DayAtlas/
+  gibi kullanılır. Aç: https://alid67-git.github.io/DayAtlas/web/
   (arka plan GPS Safari’de yok — bkz. web/README.md).
 
 ## Neden native Kotlin?
