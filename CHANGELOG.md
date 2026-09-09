@@ -1,5 +1,12 @@
 # Changelog
 
+## iOS 0.2.0 — 2026-09-09
+
+- **Arka plan konum:** `UIBackgroundModes = location` eklendi (significant-
+  location-change uyanması için zorunlu). SLC yalnızca **Her Zaman** izniyle
+  açılır; ön plan aralığı Android ile hizalandı (30 sn / 1 / 3 / 5 dk).
+  `showsBackgroundLocationIndicator` açık. `ios/generate.sh` eklendi.
+
 ## Web PWA — 2026-09-09
 
 - **DayAtlas Web (PWA)** eklendi (`web/`): Safari’den açılıp Ana Ekrana Ekle

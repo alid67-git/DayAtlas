@@ -10,7 +10,7 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var locationTracker = LocationTracker.shared
     @State private var dailyMode = AppPrefs.shared.dailyMode
-    @State private var interval = AppPrefs.shared.intervalMinutes
+    @State private var interval = AppPrefs.shared.intervalSeconds
 
     var body: some View {
         NavigationView {
@@ -24,26 +24,35 @@ struct SettingsView: View {
                             TrackingController.setDailyMode(newValue)
                         }
                 } footer: {
-                    Text("Açıkken uygulama açılınca veya reboot sonrası ilk kilit açmada bugünün kaydı onay sormadan başlar / devam eder.")
+                    Text("Açıkken uygulama açılınca veya (Her Zaman izniyle) belirgin yer değişikliğinde bugünün kaydı devam eder. Force-quit etme.")
                 }
 
-                Section("Örnekleme aralığı") {
-                    Picker("Dakika", selection: $interval) {
-                        Text("3 dakika").tag(3)
-                        Text("4 dakika").tag(4)
-                        Text("5 dakika (önerilen)").tag(5)
+                Section("Ön plan aralığı") {
+                    Picker("Aralık", selection: $interval) {
+                        Text("30 sn").tag(30)
+                        Text("1 dk").tag(60)
+                        Text("3 dk").tag(180)
+                        Text("5 dk").tag(300)
                     }
                     .pickerStyle(.segmented)
                     .onChange(of: interval) { newValue in
-                        AppPrefs.shared.intervalMinutes = newValue
+                        AppPrefs.shared.intervalSeconds = newValue
+                        if AppPrefs.shared.trackingEnabled {
+                            LocationTracker.shared.resume()
+                        }
                     }
-                    Text("Bu aralık yalnızca uygulama ön plandayken uygulanır. Arka planda / kilitliyken iOS yalnızca belirgin (≈500 m) yer değişikliklerinde uyandırır — Apple'ın izin verdiği tek arka plan mekanizması budur.")
+                    Text("Bu aralık yalnızca uygulama ön plandayken. Arka planda / kilitliyken iOS yalnızca belirgin (≈500 m) yer değişikliğinde uyandırır — myTracks gibi native uygulamalarla aynı sınıf kısıt (web PWA bunu hiç yapamaz).")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
 
                 Section("İzinler") {
                     LabeledContent("Konum izni", value: authorizationText)
+                    if locationTracker.authorizationStatus != .authorizedAlways {
+                        Text("Arka plan kaydı için \"Her Zaman\" zorunlu.")
+                            .font(.footnote)
+                            .foregroundColor(.orange)
+                    }
                     Button("Ayarlar uygulamasını aç") {
                         if let url = URL(string: UIApplication.openSettingsURLString) {
                             UIApplication.shared.open(url)
@@ -55,7 +64,6 @@ struct SettingsView: View {
                         }
                     }
                 }
-
                 Section("Reboot sonrası devam etme — iOS kısıtları") {
                     Text("""
                     1) "Her Zaman" izni reboot'tan önce verilmiş olmalı.

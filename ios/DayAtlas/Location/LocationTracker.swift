@@ -37,6 +37,11 @@ final class LocationTracker: NSObject, ObservableObject, CLLocationManagerDelega
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        // Shows the system blue location pill while we hold Always + BG mode —
+        // honest UX, similar to other trackers.
+        if #available(iOS 14.0, *) {
+            manager.showsBackgroundLocationIndicator = true
+        }
         NotificationCenter.default.addObserver(
             self, selector: #selector(appDidBecomeActive),
             name: UIApplication.didBecomeActiveNotification, object: nil,
@@ -66,13 +71,24 @@ final class LocationTracker: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
 
+    var hasAlwaysPermission: Bool {
+        manager.authorizationStatus == .authorizedAlways
+    }
+
     /// Re-arms significant-location-change monitoring. Must be called again
     /// on every fresh process launch (including a location-triggered
     /// relaunch after reboot) — a CLLocationManager's monitoring state does
     /// not survive the previous process exiting.
+    ///
+    /// Background wakeups only work with **Always**. When-in-use still gets
+    /// foreground timer samples while the app is open.
     func resume() {
         guard AppPrefs.shared.trackingEnabled, hasAnyLocationPermission else { return }
-        manager.startMonitoringSignificantLocationChanges()
+        if hasAlwaysPermission {
+            manager.startMonitoringSignificantLocationChanges()
+        } else {
+            manager.stopMonitoringSignificantLocationChanges()
+        }
         if UIApplication.shared.applicationState == .active {
             startForegroundTimer()
         }
@@ -102,8 +118,8 @@ final class LocationTracker: NSObject, ObservableObject, CLLocationManagerDelega
 
     private func startForegroundTimer() {
         stopForegroundTimer()
-        let interval = TimeInterval(AppPrefs.shared.intervalMinutes * 60)
-        foregroundTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+        let interval = TimeInterval(AppPrefs.shared.intervalSeconds)
+        foregroundTimer = Timer.scheduledTimer(withTimeInterval: max(15, interval), repeats: true) { [weak self] _ in
             self?.sampleNow()
         }
     }

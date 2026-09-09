@@ -26,6 +26,12 @@
 	<array>
 		<string>location-services</string>
 	</array>
+	<!-- Required for significant-location-change wakeups while backgrounded
+	     or relaunched after kill/reboot (Apple's sparse BG location path). -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
