@@ -27,6 +27,7 @@
     <string name="status_stopped">Kayıt kapalı</string>
     <string name="status_daily">Günlük mod — otomatik kayıt</string>
     <string name="today_distance">Bugünkü mesafe</string>
+    <string name="map_day_distance">Mesafe</string>
     <string name="last_point">Son nokta</string>
     <string name="point_count">Nokta sayısı</string>
     <string name="em_dash">—</string>

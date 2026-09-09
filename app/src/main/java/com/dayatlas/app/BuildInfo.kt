@@ -8,8 +8,8 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Haritada “kayıt yok” yazısı okunaklı kutuda. Farklı güne gidince " +
-            "yanında bugüne dön ikonu. Otomatik güncelleme, görev " +
-            "değiştiriciden çıkınca iptal olmuyor; kurulum için bildirim " +
-            "çıkıyor. Üst çubuk saatle daha net ayrıldı."
+        "Haritada başka bir güne geçince o günün mesafesi, son noktası ve " +
+            "nokta sayısı artık gün seçicinin hemen altında, üç hücreli " +
+            "şeritte görünüyor. Üst blok bugünün kaydına ait kalmaya devam " +
+            "eder."
 }
