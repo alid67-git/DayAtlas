@@ -57,16 +57,22 @@
                 android:layout_marginTop="8dp">
 
                 <RadioButton
+                    android:id="@+id/interval30s"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/interval_30s" />
+
+                <RadioButton
+                    android:id="@+id/interval1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/interval_1" />
+
+                <RadioButton
                     android:id="@+id/interval3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/interval_3" />
-
-                <RadioButton
-                    android:id="@+id/interval4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/interval_4" />
 
                 <RadioButton
                     android:id="@+id/interval5"

@@ -26,6 +26,7 @@ object GpxExporter {
             "${DayTitle.format(from)} – ${DayTitle.format(to)}"
         }
 
+    /** Stem only (no extension). Always strip a trailing .gpx if the user typed one. */
     fun sanitizeFileName(raw: String): String {
         val trimmed = raw.trim().ifEmpty { "DayAtlas" }
         val withoutExt = trimmed.removeSuffix(".gpx").removeSuffix(".GPX")
@@ -35,6 +36,12 @@ object GpxExporter {
             .trim()
             .take(80)
         return cleaned.ifEmpty { "DayAtlas" }
+    }
+
+    /** Final on-disk / share display name, always ending in `.gpx`. */
+    fun withGpxExtension(stemOrName: String): String {
+        val stem = sanitizeFileName(stemOrName)
+        return "$stem.gpx"
     }
 
     /**
@@ -47,25 +54,24 @@ object GpxExporter {
         from: LocalDate,
         to: LocalDate,
         fileNameStem: String,
-        trackName: String = defaultTrackName(from, to),
     ): Intent? {
         val records = store.loadRange(from, to)
         if (records.isEmpty()) return null
-        return buildShareIntent(context, records, fileNameStem, trackName)
+        return buildShareIntent(context, records, fileNameStem)
     }
 
     fun buildShareIntent(
         context: Context,
         records: List<DayRecord>,
         fileNameStem: String,
-        trackName: String,
     ): Intent? {
         if (records.none { it.points.isNotEmpty() }) return null
         val app = context.applicationContext
         val dir = File(app.cacheDir, "exports").also { it.mkdirs() }
-        val safe = sanitizeFileName(fileNameStem)
-        val file = File(dir, "$safe.gpx")
-        DayJson.writeAtomic(file, DayJson.toGpx(trackName, records))
+        val fileName = withGpxExtension(fileNameStem)
+        val file = File(dir, fileName)
+        val exportLabel = sanitizeFileName(fileNameStem)
+        DayJson.writeAtomic(file, DayJson.toGpx(records, exportName = exportLabel))
         val uri = FileProvider.getUriForFile(
             app,
             "${app.packageName}.fileprovider",
@@ -74,9 +80,14 @@ object GpxExporter {
         val send = Intent(Intent.ACTION_SEND).apply {
             type = "application/gpx+xml"
             putExtra(Intent.EXTRA_STREAM, uri)
-            putExtra(Intent.EXTRA_SUBJECT, trackName)
+            putExtra(Intent.EXTRA_SUBJECT, fileName)
+            putExtra(Intent.EXTRA_TITLE, fileName)
+            clipData = android.content.ClipData.newUri(app.contentResolver, fileName, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        return Intent.createChooser(send, app.getString(R.string.export_share_title))
+        return Intent.createChooser(send, app.getString(R.string.export_share_title)).apply {
+            // Chooser should also grant read to the target app.
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
     }
 }

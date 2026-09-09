@@ -21,7 +21,7 @@ Flutter motoru (~4–8 MB) ve Google Play Services yığını yok. AlarmManager,
 ## Ne yapar (v1)
 
 - **Opsiyonel günlük mod** (Ayarlar): açıkken uygulama veya telefon açılınca onay sormadan bugünün kaydına başlar / devam eder.
-- **Seyrek GPS:** varsayılan **5 dakika** (3 / 4 / 5 ayarlanabilir). Sürekli location stream yok.
+- **Seyrek GPS:** varsayılan **1 dakika** (30 sn / 1 / 3 / 5 dk ayarlanabilir). Sürekli location stream yok.
 - **Gün dosyası:** her **cihaz yerel** takvim günü (`yyyy-MM-dd`) ayrı kayıt. Gece yarısında yeni dosya. UTC ile gün bölünmez.
 - **İçerik:** zaman damgalı az nokta + mesafe özeti. `files/days/yyyy-MM-dd.json` ve `.gpx`.
 - **UI:** bugün kayıtta mı, mesafe, son nokta saati, başlat/durdur (günlük mod kapalıyken).
@@ -30,7 +30,8 @@ Flutter motoru (~4–8 MB) ve Google Play Services yığını yok. AlarmManager,
   key yok). Oklarla önceki günlere gidilir. Karolar yalnızca uygulama
   ön plandayken indirilir/çizilir.
 - **GPX dışa aktarma:** araç çubuğundan tek gün veya tarih aralığı + dosya
-  adı; sistem paylaşım ekranı ile kaydet/gönder.
+  adı (`.gpx` otomatik eklenir); sistem paylaşım ekranı ile kaydet/gönder.
+  Aralıkta her gün ayrı bir `<trk>` olur, noktaların gerçek UTC zamanı yazılır.
 
 ## Ne yapmaz
 
@@ -50,17 +51,19 @@ pusula takibi bilerek eklenmedi.
 Her gün zaten `files/days/yyyy-MM-dd.gpx` olarak yazılır (uygulama içi
 depo). Araç çubuğundaki dışa aktarma, seçilen gün veya aralığı tek bir
 GPX dosyasında birleştirip sistem paylaşım ekranına verir (Dosyalar,
-Drive, e-posta vb.). Dosya adı kullanıcıdan sorulur; aralıkta her gün
-ayrı bir `<trkseg>` olur.
+Drive, e-posta vb.). Dosya adına `.gpx` otomatik eklenir; aralıkta her
+gün ayrı bir `<trk>` olur (içe aktaran uygulamaların tek güne yığmaması
+için), her noktada gerçek UTC zaman damgası vardır.
 
 ## Nasıl çalışır (örnekleme)
 
 1. `AlarmManager.setExactAndAllowWhileIdle` bir sonraki örneği planlar (tam alarm yoksa `setAndAllowWhileIdle`).
 2. Alarm `SampleReceiver` → kısa ömürlü `SampleService` (foreground type `location`).
 3. Servis `LocationManager.getCurrentLocation` ile **tek nokta** alır (Play Services yok), gün dosyasına yazar, kendini kapatır.
-4. WorkManager kullanılmaz (minimum periyot 15 dk; 3–5 dk için uygun değil).
+4. WorkManager kullanılmaz (minimum periyot 15 dk; 30 sn–5 dk için uygun değil).
 
-Kısa FGS, sürekli yüksek frekanslı servis değildir. Doze altında 3–5 dk tam tutmayabilir; pil muafiyeti bunu iyileştirir.
+Kısa FGS, sürekli yüksek frekanslı servis değildir. Doze altında kısa aralıklar
+(özellikle 30 sn / 1 dk) tam tutmayabilir; pil muafiyeti bunu iyileştirir.
 
 ## İzinler (ilk açılış, bir kez)
 
@@ -70,7 +73,7 @@ Kısa FGS, sürekli yüksek frekanslı servis değildir. Doze altında 3–5 dk 
 | **Her zaman izin ver** (`ACCESS_BACKGROUND_LOCATION`) | Ekran kapalıyken / arka planda örnek |
 | Bildirimler (Android 13+) | Kısa FGS bildirimi (zorunlu) |
 | Pil optimizasyonu muafiyeti | Alarm’ın uyku modunda çalışması |
-| Tam alarm (`SCHEDULE_EXACT_ALARM`) | 3–5 dk aralığına yaklaşmak |
+| Tam alarm (`SCHEDULE_EXACT_ALARM`) | 30 sn–5 dk aralığına yaklaşmak |
 
 Sistem izin pencereleri kaçınılmazdır. Günlük mod açıkken **“kayıt başlasın mı?”** diye sormayız.
 
@@ -122,7 +125,7 @@ indirmeye başlıyor.
 
 Uygulama günlerce hiç açılmadan (yalnızca günlük mod arka planda) çalışabildiği
 için bu açılış-anı kontrolü tek başına yetmez: `SampleService` de zaten her
-3–5 dk’da bir çalıştığı için, günde en fazla bir kez aynı sessiz kontrolü o
+örnekleme döngüsünde çalıştığı için, günde en fazla bir kez aynı sessiz kontrolü o
 döngüye de ekliyor (`AppPrefs.lastUpdateCheckMillis`). Yeni alarm/servis
 eklenmedi — mevcut örnekleme tetiklemesine, zaten tutulan wake-lock’a binen bir
 ek adım. Yalnızca günlük mod veya manuel kayıt açıkken çalışır; ikisi de
@@ -166,7 +169,7 @@ CI her push’ta aynı APK’ları artifact olarak yükler.
 1. Debug APK kur, uygulamayı aç.
 2. Konum: **Her zaman izin ver**. Pil: **optimize etme**. Gerekirse tam alarm izni.
 3. OEM ise “otomatik başlat”ı aç.
-4. Ayarlar → **Günlük mod** açık, aralık 3 dk (hızlı deneme).
+4. Ayarlar → **Günlük mod** açık, aralık 1 dk (hızlı deneme için 30 sn).
 5. Ana ekranda “Günlük mod — otomatik kayıt”, mesafe/son nokta bir süre sonra dolmalı. Onay diyaloğu olmamalı.
 6. Dosyalar:
    ```bash

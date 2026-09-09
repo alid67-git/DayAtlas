@@ -13,14 +13,14 @@ object SampleScheduler {
     private const val REQ_MIDNIGHT = 1002
 
     fun ensureScheduled(context: Context, prefs: AppPrefs = AppPrefs(context)) {
-        scheduleNext(context, prefs, delayMs = prefs.intervalMinutes * 60_000L)
+        scheduleNext(context, prefs, delayMs = prefs.intervalMillis)
         scheduleMidnight(context)
     }
 
     fun scheduleNext(
         context: Context,
         prefs: AppPrefs = AppPrefs(context),
-        delayMs: Long = prefs.intervalMinutes * 60_000L,
+        delayMs: Long = prefs.intervalMillis,
     ) {
         val app = context.applicationContext
         val triggerAt = System.currentTimeMillis() + delayMs.coerceAtLeast(1_000L)

@@ -15,15 +15,44 @@ class AppPrefs(context: Context) {
         get() = prefs.getBoolean(TRACKING, false)
         set(value) = prefs.edit().putBoolean(TRACKING, value).apply()
 
-    var intervalMinutes: Int
+    /**
+     * Sampling period in seconds: 30 / 60 / 180 / 300.
+     * Migrates the old `interval_minutes` (3/4/5) key on first read.
+     */
+    var intervalSeconds: Int
         get() {
-            val raw = prefs.getInt(INTERVAL, DEFAULT_INTERVAL_MINUTES)
-            return if (raw in ALLOWED_INTERVALS) raw else DEFAULT_INTERVAL_MINUTES
+            if (prefs.contains(INTERVAL_SECONDS)) {
+                val raw = prefs.getInt(INTERVAL_SECONDS, DEFAULT_INTERVAL_SECONDS)
+                return if (raw in ALLOWED_INTERVAL_SECONDS) raw else DEFAULT_INTERVAL_SECONDS
+            }
+            if (prefs.contains(INTERVAL_MINUTES_LEGACY)) {
+                val legacy = prefs.getInt(INTERVAL_MINUTES_LEGACY, 5)
+                val migrated = when (legacy) {
+                    3 -> 180
+                    4 -> 180
+                    5 -> 300
+                    else -> DEFAULT_INTERVAL_SECONDS
+                }
+                prefs.edit()
+                    .putInt(INTERVAL_SECONDS, migrated)
+                    .remove(INTERVAL_MINUTES_LEGACY)
+                    .apply()
+                return migrated
+            }
+            return DEFAULT_INTERVAL_SECONDS
         }
         set(value) {
-            val clamped = if (value in ALLOWED_INTERVALS) value else DEFAULT_INTERVAL_MINUTES
-            prefs.edit().putInt(INTERVAL, clamped).apply()
+            val clamped =
+                if (value in ALLOWED_INTERVAL_SECONDS) value else DEFAULT_INTERVAL_SECONDS
+            prefs.edit()
+                .putInt(INTERVAL_SECONDS, clamped)
+                .remove(INTERVAL_MINUTES_LEGACY)
+                .apply()
         }
+
+    /** @deprecated Use [intervalSeconds]; kept for call-site clarity in ms math. */
+    val intervalMillis: Long
+        get() = intervalSeconds * 1_000L
 
     /** versionName of the build whose "what's new" dialog has already been shown. */
     var lastSeenBuildNoteVersion: String?
@@ -36,13 +65,15 @@ class AppPrefs(context: Context) {
         set(value) = prefs.edit().putLong(LAST_UPDATE_CHECK, value).apply()
 
     companion object {
-        const val DEFAULT_INTERVAL_MINUTES = 5
-        val ALLOWED_INTERVALS = intArrayOf(3, 4, 5)
+        /** Default / recommended: 1 minute — denser track than the old 5 min. */
+        const val DEFAULT_INTERVAL_SECONDS = 60
+        val ALLOWED_INTERVAL_SECONDS = intArrayOf(30, 60, 180, 300)
 
         private const val PREFS = "dayatlas_prefs"
         private const val DAILY_MODE = "daily_mode"
         private const val TRACKING = "tracking_enabled"
-        private const val INTERVAL = "interval_minutes"
+        private const val INTERVAL_SECONDS = "interval_seconds"
+        private const val INTERVAL_MINUTES_LEGACY = "interval_minutes"
         private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"
         private const val LAST_UPDATE_CHECK = "last_update_check_millis"
     }

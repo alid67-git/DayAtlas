@@ -56,27 +56,35 @@ class DayJsonTest {
     }
 
     @Test
-    fun multiDayGpxHasOneSegmentPerDayWithPoints() {
+    fun multiDayGpxHasOneTrackPerDayWithUtcTimes() {
         val day1 = DayRecord(
             date = "2026-08-28",
             title = "Günlük 28 Ağu 2026",
-            points = listOf(TrackPoint(1_000L, 41.01, 29.02, null)),
+            points = listOf(TrackPoint(1_720_000_000_000L, 41.01, 29.02, null)),
             distanceMeters = 0.0,
         )
         val day2 = DayRecord(
             date = "2026-08-29",
             title = "Günlük 29 Ağu 2026",
             points = listOf(
-                TrackPoint(2_000L, 41.02, 29.03, null),
-                TrackPoint(3_000L, 41.03, 29.04, null),
+                TrackPoint(1_720_086_400_000L, 41.02, 29.03, null),
+                TrackPoint(1_720_086_460_000L, 41.03, 29.04, null),
             ),
             distanceMeters = 10.0,
         )
         val empty = DayRecord.empty("2026-08-30", "empty")
-        val gpx = DayJson.toGpx("Tatil", listOf(day1, empty, day2))
-        assertTrue(gpx.contains("<name>Tatil</name>"))
-        assertEquals(2, Regex("<trkseg>").findAll(gpx).count())
+        val gpx = DayJson.toGpx(listOf(day1, empty, day2), exportName = "Tatil")
+        assertEquals(2, Regex("<trk>").findAll(gpx).count())
+        assertTrue(gpx.contains("<name>Tatil — Günlük 28 Ağu 2026</name>"))
+        assertTrue(gpx.contains("<name>Tatil — Günlük 29 Ağu 2026</name>"))
         assertEquals(3, Regex("<trkpt ").findAll(gpx).count())
+        assertTrue(gpx.contains(DayJson.formatGpxTime(1_720_000_000_000L)))
+        assertTrue(Regex("""<time>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z</time>""").containsMatchIn(gpx))
+    }
+
+    @Test
+    fun gpxTimeIsUtcWithoutMillis() {
+        assertEquals("1970-01-01T00:00:01Z", DayJson.formatGpxTime(1_000L))
     }
 }
 
@@ -90,6 +98,18 @@ class GpxExporterNameTest {
         assertEquals(
             "a-b-c",
             com.dayatlas.app.export.GpxExporter.sanitizeFileName("a/b:c"),
+        )
+    }
+
+    @Test
+    fun withGpxExtensionAlwaysAppends() {
+        assertEquals(
+            "rota.gpx",
+            com.dayatlas.app.export.GpxExporter.withGpxExtension("rota"),
+        )
+        assertEquals(
+            "rota.gpx",
+            com.dayatlas.app.export.GpxExporter.withGpxExtension("rota.gpx"),
         )
     }
 
