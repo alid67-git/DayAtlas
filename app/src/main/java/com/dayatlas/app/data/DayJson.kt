@@ -52,22 +52,32 @@ object DayJson {
         return DayRecord(date = date, title = title, points = points, distanceMeters = distance)
     }
 
-    fun toGpx(record: DayRecord): String {
+    fun toGpx(record: DayRecord): String = toGpx(record.title, listOf(record))
+
+    /**
+     * GPX 1.1 with one track named [trackName] and one `<trkseg>` per day that
+     * has points (empty days skipped). Used for both single-day rewrite and
+     * user-triggered range export.
+     */
+    fun toGpx(trackName: String, records: List<DayRecord>): String {
         val sb = StringBuilder()
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
         sb.append("<gpx version=\"1.1\" creator=\"DayAtlas\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n")
         sb.append("  <trk>\n")
-        sb.append("    <name>").append(escapeXml(record.title)).append("</name>\n")
-        sb.append("    <trkseg>\n")
-        record.points.forEach { p ->
-            sb.append("      <trkpt lat=\"").append(p.lat).append("\" lon=\"").append(p.lon).append("\">\n")
-            sb.append("        <time>").append(Instant.ofEpochMilli(p.timeMillis)).append("</time>\n")
-            if (p.accuracyMeters != null) {
-                sb.append("        <hdop>").append(p.accuracyMeters).append("</hdop>\n")
+        sb.append("    <name>").append(escapeXml(trackName)).append("</name>\n")
+        records.forEach { record ->
+            if (record.points.isEmpty()) return@forEach
+            sb.append("    <trkseg>\n")
+            record.points.forEach { p ->
+                sb.append("      <trkpt lat=\"").append(p.lat).append("\" lon=\"").append(p.lon).append("\">\n")
+                sb.append("        <time>").append(Instant.ofEpochMilli(p.timeMillis)).append("</time>\n")
+                if (p.accuracyMeters != null) {
+                    sb.append("        <hdop>").append(p.accuracyMeters).append("</hdop>\n")
+                }
+                sb.append("      </trkpt>\n")
             }
-            sb.append("      </trkpt>\n")
+            sb.append("    </trkseg>\n")
         }
-        sb.append("    </trkseg>\n")
         sb.append("  </trk>\n")
         sb.append("</gpx>\n")
         return sb.toString()

@@ -17,16 +17,19 @@ import androidx.core.content.ContextCompat
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
 import com.dayatlas.app.databinding.ActivityMainBinding
+import com.dayatlas.app.export.GpxExportDialog
 import com.dayatlas.app.location.Intents
 import com.dayatlas.app.location.PermissionHelper
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
-import com.dayatlas.app.route.RouteActivity
+import com.dayatlas.app.route.RouteMapController
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 
 class MainActivity : DayAtlasActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -35,6 +38,7 @@ class MainActivity : DayAtlasActivity() {
     private var pendingStart = false
     private var askedBatteryThisSession = false
     private var askedExactThisSession = false
+    private var mapDate: LocalDate = DayTitle.localToday()
 
     private val locationLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
@@ -68,17 +72,31 @@ class MainActivity : DayAtlasActivity() {
         setContentView(binding.root)
         prefs = AppPrefs(this)
 
+        binding.routeMap.setTileSource(TileSourceFactory.MAPNIK)
+        binding.routeMap.setMultiTouchControls(true)
+
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+                R.id.action_export_gpx -> {
+                    GpxExportDialog.show(this, store, mapDate)
+                    true
+                }
                 R.id.action_settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
                     true
                 }
-                R.id.action_route -> {
-                    RouteActivity.start(this)
-                    true
-                }
                 else -> false
+            }
+        }
+
+        binding.previousDay.setOnClickListener {
+            mapDate = mapDate.minusDays(1)
+            refreshMap()
+        }
+        binding.nextDay.setOnClickListener {
+            if (mapDate < DayTitle.localToday()) {
+                mapDate = mapDate.plusDays(1)
+                refreshMap()
             }
         }
 
@@ -144,7 +162,13 @@ class MainActivity : DayAtlasActivity() {
 
     override fun onResume() {
         super.onResume()
+        binding.routeMap.onResume()
         refresh()
+    }
+
+    override fun onPause() {
+        binding.routeMap.onPause()
+        super.onPause()
     }
 
     private fun ensurePermissionsThenStart() {
@@ -206,6 +230,9 @@ class MainActivity : DayAtlasActivity() {
     }
 
     private fun refresh() {
+        val today = DayTitle.localToday()
+        if (mapDate.isAfter(today)) mapDate = today
+
         val record = store.loadToday()
         binding.dayTitle.text = record.title
         val recording = prefs.trackingEnabled || prefs.dailyMode
@@ -241,6 +268,15 @@ class MainActivity : DayAtlasActivity() {
             binding.toggle.setText(if (prefs.trackingEnabled) R.string.stop else R.string.start)
             binding.hint.text = getString(R.string.manual_hint)
         }
+
+        refreshMap()
+    }
+
+    private fun refreshMap() {
+        binding.mapDayTitle.text = DayTitle.format(mapDate)
+        binding.nextDay.isEnabled = mapDate < DayTitle.localToday()
+        val points = store.load(DayTitle.iso(mapDate))?.points.orEmpty()
+        RouteMapController.show(binding.routeMap, this, points, binding.emptyState)
     }
 
     companion object {
