@@ -8,8 +8,8 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Haritada “kayıt yok” yazısı okunaklı kutuda. Farklı güne gidince " +
-            "yanında bugüne dön ikonu. Otomatik güncelleme, görev " +
-            "değiştiriciden çıkınca iptal olmuyor; kurulum için bildirim " +
-            "çıkıyor. Üst çubuk saatle daha net ayrıldı."
+        "Otomatik güncelleme indirdikten sonra kurulum ekranı / “kurmak " +
+            "için dokun” bildirimi artık geliyor (önceden indirme bitince " +
+            "sessizce kalıyordu). Uygulamayı tekrar açınca da bekleyen " +
+            "kurulum hatırlatılır."
 }

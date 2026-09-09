@@ -165,6 +165,7 @@ class MainActivity : DayAtlasActivity() {
     override fun onResume() {
         super.onResume()
         binding.routeMap.onResume()
+        UpdateInstaller.resumePending(this, offerUi = true)
         refresh()
     }
 
