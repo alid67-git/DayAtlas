@@ -55,9 +55,11 @@ class SampleService : Service() {
         }
 
         if (shouldCheckForUpdate(prefs)) {
-            prefs.lastUpdateCheckMillis = System.currentTimeMillis()
             pending.incrementAndGet()
             UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
+                // Stamp after the check so a failed/offline attempt can retry
+                // on the next sample tick instead of waiting a full day.
+                prefs.lastUpdateCheckMillis = System.currentTimeMillis()
                 if (info != null) {
                     UpdateInstaller.download(applicationContext, info, silent = true)
                 }

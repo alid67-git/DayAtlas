@@ -5,7 +5,13 @@
     <string name="action_export_gpx">GPX dışa aktar</string>
     <string name="route_previous_day">Önceki gün</string>
     <string name="route_next_day">Sonraki gün</string>
+    <string name="route_go_today">Bugüne dön</string>
     <string name="route_empty">Bu gün için kayıt yok.</string>
+    <string name="notif_update_channel">Güncelleme</string>
+    <string name="notif_update_ready_title">Güncelleme hazır</string>
+    <string name="notif_update_ready_text">%1$s sürümünü kurmak için dokunun</string>
+    <string name="notif_update_permission_title">Kurulum izni gerekli</string>
+    <string name="notif_update_permission_text">Güncellemeyi kurmak için bilinen uygulamalar iznini açın</string>
     <string name="export_title">GPX dışa aktar</string>
     <string name="export_mode_single">Tek gün</string>
     <string name="export_mode_range">Tarih aralığı</string>
