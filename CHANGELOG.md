@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.3 — 2026-09-09
+
+- **Görev değiştiriciden çıkarma artık görev sonlandırmayla yapılıyor.**
+  Manifest `excludeFromRecents` + çalışma zamanı `setExcludeFromRecents`
+  bazı OEM arayüzlerinde (özellikle Samsung One UI) tutarsız kalıyordu —
+  görev arka planda hayattayken kart yine de görünebiliyordu. "Çalışan
+  uygulamalar listesinde görünmeyen" uygulamaların kullandığı yöntem:
+  UI tamamen arka plana geçince `AppTask.finishAndRemoveTask()` ile görevi
+  kaldırmak. `RecentsHider` bunu uygulama düzeyinde yapıyor (kısa gecikme:
+  izin diyaloğu titremesinde görevi bozmamak için). Sistem Ayarları / izin /
+  OEM otomatik-başlat ekranlarına çıkarken görev korunuyor ki Geri ile
+  dönüş çalışsın; Ana ekran / uygulama değiştiriciden çıkışta kart kalkar.
+  AlarmManager + `SampleService` activity'ye bağlı değil — günlük mod
+  arka plan kaydı etkilenmez. Yeniden açmak için ana ekran simgesi gerekir
+  (zaten `excludeFromRecents` ile de böyleydi).
+
 ## 0.5.2 — 2026-09-08
 
 - **Görev değiştiriciden çıkarma (`excludeFromRecents`) güçlendirildi.**

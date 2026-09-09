@@ -89,18 +89,22 @@ sistem ekranlarına best-effort deep link — bulunamazsa kullanıcıyı üretic
 ayarlarında elle aramaya yönlendirir). İzni açık hâle getirmek yine kullanıcının
 elinde; uygulama bunu zorlayamaz.
 
-### Görev değiştiricide bazen kart bırakabilir (Samsung One UI)
+### Görev değiştirici (son uygulamalar)
 
-`MainActivity` hem `android:excludeFromRecents="true"` (manifest) hem de
-çalışma zamanında `ActivityManager.AppTask.setExcludeFromRecents(true)`
-(`onCreate`/`onResume`) ile görev değiştiriciden çıkarılmaya çalışıyor —
-ikisi de standart, dokümante Android API'leri. Buna rağmen bazı Samsung One
-UI sürümlerinde uygulama zaman zaman yine de bir kart bırakabiliyor; bu,
-otomatik-başlat/pil optimizasyonu gibi bir OEM arayüz tutarsızlığı,
-uygulama kodunun aşabileceği bir şey değil. Daha kesin bir çözüm
-(`finishAndRemoveTask()` ile arka plana her geçişte görevi sonlandırmak)
-her açılışı soğuk başlangıca çevirir ve günlük moddaki arka plan
-güvenilirliğini riske atar — bu yüzden bilerek uygulanmadı.
+DayAtlas görev değiştiricide kart bırakmamaya çalışır. Yalnızca
+`excludeFromRecents` bazı OEM arayüzlerinde (Samsung One UI) yetmediği
+için, UI arka plana geçince görev de sonlandırılır
+(`AppTask.finishAndRemoveTask`). Bu, listede görünmeyen uygulamaların
+yaptığı şeyle aynı sınıftır: bayrak yetmezse görevi gerçekten kaldırmak.
+
+- Yeniden açmak için ana ekran simgesini kullanın (görev değiştiricide
+  kart olmaz).
+- Günlük kayıt bundan etkilenmez — örnekleme AlarmManager + kısa
+  `SampleService` ile activity'den bağımsız sürer.
+- Sistem izin / Ayarlar / OEM otomatik-başlat ekranlarına giderken görev
+  bilinçli olarak tutulur; o ekranlardan Geri ile dönüş çalışır.
+- Bildirim, konum göstergesi, Ayarlar'daki uygulama kaydı gibi şeffaflık
+  öğeleri bilerek değiştirilmez — yalnızca görev değiştirici kartı.
 
 ## Güncelleme
 

@@ -9,6 +9,7 @@ import org.osmdroid.config.Configuration
 class DayAtlasApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        RecentsHider.install(this)
         configureOsmdroid()
         val prefs = AppPrefs(this)
         TrackingController.onAppStart(this, prefs)
