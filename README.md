@@ -13,6 +13,10 @@ Bu depo **RideAtlas değildir**. RideAtlas sık GPS, canlı harita ve zengin sü
   sonrası devam etme kısıtları için bkz. [`ios/README.md`](ios/README.md).
   Apple'ın platform kuralları yüzünden arka plan tetiklemesi Android'den
   farklıdır (sabit dakika yerine ~500 m hareket eşiği) — ayrıntı ios/README.md'de.
+- **Web PWA (iPhone Safari / ana ekran)** — [`web/`](web/README.md).
+  Native uygulama kurmadan tarayıcıdan çalışır; Ana Ekrana Ekle ile ikon
+  gibi kullanılır. Yayın: https://alid67-git.github.io/DayAtlas/
+  (arka plan GPS Safari’de yok — bkz. web/README.md).
 
 ## Neden native Kotlin?
 
