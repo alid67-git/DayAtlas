@@ -81,14 +81,12 @@ object GpxExportDialog {
                         val stem = GpxExporter.sanitizeFileName(
                             binding.fileName.text?.toString().orEmpty(),
                         )
-                        val trackName = stem.ifBlank { GpxExporter.defaultTrackName(from, end) }
                         val intent = GpxExporter.buildShareIntent(
                             activity,
                             store,
                             from,
                             end,
                             stem,
-                            trackName,
                         )
                         if (intent == null) {
                             Toast.makeText(activity, R.string.export_no_points, Toast.LENGTH_LONG).show()

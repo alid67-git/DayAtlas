@@ -8,9 +8,9 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Harita artık ayrı ekranda değil — ana ekranın altında. Oklarla " +
-            "önceki günlerin rotasına bakabilirsiniz. Araç çubuğundan GPX " +
-            "dışa aktarma: tek gün veya tarih aralığı seçin, dosya adını " +
-            "istediğiniz gibi yazın, sistem paylaşım ekranından kaydedin " +
-            "veya gönderin."
+        "GPX aralık dışa aktarmada her gün ayrı iz olarak yazılıyor; " +
+            "noktaların gerçek UTC zaman damgası korunuyor. Dosya adına " +
+            ".gpx otomatik ekleniyor. Üst çubuk saatle çakışmasın diye " +
+            "aşağı alındı. Örnekleme aralıkları: 30 sn, 1 dk (önerilen), " +
+            "3 dk, 5 dk — daha sık nokta, daha düzgün çizgi."
 }

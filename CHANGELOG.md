@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.1 — 2026-09-09
+
+- **GPX aralık dışa aktarma:** her gün ayrı `<trk>` (tek güne yığılma
+  düzeltildi); her noktada gerçek UTC `<time>` (`yyyy-MM-dd'T'HH:mm:ss'Z'`).
+- **Dosya adı:** kaydet/paylaşırken ismin sonuna `.gpx` otomatik eklenir
+  (alanda da `.gpx` soneki görünür).
+- **Üst çubuk:** status bar (saat) ile çakışmayı önlemek için toolbar
+  sistem inset kadar aşağı kaydırıldı.
+- **Örnekleme aralıkları:** 30 sn / 1 dk (önerilen, yeni varsayılan) /
+  3 dk / 5 dk. Eski 3/4/5 dk tercihi saniyeye taşınıyor.
+
 ## 0.6.0 — 2026-09-09
 
 - **Harita ana ekranın altında.** Ayrı Rota ekranı kaldırıldı; OpenStreetMap

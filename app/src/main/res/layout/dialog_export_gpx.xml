@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -64,18 +65,12 @@
             android:visibility="gone"
             tools:text="2026-09-09" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/export_file_name"
-            android:textAppearance="?attr/textAppearanceLabelLarge" />
-
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/export_file_name_hint">
+            android:layout_marginTop="12dp"
+            android:hint="@string/export_file_name"
+            app:suffixText=".gpx">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/fileName"

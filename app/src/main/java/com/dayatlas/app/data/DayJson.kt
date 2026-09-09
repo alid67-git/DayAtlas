@@ -4,8 +4,13 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 object DayJson {
+    private val GPX_TIME: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC)
+
     fun toJson(record: DayRecord): String {
         val root = JSONObject()
             .put("version", 1)
@@ -52,36 +57,49 @@ object DayJson {
         return DayRecord(date = date, title = title, points = points, distanceMeters = distance)
     }
 
-    fun toGpx(record: DayRecord): String = toGpx(record.title, listOf(record))
+    fun toGpx(record: DayRecord): String = toGpx(listOf(record), exportName = record.title)
 
     /**
-     * GPX 1.1 with one track named [trackName] and one `<trkseg>` per day that
-     * has points (empty days skipped). Used for both single-day rewrite and
-     * user-triggered range export.
+     * GPX 1.1 export. **One `<trk>` per calendar day** (empty days skipped) so
+     * importers that group by track/day do not collapse a range onto a single
+     * day. Each `<trkpt>` carries a UTC `<time>` from the real sample epoch.
+     *
+     * [exportName] is used as the sole track name when there is only one day;
+     * for multi-day ranges each track keeps that day's title (optionally
+     * prefixed with [exportName]).
      */
-    fun toGpx(trackName: String, records: List<DayRecord>): String {
+    fun toGpx(records: List<DayRecord>, exportName: String? = null): String {
+        val withPoints = records.filter { it.points.isNotEmpty() }
         val sb = StringBuilder()
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
         sb.append("<gpx version=\"1.1\" creator=\"DayAtlas\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n")
-        sb.append("  <trk>\n")
-        sb.append("    <name>").append(escapeXml(trackName)).append("</name>\n")
-        records.forEach { record ->
-            if (record.points.isEmpty()) return@forEach
+        withPoints.forEach { record ->
+            val name = when {
+                withPoints.size == 1 && !exportName.isNullOrBlank() -> exportName
+                !exportName.isNullOrBlank() && withPoints.size > 1 ->
+                    "$exportName — ${record.title}"
+                else -> record.title
+            }
+            sb.append("  <trk>\n")
+            sb.append("    <name>").append(escapeXml(name)).append("</name>\n")
             sb.append("    <trkseg>\n")
             record.points.forEach { p ->
                 sb.append("      <trkpt lat=\"").append(p.lat).append("\" lon=\"").append(p.lon).append("\">\n")
-                sb.append("        <time>").append(Instant.ofEpochMilli(p.timeMillis)).append("</time>\n")
+                sb.append("        <time>").append(formatGpxTime(p.timeMillis)).append("</time>\n")
                 if (p.accuracyMeters != null) {
                     sb.append("        <hdop>").append(p.accuracyMeters).append("</hdop>\n")
                 }
                 sb.append("      </trkpt>\n")
             }
             sb.append("    </trkseg>\n")
+            sb.append("  </trk>\n")
         }
-        sb.append("  </trk>\n")
         sb.append("</gpx>\n")
         return sb.toString()
     }
+
+    fun formatGpxTime(timeMillis: Long): String =
+        GPX_TIME.format(Instant.ofEpochMilli(timeMillis))
 
     fun writeAtomic(file: File, content: String) {
         val tmp = File(file.parentFile, file.name + ".tmp")

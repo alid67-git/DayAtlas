@@ -12,7 +12,6 @@
     <string name="export_start_date">Başlangıç günü</string>
     <string name="export_end_date">Bitiş günü</string>
     <string name="export_file_name">Dosya adı</string>
-    <string name="export_file_name_hint">.gpx uzantısı otomatik eklenir</string>
     <string name="export_share">Paylaş</string>
     <string name="export_cancel">İptal</string>
     <string name="export_share_title">GPX paylaş</string>
@@ -28,14 +27,15 @@
     <string name="start">Başlat</string>
     <string name="stop">Durdur</string>
     <string name="daily_mode_hint">Günlük mod açıkken kayıt sessizce devam eder. Durdurmak için Ayarlar’dan günlük modu kapatın.</string>
-    <string name="manual_hint">Günlük mod kapalı. İzlemek istediğinizde Başlat’a basın (3–5 dk’da bir nokta).</string>
+    <string name="manual_hint">Günlük mod kapalı. İzlemek istediğinizde Başlat’a basın (0,5–5 dk’da bir nokta).</string>
     <string name="need_location">Konum izni olmadan nokta alınamaz.</string>
     <string name="settings_daily_mode">Günlük mod</string>
     <string name="settings_daily_mode_summary">Açıkken uygulama veya telefon açılınca bugünün kaydı onay sormadan başlar / devam eder.</string>
     <string name="settings_interval">Örnekleme aralığı</string>
+    <string name="interval_30s">30 saniye (0,5 dk)</string>
+    <string name="interval_1">1 dakika (önerilen)</string>
     <string name="interval_3">3 dakika</string>
-    <string name="interval_4">4 dakika</string>
-    <string name="interval_5">5 dakika (önerilen)</string>
+    <string name="interval_5">5 dakika</string>
     <string name="settings_permissions">İzinler ve pil</string>
     <string name="open_location_settings">Konum izinleri</string>
     <string name="open_battery_settings">Pil optimizasyonu</string>

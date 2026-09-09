@@ -37,18 +37,20 @@ class SettingsActivity : DayAtlasActivity() {
             TrackingController.setDailyMode(this, checked, prefs)
         }
 
-        when (prefs.intervalMinutes) {
-            3 -> binding.interval3.isChecked = true
-            4 -> binding.interval4.isChecked = true
+        when (prefs.intervalSeconds) {
+            30 -> binding.interval30s.isChecked = true
+            60 -> binding.interval1.isChecked = true
+            180 -> binding.interval3.isChecked = true
             else -> binding.interval5.isChecked = true
         }
         binding.intervalGroup.setOnCheckedChangeListener { _, checkedId ->
-            val minutes = when (checkedId) {
-                R.id.interval3 -> 3
-                R.id.interval4 -> 4
-                else -> 5
+            val seconds = when (checkedId) {
+                R.id.interval30s -> 30
+                R.id.interval1 -> 60
+                R.id.interval3 -> 180
+                else -> 300
             }
-            prefs.intervalMinutes = minutes
+            prefs.intervalSeconds = seconds
             if (prefs.trackingEnabled || prefs.dailyMode) {
                 TrackingController.start(this, prefs, sampleSoon = false)
             }
