@@ -2,12 +2,22 @@
 <resources>
     <string name="app_name">DayAtlas</string>
     <string name="settings">Ayarlar</string>
-    <string name="action_route">Rota</string>
-    <string name="route_title">Rota</string>
+    <string name="action_export_gpx">GPX dışa aktar</string>
     <string name="route_previous_day">Önceki gün</string>
     <string name="route_next_day">Sonraki gün</string>
     <string name="route_empty">Bu gün için kayıt yok.</string>
-    <string name="route_point_count">%1$d nokta</string>
+    <string name="export_title">GPX dışa aktar</string>
+    <string name="export_mode_single">Tek gün</string>
+    <string name="export_mode_range">Tarih aralığı</string>
+    <string name="export_start_date">Başlangıç günü</string>
+    <string name="export_end_date">Bitiş günü</string>
+    <string name="export_file_name">Dosya adı</string>
+    <string name="export_file_name_hint">.gpx uzantısı otomatik eklenir</string>
+    <string name="export_share">Paylaş</string>
+    <string name="export_cancel">İptal</string>
+    <string name="export_share_title">GPX paylaş</string>
+    <string name="export_no_points">Seçilen gün(ler)de paylaşılacak nokta yok.</string>
+    <string name="export_bad_range">Bitiş günü başlangıçtan önce olamaz.</string>
     <string name="status_recording">Kayıt açık</string>
     <string name="status_stopped">Kayıt kapalı</string>
     <string name="status_daily">Günlük mod — otomatik kayıt</string>

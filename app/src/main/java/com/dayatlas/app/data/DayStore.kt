@@ -4,6 +4,7 @@ import android.content.Context
 import android.location.Location
 import java.io.File
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -28,6 +29,31 @@ class DayStore(context: Context) {
         val date = DayTitle.localToday(zoneId)
         val iso = DayTitle.iso(date)
         return load(iso) ?: DayRecord.empty(iso, DayTitle.format(date))
+    }
+
+    /** Dates that have a JSON day file, ascending. */
+    fun listDates(): List<LocalDate> = lock.withLock {
+        daysDir().listFiles()
+            ?.asSequence()
+            ?.filter { it.isFile && it.name.endsWith(".json") }
+            ?.mapNotNull { runCatching { LocalDate.parse(it.name.removeSuffix(".json")) }.getOrNull() }
+            ?.sorted()
+            ?.toList()
+            .orEmpty()
+    }
+
+    fun loadRange(from: LocalDate, to: LocalDate): List<DayRecord> {
+        if (to.isBefore(from)) return emptyList()
+        val out = ArrayList<DayRecord>()
+        var day = from
+        while (!day.isAfter(to)) {
+            val record = load(DayTitle.iso(day))
+            if (record != null && record.points.isNotEmpty()) {
+                out.add(record)
+            }
+            day = day.plusDays(1)
+        }
+        return out
     }
 
     fun append(location: Location, zoneId: ZoneId = ZoneId.systemDefault()): DayRecord = lock.withLock {

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0 — 2026-09-09
+
+- **Harita ana ekranın altında.** Ayrı Rota ekranı kaldırıldı; OpenStreetMap
+  görünümü ana ekranın alt yarısında. Oklarla önceki günlere gidilebilir.
+  Üstte bugünün özeti (mesafe, son nokta, başlat/durdur) duruyor.
+- **GPX dışa aktarma.** Araç çubuğundaki paylaş simgesi tek gün veya tarih
+  aralığı seçtirir, dosya adını sorar, sistem paylaşım ekranından
+  kaydetmeye/göndermeye açar. Aralıkta her gün ayrı `<trkseg>` olur.
+
 ## 0.5.3 — 2026-09-09
 
 - **Görev değiştiriciden çıkarma artık görev sonlandırmayla yapılıyor.**

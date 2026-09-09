@@ -8,10 +8,9 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Görev değiştiricide (son uygulamalar) kart bırakma sorunu için " +
-            "daha kesin yöntem: uygulama arka plana geçince görev artık " +
-            "yalnızca gizlenmiyor, tamamen kaldırılıyor. Ana ekran " +
-            "simgesinden yeniden açılır; AlarmManager ile günlük kayıt " +
-            "arka planda aynı şekilde devam eder. Sistem ayarları / izin " +
-            "ekranlarından Geri ile dönüş korunuyor."
+        "Harita artık ayrı ekranda değil — ana ekranın altında. Oklarla " +
+            "önceki günlerin rotasına bakabilirsiniz. Araç çubuğundan GPX " +
+            "dışa aktarma: tek gün veya tarih aralığı seçin, dosya adını " +
+            "istediğiniz gibi yazın, sistem paylaşım ekranından kaydedin " +
+            "veya gönderin."
 }

@@ -25,27 +25,33 @@ Flutter motoru (~4–8 MB) ve Google Play Services yığını yok. AlarmManager,
 - **Gün dosyası:** her **cihaz yerel** takvim günü (`yyyy-MM-dd`) ayrı kayıt. Gece yarısında yeni dosya. UTC ile gün bölünmez.
 - **İçerik:** zaman damgalı az nokta + mesafe özeti. `files/days/yyyy-MM-dd.json` ve `.gpx`.
 - **UI:** bugün kayıtta mı, mesafe, son nokta saati, başlat/durdur (günlük mod kapalıyken).
-- **Rota ekranı:** araç çubuğundaki rota simgesi, o günün noktalarını
-  gerçek bir OpenStreetMap haritası üzerinde çizgi olarak gösterir
-  (osmdroid — Play Services yok, API key yok). Başlangıç yeşil, son nokta
-  kırmızı; harita karoları yalnızca bu ekran açıkken indirilir/çizilir,
-  arka planda hiçbir şey çalışmaz (bkz. aşağıdaki "Rota ekranı ve pil"
-  notu). Açılışta bugünü gösterir; ok düğmeleriyle önceki günlere
-  gidilebilir, kayıt olmayan bir günde boş durum mesajı çıkar.
+- **Harita (ana ekranın altı):** bugünün / seçilen günün noktaları
+  OpenStreetMap üzerinde çizgi olarak (osmdroid — Play Services yok, API
+  key yok). Oklarla önceki günlere gidilir. Karolar yalnızca uygulama
+  ön plandayken indirilir/çizilir.
+- **GPX dışa aktarma:** araç çubuğundan tek gün veya tarih aralığı + dosya
+  adı; sistem paylaşım ekranı ile kaydet/gönder.
 
 ## Ne yapmaz
 
-Analiz, foto, Android Auto, topo harita, canlı harita/canlı konum takibi, sık GPS, dışa aktar/paylaş UI (dosyalar diskte; paylaşım sonra eklenebilir). Rota ekranı geçmiş bir günün *bitmiş* rotasını gösterir — RideAtlas'taki gibi canlı, takip eden bir harita değildir.
+Analiz, foto, Android Auto, topo harita, canlı harita/canlı konum takibi, sık GPS. Harita geçmiş bir günün *bitmiş* rotasını gösterir — RideAtlas'taki gibi canlı, takip eden bir harita değildir.
 
-## Rota ekranı ve pil
+## Harita ve pil
 
-Harita (osmdroid) tamamen bir ön plan görünüm bileşenidir: yalnızca Rota
-ekranı açık ve görünürken karo indirir/çizer (`onResume`/`onPause` ile
-bağlı). Uygulama arka plandayken veya başka bir ekrandayken haritanın hiçbir
-kodu çalışmaz — sıfır pil, sıfır ağ. DayAtlas'ın gerçek arka plan pil
-maliyeti tamamen `SampleService`'ten gelir (bkz. "Nasıl çalışır"), harita bunu
-etkilemez. Canlı konum/pusula takibi bilerek eklenmedi — rota ekranı bitmiş
-bir günü gösterir, GPS'i tekrar açmaz.
+Harita (osmdroid) ana ekranın altındaki bir ön plan görünüm bileşenidir:
+yalnızca MainActivity görünürken karo indirir/çizer (`onResume`/`onPause`
+ile bağlı). Uygulama arka plandayken harita kodu çalışmaz — sıfır pil,
+sıfır ağ (ana ekran açıkken karo indirmesi olabilir). DayAtlas'ın gerçek
+arka plan pil maliyeti tamamen `SampleService`'ten gelir. Canlı konum/
+pusula takibi bilerek eklenmedi.
+
+## GPX dışa aktarma
+
+Her gün zaten `files/days/yyyy-MM-dd.gpx` olarak yazılır (uygulama içi
+depo). Araç çubuğundaki dışa aktarma, seçilen gün veya aralığı tek bir
+GPX dosyasında birleştirip sistem paylaşım ekranına verir (Dosyalar,
+Drive, e-posta vb.). Dosya adı kullanıcıdan sorulur; aralıkta her gün
+ayrı bir `<trkseg>` olur.
 
 ## Nasıl çalışır (örnekleme)
 
