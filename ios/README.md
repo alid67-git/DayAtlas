@@ -5,16 +5,17 @@ Android'deki DayAtlas'ın native Swift/SwiftUI karşılığı. Aynı ürün fikr
 ve `.gpx`, Android'le birebir aynı JSON şeması) — ama arka planda **farklı**
 bir mekanizmayla çalışır, çünkü Apple ikisine de izin vermiyor:
 
-| | Android | iOS |
-| --- | --- | --- |
-| Arka plan tetikleyici | `AlarmManager` (sabit 3/4/5 dk) | `CLLocationManager` significant-location-change (**mesafe** bazlı, ~500 m) |
-| Reboot sonrası devam | `BOOT_COMPLETED` (OEM izin verirse) | Konum olayıyla sessiz yeniden başlatma (aşağıdaki 3 şart) |
-| Ön planda örnekleme | Aynı zamanlayıcı | Uygulama açıkken ek bir `Timer` ile `requestLocation()`, seçilen aralıkta |
+| | Android | iOS (native) | Web PWA |
+| --- | --- | --- | --- |
+| Arka plan tetikleyici | `AlarmManager` (sabit dk) | significant-location-change (**~500 m**) | Yok |
+| Reboot sonrası devam | `BOOT_COMPLETED` (OEM izin verirse) | Konum olayıyla (aşağıdaki 3 şart) | Yok |
+| Ön planda örnekleme | Aynı zamanlayıcı | Timer `requestLocation()` (30 sn–5 dk) | Timer (sekme açıkken) |
 
-Bu yüzden iOS sürümü Android'deki "her zaman tam olarak 3/4/5 dakikada bir
-nokta" davranışını **arka planda** birebir tekrar edemez. Ayarlar ekranındaki
-aralık seçimi yalnızca uygulama ön plandayken uygulanır; arka planda / kilit
-ekranındayken tetikleyici zaman değil, hareket mesafesidir.
+Bu yüzden iOS native, myTracks gibi **App Store / Xcode uygulaması** sınıfındadır
+(web “Ana Ekrana Ekle” değildir). Arka planda Android’deki “her N dakikada bir”
+davranışını **birebir** tekrar edemez; mesafe tetiklidir. `Info.plist` içinde
+`UIBackgroundModes = location` tanımlıdır — bu olmadan SLC arka plan uyanması
+çalışmaz.
 
 ## Reboot sonrası otomatik devam etme — gerçek kısıtlar
 

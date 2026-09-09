@@ -4,15 +4,17 @@ import Foundation
 final class AppPrefs {
     static let shared = AppPrefs()
 
-    static let allowedIntervals = [3, 4, 5]
-    static let defaultIntervalMinutes = 5
+    /// Foreground timer only (seconds). Background uses significant-location-change.
+    static let allowedIntervalSeconds = [30, 60, 180, 300]
+    static let defaultIntervalSeconds = 60
 
     private let defaults = UserDefaults.standard
 
     private enum Keys {
         static let dailyMode = "daily_mode"
         static let tracking = "tracking_enabled"
-        static let interval = "interval_minutes"
+        static let intervalSeconds = "interval_seconds"
+        static let intervalMinutesLegacy = "interval_minutes"
         static let lastSeenBuildNote = "last_seen_build_note_version"
     }
 
@@ -26,14 +28,30 @@ final class AppPrefs {
         set { defaults.set(newValue, forKey: Keys.tracking) }
     }
 
-    var intervalMinutes: Int {
+    var intervalSeconds: Int {
         get {
-            let raw = defaults.integer(forKey: Keys.interval)
-            return Self.allowedIntervals.contains(raw) ? raw : Self.defaultIntervalMinutes
+            if defaults.object(forKey: Keys.intervalSeconds) != nil {
+                let raw = defaults.integer(forKey: Keys.intervalSeconds)
+                return Self.allowedIntervalSeconds.contains(raw) ? raw : Self.defaultIntervalSeconds
+            }
+            // Migrate old 3/4/5 minute prefs.
+            let legacy = defaults.integer(forKey: Keys.intervalMinutesLegacy)
+            let migrated: Int
+            switch legacy {
+            case 3: migrated = 180
+            case 4: migrated = 180
+            case 5: migrated = 300
+            default: migrated = Self.defaultIntervalSeconds
+            }
+            defaults.set(migrated, forKey: Keys.intervalSeconds)
+            defaults.removeObject(forKey: Keys.intervalMinutesLegacy)
+            return migrated
         }
         set {
-            let clamped = Self.allowedIntervals.contains(newValue) ? newValue : Self.defaultIntervalMinutes
-            defaults.set(clamped, forKey: Keys.interval)
+            let clamped = Self.allowedIntervalSeconds.contains(newValue)
+                ? newValue : Self.defaultIntervalSeconds
+            defaults.set(clamped, forKey: Keys.intervalSeconds)
+            defaults.removeObject(forKey: Keys.intervalMinutesLegacy)
         }
     }
 

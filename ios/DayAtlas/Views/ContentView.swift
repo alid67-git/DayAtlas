@@ -48,7 +48,7 @@ struct ContentView: View {
                         toggleTracking()
                     }
                     .buttonStyle(.borderedProminent)
-                    Text("Günlük mod kapalı. İzlemek istediğinizde Başlat'a basın (uygulama açıkken 3–5 dk'da bir nokta; arka planda yalnızca belirgin bir yer değişikliğinde).")
+                    Text("Günlük mod kapalı. Başlat ile ön planda örnekleme (30 sn–5 dk). Arka planda yalnızca \"Her Zaman\" + belirgin yer değişikliği (~500 m).")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
