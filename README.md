@@ -89,6 +89,19 @@ sistem ekranlarına best-effort deep link — bulunamazsa kullanıcıyı üretic
 ayarlarında elle aramaya yönlendirir). İzni açık hâle getirmek yine kullanıcının
 elinde; uygulama bunu zorlayamaz.
 
+### Görev değiştiricide bazen kart bırakabilir (Samsung One UI)
+
+`MainActivity` hem `android:excludeFromRecents="true"` (manifest) hem de
+çalışma zamanında `ActivityManager.AppTask.setExcludeFromRecents(true)`
+(`onCreate`/`onResume`) ile görev değiştiriciden çıkarılmaya çalışıyor —
+ikisi de standart, dokümante Android API'leri. Buna rağmen bazı Samsung One
+UI sürümlerinde uygulama zaman zaman yine de bir kart bırakabiliyor; bu,
+otomatik-başlat/pil optimizasyonu gibi bir OEM arayüz tutarsızlığı,
+uygulama kodunun aşabileceği bir şey değil. Daha kesin bir çözüm
+(`finishAndRemoveTask()` ile arka plana her geçişte görevi sonlandırmak)
+her açılışı soğuk başlangıca çevirir ve günlük moddaki arka plan
+güvenilirliğini riske atar — bu yüzden bilerek uygulanmadı.
+
 ## Güncelleme
 
 RideAtlas/MediaAtlas ile aynı kurgu: CI (`android.yml`) her `main` push’unda
