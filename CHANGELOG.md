@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.11 — 2026-09-10
+
+- **Açılışta çökme düzeltildi:** güncelleme bildirimi için oluşturulan
+  `PendingIntent`, Android 14+ (targetSdk 34) hedefli uygulamalarda
+  implicit `Intent` ile `FLAG_MUTABLE` kullanmayı yasaklıyor —
+  `IllegalArgumentException` ile her `MainActivity.onResume()`'da (yani
+  her açılışta) çöküyordu. `FLAG_IMMUTABLE`'a çevrildi.
+
 ## 0.6.10 — 2026-09-10
 
 - **CI derleme hatası düzeltildi:** `DriveFolderBackup.kt` içindeki doc
