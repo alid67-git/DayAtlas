@@ -353,14 +353,13 @@ object UpdateInstaller {
         text: String,
         action: Intent,
     ) {
-        // MUTABLE: install intent carries a FileProvider URI grant; IMMUTABLE
-        // PendingIntents drop that grant on several OEMs when tapped.
-        val piFlags = PendingIntent.FLAG_UPDATE_CURRENT or
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.FLAG_MUTABLE
-            } else {
-                0
-            }
+        // IMMUTABLE: both actions here (install view, unknown-sources settings)
+        // are implicit intents. Android 14+ (targetSdk 34+) throws
+        // IllegalArgumentException creating a MUTABLE PendingIntent for an
+        // implicit intent. The FileProvider URI grant travels with the
+        // Intent's own FLAG_GRANT_READ_URI_PERMISSION regardless of the
+        // PendingIntent's mutability, so IMMUTABLE does not lose it.
+        val piFlags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         val pending = PendingIntent.getActivity(context, id, action, piFlags)
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_dot)
