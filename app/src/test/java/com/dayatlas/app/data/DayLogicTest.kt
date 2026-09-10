@@ -25,6 +25,36 @@ class GeoTest {
     }
 }
 
+class JumpFilterTest {
+    @Test
+    fun normalWalkIsAccepted() {
+        val a = TrackPoint(0L, 41.0, 29.0, null)
+        // ~85 m in 60 s ≈ 5 km/h
+        val b = TrackPoint(60_000L, 41.0, 29.001, null)
+        assertTrue(JumpFilter.shouldAccept(listOf(a), b))
+        assertTrue(JumpFilter.findJumps(listOf(a, b)).isEmpty())
+    }
+
+    @Test
+    fun teleportIsRejectedAndListed() {
+        val a = TrackPoint(0L, 41.0, 29.0, null)
+        // ~111 km north in 60 s
+        val b = TrackPoint(60_000L, 42.0, 29.0, null)
+        assertTrue(!JumpFilter.shouldAccept(listOf(a), b))
+        val jumps = JumpFilter.findJumps(listOf(a, b))
+        assertEquals(1, jumps.size)
+        assertEquals(1, jumps[0].index)
+        assertTrue(jumps[0].distanceMeters > 100_000)
+        assertTrue(jumps[0].speedKmh > JumpFilter.MAX_SPEED_KMH)
+    }
+
+    @Test
+    fun firstPointAlwaysAccepted() {
+        val only = TrackPoint(0L, 41.0, 29.0, null)
+        assertTrue(JumpFilter.shouldAccept(emptyList(), only))
+    }
+}
+
 class DayTitleTest {
     @Test
     fun turkishTitleUsesLocalCalendarDay() {

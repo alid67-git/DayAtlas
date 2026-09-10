@@ -16,6 +16,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
+import com.dayatlas.app.data.JumpCleanupDialog
+import com.dayatlas.app.data.JumpFilter
 import com.dayatlas.app.databinding.ActivityMainBinding
 import com.dayatlas.app.export.GpxExportDialog
 import com.dayatlas.app.location.Intents
@@ -102,6 +104,14 @@ class MainActivity : DayAtlasActivity() {
         binding.goToday.setOnClickListener {
             mapDate = DayTitle.localToday()
             refreshMap()
+        }
+
+        binding.jumpsButton.setOnClickListener {
+            JumpCleanupDialog.show(
+                this,
+                store,
+                DayTitle.iso(mapDate),
+            ) { refresh() }
         }
 
         binding.toggle.setOnClickListener {
@@ -280,7 +290,8 @@ class MainActivity : DayAtlasActivity() {
         binding.mapDayTitle.text = DayTitle.format(mapDate)
         binding.nextDay.isEnabled = mapDate < today
         binding.goToday.visibility = if (mapDate == today) View.GONE else View.VISIBLE
-        val record = store.load(DayTitle.iso(mapDate))
+        val dateIso = DayTitle.iso(mapDate)
+        val record = store.load(dateIso)
         val points = record?.points.orEmpty()
         binding.mapDistance.text = if (points.isEmpty()) {
             getString(R.string.em_dash)
@@ -294,7 +305,29 @@ class MainActivity : DayAtlasActivity() {
                 .format(TIME_FMT)
         } ?: getString(R.string.em_dash)
         binding.mapPointCount.text = points.size.toString()
-        RouteMapController.show(binding.routeMap, this, points, binding.emptyState)
+
+        val jumps = JumpFilter.findJumps(points)
+        if (jumps.isEmpty()) {
+            binding.jumpsButton.visibility = View.GONE
+        } else {
+            binding.jumpsButton.visibility = View.VISIBLE
+            binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
+        }
+
+        RouteMapController.show(
+            map = binding.routeMap,
+            context = this,
+            points = points,
+            emptyState = binding.emptyState,
+            onJumpTap = { jump ->
+                JumpCleanupDialog.confirmDelete(
+                    this,
+                    store,
+                    dateIso,
+                    jump,
+                ) { refresh() }
+            },
+        )
     }
 
     companion object {

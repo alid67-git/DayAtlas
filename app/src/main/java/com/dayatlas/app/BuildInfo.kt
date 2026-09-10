@@ -8,7 +8,7 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Güncelleme indirme sonrası kurulum güçlendirildi (bildirim + " +
-            "otomatik kurulum denemesi). Bu sürümü bir kez elle kurmanız " +
-            "gerekebilir; sonraki güncellemeler yine otomatik kurulur."
+        "GPS atlamaları: yeni örnekler ~160 km/sa / 30 km eşiğinin üstünde " +
+            "otomatik reddedilir. Haritada turuncu uyarı işaretleri ve " +
+            "“Atlamalar” listesiyle eski sıçramaları dokunarak silebilirsiniz."
 }

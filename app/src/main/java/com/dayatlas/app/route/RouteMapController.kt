@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.dayatlas.app.R
+import com.dayatlas.app.data.JumpFilter
 import com.dayatlas.app.data.TrackPoint
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
@@ -22,6 +23,7 @@ object RouteMapController {
         context: Context,
         points: List<TrackPoint>,
         emptyState: View?,
+        onJumpTap: ((JumpFilter.Jump) -> Unit)? = null,
     ) {
         map.overlays.clear()
         val hasPoints = points.isNotEmpty()
@@ -44,12 +46,35 @@ object RouteMapController {
             map.overlays.add(marker(map, context, geoPoints.last(), R.drawable.ic_marker_end))
         }
 
+        val jumps = JumpFilter.findJumps(points)
+        jumps.forEach { jump ->
+            val gp = GeoPoint(jump.point.lat, jump.point.lon)
+            map.overlays.add(
+                Marker(map).apply {
+                    position = gp
+                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    icon = ContextCompat.getDrawable(context, R.drawable.ic_marker_jump)
+                    setInfoWindow(null)
+                    if (onJumpTap != null) {
+                        setOnMarkerClickListener { _, _ ->
+                            onJumpTap(jump)
+                            true
+                        }
+                    }
+                },
+            )
+        }
+
         map.post {
+            val focus = jumps.lastOrNull()?.let { GeoPoint(it.point.lat, it.point.lon) }
             val box = boundingBoxOf(geoPoints)
             val degenerate = box.latitudeSpan < 1e-6 && box.longitudeSpan < 1e-6
             if (degenerate) {
                 map.controller.setZoom(17.0)
                 map.controller.setCenter(geoPoints.last())
+            } else if (focus != null && jumps.size == 1) {
+                map.controller.setZoom(14.0)
+                map.controller.setCenter(focus)
             } else {
                 map.zoomToBoundingBox(box, true, 96)
             }

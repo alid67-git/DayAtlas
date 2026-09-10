@@ -75,4 +75,14 @@
     <string name="check_for_updates">Güncellemeleri kontrol et</string>
     <string name="checking_for_updates">Kontrol ediliyor…</string>
     <string name="up_to_date">En güncel sürümdesiniz.</string>
+
+    <string name="jumps_button">Atlamalar (%1$d) — dokunup sil</string>
+    <string name="jumps_title">GPS atlamaları (%1$d)</string>
+    <string name="jumps_none">Bu günde atlama yok.</string>
+    <string name="jump_row">%1$s · %2$s · %3$s</string>
+    <string name="jump_delete_title">Atlamayı sil?</string>
+    <string name="jump_delete_message">%1$s saatindeki nokta (%2$s sıçrama) kayıttan çıkarılacak. Mesafe yeniden hesaplanır.</string>
+    <string name="jump_delete">Sil</string>
+    <string name="jump_deleted">Atlama silindi.</string>
+    <string name="jump_delete_failed">Nokta silinemedi.</string>
 </resources>

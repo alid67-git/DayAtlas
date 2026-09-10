@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.8 — 2026-09-10
+
+- **GPS atlama filtresi:** yeni noktalar önceki noktaya göre ~160 km/sa veya
+  30 km’den fazla sıçrıyorsa kayda yazılmaz.
+- **Atlama temizliği:** haritada turuncu işaretler; “Atlamalar (N)” listesi —
+  satıra veya işarete dokununca noktayı siler, mesafeyi yeniden hesaplar.
+
 ## 0.6.7 — 2026-09-10
 
 - **Güncelleme kurulumu (sıkılaştırma):** indirme bitince hem broadcast hem

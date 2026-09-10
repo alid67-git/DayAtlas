@@ -69,7 +69,33 @@ class DayStore(context: Context) {
             lon = location.longitude,
             accuracyMeters = if (location.hasAccuracy()) location.accuracy else null,
         )
+        if (!JumpFilter.shouldAccept(existing.points, point)) {
+            // GPS teleport — keep the day file unchanged.
+            return@withLock existing
+        }
         val points = existing.points + point
+        val updated = existing.copy(
+            points = points,
+            distanceMeters = Geo.pathLengthMeters(points),
+        )
+        persistUnlocked(updated)
+        updated
+    }
+
+    /**
+     * Removes the point at [index] for [dateIso], recalculates distance, and
+     * rewrites JSON + GPX. Returns the updated record, or null if missing /
+     * out of range.
+     */
+    fun removePointAt(dateIso: String, index: Int): DayRecord? = lock.withLock {
+        val existing = loadUnlocked(dateIso) ?: return@withLock null
+        if (index !in existing.points.indices) return@withLock null
+        val points = existing.points.toMutableList().also { it.removeAt(index) }
+        if (points.isEmpty()) {
+            jsonFile(dateIso).delete()
+            gpxFile(dateIso).delete()
+            return@withLock DayRecord.empty(dateIso, existing.title)
+        }
         val updated = existing.copy(
             points = points,
             distanceMeters = Geo.pathLengthMeters(points),
