@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.7 — 2026-09-10
+
+- **Güncelleme kurulumu (sıkılaştırma):** indirme bitince hem broadcast hem
+  poll; kurulum her zaman denenir + “kurmak için dokun” bildirimi.
+  PendingIntent URI grant (OEM) düzeltmesi. Eski sürümün indirdiği ama
+  kurmadığı APK uygulama açılınca hatırlatılır.
+  Not: 0.6.5 ve öncesi kendini güncelleyemez — bir kez elle 0.6.7 kurun.
+
 ## 0.6.6 — 2026-09-10
 
 - **Otomatik güncelleme kurulumu:** indirme bitince sistem kurulum ekranı /

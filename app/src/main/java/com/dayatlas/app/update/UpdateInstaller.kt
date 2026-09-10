@@ -9,6 +9,8 @@ import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -23,34 +25,43 @@ import java.io.File
  * Downloads an update APK via the system [DownloadManager], then hands the
  * finished file to the system installer.
  *
- * Completion is handled by [DownloadCompleteReceiver] (manifest-exported so
- * the system broadcast is delivered even after RecentsHider kills the UI
- * process). [resumePending] re-checks on the next UI open in case the
- * broadcast was dropped by an OEM.
+ * Completion paths (belt and suspenders):
+ * 1. [DownloadCompleteReceiver] — manifest-exported for the system broadcast
+ * 2. [watchDownload] — polls DownloadManager while this process is alive
+ * 3. [resumePending] — on next UI open / process start if OEM dropped (1)
  */
 object UpdateInstaller {
     private const val FILE_NAME = "DayAtlas-update.apk"
     private const val CHANNEL_ID = "dayatlas_update"
     private const val NOTIF_ID_INSTALL = 43
     private const val NOTIF_ID_PERMISSION = 44
+    private const val POLL_INTERVAL_MS = 2_000L
+    private const val POLL_MAX_MS = 15 * 60_000L
+
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     /** Avoid re-launching the system installer on every MainActivity resume. */
     @Volatile
     private var offeredInstallUiThisProcess = false
 
+    @Volatile
+    private var watchRunnable: Runnable? = null
+
     /**
-     * [silent] suppresses toast prompts and prefers a tap-to-install
-     * notification when startActivity would be blocked in the background.
+     * [silent] suppresses toast prompts only. Install UI is always attempted
+     * (startActivity + tap-to-install notification) — background restrictions
+     * make startActivity unreliable, so the notification is the reliable path.
      */
     fun download(context: Context, info: UpdateInfo, silent: Boolean = false) {
         val appContext = context.applicationContext
         val prefs = AppPrefs(appContext)
 
-        // Avoid stacking downloads / orphan receivers when SampleService and
-        // MainActivity both discover the same release.
+        // Avoid stacking downloads when SampleService and MainActivity both
+        // discover the same release.
         if (prefs.pendingUpdateVersion == info.version) {
             val existingId = prefs.pendingUpdateDownloadId
             if (existingId >= 0L && isDownloadActive(appContext, existingId)) {
+                watchDownload(appContext, existingId)
                 resumePending(appContext, offerUi = !silent)
                 return
             }
@@ -78,9 +89,9 @@ object UpdateInstaller {
         val downloadId = manager.enqueue(request)
         prefs.pendingUpdateDownloadId = downloadId
         prefs.pendingUpdateVersion = info.version
-        // Remember silent vs interactive so the manifest receiver can behave
-        // the same way after a process restart.
         prefs.pendingUpdateSilent = silent
+
+        watchDownload(appContext, downloadId)
 
         if (!silent) {
             Toast.makeText(appContext, R.string.update_downloading_toast, Toast.LENGTH_SHORT).show()
@@ -91,64 +102,136 @@ object UpdateInstaller {
     fun onDownloadComplete(context: Context, downloadId: Long) {
         val appContext = context.applicationContext
         val prefs = AppPrefs(appContext)
-        if (downloadId < 0L || downloadId != prefs.pendingUpdateDownloadId) return
-        val version = prefs.pendingUpdateVersion ?: return
-        val silent = prefs.pendingUpdateSilent
-        val file = apkFile(appContext)
-        if (!isDownloadSuccessful(appContext, downloadId) || !file.exists() || file.length() < 1024) {
-            prefs.clearPendingUpdate()
-            if (!silent) {
-                Toast.makeText(appContext, R.string.update_download_failed, Toast.LENGTH_LONG).show()
-            }
+        if (downloadId < 0L) return
+        // Accept our pending id, or an orphan complete if version is known.
+        if (prefs.pendingUpdateDownloadId >= 0L && downloadId != prefs.pendingUpdateDownloadId) {
             return
         }
-        // Keep version + file; clear id so we don't treat this as still downloading.
-        prefs.pendingUpdateDownloadId = -1L
-        promptInstall(appContext, file, version, silent)
+        finishDownload(appContext, downloadId)
     }
 
     /**
-     * Re-offer install when the user returns to the app. [offerUi] true opens
-     * the system installer once per process; later calls only refresh the
-     * tap-to-install notification.
+     * Re-offer install when the user returns to the app. Also recovers an APK
+     * left behind by older builds that downloaded but never installed.
      */
     fun resumePending(context: Context, offerUi: Boolean = true) {
         val appContext = context.applicationContext
         val prefs = AppPrefs(appContext)
-        val version = prefs.pendingUpdateVersion ?: return
-        val downloadId = prefs.pendingUpdateDownloadId
         val file = apkFile(appContext)
+        var version = prefs.pendingUpdateVersion
+        val downloadId = prefs.pendingUpdateDownloadId
 
         if (downloadId >= 0L) {
             when {
                 isDownloadSuccessful(appContext, downloadId) -> {
                     prefs.pendingUpdateDownloadId = -1L
+                    stopWatch()
                 }
-                isDownloadActive(appContext, downloadId) -> return
+                isDownloadActive(appContext, downloadId) -> {
+                    watchDownload(appContext, downloadId)
+                    return
+                }
                 isDownloadFailed(appContext, downloadId) -> {
                     prefs.clearPendingUpdate()
+                    stopWatch()
                     return
                 }
                 else -> {
-                    // Unknown / purged from DownloadManager history — fall through to file check.
                     prefs.pendingUpdateDownloadId = -1L
                 }
             }
         }
 
+        // Orphan APK from a previous broken installer (no prefs / process died).
+        if (version == null && file.exists() && file.length() >= 1024) {
+            version = "indirilen"
+            prefs.pendingUpdateVersion = version
+            prefs.pendingUpdateSilent = true
+        }
+
+        if (version == null) return
         if (!file.exists() || file.length() < 1024) {
             if (downloadId < 0L) prefs.clearPendingUpdate()
             return
         }
         val launchUi = offerUi && !offeredInstallUiThisProcess
         if (launchUi) offeredInstallUiThisProcess = true
+        // Always attempt the installer when the user opened the app.
         promptInstall(appContext, file, version, silent = !launchUi)
+    }
+
+    private fun finishDownload(context: Context, downloadId: Long) {
+        stopWatch()
+        val prefs = AppPrefs(context)
+        val version = prefs.pendingUpdateVersion ?: return
+        val silent = prefs.pendingUpdateSilent
+        val file = apkFile(context)
+        if (!isDownloadSuccessful(context, downloadId) || !file.exists() || file.length() < 1024) {
+            // Brief grace: file may not be flushed yet when the broadcast fires.
+            mainHandler.postDelayed({
+                if (!file.exists() || file.length() < 1024) {
+                    if (isDownloadFailed(context, downloadId)) {
+                        prefs.clearPendingUpdate()
+                        if (!silent) {
+                            Toast.makeText(
+                                context,
+                                R.string.update_download_failed,
+                                Toast.LENGTH_LONG,
+                            ).show()
+                        }
+                    }
+                    return@postDelayed
+                }
+                prefs.pendingUpdateDownloadId = -1L
+                promptInstall(context, file, version, silent)
+            }, 1_000L)
+            return
+        }
+        prefs.pendingUpdateDownloadId = -1L
+        promptInstall(context, file, version, silent)
+    }
+
+    private fun watchDownload(context: Context, downloadId: Long) {
+        stopWatch()
+        val appContext = context.applicationContext
+        val startedAt = System.currentTimeMillis()
+        val runnable = object : Runnable {
+            override fun run() {
+                val prefs = AppPrefs(appContext)
+                if (prefs.pendingUpdateDownloadId != downloadId) {
+                    watchRunnable = null
+                    return
+                }
+                when {
+                    isDownloadSuccessful(appContext, downloadId) -> {
+                        watchRunnable = null
+                        finishDownload(appContext, downloadId)
+                    }
+                    isDownloadFailed(appContext, downloadId) -> {
+                        watchRunnable = null
+                        prefs.clearPendingUpdate()
+                    }
+                    System.currentTimeMillis() - startedAt > POLL_MAX_MS -> {
+                        watchRunnable = null
+                    }
+                    else -> mainHandler.postDelayed(this, POLL_INTERVAL_MS)
+                }
+            }
+        }
+        watchRunnable = runnable
+        mainHandler.postDelayed(runnable, POLL_INTERVAL_MS)
+    }
+
+    private fun stopWatch() {
+        watchRunnable?.let { mainHandler.removeCallbacks(it) }
+        watchRunnable = null
     }
 
     private fun apkFile(context: Context): File =
         File(context.getExternalFilesDir("apk"), FILE_NAME)
 
     private fun cancelPendingDownload(context: Context) {
+        stopWatch()
         val prefs = AppPrefs(context)
         val id = prefs.pendingUpdateDownloadId
         if (id >= 0L) {
@@ -232,9 +315,7 @@ object UpdateInstaller {
             clipData = android.content.ClipData.newUri(context.contentResolver, file.name, uri)
         }
 
-        // Always leave a high-priority tap-to-install notification: background
-        // startActivity is unreliable on Android 10+ and RecentsHider may have
-        // already finished the task.
+        // High-priority notification is the reliable path on Android 10+.
         notifyAction(
             context,
             NOTIF_ID_INSTALL,
@@ -243,25 +324,26 @@ object UpdateInstaller {
             intent,
         )
 
-        if (!silent) {
-            RecentsHider.retainForExternalNavigation()
-            val started = runCatching { context.startActivity(intent) }.isSuccess
-            if (!started) {
-                Toast.makeText(context, R.string.update_install_failed, Toast.LENGTH_LONG).show()
-            }
+        // Always try to open the installer. From a BroadcastReceiver / poll
+        // callback this often works; from pure background it may no-op — the
+        // notification above covers that case.
+        RecentsHider.retainForExternalNavigation()
+        val started = runCatching { context.startActivity(intent) }.isSuccess
+        if (!started && !silent) {
+            Toast.makeText(context, R.string.update_install_failed, Toast.LENGTH_LONG).show()
         }
     }
 
     private fun ensureUpdateChannel(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val nm = context.getSystemService(NotificationManager::class.java) ?: return
-        nm.createNotificationChannel(
-            NotificationChannel(
-                CHANNEL_ID,
-                context.getString(R.string.notif_update_channel),
-                NotificationManager.IMPORTANCE_HIGH,
-            ),
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            context.getString(R.string.notif_update_channel),
+            NotificationManager.IMPORTANCE_HIGH,
         )
+        channel.description = context.getString(R.string.notif_update_ready_title)
+        nm.createNotificationChannel(channel)
     }
 
     private fun notifyAction(
@@ -271,12 +353,15 @@ object UpdateInstaller {
         text: String,
         action: Intent,
     ) {
-        val pending = PendingIntent.getActivity(
-            context,
-            id,
-            action,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
+        // MUTABLE: install intent carries a FileProvider URI grant; IMMUTABLE
+        // PendingIntents drop that grant on several OEMs when tapped.
+        val piFlags = PendingIntent.FLAG_UPDATE_CURRENT or
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_MUTABLE
+            } else {
+                0
+            }
+        val pending = PendingIntent.getActivity(context, id, action, piFlags)
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_dot)
             .setContentTitle(title)
@@ -285,6 +370,7 @@ object UpdateInstaller {
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_STATUS)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .build()
         ContextCompat.getSystemService(context, NotificationManager::class.java)
             ?.notify(id, notification)

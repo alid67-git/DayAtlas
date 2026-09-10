@@ -8,8 +8,7 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Otomatik güncelleme indirdikten sonra kurulum ekranı / “kurmak " +
-            "için dokun” bildirimi artık geliyor (önceden indirme bitince " +
-            "sessizce kalıyordu). Uygulamayı tekrar açınca da bekleyen " +
-            "kurulum hatırlatılır."
+        "Güncelleme indirme sonrası kurulum güçlendirildi (bildirim + " +
+            "otomatik kurulum denemesi). Bu sürümü bir kez elle kurmanız " +
+            "gerekebilir; sonraki güncellemeler yine otomatik kurulur."
 }
