@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="md_theme_primary">#1F6F5B</color>
+    <color name="md_theme_primary">#7A1533</color>
     <color name="md_theme_on_primary">#FFFFFF</color>
-    <color name="md_theme_primary_container">#C8EDE0</color>
-    <color name="md_theme_on_primary_container">#002019</color>
-    <color name="md_theme_surface">#F6FBF8</color>
-    <color name="md_theme_on_surface">#161D1A</color>
-    <color name="md_theme_outline">#6F7A75</color>
-    <color name="ic_launcher_background">#1F6F5B</color>
-    <color name="status_on">#1F6F5B</color>
-    <color name="status_off">#6F7A75</color>
+    <color name="md_theme_primary_container">#F3D3DC</color>
+    <color name="md_theme_on_primary_container">#3A0016</color>
+    <color name="md_theme_surface">#FBF6F7</color>
+    <color name="md_theme_on_surface">#201415</color>
+    <color name="md_theme_outline">#7A6165</color>
+    <color name="ic_launcher_background">#7A1533</color>
+    <color name="status_on">#7A1533</color>
+    <color name="status_off">#7A6165</color>
 </resources>

@@ -1,0 +1,47 @@
+DayAtlas Help
+
+DayAtlas records your location in the background throughout the day, keeping a daily route and distance history. Your data is stored only on your phone; you can optionally back it up to Google Drive (or any folder).
+
+1) RECORDING MODES
+
+Daily mode (recommended): once turned on in Settings, recording starts/continues automatically whenever the app or phone starts - no confirmation prompt. Turn daily mode off in Settings to stop it.
+
+Manual mode: with daily mode off, use the Start/Stop button on the home screen to control recording yourself.
+
+2) SAMPLING INTERVAL
+
+Choose 30 seconds, 1, 3 or 5 minutes between points in Settings. After 3 consecutive readings in roughly the same spot (~25 m), the interval automatically coarsens one step (e.g. 1 min -> 3 min); it returns to your chosen interval as soon as you move. This saves battery while sitting still overnight.
+
+3) PERMISSIONS AND BATTERY
+
+Background operation needs location permission set to "Allow all the time", notification permission, and ideally an exemption from battery optimization. The buttons in Settings open the relevant system screens directly. On some phones (Xiaomi, Huawei, Oppo, Samsung) you also need to enable "autostart" - a button to that screen appears in Settings if your device is recognized.
+
+4) MAP AND DAY STATS
+
+The bottom of the home screen shows the selected day's route on a simple map. Use the arrow buttons to move to the previous/next day, or "go to today" to jump back.
+
+The tiles above the map show things like distance, last point, point count, max speed, average speed and active driving time. Long-press and drag a tile to reorder it, and choose which tiles are shown from the "Map day stats" section in Settings.
+
+5) GPS JUMPS
+
+GPS can occasionally record a bad, jumpy point. These show up as orange markers on the map and are listed under the "Jumps" button, where you can delete them one by one - the distance is recalculated automatically.
+
+6) GPX EXPORT
+
+Use the export icon in the toolbar to share a single day or a date range as a GPX file (Drive, email, mapping apps, etc.).
+
+7) GOOGLE DRIVE BACKUP AND RESTORE
+
+Pick a folder in Settings (ideally an empty folder you created in Drive) to enable daily automatic backup. Only new or changed day files are uploaded - files already backed up and unchanged are skipped.
+
+When moving to a new phone, or after reinstalling the app: pick the same backup folder again and tap "Restore from backup" - every day file in that folder is copied back onto the phone.
+
+8) UPDATES
+
+The app checks in the background for a newer version; if found, it downloads it and shows a notification to install. You can also check manually from Settings ("Check for updates"). Installing may require the "install unknown apps" permission.
+
+9) KNOWN LIMITATIONS
+
+On some manufacturer skins (notably Samsung One UI), the app may occasionally leave a card in the recent-apps / task switcher while running in the background. This is an OEM display quirk and does not affect recording.
+
+Developed by: Ali Dinçer

@@ -171,6 +171,22 @@ class AppPrefs(context: Context) {
         get() = prefs.getString(LAST_DRIVE_BACKUP_DAY, null)
         set(value) = prefs.edit().putString(LAST_DRIVE_BACKUP_DAY, value).apply()
 
+    /** True once a full (all local day files) Drive backup has completed at least
+     * once - after that, the daily auto-run only needs to touch today's file. */
+    var driveInitialBackupDone: Boolean
+        get() = prefs.getBoolean(DRIVE_INITIAL_BACKUP_DONE, false)
+        set(value) = prefs.edit().putBoolean(DRIVE_INITIAL_BACKUP_DONE, value).apply()
+
+    /** Comma-joined [com.dayatlas.app.route.DayStatKind] keys, drag-reorder order. */
+    var dayStatsOrderRaw: String?
+        get() = prefs.getString(DAY_STATS_ORDER, null)
+        set(value) = prefs.edit().putString(DAY_STATS_ORDER, value).apply()
+
+    /** [com.dayatlas.app.route.DayStatKind] keys hidden from the day-stats row. */
+    var dayStatsHidden: Set<String>
+        get() = prefs.getStringSet(DAY_STATS_HIDDEN, emptySet()).orEmpty()
+        set(value) = prefs.edit().putStringSet(DAY_STATS_HIDDEN, value).apply()
+
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
         const val DEFAULT_INTERVAL_SECONDS = 60
@@ -193,5 +209,8 @@ class AppPrefs(context: Context) {
         private const val DRIVE_BACKUP_ENABLED = "drive_backup_enabled"
         private const val DRIVE_TREE_URI = "drive_tree_uri"
         private const val LAST_DRIVE_BACKUP_DAY = "last_drive_backup_day"
+        private const val DRIVE_INITIAL_BACKUP_DONE = "drive_initial_backup_done"
+        private const val DAY_STATS_ORDER = "day_stats_order"
+        private const val DAY_STATS_HIDDEN = "day_stats_hidden"
     }
 }

@@ -37,7 +37,7 @@ object RouteMapController {
         map.overlays.add(
             Polyline().apply {
                 setPoints(geoPoints)
-                outlinePaint.color = Color.parseColor("#1F6F5B")
+                outlinePaint.color = Color.parseColor("#7A1533")
                 outlinePaint.strokeWidth = 8f
             },
         )

@@ -55,6 +55,64 @@ class JumpFilterTest {
     }
 }
 
+class SpeedStatsTest {
+    @Test
+    fun fewerThanTwoPointsIsEmpty() {
+        val stats = SpeedStats.compute(listOf(TrackPoint(0L, 41.0, 29.0, null)))
+        assertEquals(0.0, stats.maxSpeedKmh, 1e-9)
+        assertEquals(0L, stats.activeMillis)
+    }
+
+    @Test
+    fun steadyWalkGivesConsistentMaxAndAvgSpeed() {
+        // ~85 m every 60 s ≈ 5.1 km/h, three legs.
+        val points = listOf(
+            TrackPoint(0L, 41.0, 29.000, null),
+            TrackPoint(60_000L, 41.0, 29.001, null),
+            TrackPoint(120_000L, 41.0, 29.002, null),
+            TrackPoint(180_000L, 41.0, 29.003, null),
+        )
+        val stats = SpeedStats.compute(points)
+        assertTrue("maxSpeed=${stats.maxSpeedKmh}", stats.maxSpeedKmh in 3.0..8.0)
+        assertTrue("avgSpeed=${stats.avgSpeedKmh}", stats.avgSpeedKmh in 3.0..8.0)
+        assertEquals(180_000L, stats.activeMillis)
+    }
+
+    @Test
+    fun stationaryJitterDoesNotCountAsActive() {
+        val points = listOf(
+            TrackPoint(0L, 41.0, 29.0, null),
+            // ~1 m of GPS jitter over a minute - well under the 1 km/h floor.
+            TrackPoint(60_000L, 41.0, 29.00001, null),
+        )
+        val stats = SpeedStats.compute(points)
+        assertEquals(0L, stats.activeMillis)
+        assertEquals(0.0, stats.avgSpeedKmh, 1e-9)
+    }
+
+    @Test
+    fun unrealisticJumpIsExcludedFromMaxSpeed() {
+        val points = listOf(
+            TrackPoint(0L, 41.0, 29.0, null),
+            // ~111 km in 60 s - a GPS teleport, not a real max speed.
+            TrackPoint(60_000L, 42.0, 29.0, null),
+        )
+        val stats = SpeedStats.compute(points)
+        assertEquals(0.0, stats.maxSpeedKmh, 1e-9)
+    }
+
+    @Test
+    fun longGapBreaksTheSegmentInsteadOfCountingAsSlowDriving() {
+        val points = listOf(
+            TrackPoint(0L, 41.0, 29.0, null),
+            // 30 min later, a few meters away - an overnight/parked gap.
+            TrackPoint(30 * 60_000L, 41.0, 29.0001, null),
+        )
+        val stats = SpeedStats.compute(points)
+        assertEquals(0L, stats.activeMillis)
+    }
+}
+
 class DayTitleTest {
     @Test
     fun turkishTitleUsesLocalCalendarDay() {
@@ -65,6 +123,17 @@ class DayTitleTest {
     @Test
     fun isoIsYearMonthDay() {
         assertEquals("2026-08-28", DayTitle.iso(LocalDate.of(2026, 8, 28)))
+    }
+
+    @Test
+    fun formatDurationSwitchesToHoursPastSixty() {
+        assertEquals("45 dk", DayTitle.formatDuration(45 * 60_000L))
+        assertEquals("2 sa 5 dk", DayTitle.formatDuration((2 * 60 + 5) * 60_000L))
+    }
+
+    @Test
+    fun formatSpeedRoundsToWholeKmh() {
+        assertEquals("42 km/sa", DayTitle.formatSpeed(42.4, Locale("tr", "TR")))
     }
 }
 

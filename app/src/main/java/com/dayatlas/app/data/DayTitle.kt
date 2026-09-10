@@ -29,4 +29,14 @@ object DayTitle {
             String.format(locale, "%.1f km", meters / 1000.0)
         }
     }
+
+    fun formatSpeed(kmh: Double, locale: Locale = Locale("tr", "TR")): String =
+        String.format(locale, "%.0f km/sa", kmh)
+
+    fun formatDuration(millis: Long): String {
+        val totalMinutes = millis / 60_000L
+        val hours = totalMinutes / 60
+        val minutes = totalMinutes % 60
+        return if (hours > 0) "${hours} sa ${minutes} dk" else "${minutes} dk"
+    }
 }

@@ -1,0 +1,47 @@
+DayAtlas Hilfe
+
+DayAtlas zeichnet Ihren Standort den ganzen Tag über im Hintergrund auf und führt eine tägliche Routen- und Distanzhistorie. Ihre Daten werden ausschließlich auf Ihrem Telefon gespeichert; optional können Sie sie in Google Drive (oder einem beliebigen Ordner) sichern.
+
+1) AUFZEICHNUNGSMODI
+
+Tagesmodus (empfohlen): einmal in den Einstellungen aktiviert, startet bzw. läuft die Aufzeichnung automatisch weiter, sobald die App oder das Telefon startet - ohne Bestätigung. Zum Beenden den Tagesmodus in den Einstellungen wieder ausschalten.
+
+Manueller Modus: Bei ausgeschaltetem Tagesmodus steuern Sie die Aufzeichnung selbst über die Start/Stopp-Taste auf dem Startbildschirm.
+
+2) ABTASTINTERVALL
+
+Wählen Sie in den Einstellungen 30 Sekunden, 1, 3 oder 5 Minuten zwischen den Punkten. Nach 3 aufeinanderfolgenden Messungen am (fast) gleichen Ort (~25 m) wird das Intervall automatisch eine Stufe vergrößert (z. B. 1 Min. -> 3 Min.); sobald Sie sich bewegen, kehrt es zum gewählten Intervall zurück. So wird der Akku geschont, während das Gerät nachts stillsteht.
+
+3) BERECHTIGUNGEN UND AKKU
+
+Für den Hintergrundbetrieb ist die Standortberechtigung "Immer zulassen", die Benachrichtigungsberechtigung sowie idealerweise eine Ausnahme von der Akkuoptimierung erforderlich. Die Schaltflächen in den Einstellungen öffnen die entsprechenden Systembildschirme direkt. Bei manchen Herstellern (Xiaomi, Huawei, Oppo, Samsung) muss zusätzlich der "Autostart" aktiviert werden - falls Ihr Gerät erkannt wird, erscheint dafür eine eigene Schaltfläche in den Einstellungen.
+
+4) KARTE UND TAGESSTATISTIKEN
+
+Unten auf dem Startbildschirm wird die Route des ausgewählten Tages auf einer einfachen Karte angezeigt. Mit den Pfeiltasten wechseln Sie zum vorherigen/nächsten Tag, mit "Zu heute" springen Sie schnell zurück.
+
+Die Kacheln über der Karte zeigen z. B. Distanz, letzten Punkt, Punktanzahl, Höchstgeschwindigkeit, Durchschnittsgeschwindigkeit und aktive Fahrzeit. Durch langes Drücken und Ziehen lässt sich die Reihenfolge einer Kachel ändern; welche Kacheln angezeigt werden, legen Sie im Abschnitt "Kartentagesstatistiken" in den Einstellungen fest.
+
+5) GPS-SPRÜNGE
+
+Gelegentlich kann das GPS einen fehlerhaften Sprungpunkt aufzeichnen. Solche Punkte werden auf der Karte orange markiert und unter der Schaltfläche "Sprünge" aufgelistet, wo Sie sie einzeln löschen können - die Distanz wird automatisch neu berechnet.
+
+6) GPX-EXPORT
+
+Über das Export-Symbol in der Symbolleiste können Sie einen einzelnen Tag oder einen Datumsbereich als GPX-Datei teilen (Drive, E-Mail, Kartenanwendungen usw.).
+
+7) GOOGLE-DRIVE-SICHERUNG UND -WIEDERHERSTELLUNG
+
+Wählen Sie in den Einstellungen einen Ordner aus (idealerweise einen leeren, in Drive angelegten Ordner), um die tägliche automatische Sicherung zu aktivieren. Es werden nur neue oder geänderte Tagesdateien hochgeladen - bereits gesicherte, unveränderte Dateien werden übersprungen.
+
+Beim Wechsel auf ein neues Telefon oder nach einer Neuinstallation der App: denselben Sicherungsordner erneut auswählen und auf "Aus Sicherung wiederherstellen" tippen - alle Tagesdateien aus diesem Ordner werden zurück auf das Telefon kopiert.
+
+8) UPDATES
+
+Die App prüft im Hintergrund auf eine neuere Version; wird eine gefunden, lädt sie diese herunter und zeigt eine Benachrichtigung zur Installation. Über "Nach Updates suchen" in den Einstellungen können Sie auch manuell prüfen. Für die Installation kann die Berechtigung "Unbekannte Apps installieren" erforderlich sein.
+
+9) BEKANNTE EINSCHRÄNKUNGEN
+
+Bei manchen Hersteller-Oberflächen (insbesondere Samsung One UI) kann die App im Hintergrundbetrieb gelegentlich eine Karte in der Liste der zuletzt verwendeten Apps/Task-Switcher hinterlassen. Dies ist eine Anzeige-Eigenheit des Herstellers und beeinträchtigt die Aufzeichnung nicht.
+
+Entwickelt von: Ali Dinçer

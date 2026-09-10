@@ -54,6 +54,9 @@ object DriveFolderBackup {
             context.contentResolver.takePersistableUriPermission(treeUri, flags)
         }
         prefs.driveTreeUri = treeUri.toString()
+        // A (possibly different) folder was just picked - it needs its own
+        // full scan before the "only today" shortcut is safe to use.
+        prefs.driveInitialBackupDone = false
     }
 
     fun clearFolder(context: Context, prefs: AppPrefs) {
@@ -64,11 +67,15 @@ object DriveFolderBackup {
         }
         prefs.driveTreeUri = null
         prefs.lastDriveBackupDay = null
+        prefs.driveInitialBackupDone = false
     }
 
     /**
      * If auto-backup is on and we have not yet backed up for [today], run once.
-     * Silent — for alarms / SampleService / Application.onCreate.
+     * Silent — for alarms / SampleService / Application.onCreate. Once a full
+     * backup has completed at least once ([AppPrefs.driveInitialBackupDone]),
+     * this only needs to check today's file — every earlier day is already
+     * up there and never changes on its own.
      */
     fun maybeRunDaily(context: Context) {
         val app = context.applicationContext
@@ -76,21 +83,25 @@ object DriveFolderBackup {
         if (!prefs.driveBackupEnabled || !hasFolder(prefs)) return
         val today = DayTitle.iso(DayTitle.localToday())
         if (prefs.lastDriveBackupDay == today) return
-        runAsync(app, prefs) { /* silent */ }
+        val fullScan = !prefs.driveInitialBackupDone
+        runAsync(app, prefs, fullScan = fullScan) { /* silent */ }
     }
 
+    /** Manual "Şimdi yedekle": always a full scan, so a jump deleted on an
+     * older day (or a file added by [restoreNow]) gets picked up too. */
     fun runNow(
         context: Context,
         onDone: (Result) -> Unit,
     ) {
         val app = context.applicationContext
         val prefs = AppPrefs(app)
-        runAsync(app, prefs, onDone = onDone)
+        runAsync(app, prefs, fullScan = true, onDone = onDone)
     }
 
     private fun runAsync(
         context: Context,
         prefs: AppPrefs,
+        fullScan: Boolean,
         onDone: ((Result) -> Unit)? = null,
     ) {
         if (!running.compareAndSet(false, true)) {
@@ -98,13 +109,14 @@ object DriveFolderBackup {
             return
         }
         io.execute {
-            val result = runCatching { backupLocked(context, prefs) }
+            val result = runCatching { backupLocked(context, prefs, fullScan) }
                 .getOrElse { e ->
                     Log.w(TAG, "backup failed", e)
                     Result(false, message = e.message ?: "error")
                 }
             if (result.ok) {
                 prefs.lastDriveBackupDay = DayTitle.iso(DayTitle.localToday())
+                if (fullScan) prefs.driveInitialBackupDone = true
             }
             running.set(false)
             if (onDone != null) {
@@ -115,7 +127,7 @@ object DriveFolderBackup {
         }
     }
 
-    private fun backupLocked(context: Context, prefs: AppPrefs): Result {
+    private fun backupLocked(context: Context, prefs: AppPrefs, fullScan: Boolean): Result {
         val uriStr = prefs.driveTreeUri
             ?: return Result(false, message = "no_folder")
         val tree = DocumentFile.fromTreeUri(context, Uri.parse(uriStr))
@@ -128,8 +140,12 @@ object DriveFolderBackup {
         if (!daysDir.isDirectory) {
             return Result(true, uploaded = 0)
         }
+        val todayIso = DayTitle.iso(DayTitle.localToday())
         val files = daysDir.listFiles()
-            ?.filter { it.isFile && (it.name.endsWith(".json") || it.name.endsWith(".gpx")) }
+            ?.filter {
+                it.isFile && (it.name.endsWith(".json") || it.name.endsWith(".gpx")) &&
+                    (fullScan || it.name.startsWith(todayIso))
+            }
             ?.sortedBy { it.name }
             .orEmpty()
         if (files.isEmpty()) {

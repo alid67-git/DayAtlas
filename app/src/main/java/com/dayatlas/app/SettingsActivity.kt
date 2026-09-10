@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +17,7 @@ import com.dayatlas.app.databinding.ActivitySettingsBinding
 import com.dayatlas.app.location.PermissionHelper
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
+import com.dayatlas.app.route.DayStatKind
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
 
@@ -71,7 +73,12 @@ class SettingsActivity : DayAtlasActivity() {
             if (prefs.trackingEnabled || prefs.dailyMode) {
                 TrackingController.start(this, prefs, sampleSoon = false)
             }
+            binding.gpsRateLabel.text = getString(R.string.gps_check_rate, formatIntervalSeconds(seconds))
         }
+        binding.gpsRateLabel.text =
+            getString(R.string.gps_check_rate, formatIntervalSeconds(prefs.intervalSeconds))
+
+        setupDayStatsCheckboxes()
 
         binding.locationSettings.setOnClickListener {
             startActivity(
@@ -168,6 +175,33 @@ class SettingsActivity : DayAtlasActivity() {
                         .setNegativeButton(R.string.update_later, null)
                         .show()
                 }
+            }
+        }
+    }
+
+    private fun formatIntervalSeconds(seconds: Int): String = when (seconds) {
+        30 -> "30 saniye"
+        60 -> "1 dakika"
+        180 -> "3 dakika"
+        else -> "5 dakika"
+    }
+
+    private fun setupDayStatsCheckboxes() {
+        val checkboxes = mapOf(
+            DayStatKind.DISTANCE to binding.statCheckDistance,
+            DayStatKind.LAST_POINT to binding.statCheckLastPoint,
+            DayStatKind.POINT_COUNT to binding.statCheckPointCount,
+            DayStatKind.MAX_SPEED to binding.statCheckMaxSpeed,
+            DayStatKind.AVG_SPEED to binding.statCheckAvgSpeed,
+            DayStatKind.ACTIVE_DURATION to binding.statCheckActiveDuration,
+        )
+        val hidden = prefs.dayStatsHidden
+        checkboxes.forEach { (kind, checkBox: CheckBox) ->
+            checkBox.isChecked = kind.key !in hidden
+            checkBox.setOnCheckedChangeListener { _, checked ->
+                val current = prefs.dayStatsHidden.toMutableSet()
+                if (checked) current.remove(kind.key) else current.add(kind.key)
+                prefs.dayStatsHidden = current
             }
         }
     }
