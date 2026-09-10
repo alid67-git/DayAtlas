@@ -33,6 +33,12 @@ object DriveFolderBackup {
         val message: String? = null,
     )
 
+    data class RestoreResult(
+        val ok: Boolean,
+        val restored: Int = 0,
+        val message: String? = null,
+    )
+
     fun hasFolder(prefs: AppPrefs): Boolean = !prefs.driveTreeUri.isNullOrBlank()
 
     fun folderSummary(context: Context, prefs: AppPrefs): String? {
@@ -132,6 +138,13 @@ object DriveFolderBackup {
 
         var count = 0
         for (file in files) {
+            // Already backed up and unchanged since (size is a cheap enough
+            // proxy — a day file only grows as points are appended, or its
+            // size changes when a jump point is deleted). Skip re-uploading
+            // the same bytes on every manual/daily run.
+            val existing = tree.findFile(file.name)
+            if (existing != null && existing.length() == file.length()) continue
+
             val mime = when {
                 file.name.endsWith(".json") -> "application/json"
                 file.name.endsWith(".gpx") -> "application/gpx+xml"
@@ -141,6 +154,61 @@ object DriveFolderBackup {
             count++
         }
         return Result(true, uploaded = count)
+    }
+
+    /**
+     * Copies every `.json` day file found in the selected Drive folder back
+     * into local `files/days/`, overwriting any local file with the same
+     * name. For a fresh install / new phone where local storage is empty —
+     * the backup folder is treated as the source of truth. GPX files are not
+     * restored: they are a derived export, not app-read data (see
+     * [DriveFolderBackup] and [com.dayatlas.app.data.DayStore]).
+     */
+    fun restoreNow(
+        context: Context,
+        onDone: (RestoreResult) -> Unit,
+    ) {
+        val app = context.applicationContext
+        val prefs = AppPrefs(app)
+        if (!running.compareAndSet(false, true)) {
+            main.post { onDone(RestoreResult(false, message = "busy")) }
+            return
+        }
+        io.execute {
+            val result = runCatching { restoreLocked(app, prefs) }
+                .getOrElse { e ->
+                    Log.w(TAG, "restore failed", e)
+                    RestoreResult(false, message = e.message ?: "error")
+                }
+            running.set(false)
+            main.post { onDone(result) }
+        }
+    }
+
+    private fun restoreLocked(context: Context, prefs: AppPrefs): RestoreResult {
+        val uriStr = prefs.driveTreeUri
+            ?: return RestoreResult(false, message = "no_folder")
+        val tree = DocumentFile.fromTreeUri(context, Uri.parse(uriStr))
+            ?: return RestoreResult(false, message = "invalid_folder")
+        if (!tree.canRead()) {
+            return RestoreResult(false, message = "not_readable")
+        }
+
+        val daysDir = File(context.filesDir, "days").also { it.mkdirs() }
+        val jsonFiles = tree.listFiles().filter { it.isFile && it.name?.endsWith(".json") == true }
+        if (jsonFiles.isEmpty()) {
+            return RestoreResult(true, restored = 0)
+        }
+
+        var count = 0
+        for (doc in jsonFiles) {
+            val name = doc.name ?: continue
+            val bytes = context.contentResolver.openInputStream(doc.uri)?.use { it.readBytes() }
+                ?: continue
+            File(daysDir, name).writeBytes(bytes)
+            count++
+        }
+        return RestoreResult(true, restored = count)
     }
 
     private fun upsert(

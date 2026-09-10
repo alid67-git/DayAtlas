@@ -94,7 +94,15 @@
     <string name="drive_folder_none">Klasör seçilmedi</string>
     <string name="drive_folder_selected">Klasör: %1$s</string>
     <string name="drive_need_folder">Önce bir yedek klasörü seçin (Google Drive önerilir).</string>
-    <string name="drive_backup_ok">Yedek tamam: %1$d dosya</string>
+    <string name="drive_backup_ok">Yedek tamam: %1$d yeni/değişen dosya</string>
     <string name="drive_backup_failed">Yedek başarısız: %1$s</string>
     <string name="drive_backup_busy">Yedek zaten çalışıyor…</string>
+
+    <string name="drive_restore_now">Yedekten geri yükle</string>
+    <string name="drive_restore_confirm_title">Yedekten geri yükle?</string>
+    <string name="drive_restore_confirm_message">Seçili klasördeki gün kayıtları bu telefona kopyalanacak ve aynı isimli yerel kayıtların üzerine yazılacak. Devam edilsin mi?</string>
+    <string name="drive_restore_ok">Geri yükleme tamam: %1$d gün</string>
+    <string name="drive_restore_none">Klasörde geri yüklenecek kayıt bulunamadı.</string>
+    <string name="drive_restore_failed">Geri yükleme başarısız: %1$s</string>
+    <string name="drive_restore_busy">Yedekleme/geri yükleme zaten çalışıyor…</string>
 </resources>

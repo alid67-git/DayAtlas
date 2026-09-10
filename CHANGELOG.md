@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.13 — 2026-09-10
+
+- **Yedek: tekrar yükleme yok:** "Şimdi yedekle" artık yalnızca yeni veya
+  değişen gün dosyalarını yükler; boyutu aynı kalan (zaten yedeklenmiş)
+  dosyalar tekrar yüklenmez.
+- **Yedekten geri yükle:** Ayarlar'a yeni buton — seçili klasördeki gün
+  kayıtlarını telefona geri kopyalar. Yeni telefonda veya uygulamayı
+  silip yeniden kurduktan sonra, önce aynı klasörü seçip bu düğmeyle
+  verileri geri getirebilirsiniz.
+
 ## 0.6.12 — 2026-09-10
 
 - **Sürekli "güncelle" isteği düzeltildi:** başarıyla kurulan güncelleme
