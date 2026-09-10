@@ -28,12 +28,14 @@
     <string name="status_daily">Günlük mod — otomatik kayıt</string>
     <string name="today_distance">Bugünkü mesafe</string>
     <string name="map_day_distance">Mesafe</string>
+    <string name="stat_max_speed">Maks. hız</string>
+    <string name="stat_avg_speed">Ort. hız</string>
+    <string name="stat_active_duration">Aktif süre</string>
     <string name="last_point">Son nokta</string>
     <string name="point_count">Nokta sayısı</string>
     <string name="em_dash">—</string>
     <string name="start">Başlat</string>
     <string name="stop">Durdur</string>
-    <string name="daily_mode_hint">Günlük mod açıkken kayıt sessizce devam eder. Durdurmak için Ayarlar’dan günlük modu kapatın.</string>
     <string name="manual_hint">Günlük mod kapalı. İzlemek istediğinizde Başlat’a basın (0,5–5 dk’da bir nokta).</string>
     <string name="need_location">Konum izni olmadan nokta alınamaz.</string>
     <string name="settings_daily_mode">Günlük mod</string>
@@ -105,4 +107,11 @@
     <string name="drive_restore_none">Klasörde geri yüklenecek kayıt bulunamadı.</string>
     <string name="drive_restore_failed">Geri yükleme başarısız: %1$s</string>
     <string name="drive_restore_busy">Yedekleme/geri yükleme zaten çalışıyor…</string>
+
+    <string name="settings_day_stats">Harita gün istatistikleri</string>
+    <string name="settings_day_stats_hint">Ana ekrandaki gün kartlarında hangileri görünsün? Kartlar ayrıca uzun basıp sürükleyerek sıralanabilir.</string>
+
+    <string name="gps_check_rate">GPS kontrol hızı: %1$s</string>
+    <string name="app_footer_credit">Geliştiren: Ali Dinçer</string>
+    <string name="action_help">Yardım</string>
 </resources>

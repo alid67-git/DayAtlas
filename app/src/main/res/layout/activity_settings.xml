@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -87,6 +88,57 @@
                     android:layout_height="wrap_content"
                     android:text="@string/interval_5" />
             </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/settings_day_stats"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/settings_day_stats_hint"
+                android:textAppearance="?attr/textAppearanceBodySmall" />
+
+            <CheckBox
+                android:id="@+id/statCheckDistance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/map_day_distance" />
+
+            <CheckBox
+                android:id="@+id/statCheckLastPoint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/last_point" />
+
+            <CheckBox
+                android:id="@+id/statCheckPointCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/point_count" />
+
+            <CheckBox
+                android:id="@+id/statCheckMaxSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_max_speed" />
+
+            <CheckBox
+                android:id="@+id/statCheckAvgSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_avg_speed" />
+
+            <CheckBox
+                android:id="@+id/statCheckActiveDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_active_duration" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -225,6 +277,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/check_for_updates" />
+
+            <TextView
+                android:id="@+id/gpsRateLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="@color/md_theme_outline"
+                tools:text="GPS kontrol hızı: 1 dakika" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="@string/app_footer_credit"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="@color/md_theme_outline" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

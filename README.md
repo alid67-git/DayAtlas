@@ -54,6 +54,21 @@ sıfır ağ (ana ekran açıkken karo indirmesi olabilir). DayAtlas'ın gerçek
 arka plan pil maliyeti tamamen `SampleService`'ten gelir. Canlı konum/
 pusula takibi bilerek eklenmedi.
 
+## Harita gün istatistikleri
+
+Haritanın üstündeki kartlarda mesafe, son nokta, nokta sayısı, maksimum
+hız, ortalama hız ve aktif sürüş süresi gösterilir (`DayStatKind` /
+`SpeedStats`). Kartlara uzun basıp sürükleyerek sırası değiştirilebilir;
+Ayarlar → **Harita gün istatistikleri** bölümünden hangilerinin
+görüneceği seçilir. Hız/süre, GPS sıçramalarını ve duraklamaları (>20 dk
+boşluk) dışarıda bırakacak şekilde hesaplanır.
+
+## Yardım ekranı
+
+Araç çubuğu menüsünde (taşma menüsü) **Yardım** — Türkçe/İngilizce/
+Almanca arasında geçiş yapılabilen, uygulamanın tüm özelliklerini
+anlatan bir ekran (`HelpActivity`, metinler `res/raw/help_*.txt`).
+
 ## GPX dışa aktarma
 
 Her gün zaten `files/days/yyyy-MM-dd.gpx` olarak yazılır (uygulama içi
@@ -76,8 +91,12 @@ klasör seçilir — tercihen Drive’da oluşturduğunuz `DayAtlas` klasörü.
 Sonrasında günde en fazla bir kez (uygulama açılışı veya GPS örneği
 sırasında) yalnızca yeni/değişen `yyyy-MM-dd.json` / `.gpx` dosyaları
 klasöre kopyalanır — zaten yedeklenmiş, değişmemiş dosyalar tekrar
-yüklenmez. Drive istemcisi klasörü buluta senkronlar. Uygulamayı
-kaldırmak yerel kaydı siler; Drive’daki kopyalar kalır.
+yüklenmez. İlk tam yedek tamamlandıktan sonra günlük otomatik yedek
+artık tüm geçmişi taramaz, yalnızca bugünün dosyasına bakar (eski
+günler zaten yukarıda ve kendiliğinden değişmez). Bir klasör yeniden
+seçildiğinde bu tam tarama bir kez daha yapılır. Drive istemcisi
+klasörü buluta senkronlar. Uygulamayı kaldırmak yerel kaydı siler;
+Drive’daki kopyalar kalır.
 
 **Geri yükleme** (yeni telefon veya uygulamayı silip yeniden kurduktan
 sonra): Ayarlar → **Yedek klasörü seç** ile aynı klasörü seçin, sonra

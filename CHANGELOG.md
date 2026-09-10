@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.7.0 — 2026-09-10
+
+- **Bordo renk paleti:** Uygulama genelindeki yeşil tema bordo ağırlıklı
+  bir palete geçirildi (araç çubuğu, düğmeler, rota çizgisi, başlangıç
+  işareti, uygulama simgesi).
+- **Yeni gün istatistikleri:** Maksimum hız, ortalama hız ve aktif sürüş
+  süresi eklendi (GPS sıçramaları ve >20 dk’lık duraklamalar hesaba
+  katılmaz). Haritanın üstündeki kartlar artık uzun basıp sürükleyerek
+  sıralanabiliyor; Ayarlar → **Harita gün istatistikleri**’nden
+  hangilerinin görüneceği seçilebiliyor.
+- **Akıllı günlük yedek:** İlk tam Drive yedeği tamamlandıktan sonra
+  günlük otomatik yedek artık tüm geçmişi taramıyor, yalnızca bugünün
+  dosyasını kontrol ediyor.
+- **Yardım ekranı:** Araç çubuğu taşma menüsüne Türkçe/İngilizce/Almanca
+  arasında geçiş yapılabilen kapsamlı bir yardım ekranı eklendi.
+- **Küçük düzeltmeler:** Dışa aktar simgesinin rengi (araç çubuğuyla
+  uyumsuzdu) düzeltildi; "Günlük mod açıkken…" açıklama metni kaldırıldı;
+  Ayarlar ekranının altına GPS kontrol hızı ve geliştirici bilgisi
+  eklendi.
+
 ## 0.6.13 — 2026-09-10
 
 - **Yedek: tekrar yükleme yok:** "Şimdi yedekle" artık yalnızca yeni veya
