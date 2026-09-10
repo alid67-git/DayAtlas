@@ -74,9 +74,15 @@ klasör seçilir — tercihen Drive’da oluşturduğunuz `DayAtlas` klasörü.
 4. İsterseniz **Şimdi yedekle**.
 
 Sonrasında günde en fazla bir kez (uygulama açılışı veya GPS örneği
-sırasında) tüm `yyyy-MM-dd.json` / `.gpx` dosyaları klasöre kopyalanır.
-Drive istemcisi klasörü buluta senkronlar. Uygulamayı kaldırmak yerel
-kaydı siler; Drive’daki kopyalar kalır.
+sırasında) yalnızca yeni/değişen `yyyy-MM-dd.json` / `.gpx` dosyaları
+klasöre kopyalanır — zaten yedeklenmiş, değişmemiş dosyalar tekrar
+yüklenmez. Drive istemcisi klasörü buluta senkronlar. Uygulamayı
+kaldırmak yerel kaydı siler; Drive’daki kopyalar kalır.
+
+**Geri yükleme** (yeni telefon veya uygulamayı silip yeniden kurduktan
+sonra): Ayarlar → **Yedek klasörü seç** ile aynı klasörü seçin, sonra
+**Yedekten geri yükle**’ye dokunun. Klasördeki tüm `.json` gün kayıtları
+telefona kopyalanır (aynı isimli yerel dosyaların üzerine yazılır).
 
 ## Nasıl çalışır (örnekleme)
 

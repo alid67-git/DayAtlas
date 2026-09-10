@@ -135,6 +135,20 @@ class SettingsActivity : DayAtlasActivity() {
             Toast.makeText(this, R.string.drive_backup_now, Toast.LENGTH_SHORT).show()
             DriveFolderBackup.runNow(this) { toastBackupResult(it) }
         }
+        binding.driveRestoreNow.setOnClickListener {
+            if (!DriveFolderBackup.hasFolder(prefs)) {
+                Toast.makeText(this, R.string.drive_need_folder, Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            AlertDialog.Builder(this)
+                .setTitle(R.string.drive_restore_confirm_title)
+                .setMessage(R.string.drive_restore_confirm_message)
+                .setPositiveButton(R.string.drive_restore_now) { _, _ ->
+                    DriveFolderBackup.restoreNow(this) { toastRestoreResult(it) }
+                }
+                .setNegativeButton(R.string.export_cancel, null)
+                .show()
+        }
         refreshDriveUi()
 
         binding.versionLabel.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
@@ -187,6 +201,27 @@ class SettingsActivity : DayAtlasActivity() {
                 Toast.makeText(
                     this,
                     getString(R.string.drive_backup_failed, result.message ?: "error"),
+                    Toast.LENGTH_LONG,
+                ).show()
+        }
+    }
+
+    private fun toastRestoreResult(result: DriveFolderBackup.RestoreResult) {
+        when {
+            result.message == "busy" ->
+                Toast.makeText(this, R.string.drive_restore_busy, Toast.LENGTH_SHORT).show()
+            result.ok && result.restored == 0 ->
+                Toast.makeText(this, R.string.drive_restore_none, Toast.LENGTH_SHORT).show()
+            result.ok ->
+                Toast.makeText(
+                    this,
+                    getString(R.string.drive_restore_ok, result.restored),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            else ->
+                Toast.makeText(
+                    this,
+                    getString(R.string.drive_restore_failed, result.message ?: "error"),
                     Toast.LENGTH_LONG,
                 ).show()
         }

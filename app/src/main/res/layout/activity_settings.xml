@@ -195,6 +195,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/drive_backup_now" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/driveRestoreNow"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/drive_restore_now" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
