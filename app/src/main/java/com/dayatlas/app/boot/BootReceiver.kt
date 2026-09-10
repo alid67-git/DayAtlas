@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
+import com.dayatlas.app.update.UpdateInstaller
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
@@ -22,8 +23,7 @@ class BootReceiver : BroadcastReceiver() {
 class PackageReplacedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
-        val prefs = AppPrefs(context)
-        prefs.clearPendingUpdate()
-        TrackingController.onAppStart(context, prefs)
+        UpdateInstaller.onPackageReplaced(context)
+        TrackingController.onAppStart(context, AppPrefs(context))
     }
 }

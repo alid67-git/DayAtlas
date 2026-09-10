@@ -98,6 +98,20 @@ object UpdateInstaller {
         }
     }
 
+    /**
+     * Called when the app itself was just updated ([Intent.ACTION_MY_PACKAGE_REPLACED]).
+     * Deletes the leftover downloaded APK, not just the prefs bookkeeping —
+     * otherwise [resumePending]'s orphan-APK recovery treats the now-stale
+     * file as a pending update forever and re-prompts install on every open.
+     */
+    fun onPackageReplaced(context: Context) {
+        val appContext = context.applicationContext
+        stopWatch()
+        AppPrefs(appContext).clearPendingUpdate()
+        runCatching { apkFile(appContext).delete() }
+        offeredInstallUiThisProcess = false
+    }
+
     /** Called from [DownloadCompleteReceiver] when DownloadManager finishes. */
     fun onDownloadComplete(context: Context, downloadId: Long) {
         val appContext = context.applicationContext

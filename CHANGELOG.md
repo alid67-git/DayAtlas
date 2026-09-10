@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.12 — 2026-09-10
+
+- **Sürekli "güncelle" isteği düzeltildi:** başarıyla kurulan güncelleme
+  APK'sı diskte silinmeden kalıyordu; uygulama her açıldığında bu dosyayı
+  "bekleyen güncelleme" sanıp tekrar kurulum istiyordu (sonsuz döngü).
+  Artık uygulama güncellendiğinde (`MY_PACKAGE_REPLACED`) indirilen APK
+  dosyası da siliniyor.
+
 ## 0.6.11 — 2026-09-10
 
 - **Açılışta çökme düzeltildi:** güncelleme bildirimi için oluşturulan
