@@ -15,7 +15,7 @@ import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import com.dayatlas.app.BuildConfig
 import com.dayatlas.app.R
-import com.dayatlas.app.data.DayStore
+import com.dayatlas.app.backup.DriveFolderBackup
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
@@ -91,6 +91,8 @@ class SampleService : Service() {
     }
 
     private fun finish(reschedule: Boolean) {
+        // Once per local day: copy days/* into the user-picked Drive/folder tree.
+        DriveFolderBackup.maybeRunDaily(this)
         if (reschedule) {
             val prefs = AppPrefs(this)
             SampleScheduler.scheduleNext(

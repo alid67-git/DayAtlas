@@ -11,8 +11,8 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 17
-        versionName = "0.6.8"
+        versionCode = 18
+        versionName = "0.6.9"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -77,6 +77,7 @@ dependencies {
     // tiles while the map screen is on screen, nothing runs in the
     // background or costs battery outside of that.
     implementation("org.osmdroid:osmdroid-android:6.1.20")
+    implementation("androidx.documentfile:documentfile:1.0.1")
     testImplementation("junit:junit:4.13.2")
     // Local unit tests run against the mockable android.jar, whose
     // org.json.* methods all throw RuntimeException("Stub!"). This puts the

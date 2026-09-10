@@ -8,7 +8,7 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "GPS atlamaları: yeni örnekler ~160 km/sa / 30 km eşiğinin üstünde " +
-            "otomatik reddedilir. Haritada turuncu uyarı işaretleri ve " +
-            "“Atlamalar” listesiyle eski sıçramaları dokunarak silebilirsiniz."
+        "Google Drive yedek: Ayarlar’dan bir Drive klasörü seçin, günlük " +
+            "otomatik yedeği açın. Günde bir kez JSON+GPX o klasöre " +
+            "kopyalanır; Drive uygulaması buluta senkronlar."
 }

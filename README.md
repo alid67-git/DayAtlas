@@ -36,6 +36,10 @@ Flutter motoru (~4–8 MB) ve Google Play Services yığını yok. AlarmManager,
 - **GPX dışa aktarma:** araç çubuğundan tek gün veya tarih aralığı + dosya
   adı (`.gpx` otomatik eklenir); sistem paylaşım ekranı ile kaydet/gönder.
   Aralıkta her gün ayrı bir `<trk>` olur, noktaların gerçek UTC zamanı yazılır.
+- **Google Drive / klasör yedek:** Ayarlar’dan bir klasör seçin (Drive
+  önerilir), günlük otomatik yedeği açın. Günde bir kez tüm `days/*`
+  JSON+GPX o klasöre kopyalanır; Drive uygulaması buluta senkronlar.
+  Uygulama kaldırıınca yerel veri silinir — yedek klasörü kalır.
 
 ## Ne yapmaz
 
@@ -58,6 +62,21 @@ GPX dosyasında birleştirip sistem paylaşım ekranına verir (Dosyalar,
 Drive, e-posta vb.). Dosya adına `.gpx` otomatik eklenir; aralıkta her
 gün ayrı bir `<trk>` olur (içe aktaran uygulamaların tek güne yığmaması
 için), her noktada gerçek UTC zaman damgası vardır.
+
+## Google Drive günlük yedek
+
+OAuth / Google Cloud kurulumu yok. Sistem klasör seçici (SAF) ile bir
+klasör seçilir — tercihen Drive’da oluşturduğunuz `DayAtlas` klasörü.
+
+1. Drive uygulamasında boş bir klasör açın.
+2. DayAtlas → Ayarlar → **Yedek klasörü seç** → Google Drive → o klasör.
+3. **Günlük otomatik yedek** anahtarını açın (ilk açılışta hemen bir yedek dener).
+4. İsterseniz **Şimdi yedekle**.
+
+Sonrasında günde en fazla bir kez (uygulama açılışı veya GPS örneği
+sırasında) tüm `yyyy-MM-dd.json` / `.gpx` dosyaları klasöre kopyalanır.
+Drive istemcisi klasörü buluta senkronlar. Uygulamayı kaldırmak yerel
+kaydı siler; Drive’daki kopyalar kalır.
 
 ## Nasıl çalışır (örnekleme)
 

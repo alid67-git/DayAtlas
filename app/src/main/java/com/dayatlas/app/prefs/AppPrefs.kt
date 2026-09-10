@@ -156,6 +156,21 @@ class AppPrefs(context: Context) {
             .apply()
     }
 
+    /** Daily folder backup (SAF / Google Drive picker) master switch. */
+    var driveBackupEnabled: Boolean
+        get() = prefs.getBoolean(DRIVE_BACKUP_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(DRIVE_BACKUP_ENABLED, value).apply()
+
+    /** content:// tree URI from ACTION_OPEN_DOCUMENT_TREE. */
+    var driveTreeUri: String?
+        get() = prefs.getString(DRIVE_TREE_URI, null)
+        set(value) = prefs.edit().putString(DRIVE_TREE_URI, value).apply()
+
+    /** Local calendar day (yyyy-MM-dd) of the last successful auto/manual backup run. */
+    var lastDriveBackupDay: String?
+        get() = prefs.getString(LAST_DRIVE_BACKUP_DAY, null)
+        set(value) = prefs.edit().putString(LAST_DRIVE_BACKUP_DAY, value).apply()
+
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
         const val DEFAULT_INTERVAL_SECONDS = 60
@@ -175,5 +190,8 @@ class AppPrefs(context: Context) {
         private const val PENDING_UPDATE_DOWNLOAD_ID = "pending_update_download_id"
         private const val PENDING_UPDATE_VERSION = "pending_update_version"
         private const val PENDING_UPDATE_SILENT = "pending_update_silent"
+        private const val DRIVE_BACKUP_ENABLED = "drive_backup_enabled"
+        private const val DRIVE_TREE_URI = "drive_tree_uri"
+        private const val LAST_DRIVE_BACKUP_DAY = "last_drive_backup_day"
     }
 }

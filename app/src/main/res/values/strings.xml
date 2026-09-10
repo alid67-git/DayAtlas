@@ -85,4 +85,16 @@
     <string name="jump_delete">Sil</string>
     <string name="jump_deleted">Atlama silindi.</string>
     <string name="jump_delete_failed">Nokta silinemedi.</string>
+
+    <string name="settings_drive_backup">Google Drive yedek</string>
+    <string name="settings_drive_backup_toggle">Günlük otomatik yedek</string>
+    <string name="settings_drive_backup_summary">Açıkken günde bir kez tüm gün dosyaları (JSON + GPX) seçtiğiniz klasöre kopyalanır. Google Drive klasörü seçerseniz Drive uygulaması buluta senkronlar. Önce Drive’da bir klasör oluşturup aşağıdan seçin.</string>
+    <string name="drive_pick_folder">Yedek klasörü seç</string>
+    <string name="drive_backup_now">Şimdi yedekle</string>
+    <string name="drive_folder_none">Klasör seçilmedi</string>
+    <string name="drive_folder_selected">Klasör: %1$s</string>
+    <string name="drive_need_folder">Önce bir yedek klasörü seçin (Google Drive önerilir).</string>
+    <string name="drive_backup_ok">Yedek tamam: %1$d dosya</string>
+    <string name="drive_backup_failed">Yedek başarısız: %1$s</string>
+    <string name="drive_backup_busy">Yedek zaten çalışıyor…</string>
 </resources>

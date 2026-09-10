@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.9 — 2026-09-10
+
+- **Günlük Google Drive yedek:** Ayarlar’da klasör seç (Drive önerilir) +
+  otomatik yedek aç. Günde bir kez tüm `days/*` JSON+GPX seçilen klasöre
+  kopyalanır; Drive istemcisi buluta senkronlar. “Şimdi yedekle” ile elle.
+
 ## 0.6.8 — 2026-09-10
 
 - **GPS atlama filtresi:** yeni noktalar önceki noktaya göre ~160 km/sa veya

@@ -1,6 +1,7 @@
 package com.dayatlas.app
 
 import android.app.Application
+import com.dayatlas.app.backup.DriveFolderBackup
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
 import java.io.File
@@ -13,6 +14,7 @@ class DayAtlasApp : Application() {
         configureOsmdroid()
         val prefs = AppPrefs(this)
         TrackingController.onAppStart(this, prefs)
+        DriveFolderBackup.maybeRunDaily(this)
     }
 
     /**

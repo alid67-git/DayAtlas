@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import com.dayatlas.app.backup.DriveFolderBackup
 import com.dayatlas.app.boot.OemAutostart
 import com.dayatlas.app.data.DayStore
-import com.dayatlas.app.location.PermissionHelper
 import com.dayatlas.app.data.DayTitle
 import com.dayatlas.app.databinding.ActivitySettingsBinding
+import com.dayatlas.app.location.PermissionHelper
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.update.UpdateChecker
@@ -20,6 +22,20 @@ import com.dayatlas.app.update.UpdateInstaller
 class SettingsActivity : DayAtlasActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var prefs: AppPrefs
+
+    private val pickDriveFolder = registerForActivityResult(
+        ActivityResultContracts.OpenDocumentTree(),
+    ) { uri: Uri? ->
+        if (uri == null) return@registerForActivityResult
+        RecentsHider.retainForExternalNavigation()
+        DriveFolderBackup.takeFolder(this, prefs, uri)
+        refreshDriveUi()
+        if (prefs.driveBackupEnabled) {
+            DriveFolderBackup.runNow(this) { result ->
+                toastBackupResult(result)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +110,33 @@ class SettingsActivity : DayAtlasActivity() {
         val dir = DayStore(this).daysDir().absolutePath
         binding.filesHint.text = getString(R.string.today_files) + "\n$dir\n$today.json / $today.gpx"
 
+        binding.driveBackup.isChecked = prefs.driveBackupEnabled
+        binding.driveBackup.setOnCheckedChangeListener { _, checked ->
+            if (checked && !DriveFolderBackup.hasFolder(prefs)) {
+                binding.driveBackup.isChecked = false
+                prefs.driveBackupEnabled = false
+                Toast.makeText(this, R.string.drive_need_folder, Toast.LENGTH_LONG).show()
+                return@setOnCheckedChangeListener
+            }
+            prefs.driveBackupEnabled = checked
+            if (checked) {
+                DriveFolderBackup.runNow(this) { toastBackupResult(it) }
+            }
+        }
+        binding.drivePickFolder.setOnClickListener {
+            RecentsHider.retainForExternalNavigation()
+            pickDriveFolder.launch(null)
+        }
+        binding.driveBackupNow.setOnClickListener {
+            if (!DriveFolderBackup.hasFolder(prefs)) {
+                Toast.makeText(this, R.string.drive_need_folder, Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            Toast.makeText(this, R.string.drive_backup_now, Toast.LENGTH_SHORT).show()
+            DriveFolderBackup.runNow(this) { toastBackupResult(it) }
+        }
+        refreshDriveUi()
+
         binding.versionLabel.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
         binding.checkUpdates.setOnClickListener {
             Toast.makeText(this, R.string.checking_for_updates, Toast.LENGTH_SHORT).show()
@@ -112,6 +155,40 @@ class SettingsActivity : DayAtlasActivity() {
                         .show()
                 }
             }
+        }
+    }
+
+    private fun refreshDriveUi() {
+        val name = DriveFolderBackup.folderSummary(this, prefs)
+        binding.driveFolderLabel.text = if (name == null) {
+            getString(R.string.drive_folder_none)
+        } else {
+            getString(R.string.drive_folder_selected, name)
+        }
+        val last = prefs.lastDriveBackupDay
+        if (last != null) {
+            binding.driveFolderLabel.append("\nSon yedek: $last")
+        }
+    }
+
+    private fun toastBackupResult(result: DriveFolderBackup.Result) {
+        when {
+            result.message == "busy" ->
+                Toast.makeText(this, R.string.drive_backup_busy, Toast.LENGTH_SHORT).show()
+            result.ok -> {
+                Toast.makeText(
+                    this,
+                    getString(R.string.drive_backup_ok, result.uploaded),
+                    Toast.LENGTH_SHORT,
+                ).show()
+                refreshDriveUi()
+            }
+            else ->
+                Toast.makeText(
+                    this,
+                    getString(R.string.drive_backup_failed, result.message ?: "error"),
+                    Toast.LENGTH_LONG,
+                ).show()
         }
     }
 }
