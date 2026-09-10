@@ -8,8 +8,8 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Aynı yerde kalınca GPS örneklemesi kademeli seyreltiliyor " +
-            "(~25 m içinde art arda 3 ölçüm → bir üst aralık, en fazla 5 dk). " +
-            "Hareket edince ayarlardaki aralığa döner; gece sabit otururken " +
-            "pil tüketimini azaltır."
+        "Otomatik güncelleme indirdikten sonra kurulum ekranı / “kurmak " +
+            "için dokun” bildirimi artık geliyor (önceden indirme bitince " +
+            "sessizce kalıyordu). Uygulamayı tekrar açınca da bekleyen " +
+            "kurulum hatırlatılır."
 }

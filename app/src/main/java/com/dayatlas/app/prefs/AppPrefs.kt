@@ -133,6 +133,29 @@ class AppPrefs(context: Context) {
         get() = prefs.getLong(LAST_UPDATE_CHECK, 0L)
         set(value) = prefs.edit().putLong(LAST_UPDATE_CHECK, value).apply()
 
+    /** DownloadManager id for an in-flight update APK, or -1 when none / finished. */
+    var pendingUpdateDownloadId: Long
+        get() = prefs.getLong(PENDING_UPDATE_DOWNLOAD_ID, -1L)
+        set(value) = prefs.edit().putLong(PENDING_UPDATE_DOWNLOAD_ID, value).apply()
+
+    /** version label (e.g. "v0.6.6") for the pending update APK. */
+    var pendingUpdateVersion: String?
+        get() = prefs.getString(PENDING_UPDATE_VERSION, null)
+        set(value) = prefs.edit().putString(PENDING_UPDATE_VERSION, value).apply()
+
+    /** Whether the pending download was started without UI prompts. */
+    var pendingUpdateSilent: Boolean
+        get() = prefs.getBoolean(PENDING_UPDATE_SILENT, true)
+        set(value) = prefs.edit().putBoolean(PENDING_UPDATE_SILENT, value).apply()
+
+    fun clearPendingUpdate() {
+        prefs.edit()
+            .remove(PENDING_UPDATE_DOWNLOAD_ID)
+            .remove(PENDING_UPDATE_VERSION)
+            .remove(PENDING_UPDATE_SILENT)
+            .apply()
+    }
+
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
         const val DEFAULT_INTERVAL_SECONDS = 60
@@ -149,5 +172,8 @@ class AppPrefs(context: Context) {
         private const val LAST_SAMPLE_LON = "last_sample_lon_bits"
         private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"
         private const val LAST_UPDATE_CHECK = "last_update_check_millis"
+        private const val PENDING_UPDATE_DOWNLOAD_ID = "pending_update_download_id"
+        private const val PENDING_UPDATE_VERSION = "pending_update_version"
+        private const val PENDING_UPDATE_SILENT = "pending_update_silent"
     }
 }

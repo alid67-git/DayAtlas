@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.6 — 2026-09-10
+
+- **Otomatik güncelleme kurulumu:** indirme bitince sistem kurulum ekranı /
+  “kurmak için dokun” bildirimi geliyor (Android 13+ `DOWNLOAD_COMPLETE`
+  receiver + süreç ölümü yüzünden sessiz kalıyordu). Bekleyen APK uygulama
+  açılınca hatırlatılıyor.
+
 ## 0.6.5 — 2026-09-10
 
 - **Sabit nokta seyreltme:** kullanıcı aralığı taban kalır; ~25 m içinde art

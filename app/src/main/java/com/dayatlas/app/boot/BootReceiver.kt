@@ -22,6 +22,8 @@ class BootReceiver : BroadcastReceiver() {
 class PackageReplacedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
-        TrackingController.onAppStart(context, AppPrefs(context))
+        val prefs = AppPrefs(context)
+        prefs.clearPendingUpdate()
+        TrackingController.onAppStart(context, prefs)
     }
 }

@@ -71,6 +71,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- Must be exported: DownloadManager is a system app broadcast. -->
+        <receiver
+            android:name=".update.DownloadCompleteReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name=".location.SampleReceiver"
             android:exported="false" />
