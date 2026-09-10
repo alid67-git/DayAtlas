@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.5 — 2026-09-10
+
+- **Sabit nokta seyreltme:** kullanıcı aralığı taban kalır; ~25 m içinde art
+  arda 3 GPS ölçümü olunca etkili aralık bir üst kademeye çıkar
+  (30 sn → 1 → 3 → 5 dk). Hareket edince tabana döner — gece otururken
+  sık uyanma / pil tüketimini azaltır.
+
 ## 0.6.3 — 2026-09-09
 
 - **Seçilen gün özeti:** harita gün gezicinin altında yumuşak yeşil tonlu

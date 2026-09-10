@@ -50,6 +50,13 @@
                 android:text="@string/settings_interval"
                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/settings_interval_hint"
+                android:textAppearance="?attr/textAppearanceBodySmall" />
+
             <RadioGroup
                 android:id="@+id/intervalGroup"
                 android:layout_width="match_parent"

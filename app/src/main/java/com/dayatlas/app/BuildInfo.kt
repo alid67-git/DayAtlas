@@ -8,8 +8,8 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Haritada başka bir güne geçince o günün mesafesi, son noktası ve " +
-            "nokta sayısı artık gün seçicinin hemen altında, üç hücreli " +
-            "şeritte görünüyor. Üst blok bugünün kaydına ait kalmaya devam " +
-            "eder."
+        "Aynı yerde kalınca GPS örneklemesi kademeli seyreltiliyor " +
+            "(~25 m içinde art arda 3 ölçüm → bir üst aralık, en fazla 5 dk). " +
+            "Hareket edince ayarlardaki aralığa döner; gece sabit otururken " +
+            "pil tüketimini azaltır."
 }

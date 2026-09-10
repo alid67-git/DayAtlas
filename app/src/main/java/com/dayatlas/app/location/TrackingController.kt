@@ -15,6 +15,7 @@ object TrackingController {
 
     fun start(context: Context, prefs: AppPrefs = AppPrefs(context), sampleSoon: Boolean = true) {
         prefs.trackingEnabled = true
+        prefs.resetStationaryBackoff()
         if (sampleSoon) {
             SampleScheduler.scheduleNext(context, prefs, delayMs = 3_000L)
         } else {
@@ -24,6 +25,7 @@ object TrackingController {
 
     fun stop(context: Context, prefs: AppPrefs = AppPrefs(context)) {
         prefs.trackingEnabled = false
+        prefs.resetStationaryBackoff()
         SampleScheduler.cancel(context)
     }
 
