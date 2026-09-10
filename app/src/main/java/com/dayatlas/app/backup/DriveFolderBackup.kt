@@ -14,7 +14,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Copies local `files/days/*` into a user-picked folder (typically Google Drive
+ * Copies local `files/days/` day files into a user-picked folder (typically Google Drive
  * via the system folder picker). Drive's own client then syncs that folder to
  * the cloud — no OAuth / Play Services Drive SDK.
  *

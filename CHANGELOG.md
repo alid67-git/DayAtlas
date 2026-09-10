@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.10 — 2026-09-10
+
+- **CI derleme hatası düzeltildi:** `DriveFolderBackup.kt` içindeki doc
+  comment'te backtick içinde geçen `` `files/days/*` `` metni, Kotlin'de
+  iç içe blok yorum açıp dosyanın geri kalanını yorum içine alıyordu
+  (derleme "Unclosed comment" hatasıyla düşüyordu). Bu yüzden 0.6.9 hiç
+  yayınlanamadı ve `android-latest` sürümü 0.6.8'de takılı kaldı —
+  telefonlar kendini güncelleyemedi. Metin düzeltildi, derleme artık geçiyor.
+
 ## 0.6.9 — 2026-09-10
 
 - **Günlük Google Drive yedek:** Ayarlar’da klasör seç (Drive önerilir) +
