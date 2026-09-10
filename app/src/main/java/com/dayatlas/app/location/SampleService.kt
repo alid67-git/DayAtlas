@@ -71,6 +71,11 @@ class SampleService : Service() {
         LocationSampler.request(lm, io) { location ->
             main.post {
                 if (location != null) {
+                    StationaryBackoff.recordSample(
+                        prefs,
+                        location.latitude,
+                        location.longitude,
+                    )
                     runCatching { DayStore(applicationContext).append(location) }
                     sendBroadcast(Intents.pointSaved(this))
                 }
@@ -88,7 +93,11 @@ class SampleService : Service() {
     private fun finish(reschedule: Boolean) {
         if (reschedule) {
             val prefs = AppPrefs(this)
-            SampleScheduler.scheduleNext(this, prefs)
+            SampleScheduler.scheduleNext(
+                this,
+                prefs,
+                delayMs = prefs.effectiveIntervalMillis,
+            )
         }
         releaseWakeLock()
         stopForeground(STOP_FOREGROUND_REMOVE)

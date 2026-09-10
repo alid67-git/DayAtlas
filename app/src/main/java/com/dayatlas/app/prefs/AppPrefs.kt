@@ -54,6 +54,75 @@ class AppPrefs(context: Context) {
     val intervalMillis: Long
         get() = intervalSeconds * 1_000L
 
+    /**
+     * Alarm delay currently in force. Starts at [intervalSeconds] and may
+     * coarsen while sitting still; never finer than the user-configured base.
+     */
+    var effectiveIntervalSeconds: Int
+        get() {
+            val base = intervalSeconds
+            if (!prefs.contains(EFFECTIVE_INTERVAL_SECONDS)) return base
+            val raw = prefs.getInt(EFFECTIVE_INTERVAL_SECONDS, base)
+            val clamped =
+                if (raw in ALLOWED_INTERVAL_SECONDS) raw else base
+            return clamped.coerceAtLeast(base)
+        }
+        set(value) {
+            val base = intervalSeconds
+            val clamped =
+                if (value in ALLOWED_INTERVAL_SECONDS) value else base
+            prefs.edit()
+                .putInt(EFFECTIVE_INTERVAL_SECONDS, clamped.coerceAtLeast(base))
+                .apply()
+        }
+
+    val effectiveIntervalMillis: Long
+        get() = effectiveIntervalSeconds * 1_000L
+
+    var stationaryStreak: Int
+        get() = prefs.getInt(STATIONARY_STREAK, 0).coerceAtLeast(0)
+        set(value) = prefs.edit().putInt(STATIONARY_STREAK, value.coerceAtLeast(0)).apply()
+
+    var lastSampleLat: Double?
+        get() =
+            if (prefs.contains(LAST_SAMPLE_LAT)) {
+                Double.fromBits(prefs.getLong(LAST_SAMPLE_LAT, 0L))
+            } else {
+                null
+            }
+        set(value) {
+            if (value == null) {
+                prefs.edit().remove(LAST_SAMPLE_LAT).apply()
+            } else {
+                prefs.edit().putLong(LAST_SAMPLE_LAT, value.toRawBits()).apply()
+            }
+        }
+
+    var lastSampleLon: Double?
+        get() =
+            if (prefs.contains(LAST_SAMPLE_LON)) {
+                Double.fromBits(prefs.getLong(LAST_SAMPLE_LON, 0L))
+            } else {
+                null
+            }
+        set(value) {
+            if (value == null) {
+                prefs.edit().remove(LAST_SAMPLE_LON).apply()
+            } else {
+                prefs.edit().putLong(LAST_SAMPLE_LON, value.toRawBits()).apply()
+            }
+        }
+
+    /** Clear adaptive backoff (e.g. settings interval change or tracking start). */
+    fun resetStationaryBackoff() {
+        prefs.edit()
+            .putInt(EFFECTIVE_INTERVAL_SECONDS, intervalSeconds)
+            .putInt(STATIONARY_STREAK, 0)
+            .remove(LAST_SAMPLE_LAT)
+            .remove(LAST_SAMPLE_LON)
+            .apply()
+    }
+
     /** versionName of the build whose "what's new" dialog has already been shown. */
     var lastSeenBuildNoteVersion: String?
         get() = prefs.getString(LAST_SEEN_BUILD_NOTE, null)
@@ -74,6 +143,10 @@ class AppPrefs(context: Context) {
         private const val TRACKING = "tracking_enabled"
         private const val INTERVAL_SECONDS = "interval_seconds"
         private const val INTERVAL_MINUTES_LEGACY = "interval_minutes"
+        private const val EFFECTIVE_INTERVAL_SECONDS = "effective_interval_seconds"
+        private const val STATIONARY_STREAK = "stationary_streak"
+        private const val LAST_SAMPLE_LAT = "last_sample_lat_bits"
+        private const val LAST_SAMPLE_LON = "last_sample_lon_bits"
         private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"
         private const val LAST_UPDATE_CHECK = "last_update_check_millis"
     }

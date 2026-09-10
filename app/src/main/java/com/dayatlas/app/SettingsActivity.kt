@@ -51,6 +51,7 @@ class SettingsActivity : DayAtlasActivity() {
                 else -> 300
             }
             prefs.intervalSeconds = seconds
+            prefs.resetStationaryBackoff()
             if (prefs.trackingEnabled || prefs.dailyMode) {
                 TrackingController.start(this, prefs, sampleSoon = false)
             }
