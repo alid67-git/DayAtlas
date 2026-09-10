@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat
 import com.dayatlas.app.BuildConfig
 import com.dayatlas.app.R
 import com.dayatlas.app.backup.DriveFolderBackup
+import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
