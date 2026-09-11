@@ -16,9 +16,9 @@ class GeoTest {
     @Test
     fun pathLengthSumsSegments() {
         val points = listOf(
-            TrackPoint(1L, 41.0, 29.0, null),
-            TrackPoint(2L, 41.0, 29.001, null),
-            TrackPoint(3L, 41.0, 29.002, null),
+            TrackPoint(0L, 41.0, 29.0, null),
+            TrackPoint(60_000L, 41.0, 29.001, null),
+            TrackPoint(120_000L, 41.0, 29.002, null),
         )
         val len = Geo.pathLengthMeters(points)
         assertTrue(len in 140.0..220.0)
@@ -82,12 +82,28 @@ class SpeedStatsTest {
     fun stationaryJitterDoesNotCountAsActive() {
         val points = listOf(
             TrackPoint(0L, 41.0, 29.0, null),
-            // ~1 m of GPS jitter over a minute - well under the 1 km/h floor.
+            // ~1 m of GPS jitter over a minute - well under the noise floor.
             TrackPoint(60_000L, 41.0, 29.00001, null),
         )
         val stats = SpeedStats.compute(points)
         assertEquals(0L, stats.activeMillis)
         assertEquals(0.0, stats.avgSpeedKmh, 1e-9)
+        assertEquals(0.0, stats.maxSpeedKmh, 1e-9)
+    }
+
+    @Test
+    fun homeGpsWanderDoesNotInflateActiveOrMax() {
+        // ~50 m in 60 s ≈ 3 km/h — typical courtyard GPS bounce, not a walk.
+        val points = listOf(
+            TrackPoint(0L, 41.0, 29.0, null),
+            TrackPoint(60_000L, 41.0, 29.0006, null),
+            TrackPoint(120_000L, 41.0, 29.0, null),
+            TrackPoint(180_000L, 41.0, 29.0006, null),
+        )
+        val stats = SpeedStats.compute(points)
+        assertEquals(0L, stats.activeMillis)
+        assertEquals(0.0, stats.maxSpeedKmh, 1e-9)
+        assertTrue(Geo.pathLengthMeters(points) < 1.0)
     }
 
     @Test
@@ -127,13 +143,25 @@ class DayTitleTest {
 
     @Test
     fun formatDurationSwitchesToHoursPastSixty() {
-        assertEquals("45 dk", DayTitle.formatDuration(45 * 60_000L))
-        assertEquals("2 sa 5 dk", DayTitle.formatDuration((2 * 60 + 5) * 60_000L))
+        val tr = Locale("tr", "TR")
+        assertEquals("45 dk", DayTitle.formatDuration(45 * 60_000L, tr))
+        assertEquals("2 sa 5 dk", DayTitle.formatDuration((2 * 60 + 5) * 60_000L, tr))
+        val en = Locale.ENGLISH
+        assertEquals("45 min", DayTitle.formatDuration(45 * 60_000L, en))
+        assertEquals("2 h 5 min", DayTitle.formatDuration((2 * 60 + 5) * 60_000L, en))
     }
 
     @Test
     fun formatSpeedRoundsToWholeKmh() {
         assertEquals("42 km/sa", DayTitle.formatSpeed(42.4, Locale("tr", "TR")))
+        assertEquals("42 km/h", DayTitle.formatSpeed(42.4, Locale.ENGLISH))
+    }
+
+    @Test
+    fun formatEnglishAndGermanTitles() {
+        val date = LocalDate.of(2026, 8, 28)
+        assertEquals("Daily 28 Aug 2026", DayTitle.format(date, Locale.ENGLISH))
+        assertEquals("Tag 28 Aug 2026", DayTitle.format(date, Locale.GERMAN))
     }
 }
 

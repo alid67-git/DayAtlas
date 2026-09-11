@@ -73,6 +73,26 @@ class DayStore(context: Context) {
             // GPS teleport — keep the day file unchanged.
             return@withLock existing
         }
+        val last = existing.points.lastOrNull()
+        if (last != null) {
+            val drift = Geo.haversineMeters(last.lat, last.lon, point.lat, point.lon)
+            if (drift < Geo.SAME_PLACE_RADIUS_M) {
+                // Same place (incl. while the sample interval is coarsening) —
+                // refresh time on the existing fix; do not stack another pin
+                // or chase GPS jitter around the spot.
+                val refreshed = last.copy(
+                    timeMillis = point.timeMillis,
+                    accuracyMeters = point.accuracyMeters ?: last.accuracyMeters,
+                )
+                val points = existing.points.dropLast(1) + refreshed
+                val updated = existing.copy(
+                    points = points,
+                    distanceMeters = Geo.pathLengthMeters(points),
+                )
+                persistUnlocked(updated)
+                return@withLock updated
+            }
+        }
         val points = existing.points + point
         val updated = existing.copy(
             points = points,

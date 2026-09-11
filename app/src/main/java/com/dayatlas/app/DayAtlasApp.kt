@@ -11,8 +11,9 @@ class DayAtlasApp : Application() {
     override fun onCreate() {
         super.onCreate()
         RecentsHider.install(this)
-        configureOsmdroid()
         val prefs = AppPrefs(this)
+        AppLocale.applyFromPrefs(prefs)
+        configureOsmdroid()
         TrackingController.onAppStart(this, prefs)
         DriveFolderBackup.maybeRunDaily(this)
     }

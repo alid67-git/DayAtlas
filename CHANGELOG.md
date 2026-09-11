@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.7.10 — 2026-09-11
+
+- **Aynı yerde üst üste nokta yok:** Sabit dururken (~80 m) yeni GPS
+  ölçümü haritaya ikinci pin eklemez; son noktanın saati güncellenir.
+  Aralık seyrelirken spaghetti birikmez.
+
+## 0.7.9 — 2026-09-11
+
+- **Sabit otururken GPS hızı:** Ev GPS titreşimi artık aralığı yeniden
+  sıkılaştırmaz. Sabit çapa (~80 m) + ardışık 2 dış ölçüm şartı; tek
+  sıçrama seyreltilmiş aralığı bozmaz.
+
+## 0.7.8 — 2026-09-11
+
+- **Tek renk kartlar:** Günlük istatistik kutuları aynı beyaz kart stili.
+- **Aktif GPS alma hızı:** Etiket güncellendi (TR/EN/DE).
+- **Ev GPS toleransı:** 25 m içindeki titreşim yerinde güncellenir (spaghetti
+  büyümez); mesafe/aktif süre/maks. hız kısa ve yavaş segmentleri yok sayar.
+  Atlama engeli kayıtta zaten açıktı; mesafe hesabında da uygulanır.
+- **3. satır ortalı:** Eksik son satır yatayda ortalanır; kartlar biraz genişletildi.
+
+## 0.7.7 — 2026-09-11
+
+- **Tam uygulama dilleri (TR / EN / DE):** Tüm arayüz metinleri üç dilde.
+  Ayarlar → Dil (sistem / Türkçe / English / Deutsch). Yardım metinleri
+  uygulama dilini izler; istenirse yardım içinde dil değiştirilebilir.
+
 ## 0.7.6 — 2026-09-11
 
 - **Üst sağ ikonlar kaldırıldı:** Marka şeridindeki GPX dışa aktar ve

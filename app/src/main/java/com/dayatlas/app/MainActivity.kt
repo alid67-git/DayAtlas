@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
+import com.dayatlas.app.data.Geo
 import com.dayatlas.app.data.JumpCleanupDialog
 import com.dayatlas.app.data.JumpFilter
 import com.dayatlas.app.data.RangeStats
@@ -168,7 +169,7 @@ class MainActivity : DayAtlasActivity() {
         prefs.lastSeenBuildNoteVersion = BuildConfig.VERSION_NAME
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.changelog_title, BuildConfig.VERSION_NAME))
-            .setMessage(BuildInfo.BUILD_NOTE)
+            .setMessage(getString(R.string.build_note))
             .setPositiveButton(R.string.ok, null)
             .show()
     }
@@ -378,13 +379,7 @@ class MainActivity : DayAtlasActivity() {
         }
     }
 
-    private fun formatStatsDay(date: LocalDate): String {
-        val months = arrayOf(
-            "Oca", "Şub", "Mar", "Nis", "May", "Haz",
-            "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara",
-        )
-        return "${date.dayOfMonth} ${months[date.monthValue - 1]}"
-    }
+    private fun formatStatsDay(date: LocalDate): String = DayTitle.formatShort(date)
 
     private fun ensurePermissionsThenStart() {
         pendingStart = true
@@ -499,7 +494,7 @@ class MainActivity : DayAtlasActivity() {
         binding.mapDistance.text = if (points.isEmpty()) {
             emDash
         } else {
-            DayTitle.formatDistance(record?.distanceMeters ?: 0.0)
+            DayTitle.formatDistance(Geo.pathLengthMeters(points))
         }
         binding.mapLastPoint.text = points.lastOrNull()?.let { point ->
             Instant.ofEpochMilli(point.timeMillis)
@@ -543,7 +538,7 @@ class MainActivity : DayAtlasActivity() {
             DayStatKind.DISTANCE to if (points.isEmpty()) {
                 emDash
             } else {
-                DayTitle.formatDistance(record?.distanceMeters ?: 0.0)
+                DayTitle.formatDistance(Geo.pathLengthMeters(points))
             },
             DayStatKind.LAST_POINT to (
                 points.lastOrNull()?.let { point ->

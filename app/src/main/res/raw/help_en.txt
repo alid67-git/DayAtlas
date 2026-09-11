@@ -10,7 +10,7 @@ Manual mode: with daily mode off, use the Start/Stop button on the home screen t
 
 2) SAMPLING INTERVAL
 
-Choose 30 seconds, 1, 3 or 5 minutes between points in Settings. After 3 consecutive readings in roughly the same spot (~25 m), the interval automatically coarsens one step (e.g. 1 min -> 3 min); it returns to your chosen interval as soon as you move. This saves battery while sitting still overnight.
+Choose 30 seconds, 1, 3 or 5 minutes between points in Settings. After 3 consecutive readings in roughly the same spot (~80 m), the interval automatically coarsens one step (e.g. 1 min -> 3 min); it returns to your chosen interval after confirmed movement (2 fixes in a row outside). Home GPS jitter does not speed sampling back up. This saves battery while sitting still overnight.
 
 3) PERMISSIONS AND BATTERY
 

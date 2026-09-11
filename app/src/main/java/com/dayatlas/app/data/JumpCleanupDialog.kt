@@ -7,7 +7,6 @@ import com.dayatlas.app.R
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 /**
  * Lists detected GPS jumps for a day; tap a row to delete that point.
@@ -34,7 +33,7 @@ object JumpCleanupDialog {
                 .toLocalTime()
                 .format(TIME_FMT)
             val dist = DayTitle.formatDistance(jump.distanceMeters)
-            val speed = String.format(Locale("tr", "TR"), "%.0f km/sa", jump.speedKmh)
+            val speed = DayTitle.formatSpeed(jump.speedKmh)
             activity.getString(R.string.jump_row, time, dist, speed)
         }.toTypedArray()
 

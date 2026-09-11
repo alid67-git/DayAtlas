@@ -58,24 +58,44 @@ class StationaryBackoffTest {
             state = StationaryBackoff.onSample(41.0, 29.0, 180, state, allowed)
         }
         assertEquals(300, state.effectiveIntervalSeconds)
-        // Even if somehow effective were lower, onSample floors at base —
-        // movement reset returns to 180, not 30.
+        // Two consecutive far fixes confirm movement → back to user base 180.
+        state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
+        assertEquals(300, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
         assertEquals(180, state.effectiveIntervalSeconds)
     }
 
     @Test
-    fun movementResetsToUserBase() {
+    fun movementResetsToUserBaseAfterConfirmedStreak() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         repeat(3) {
             state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         }
         assertEquals(60, state.effectiveIntervalSeconds)
-        // ~1 km away
+        // ~1 km away — first spike alone must not speed the interval back up.
+        state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
+        assertEquals(60, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
         assertEquals(30, state.effectiveIntervalSeconds)
         assertEquals(0, state.stationaryStreak)
+    }
+
+    @Test
+    fun singleHomeGpsSpikeDoesNotSpeedUpInterval() {
+        var state = StationaryBackoff.reset(30)
+        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        repeat(9) {
+            state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        }
+        assertEquals(300, state.effectiveIntervalSeconds)
+        // ~50 m courtyard bounce (was enough to reset with the old 25 m rule).
+        state = StationaryBackoff.onSample(41.0, 29.0006, 30, state, allowed)
+        assertEquals(300, state.effectiveIntervalSeconds)
+        // Still inside 80 m of the fixed anchor — keep coarsening, not speeding up.
+        state = StationaryBackoff.onSample(41.0, 29.0008, 30, state, allowed)
+        assertEquals(300, state.effectiveIntervalSeconds)
+        assertEquals(0, state.movingStreak)
     }
 
     @Test

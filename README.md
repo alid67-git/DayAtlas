@@ -2,7 +2,7 @@
 
 Hafif **günlük iz defteri** — Android. Amaç: nereye ve ne kadar gidildiğinin seyrek, pil dostu kaydı.
 
-Paket: `com.dayatlas.app` · Dil: Türkçe (v0.1) · Sürüm: 0.1.0
+Paket: `com.dayatlas.app` · Dil: Türkçe / English / Deutsch · Sürüm: 0.7.7
 
 Bu depo **RideAtlas değildir**. RideAtlas sık GPS, canlı harita ve zengin sürüş kaydıdır. DayAtlas ayrı bir ürün: seyrek örnekleme, özet iz, az pil. RideAtlas kodu kopyalanmaz; monorepo yoktur.
 
@@ -65,18 +65,18 @@ boşluk) dışarıda bırakacak şekilde hesaplanır.
 
 ## Yardım ekranı
 
-Araç çubuğu menüsünde (taşma menüsü) **Yardım** — Türkçe/İngilizce/
-Almanca arasında geçiş yapılabilen, uygulamanın tüm özelliklerini
-anlatan bir ekran (`HelpActivity`, metinler `res/raw/help_*.txt`).
+**Daha fazla → Yardım** — uygulama dilinde açılır; ekranda Türkçe /
+İngilizce / Almanca yardım metni arasında geçiş yapılabilir
+(`HelpActivity`, `res/raw/help_*.txt`). Arayüz dili **Ayarlar → Dil**.
 
 ## GPX dışa aktarma
 
 Her gün zaten `files/days/yyyy-MM-dd.gpx` olarak yazılır (uygulama içi
-depo). Araç çubuğundaki dışa aktarma, seçilen gün veya aralığı tek bir
-GPX dosyasında birleştirip sistem paylaşım ekranına verir (Dosyalar,
-Drive, e-posta vb.). Dosya adına `.gpx` otomatik eklenir; aralıkta her
-gün ayrı bir `<trk>` olur (içe aktaran uygulamaların tek güne yığmaması
-için), her noktada gerçek UTC zaman damgası vardır.
+depo). **Rotalar** sekmesinden tek gün veya Aralık GPX ile sistem
+paylaşım ekranına verilir (Dosyalar, Drive, e-posta vb.). Dosya adına
+`.gpx` otomatik eklenir; aralıkta her gün ayrı bir `<trk>` olur (içe
+aktaran uygulamaların tek güne yığmaması için), her noktada gerçek UTC
+zaman damgası vardır.
 
 ## Google Drive günlük yedek
 

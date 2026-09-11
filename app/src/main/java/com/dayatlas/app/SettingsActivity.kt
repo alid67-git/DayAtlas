@@ -55,6 +55,8 @@ class SettingsActivity : DayAtlasActivity() {
             TrackingController.setDailyMode(this, checked, prefs)
         }
 
+        setupLanguagePicker()
+
         when (prefs.intervalSeconds) {
             30 -> binding.interval30s.isChecked = true
             60 -> binding.interval1.isChecked = true
@@ -179,11 +181,33 @@ class SettingsActivity : DayAtlasActivity() {
         }
     }
 
+    private fun setupLanguagePicker() {
+        when (prefs.appLanguage) {
+            AppLocale.TR -> binding.languageTr.isChecked = true
+            AppLocale.EN -> binding.languageEn.isChecked = true
+            AppLocale.DE -> binding.languageDe.isChecked = true
+            else -> binding.languageSystem.isChecked = true
+        }
+        binding.languageGroup.setOnCheckedChangeListener { _, checkedId ->
+            val tag = when (checkedId) {
+                R.id.languageTr -> AppLocale.TR
+                R.id.languageEn -> AppLocale.EN
+                R.id.languageDe -> AppLocale.DE
+                else -> AppLocale.SYSTEM
+            }
+            if (tag == prefs.appLanguage) return@setOnCheckedChangeListener
+            prefs.appLanguage = tag
+            AppLocale.apply(tag)
+            // Recreate so every string/label refreshes in the new locale.
+            recreate()
+        }
+    }
+
     private fun formatIntervalSeconds(seconds: Int): String = when (seconds) {
-        30 -> "30 saniye"
-        60 -> "1 dakika"
-        180 -> "3 dakika"
-        else -> "5 dakika"
+        30 -> getString(R.string.interval_30s)
+        60 -> getString(R.string.interval_1)
+        180 -> getString(R.string.interval_3)
+        else -> getString(R.string.interval_5)
     }
 
     private fun setupDayStatsCheckboxes() {
@@ -216,7 +240,7 @@ class SettingsActivity : DayAtlasActivity() {
         }
         val last = prefs.lastDriveBackupDay
         if (last != null) {
-            binding.driveFolderLabel.append("\nSon yedek: $last")
+            binding.driveFolderLabel.append("\n" + getString(R.string.drive_last_backup, last))
         }
     }
 
