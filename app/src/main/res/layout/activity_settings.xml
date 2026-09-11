@@ -123,6 +123,12 @@
                 android:text="@string/point_count" />
 
             <CheckBox
+                android:id="@+id/statCheckGpsInterval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_gps_interval" />
+
+            <CheckBox
                 android:id="@+id/statCheckMaxSpeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

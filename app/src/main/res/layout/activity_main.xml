@@ -12,141 +12,225 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <!-- Günlük: mevcut ana içerik (Adım 2'de mockup düzenine çekilecek). -->
+        <!-- Günlük — Adım 2: marka şeridi + 2×2 sürüklenen kartlar + hız şeridi. -->
         <LinearLayout
             android:id="@+id/paneDaily"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+            <LinearLayout
+                android:id="@+id/brandHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/md_theme_primary"
-                android:minHeight="?attr/actionBarSize"
-                app:title="@string/app_name"
-                app:titleTextColor="@color/md_theme_on_primary"
-                app:menu="@menu/main" />
+                android:background="@drawable/bg_brand_header"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_brand_mark" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:textColor="@color/md_theme_on_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_footer_credit"
+                        android:textColor="#CCFFFFFF"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/headerExport"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/action_export_gpx"
+                    android:src="@drawable/ic_export"
+                    app:tint="@color/md_theme_on_primary" />
+
+                <ImageButton
+                    android:id="@+id/headerSettings"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/settings"
+                    android:src="@drawable/ic_settings"
+                    app:tint="@color/md_theme_on_primary" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="12dp"
                 android:paddingTop="12dp"
-                android:paddingBottom="8dp">
+                android:paddingBottom="4dp">
 
                 <TextView
                     android:id="@+id/dayTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?attr/textAppearanceTitleLarge"
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
                     android:textColor="@color/md_theme_on_surface"
-                    tools:text="Günlük 28 Ağu 2026" />
+                    android:textStyle="bold"
+                    tools:text="Günlük 10 Eyl 2026" />
 
                 <TextView
                     android:id="@+id/status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="@color/status_on"
-                    tools:text="Kayıt açık" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/today_distance"
-                            android:textAppearance="?attr/textAppearanceLabelMedium"
-                            android:textColor="@color/md_theme_outline" />
-
-                        <TextView
-                            android:id="@+id/distance"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                            android:textColor="@color/md_theme_on_surface"
-                            tools:text="3,2 km" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/last_point"
-                            android:textAppearance="?attr/textAppearanceLabelMedium"
-                            android:textColor="@color/md_theme_outline" />
-
-                        <TextView
-                            android:id="@+id/lastPoint"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
-                            tools:text="14:32" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/point_count"
-                            android:textAppearance="?attr/textAppearanceLabelMedium"
-                            android:textColor="@color/md_theme_outline" />
-
-                        <TextView
-                            android:id="@+id/pointCount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
-                            tools:text="18" />
-                    </LinearLayout>
-                </LinearLayout>
+                    tools:text="Günlük mod — otomatik kayıt" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/toggle"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/start" />
 
                 <TextView
                     android:id="@+id/hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="4dp"
                     android:text="@string/manual_hint"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="@color/md_theme_outline" />
+
+                <!-- 2×2 sürüklenen birincil kartlar (seçili gün). -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mapDayStats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_day_stat" />
+
+                <!-- Üç renkli hız / süre kartı. -->
+                <LinearLayout
+                    android:id="@+id/speedRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/cardMaxSpeed"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_speed_max"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/stat_max_speed"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="@color/md_theme_outline" />
+
+                        <TextView
+                            android:id="@+id/speedMaxValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="@color/md_theme_on_surface"
+                            android:textStyle="bold"
+                            tools:text="124 km/sa" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/cardActiveDuration"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_speed_active"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/stat_active_duration"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="@color/md_theme_outline" />
+
+                        <TextView
+                            android:id="@+id/speedActiveValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="@color/md_theme_on_surface"
+                            android:textStyle="bold"
+                            tools:text="2 sa 48 dk" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/cardAvgSpeed"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_speed_avg"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/stat_avg_speed"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="@color/md_theme_outline" />
+
+                        <TextView
+                            android:id="@+id/speedAvgValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="@color/md_theme_on_surface"
+                            android:textStyle="bold"
+                            tools:text="41 km/sa" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingHorizontal="4dp"
                 android:paddingBottom="4dp">
 
@@ -189,17 +273,6 @@
                     android:src="@drawable/ic_chevron_right"
                     app:tint="@color/md_theme_on_surface" />
             </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/mapDayStats"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginBottom="8dp"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_day_stat" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/jumpsButton"

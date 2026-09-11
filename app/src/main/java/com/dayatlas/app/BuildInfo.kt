@@ -8,7 +8,7 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Alt menü geldi: Günlük / İstatistikler / Rotalar / Daha fazla. " +
-            "İlk adımda iskelet; istatistik ve rota içerikleri sonraki " +
-            "sürümlerde dolacak. Ayarlar ve Yardım ‘Daha fazla’dan açılır."
+        "Günlük sekme yenilendi: marka şeridi, 2×2 sürüklenen veri kartları " +
+            "ve üç renkli hız/süre şeridi. Kartları uzun basıp sıralayabilir, " +
+            "Ayarlar’dan göstereceklerinizi seçebilirsiniz."
 }

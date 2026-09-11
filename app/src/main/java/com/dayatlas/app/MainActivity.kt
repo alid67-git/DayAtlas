@@ -88,23 +88,26 @@ class MainActivity : DayAtlasActivity() {
         binding.mapDayStats.adapter = dayStatsAdapter
         dayStatsAdapter.attachTo(binding.mapDayStats)
 
-        binding.toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_export_gpx -> {
-                    GpxExportDialog.show(this, store, mapDate)
-                    true
-                }
-                R.id.action_settings -> {
-                    startActivity(Intent(this, SettingsActivity::class.java))
-                    true
-                }
-                R.id.action_help -> {
-                    startActivity(Intent(this, HelpActivity::class.java))
-                    true
-                }
-                else -> false
-            }
+        binding.headerExport.setOnClickListener {
+            GpxExportDialog.show(this, store, mapDate)
         }
+        binding.headerSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            showTab(item.itemId)
+            true
+        }
+        binding.bottomNav.selectedItemId = R.id.nav_daily
+
+        binding.moreSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        binding.moreHelp.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
+        binding.moreVersion.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
 
         binding.bottomNav.setOnItemSelectedListener { item ->
             showTab(item.itemId)
@@ -305,19 +308,6 @@ class MainActivity : DayAtlasActivity() {
                 if (recording) R.color.status_on else R.color.status_off,
             ),
         )
-        binding.distance.text = if (record.points.isEmpty()) {
-            getString(R.string.em_dash)
-        } else {
-            DayTitle.formatDistance(record.distanceMeters)
-        }
-        binding.lastPoint.text = record.points.lastOrNull()?.let { point ->
-            Instant.ofEpochMilli(point.timeMillis)
-                .atZone(ZoneId.systemDefault())
-                .toLocalTime()
-                .format(TIME_FMT)
-        } ?: getString(R.string.em_dash)
-        binding.pointCount.text = record.points.size.toString()
-
         if (prefs.dailyMode) {
             binding.toggle.visibility = View.GONE
             binding.hint.visibility = View.GONE
@@ -333,13 +323,22 @@ class MainActivity : DayAtlasActivity() {
 
     private fun refreshMap() {
         val today = DayTitle.localToday()
-        binding.mapDayTitle.text = DayTitle.format(mapDate)
+        val dayLabel = DayTitle.format(mapDate)
+        binding.dayTitle.text = dayLabel
+        binding.mapDayTitle.text = dayLabel
         binding.nextDay.isEnabled = mapDate < today
         binding.goToday.visibility = if (mapDate == today) View.GONE else View.VISIBLE
         val dateIso = DayTitle.iso(mapDate)
         val record = store.load(dateIso)
         val points = record?.points.orEmpty()
-        dayStatsAdapter.submit(dayStatValues(record, points))
+        val values = dayStatValues(record, points)
+        val hidden = prefs.dayStatsHidden
+        val order = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
+        dayStatsAdapter.submit(
+            order.filter { it in DayStatKind.PRIMARY && it.key !in hidden }
+                .map { it to (values[it] ?: getString(R.string.em_dash)) },
+        )
+        bindSpeedRow(values, hidden)
 
         val jumps = JumpFilter.findJumps(points)
         if (jumps.isEmpty()) {
@@ -368,10 +367,10 @@ class MainActivity : DayAtlasActivity() {
     private fun dayStatValues(
         record: DayRecord?,
         points: List<TrackPoint>,
-    ): List<Pair<DayStatKind, String>> {
+    ): Map<DayStatKind, String> {
         val emDash = getString(R.string.em_dash)
         val speed = SpeedStats.compute(points)
-        val values = mapOf(
+        return mapOf(
             DayStatKind.DISTANCE to if (points.isEmpty()) {
                 emDash
             } else {
@@ -386,22 +385,53 @@ class MainActivity : DayAtlasActivity() {
                 } ?: emDash
                 ),
             DayStatKind.POINT_COUNT to points.size.toString(),
+            DayStatKind.GPS_INTERVAL to formatGpsInterval(prefs.effectiveIntervalSeconds),
             DayStatKind.MAX_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.maxSpeedKmh),
             DayStatKind.AVG_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.avgSpeedKmh),
-            DayStatKind.ACTIVE_DURATION to if (points.size < 2) emDash else DayTitle.formatDuration(speed.activeMillis),
+            DayStatKind.ACTIVE_DURATION to if (points.size < 2) {
+                emDash
+            } else {
+                DayTitle.formatDuration(speed.activeMillis)
+            },
         )
-        val hidden = prefs.dayStatsHidden
-        val order = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
-        return order.filter { it.key !in hidden }.map { it to (values[it] ?: emDash) }
     }
 
-    /** Reordering only touches the visible tiles; hidden ones keep their old
-     * relative order and are appended after so nothing is lost if re-shown. */
-    private fun persistDayStatsOrder(newVisibleOrder: List<DayStatKind>) {
+    private fun bindSpeedRow(values: Map<DayStatKind, String>, hidden: Set<String>) {
+        val emDash = getString(R.string.em_dash)
+        fun show(card: View, valueView: android.widget.TextView, kind: DayStatKind) {
+            if (kind.key in hidden) {
+                card.visibility = View.GONE
+            } else {
+                card.visibility = View.VISIBLE
+                valueView.text = values[kind] ?: emDash
+            }
+        }
+        show(binding.cardMaxSpeed, binding.speedMaxValue, DayStatKind.MAX_SPEED)
+        show(binding.cardActiveDuration, binding.speedActiveValue, DayStatKind.ACTIVE_DURATION)
+        show(binding.cardAvgSpeed, binding.speedAvgValue, DayStatKind.AVG_SPEED)
+        binding.speedRow.visibility =
+            if (DayStatKind.SECONDARY.any { it.key !in hidden }) View.VISIBLE else View.GONE
+    }
+
+    private fun formatGpsInterval(seconds: Int): String = when (seconds) {
+        30 -> getString(R.string.interval_30s_short)
+        60 -> getString(R.string.interval_1_short)
+        180 -> getString(R.string.interval_3_short)
+        300 -> getString(R.string.interval_5_short)
+        else -> getString(R.string.interval_seconds_short, seconds)
+    }
+
+    /**
+     * Reordering only touches visible primary tiles; secondary and hidden
+     * kinds keep their previous relative order and are appended after.
+     */
+    private fun persistDayStatsOrder(newVisiblePrimary: List<DayStatKind>) {
         val hidden = prefs.dayStatsHidden
         val oldOrder = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
-        val hiddenInOldOrder = oldOrder.filter { it.key in hidden }
-        prefs.dayStatsOrderRaw = DayStatKind.joinOrder(newVisibleOrder + hiddenInOldOrder)
+        val secondary = oldOrder.filter { it in DayStatKind.SECONDARY && it.key !in hidden }
+        val hiddenOrdered = oldOrder.filter { it.key in hidden }
+        prefs.dayStatsOrderRaw =
+            DayStatKind.joinOrder(newVisiblePrimary + secondary + hiddenOrdered)
     }
 
     companion object {
