@@ -45,6 +45,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import android.view.LayoutInflater
 import android.widget.TextView
@@ -66,7 +68,17 @@ class MainActivity : DayAtlasActivity() {
     private var mapDate: LocalDate = DayTitle.localToday()
     private var statsRange: StatsRange = StatsRange.LAST_7
     private val uiHandler = Handler(Looper.getMainLooper())
-    private val debouncedRefresh = Runnable { refresh() }
+    private val io = Executors.newSingleThreadExecutor()
+    private val refreshGeneration = AtomicInteger(0)
+    private val debouncedFullRefresh = Runnable { refresh(rebuildMap = false) }
+    private val debouncedMapRebuild = Runnable { refresh(rebuildMap = true) }
+    private var pendingLiveGeometry: Intent? = null
+    private var liveGeometryUpdates = 0
+    private val debouncedLiveMap = Runnable {
+        val intent = pendingLiveGeometry
+        pendingLiveGeometry = null
+        if (intent != null) applyLivePoint(intent, updateMap = true)
+    }
 
     private val locationLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
@@ -92,10 +104,16 @@ class MainActivity : DayAtlasActivity() {
 
     private val pointReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            // Coalesce rapid GPS ticks so we don't clear/rebuild the map on
-            // every sample while the Daily tab is open (ANR / blank map).
-            uiHandler.removeCallbacks(debouncedRefresh)
-            uiHandler.postDelayed(debouncedRefresh, REFRESH_DEBOUNCE_MS)
+            if (intent == null) return
+            // Same-place ticks only need clock / interval text — never rebuild map.
+            if (!intent.getBooleanExtra(Intents.EXTRA_GEOMETRY_CHANGED, true)) {
+                applyLivePoint(intent, updateMap = false)
+                return
+            }
+            // Geometry changed: nudge polyline if possible; coalesce rapid ticks.
+            pendingLiveGeometry = intent
+            uiHandler.removeCallbacks(debouncedLiveMap)
+            uiHandler.postDelayed(debouncedLiveMap, LIVE_MAP_DEBOUNCE_MS)
         }
     }
 
@@ -221,9 +239,20 @@ class MainActivity : DayAtlasActivity() {
     }
 
     override fun onStop() {
-        uiHandler.removeCallbacks(debouncedRefresh)
+        uiHandler.removeCallbacks(debouncedFullRefresh)
+        uiHandler.removeCallbacks(debouncedMapRebuild)
+        uiHandler.removeCallbacks(debouncedLiveMap)
+        pendingLiveGeometry = null
         runCatching { unregisterReceiver(pointReceiver) }
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        if (::binding.isInitialized) {
+            RouteMapController.clearLiveState(binding.routeMap)
+        }
+        io.shutdownNow()
+        super.onDestroy()
     }
 
     private fun showTab(itemId: Int) {
@@ -447,17 +476,85 @@ class MainActivity : DayAtlasActivity() {
         runCatching { startActivity(intent) }
     }
 
-    private fun refresh() {
+    private fun refresh(rebuildMap: Boolean = true) {
         val today = DayTitle.localToday()
         if (mapDate.isAfter(today)) mapDate = today
+        val mapDateSnapshot = mapDate
+        val generation = refreshGeneration.incrementAndGet()
+        val dailyMode = prefs.dailyMode
+        val trackingEnabled = prefs.trackingEnabled
+        val hidden = prefs.dayStatsHidden
+        val orderRaw = prefs.dayStatsOrderRaw
+        val intervalSeconds = prefs.effectiveIntervalSeconds
+        val dailyVisible = binding.paneDaily.visibility == View.VISIBLE
 
-        // Top block always mirrors the live "today" record — day carousel
-        // below must not rewrite this title / cards.
-        val record = store.loadToday()
+        io.execute {
+            val record = store.loadToday()
+            val mapRecord = if (mapDateSnapshot == today) {
+                record
+            } else {
+                store.load(DayTitle.iso(mapDateSnapshot))
+            }
+            val mapPoints = mapRecord?.points.orEmpty()
+            val jumps = JumpFilter.findJumps(mapPoints)
+            val todaySpeed = SpeedStats.compute(record.points)
+            uiHandler.post {
+                if (isDestroyed || generation != refreshGeneration.get()) return@post
+                applyTodayChrome(record, dailyMode, trackingEnabled, hidden, orderRaw, intervalSeconds, todaySpeed)
+                if (!dailyVisible) return@post
+                if (rebuildMap) {
+                    applyMapPane(mapDateSnapshot, mapRecord, mapPoints, jumps, fitCamera = true)
+                } else {
+                    applyMapLabels(mapDateSnapshot, mapRecord, mapPoints, jumps)
+                }
+            }
+        }
+    }
+
+    private fun applyMapLabels(
+        date: LocalDate,
+        record: DayRecord?,
+        points: List<TrackPoint>,
+        jumps: List<JumpFilter.Jump>,
+    ) {
+        val today = DayTitle.localToday()
+        binding.mapDayTitle.text = DayTitle.format(date)
+        binding.nextDay.isEnabled = date < today
+        binding.goToday.visibility = if (date == today) View.GONE else View.VISIBLE
+        val emDash = getString(R.string.em_dash)
+        binding.mapDistance.text = if (points.isEmpty()) {
+            emDash
+        } else {
+            DayTitle.formatDistance(record?.distanceMeters ?: Geo.pathLengthMeters(points))
+        }
+        binding.mapLastPoint.text = points.lastOrNull()?.let { point ->
+            Instant.ofEpochMilli(point.timeMillis)
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime()
+                .format(TIME_FMT)
+        } ?: emDash
+        binding.mapPointCount.text = points.size.toString()
+        if (jumps.isEmpty()) {
+            binding.jumpsButton.visibility = View.GONE
+        } else {
+            binding.jumpsButton.visibility = View.VISIBLE
+            binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
+        }
+    }
+
+    private fun applyTodayChrome(
+        record: DayRecord,
+        dailyMode: Boolean,
+        trackingEnabled: Boolean,
+        hidden: Set<String>,
+        orderRaw: String?,
+        intervalSeconds: Int,
+        todaySpeed: SpeedStats.Stats,
+    ) {
         binding.dayTitle.text = record.title
-        val recording = prefs.trackingEnabled || prefs.dailyMode
+        val recording = trackingEnabled || dailyMode
         binding.status.text = when {
-            prefs.dailyMode -> getString(R.string.status_daily)
+            dailyMode -> getString(R.string.status_daily)
             recording -> getString(R.string.status_recording)
             else -> getString(R.string.status_stopped)
         }
@@ -467,71 +564,143 @@ class MainActivity : DayAtlasActivity() {
                 if (recording) R.color.status_on else R.color.status_off,
             ),
         )
-        if (prefs.dailyMode) {
+        if (dailyMode) {
             binding.toggle.visibility = View.GONE
             binding.hint.visibility = View.GONE
         } else {
             binding.toggle.visibility = View.VISIBLE
-            binding.toggle.setText(if (prefs.trackingEnabled) R.string.stop else R.string.start)
+            binding.toggle.setText(if (trackingEnabled) R.string.stop else R.string.start)
             binding.hint.visibility = View.VISIBLE
             binding.hint.text = getString(R.string.manual_hint)
         }
 
-        val todayPoints = record.points
-        val todayValues = dayStatValues(record, todayPoints)
-        val hidden = prefs.dayStatsHidden
-        val order = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
+        val todayValues = dayStatValues(record, record.points, todaySpeed, intervalSeconds)
+        val order = DayStatKind.parseOrder(orderRaw)
         dayStatsAdapter.submit(
             order.filter { it.key !in hidden }
                 .map { it to (todayValues[it] ?: getString(R.string.em_dash)) },
         )
-
-        refreshMap()
     }
 
-    private fun refreshMap() {
-        val today = DayTitle.localToday()
-        val dayLabel = DayTitle.format(mapDate)
-        binding.mapDayTitle.text = dayLabel
-        binding.nextDay.isEnabled = mapDate < today
-        binding.goToday.visibility = if (mapDate == today) View.GONE else View.VISIBLE
-        val dateIso = DayTitle.iso(mapDate)
-        val record = store.load(dateIso)
-        val points = record?.points.orEmpty()
-        val emDash = getString(R.string.em_dash)
-        binding.mapDistance.text = if (points.isEmpty()) {
-            emDash
-        } else {
-            DayTitle.formatDistance(Geo.pathLengthMeters(points))
+    /**
+     * Live GPS tick: update labels from broadcast extras. Optionally extend
+     * the polyline without a full overlay clear / zoom (ANR / blank map).
+     */
+    private fun applyLivePoint(intent: Intent, updateMap: Boolean) {
+        val dateIso = intent.getStringExtra(Intents.EXTRA_DATE_ISO) ?: return
+        val pointCount = intent.getIntExtra(Intents.EXTRA_POINT_COUNT, -1)
+        val distanceM = intent.getDoubleExtra(Intents.EXTRA_DISTANCE_M, Double.NaN)
+        val timeMillis = intent.getLongExtra(Intents.EXTRA_TIME_MILLIS, -1L)
+        val lat = intent.getDoubleExtra(Intents.EXTRA_LAT, Double.NaN)
+        val lon = intent.getDoubleExtra(Intents.EXTRA_LON, Double.NaN)
+        if (pointCount < 0 || timeMillis < 0L || distanceM.isNaN() || lat.isNaN() || lon.isNaN()) {
+            // Older broadcast without extras — fall back to a full refresh.
+            uiHandler.removeCallbacks(debouncedMapRebuild)
+            uiHandler.postDelayed(debouncedMapRebuild, LIVE_MAP_DEBOUNCE_MS)
+            return
         }
-        binding.mapLastPoint.text = points.lastOrNull()?.let { point ->
-            Instant.ofEpochMilli(point.timeMillis)
+
+        val todayIso = DayTitle.iso(DayTitle.localToday())
+        if (dateIso == todayIso) {
+            val emDash = getString(R.string.em_dash)
+            val timeText = Instant.ofEpochMilli(timeMillis)
                 .atZone(ZoneId.systemDefault())
                 .toLocalTime()
                 .format(TIME_FMT)
-        } ?: emDash
-        binding.mapPointCount.text = points.size.toString()
-
-        val jumps = JumpFilter.findJumps(points)
-        if (jumps.isEmpty()) {
-            binding.jumpsButton.visibility = View.GONE
-        } else {
-            binding.jumpsButton.visibility = View.VISIBLE
-            binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
+            val distanceText = if (pointCount <= 0) emDash else DayTitle.formatDistance(distanceM)
+            val intervalText = formatGpsInterval(prefs.effectiveIntervalSeconds)
+            // Patch visible today cards without recomputing SpeedStats on main.
+            patchTodayStat(DayStatKind.LAST_POINT, timeText)
+            patchTodayStat(DayStatKind.POINT_COUNT, pointCount.toString())
+            patchTodayStat(DayStatKind.DISTANCE, distanceText)
+            patchTodayStat(DayStatKind.GPS_INTERVAL, intervalText)
         }
+
+        if (mapDate != DayTitle.localToday() || DayTitle.iso(mapDate) != dateIso) {
+            return
+        }
+        val emDash = getString(R.string.em_dash)
+        binding.mapLastPoint.text = Instant.ofEpochMilli(timeMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalTime()
+            .format(TIME_FMT)
+        binding.mapPointCount.text = pointCount.toString()
+        binding.mapDistance.text = if (pointCount <= 0) emDash else DayTitle.formatDistance(distanceM)
+
+        if (!updateMap || binding.paneDaily.visibility != View.VISIBLE) return
+
+        val ok = RouteMapController.updateLive(
+            map = binding.routeMap,
+            context = this,
+            dateIso = dateIso,
+            lat = lat,
+            lon = lon,
+            pointCount = pointCount,
+        )
+        if (!ok) {
+            // First point of the day / state lost — one full rebuild off main.
+            uiHandler.removeCallbacks(debouncedMapRebuild)
+            uiHandler.postDelayed(debouncedMapRebuild, LIVE_MAP_DEBOUNCE_MS)
+            return
+        }
+        // Occasional full refresh keeps max/avg speed cards honest without
+        // rebuilding the map on every GPS tick.
+        liveGeometryUpdates++
+        if (liveGeometryUpdates >= FULL_REFRESH_EVERY_LIVE_UPDATES) {
+            liveGeometryUpdates = 0
+            uiHandler.removeCallbacks(debouncedFullRefresh)
+            uiHandler.postDelayed(debouncedFullRefresh, FULL_REFRESH_DELAY_MS)
+        }
+    }
+
+    private fun patchTodayStat(kind: DayStatKind, value: String) {
+        val items = dayStatsAdapter.currentItems()
+        val index = items.indexOfFirst { it.first == kind }
+        if (index < 0) return
+        if (items[index].second == value) return
+        dayStatsAdapter.updateValueAt(index, value)
+    }
+
+    private fun refreshMap() {
+        val mapDateSnapshot = mapDate
+        val generation = refreshGeneration.incrementAndGet()
+        io.execute {
+            val dateIso = DayTitle.iso(mapDateSnapshot)
+            val record = store.load(dateIso)
+            val points = record?.points.orEmpty()
+            val jumps = JumpFilter.findJumps(points)
+            uiHandler.post {
+                if (isDestroyed || generation != refreshGeneration.get()) return@post
+                applyMapPane(mapDateSnapshot, record, points, jumps, fitCamera = true)
+            }
+        }
+    }
+
+    private fun applyMapPane(
+        date: LocalDate,
+        record: DayRecord?,
+        points: List<TrackPoint>,
+        jumps: List<JumpFilter.Jump>,
+        fitCamera: Boolean,
+    ) {
+        applyMapLabels(date, record, points, jumps)
+        val dateIso = DayTitle.iso(date)
 
         RouteMapController.show(
             map = binding.routeMap,
             context = this,
             points = points,
             emptyState = binding.emptyState,
+            dateIso = dateIso,
+            jumps = jumps,
+            fitCamera = fitCamera,
             onJumpTap = { jump ->
                 JumpCleanupDialog.confirmDelete(
                     this,
                     store,
                     dateIso,
                     jump,
-                ) { refresh() }
+                ) { refresh(rebuildMap = true) }
             },
         )
     }
@@ -539,14 +708,15 @@ class MainActivity : DayAtlasActivity() {
     private fun dayStatValues(
         record: DayRecord?,
         points: List<TrackPoint>,
+        speed: SpeedStats.Stats = SpeedStats.compute(points),
+        intervalSeconds: Int = prefs.effectiveIntervalSeconds,
     ): Map<DayStatKind, String> {
         val emDash = getString(R.string.em_dash)
-        val speed = SpeedStats.compute(points)
         return mapOf(
             DayStatKind.DISTANCE to if (points.isEmpty()) {
                 emDash
             } else {
-                DayTitle.formatDistance(Geo.pathLengthMeters(points))
+                DayTitle.formatDistance(record?.distanceMeters ?: Geo.pathLengthMeters(points))
             },
             DayStatKind.LAST_POINT to (
                 points.lastOrNull()?.let { point ->
@@ -557,7 +727,7 @@ class MainActivity : DayAtlasActivity() {
                 } ?: emDash
                 ),
             DayStatKind.POINT_COUNT to points.size.toString(),
-            DayStatKind.GPS_INTERVAL to formatGpsInterval(prefs.effectiveIntervalSeconds),
+            DayStatKind.GPS_INTERVAL to formatGpsInterval(intervalSeconds),
             DayStatKind.MAX_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.maxSpeedKmh),
             DayStatKind.AVG_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.avgSpeedKmh),
             DayStatKind.ACTIVE_DURATION to if (points.size < 2) {
@@ -589,6 +759,8 @@ class MainActivity : DayAtlasActivity() {
 
     companion object {
         private val TIME_FMT = DateTimeFormatter.ofPattern("HH:mm")
-        private const val REFRESH_DEBOUNCE_MS = 1_200L
+        private const val LIVE_MAP_DEBOUNCE_MS = 400L
+        private const val FULL_REFRESH_EVERY_LIVE_UPDATES = 20
+        private const val FULL_REFRESH_DELAY_MS = 1_500L
     }
 }

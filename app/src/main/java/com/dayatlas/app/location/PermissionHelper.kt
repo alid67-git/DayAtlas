@@ -55,7 +55,31 @@ object PermissionHelper {
 
 object Intents {
     const val ACTION_POINT_SAVED = "com.dayatlas.app.POINT_SAVED"
+    const val EXTRA_GEOMETRY_CHANGED = "geometry_changed"
+    const val EXTRA_DATE_ISO = "date_iso"
+    const val EXTRA_POINT_COUNT = "point_count"
+    const val EXTRA_DISTANCE_M = "distance_m"
+    const val EXTRA_TIME_MILLIS = "time_millis"
+    const val EXTRA_LAT = "lat"
+    const val EXTRA_LON = "lon"
 
-    fun pointSaved(context: Context): Intent =
-        Intent(ACTION_POINT_SAVED).setPackage(context.packageName)
+    fun pointSaved(
+        context: Context,
+        dateIso: String,
+        pointCount: Int,
+        distanceMeters: Double,
+        timeMillis: Long,
+        lat: Double,
+        lon: Double,
+        geometryChanged: Boolean,
+    ): Intent =
+        Intent(ACTION_POINT_SAVED)
+            .setPackage(context.packageName)
+            .putExtra(EXTRA_DATE_ISO, dateIso)
+            .putExtra(EXTRA_POINT_COUNT, pointCount)
+            .putExtra(EXTRA_DISTANCE_M, distanceMeters)
+            .putExtra(EXTRA_TIME_MILLIS, timeMillis)
+            .putExtra(EXTRA_LAT, lat)
+            .putExtra(EXTRA_LON, lon)
+            .putExtra(EXTRA_GEOMETRY_CHANGED, geometryChanged)
 }

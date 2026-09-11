@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Einfrieren / leere Karte während der Aufzeichnung behoben: GPS-Schreiben außerhalb des UI-Threads, Aktualisierungen entprellt. Mittags-Updateprüfung in der vorherigen Version.</string>
+    <string name="build_note">Version 0.7.13 — Live-Karte wird bei jedem GPS-Tick nicht mehr gelöscht/neu gezeichnet; leerer Bildschirm / Einfrieren behoben.</string>
 </resources>

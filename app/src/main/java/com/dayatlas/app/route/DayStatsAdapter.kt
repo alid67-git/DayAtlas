@@ -27,6 +27,15 @@ class DayStatsAdapter(
         notifyDataSetChanged()
     }
 
+    fun currentItems(): List<Pair<DayStatKind, String>> = items.toList()
+
+    fun updateValueAt(index: Int, value: String) {
+        if (index !in items.indices) return
+        val kind = items[index].first
+        items[index] = kind to value
+        notifyItemChanged(index)
+    }
+
     fun attachTo(recyclerView: RecyclerView) {
         val span = 3
         recyclerView.layoutManager = GridLayoutManager(recyclerView.context, span)

@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Son yedek: %1$s</string>
-    <string name="build_note">Kayıt açıkken kilitlenme / boş harita düzeltildi: GPS yazımı arka planda, arayüz yenilemesi sönümlü. Öğlen güncelleme kontrolü önceki sürümde.</string>
+    <string name="build_note">Sürüm 0.7.13 — Kayıt sırasında harita artık her GPS’te silinip yeniden çizilmiyor; boş ekran / kilitlenme giderildi.</string>
 </resources>
