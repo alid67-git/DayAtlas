@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Son yedek: %1$s</string>
-    <string name="build_note">Sürüm 0.7.13 — Kayıt sırasında harita artık her GPS’te silinip yeniden çizilmiyor; boş ekran / kilitlenme giderildi.</string>
+    <string name="build_note">Sürüm 0.7.14 — Boş harita: zoom kenar boşluğu düzeltildi; harita kartların hemen altında.</string>
 </resources>
