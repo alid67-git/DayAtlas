@@ -167,17 +167,12 @@ yaptığı şeyle aynı sınıftır: bayrak yetmezse görevi gerçekten kaldırm
 
 RideAtlas/MediaAtlas ile aynı kurgu: CI (`android.yml`) her `main` push’unda
 `DayAtlas.apk`’yi tek bir rolling `android-latest` GitHub release’ine
-yüklüyor. Uygulama açılışta (yalnızca release build’de) bu release’i sessizce
-kontrol ediyor; daha yeni bir sürüm varsa hiç sormadan/uyarı vermeden
-indirmeye başlıyor.
-
-Uygulama günlerce hiç açılmadan (yalnızca günlük mod arka planda) çalışabildiği
-için bu açılış-anı kontrolü tek başına yetmez: `SampleService` de zaten her
-örnekleme döngüsünde çalıştığı için, günde en fazla bir kez aynı sessiz kontrolü o
-döngüye de ekliyor (`AppPrefs.lastUpdateCheckMillis`). Yeni alarm/servis
-eklenmedi — mevcut örnekleme tetiklemesine, zaten tutulan wake-lock’a binen bir
-ek adım. Yalnızca günlük mod veya manuel kayıt açıkken çalışır; ikisi de
-kapalıyken uygulamayı hiç açmıyorsanız güncelleme kontrolü de olmaz.
+yüklüyor. Uygulama **her gün yerel saat 12:00’te** (`UpdateCheckScheduler` /
+`UpdateCheckReceiver`) bu release’i sessizce kontrol eder; daha yeni bir
+sürüm varsa indirmeye başlar. GPS kaydından bağımsızdır (kayıt kapalıyken
+de alarm çalışır). Öğleden sonra süreç açılırsa veya örnekleme tick’i
+gelirse, o gün henüz kontrol edilmediyse yedek catch-up yapılır (`günde
+bir`). Ayarlar’daki “Güncellemeleri kontrol et” her zaman elle çalışır.
 
 `release` build tipi, repoya bilerek commit edilmiş sabit bir keystore ile
 imzalanıyor (`app/dayatlas-debug.keystore`) — Android'in kendiliğinden
