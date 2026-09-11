@@ -75,9 +75,26 @@ class SampleService : Service() {
                     location.latitude,
                     location.longitude,
                 )
-                runCatching { DayStore(applicationContext).append(location) }
-                // Notify UI after I/O; receiver will debounce refresh.
-                sendBroadcast(Intents.pointSaved(this))
+                val result = runCatching { DayStore(applicationContext).append(location) }.getOrNull()
+                if (result != null && result.wrote) {
+                    val last = result.record.points.lastOrNull()
+                    if (last != null) {
+                        // Extras let the UI update without re-reading disk /
+                        // rebuilding the whole map on every tick.
+                        sendBroadcast(
+                            Intents.pointSaved(
+                                this,
+                                dateIso = result.record.date,
+                                pointCount = result.record.points.size,
+                                distanceMeters = result.record.distanceMeters,
+                                timeMillis = last.timeMillis,
+                                lat = last.lat,
+                                lon = last.lon,
+                                geometryChanged = result.geometryChanged,
+                            ),
+                        )
+                    }
+                }
             }
             main.post { stepDone() }
         }
@@ -86,6 +103,7 @@ class SampleService : Service() {
 
     private fun finish(reschedule: Boolean) {
         // Once per local day: copy days/* into the user-picked Drive/folder tree.
+        // Prefs check is light; heavy I/O is already async inside maybeRunDaily.
         DriveFolderBackup.maybeRunDaily(this)
         if (reschedule) {
             val prefs = AppPrefs(this)

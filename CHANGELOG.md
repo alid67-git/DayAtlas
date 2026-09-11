@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.13 — 2026-09-11
+
+- **ANR / boş harita (güçlü düzeltme):** Canlı GPS artık haritayı
+  silip zoomlamıyor; polyline uç noktası güncelleniyor. UI disk okuması
+  arka planda; aynı yerdeki örnekler yalnızca saati güncelliyor.
+  DayStore süreç geneli kilit + bugün önbelleği.
+
 ## 0.7.12 — 2026-09-11
 
 - **ANR / boş harita düzeltmesi:** GPS kaydı disk yazımını ana thread’den

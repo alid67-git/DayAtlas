@@ -9,9 +9,16 @@ import java.time.ZoneId
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
+data class AppendResult(
+    val record: DayRecord,
+    /** True when a new pin was added (not same-place time refresh / reject). */
+    val geometryChanged: Boolean,
+    /** False when a teleport jump was rejected and nothing was written. */
+    val wrote: Boolean,
+)
+
 class DayStore(context: Context) {
     private val appContext = context.applicationContext
-    private val lock = ReentrantLock()
 
     fun daysDir(): File = File(appContext.filesDir, "days").also { it.mkdirs() }
 
@@ -20,9 +27,12 @@ class DayStore(context: Context) {
     fun gpxFile(dateIso: String): File = File(daysDir(), "$dateIso.gpx")
 
     fun load(dateIso: String): DayRecord? = lock.withLock {
-        val file = jsonFile(dateIso)
-        if (!file.exists()) return@withLock null
-        runCatching { DayJson.fromJson(file.readText()) }.getOrNull()
+        memoryToday?.takeIf { it.date == dateIso }?.let { return@withLock it }
+        val loaded = loadUnlocked(dateIso) ?: return@withLock null
+        if (dateIso == DayTitle.iso(DayTitle.localToday())) {
+            memoryToday = loaded
+        }
+        loaded
     }
 
     fun loadToday(zoneId: ZoneId = ZoneId.systemDefault()): DayRecord {
@@ -56,7 +66,7 @@ class DayStore(context: Context) {
         return out
     }
 
-    fun append(location: Location, zoneId: ZoneId = ZoneId.systemDefault()): DayRecord = lock.withLock {
+    fun append(location: Location, zoneId: ZoneId = ZoneId.systemDefault()): AppendResult = lock.withLock {
         val timeMillis = location.time.takeIf { it > 0L } ?: System.currentTimeMillis()
         val localDate = Instant.ofEpochMilli(timeMillis)
             .atZone(zoneId)
@@ -71,7 +81,7 @@ class DayStore(context: Context) {
         )
         if (!JumpFilter.shouldAccept(existing.points, point)) {
             // GPS teleport — keep the day file unchanged.
-            return@withLock existing
+            return@withLock AppendResult(existing, geometryChanged = false, wrote = false)
         }
         val last = existing.points.lastOrNull()
         if (last != null) {
@@ -90,7 +100,7 @@ class DayStore(context: Context) {
                     distanceMeters = Geo.pathLengthMeters(points),
                 )
                 persistUnlocked(updated)
-                return@withLock updated
+                return@withLock AppendResult(updated, geometryChanged = false, wrote = true)
             }
         }
         val points = existing.points + point
@@ -99,7 +109,7 @@ class DayStore(context: Context) {
             distanceMeters = Geo.pathLengthMeters(points),
         )
         persistUnlocked(updated)
-        updated
+        AppendResult(updated, geometryChanged = true, wrote = true)
     }
 
     /**
@@ -114,6 +124,7 @@ class DayStore(context: Context) {
         if (points.isEmpty()) {
             jsonFile(dateIso).delete()
             gpxFile(dateIso).delete()
+            if (memoryToday?.date == dateIso) memoryToday = null
             return@withLock DayRecord.empty(dateIso, existing.title)
         }
         val updated = existing.copy(
@@ -125,6 +136,7 @@ class DayStore(context: Context) {
     }
 
     private fun loadUnlocked(dateIso: String): DayRecord? {
+        memoryToday?.takeIf { it.date == dateIso }?.let { return it }
         val file = jsonFile(dateIso)
         if (!file.exists()) return null
         return runCatching { DayJson.fromJson(file.readText()) }.getOrNull()
@@ -137,6 +149,11 @@ class DayStore(context: Context) {
         // GPX is derived; write on edit/export/backup, not on every sample.
         if (writeGpx) {
             DayJson.writeAtomic(gpxFile(record.date), DayJson.toGpx(record))
+        }
+        if (record.date == DayTitle.iso(DayTitle.localToday())) {
+            memoryToday = record
+        } else if (memoryToday?.date == record.date) {
+            memoryToday = record
         }
     }
 
@@ -154,5 +171,11 @@ class DayStore(context: Context) {
                 val record = loadUnlocked(iso) ?: return@forEach
                 DayJson.writeAtomic(gpxFile(iso), DayJson.toGpx(record))
             }
+    }
+
+    companion object {
+        /** Process-wide — SampleService / UI / backup must serialize on one lock. */
+        private val lock = ReentrantLock()
+        private var memoryToday: DayRecord? = null
     }
 }
