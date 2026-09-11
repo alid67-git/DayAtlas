@@ -127,13 +127,25 @@ class DayTitleTest {
 
     @Test
     fun formatDurationSwitchesToHoursPastSixty() {
-        assertEquals("45 dk", DayTitle.formatDuration(45 * 60_000L))
-        assertEquals("2 sa 5 dk", DayTitle.formatDuration((2 * 60 + 5) * 60_000L))
+        val tr = Locale("tr", "TR")
+        assertEquals("45 dk", DayTitle.formatDuration(45 * 60_000L, tr))
+        assertEquals("2 sa 5 dk", DayTitle.formatDuration((2 * 60 + 5) * 60_000L, tr))
+        val en = Locale.ENGLISH
+        assertEquals("45 min", DayTitle.formatDuration(45 * 60_000L, en))
+        assertEquals("2 h 5 min", DayTitle.formatDuration((2 * 60 + 5) * 60_000L, en))
     }
 
     @Test
     fun formatSpeedRoundsToWholeKmh() {
         assertEquals("42 km/sa", DayTitle.formatSpeed(42.4, Locale("tr", "TR")))
+        assertEquals("42 km/h", DayTitle.formatSpeed(42.4, Locale.ENGLISH))
+    }
+
+    @Test
+    fun formatEnglishAndGermanTitles() {
+        val date = LocalDate.of(2026, 8, 28)
+        assertEquals("Daily 28 Aug 2026", DayTitle.format(date, Locale.ENGLISH))
+        assertEquals("Tag 28 Aug 2026", DayTitle.format(date, Locale.GERMAN))
     }
 }
 

@@ -25,7 +25,8 @@ class HelpActivity : DayAtlasActivity() {
             )
         }
 
-        val startId = when (Locale.getDefault().language) {
+        // Follow the app UI locale (Settings → Language), not only the device.
+        val startId = when (resources.configuration.locales[0]?.language ?: Locale.getDefault().language) {
             "de" -> R.id.langDe
             "en" -> R.id.langEn
             else -> R.id.langTr

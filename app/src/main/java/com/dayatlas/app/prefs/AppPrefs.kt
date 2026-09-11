@@ -2,6 +2,7 @@ package com.dayatlas.app.prefs
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.dayatlas.app.AppLocale
 
 class AppPrefs(context: Context) {
     private val prefs: SharedPreferences =
@@ -187,6 +188,14 @@ class AppPrefs(context: Context) {
         get() = prefs.getStringSet(DAY_STATS_HIDDEN, emptySet()).orEmpty()
         set(value) = prefs.edit().putStringSet(DAY_STATS_HIDDEN, value).apply()
 
+    /**
+     * App UI language: empty = follow system; otherwise `tr` / `en` / `de`.
+     * Applied via [com.dayatlas.app.AppLocale].
+     */
+    var appLanguage: String
+        get() = AppLocale.normalize(prefs.getString(APP_LANGUAGE, AppLocale.SYSTEM))
+        set(value) = prefs.edit().putString(APP_LANGUAGE, AppLocale.normalize(value)).apply()
+
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
         const val DEFAULT_INTERVAL_SECONDS = 60
@@ -212,5 +221,6 @@ class AppPrefs(context: Context) {
         private const val DRIVE_INITIAL_BACKUP_DONE = "drive_initial_backup_done"
         private const val DAY_STATS_ORDER = "day_stats_order"
         private const val DAY_STATS_HIDDEN = "day_stats_hidden"
+        private const val APP_LANGUAGE = "app_language"
     }
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.7 — 2026-09-11
+
+- **Tam uygulama dilleri (TR / EN / DE):** Tüm arayüz metinleri üç dilde.
+  Ayarlar → Dil (sistem / Türkçe / English / Deutsch). Yardım metinleri
+  uygulama dilini izler; istenirse yardım içinde dil değiştirilebilir.
+
 ## 0.7.6 — 2026-09-11
 
 - **Üst sağ ikonlar kaldırıldı:** Marka şeridindeki GPX dışa aktar ve

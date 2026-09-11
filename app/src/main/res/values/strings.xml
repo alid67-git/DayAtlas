@@ -148,4 +148,13 @@
     <string name="stats_empty">Bu aralıkta kayıt yok.</string>
     <string name="stats_range_label">%1$s – %2$s</string>
     <string name="stats_range_label_single">%1$s</string>
+
+    <string name="settings_language">Dil</string>
+    <string name="settings_language_hint">Uygulama arayüzü Türkçe, İngilizce veya Almanca olabilir. Sistem, telefon dilini izler.</string>
+    <string name="language_system">Sistem dili</string>
+    <string name="language_tr">Türkçe</string>
+    <string name="language_en">English</string>
+    <string name="language_de">Deutsch</string>
+    <string name="drive_last_backup">Son yedek: %1$s</string>
+    <string name="build_note">Uygulama arayüzü artık Türkçe, İngilizce ve Almanca. Dil seçimi Ayarlar’da. Üst sağdaki GPX / Ayarlar simgeleri kaldırıldı (Rotalar / Daha fazla).</string>
 </resources>

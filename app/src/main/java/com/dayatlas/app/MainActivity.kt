@@ -168,7 +168,7 @@ class MainActivity : DayAtlasActivity() {
         prefs.lastSeenBuildNoteVersion = BuildConfig.VERSION_NAME
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.changelog_title, BuildConfig.VERSION_NAME))
-            .setMessage(BuildInfo.BUILD_NOTE)
+            .setMessage(getString(R.string.build_note))
             .setPositiveButton(R.string.ok, null)
             .show()
     }
@@ -378,13 +378,7 @@ class MainActivity : DayAtlasActivity() {
         }
     }
 
-    private fun formatStatsDay(date: LocalDate): String {
-        val months = arrayOf(
-            "Oca", "Şub", "Mar", "Nis", "May", "Haz",
-            "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara",
-        )
-        return "${date.dayOfMonth} ${months[date.monthValue - 1]}"
-    }
+    private fun formatStatsDay(date: LocalDate): String = DayTitle.formatShort(date)
 
     private fun ensurePermissionsThenStart() {
         pendingStart = true
