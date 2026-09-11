@@ -24,6 +24,8 @@ object RouteMapController {
         points: List<TrackPoint>,
         emptyState: View?,
         onJumpTap: ((JumpFilter.Jump) -> Unit)? = null,
+        /** Live GPS updates should not animate zoom (causes blank flashes / ANR). */
+        animateZoom: Boolean = false,
     ) {
         map.overlays.clear()
         val hasPoints = points.isNotEmpty()
@@ -66,6 +68,14 @@ object RouteMapController {
         }
 
         map.post {
+            if (map.width <= 0 || map.height <= 0) {
+                // Layout not ready (common in landscape while siblings measure) —
+                // center without zoom-to-box to avoid a degenerate tiny viewport.
+                map.controller.setZoom(15.0)
+                map.controller.setCenter(geoPoints.last())
+                map.invalidate()
+                return@post
+            }
             val focus = jumps.lastOrNull()?.let { GeoPoint(it.point.lat, it.point.lon) }
             val box = boundingBoxOf(geoPoints)
             val degenerate = box.latitudeSpan < 1e-6 && box.longitudeSpan < 1e-6
@@ -76,7 +86,7 @@ object RouteMapController {
                 map.controller.setZoom(14.0)
                 map.controller.setCenter(focus)
             } else {
-                map.zoomToBoundingBox(box, true, 96)
+                map.zoomToBoundingBox(box, animateZoom, 96)
             }
             map.invalidate()
         }

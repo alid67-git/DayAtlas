@@ -29,7 +29,8 @@ object DayJson {
             points.put(o)
         }
         root.put("points", points)
-        return root.toString(2)
+        // Compact — day files are rewritten on every GPS sample.
+        return root.toString()
     }
 
     fun fromJson(raw: String): DayRecord {

@@ -120,7 +120,7 @@ class DayStore(context: Context) {
             points = points,
             distanceMeters = Geo.pathLengthMeters(points),
         )
-        persistUnlocked(updated)
+        persistUnlocked(updated, writeGpx = true)
         updated
     }
 
@@ -130,9 +130,29 @@ class DayStore(context: Context) {
         return runCatching { DayJson.fromJson(file.readText()) }.getOrNull()
     }
 
-    private fun persistUnlocked(record: DayRecord) {
+    private fun persistUnlocked(record: DayRecord, writeGpx: Boolean = false) {
         daysDir()
+        // Compact JSON (no pretty-print) — every GPS sample rewrites this file.
         DayJson.writeAtomic(jsonFile(record.date), DayJson.toJson(record))
-        DayJson.writeAtomic(gpxFile(record.date), DayJson.toGpx(record))
+        // GPX is derived; write on edit/export/backup, not on every sample.
+        if (writeGpx) {
+            DayJson.writeAtomic(gpxFile(record.date), DayJson.toGpx(record))
+        }
+    }
+
+    /** Ensures on-disk GPX matches the JSON day file (backup / share). */
+    fun ensureGpx(dateIso: String) = lock.withLock {
+        val record = loadUnlocked(dateIso) ?: return@withLock
+        DayJson.writeAtomic(gpxFile(dateIso), DayJson.toGpx(record))
+    }
+
+    fun ensureGpxForAllDays() = lock.withLock {
+        daysDir().listFiles()
+            ?.filter { it.isFile && it.name.endsWith(".json") }
+            ?.forEach { file ->
+                val iso = file.name.removeSuffix(".json")
+                val record = loadUnlocked(iso) ?: return@forEach
+                DayJson.writeAtomic(gpxFile(iso), DayJson.toGpx(record))
+            }
     }
 }

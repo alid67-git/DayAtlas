@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
+import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
 import com.dayatlas.app.prefs.AppPrefs
 import java.io.File
@@ -141,6 +142,11 @@ object DriveFolderBackup {
             return Result(true, uploaded = 0)
         }
         val todayIso = DayTitle.iso(DayTitle.localToday())
+        // Refresh derived GPX from JSON before upload.
+        DayStore(context).let { store ->
+            if (fullScan) store.ensureGpxForAllDays()
+            else store.ensureGpx(todayIso)
+        }
         val files = daysDir.listFiles()
             ?.filter {
                 it.isFile && (it.name.endsWith(".json") || it.name.endsWith(".gpx")) &&
