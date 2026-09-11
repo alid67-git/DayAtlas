@@ -3,7 +3,6 @@ package com.dayatlas.app.route
 import android.content.Context
 import android.graphics.Color
 import android.view.View
-import android.view.ViewTreeObserver
 import androidx.core.content.ContextCompat
 import com.dayatlas.app.R
 import com.dayatlas.app.data.JumpFilter
@@ -14,6 +13,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import java.lang.ref.WeakReference
+import kotlin.math.abs
 
 /**
  * Draws a day's track on an osmdroid [MapView]. Purely a foreground view
@@ -21,16 +21,31 @@ import java.lang.ref.WeakReference
  *
  * Live GPS ticks must use [updateLive] so we never clear overlays or
  * re-zoom (those flash a blank map and can ANR as the day grows).
+ *
+ * Camera fit is re-applied whenever the MapView's laid-out size changes:
+ * a first fit on a tiny/minHeight pane followed by growth used to leave a
+ * tall white hole with only a thin tile strip at the bottom.
  */
 object RouteMapController {
     private const val DEFAULT_ZOOM_BORDER_PX = 96
     private const val MIN_ZOOM_INNER_PX = 48
+    private const val MIN_REFIT_DELTA_PX = 24
+    private const val MAX_ZOOM = 18.0
+    private const val MIN_ZOOM = 3.0
 
     private var boundMap: WeakReference<MapView>? = null
     private var shownDateIso: String? = null
     private var trackPoly: Polyline? = null
     private var endMarker: Marker? = null
-    private var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+
+    private var pendingGeo: List<GeoPoint>? = null
+    private var pendingJumps: List<JumpFilter.Jump> = emptyList()
+    private var pendingAnimate = false
+    private var lastFitWidth = 0
+    private var lastFitHeight = 0
+    private var sizeListener: View.OnLayoutChangeListener? = null
+    private var refitPass: Runnable? = null
+    private var refitDelayed: Runnable? = null
 
     fun show(
         map: MapView,
@@ -93,7 +108,26 @@ object RouteMapController {
         endMarker = end
 
         if (fitCamera) {
-            fitWhenLaidOut(map, geoPoints, jumps, animateZoom)
+            pendingGeo = geoPoints
+            pendingJumps = jumps
+            pendingAnimate = animateZoom
+            lastFitWidth = 0
+            lastFitHeight = 0
+            attachSizeListener(map)
+            fitNowIfPossible(map)
+            // Extra passes after the weighted LinearLayout settles — the first
+            // fit often runs at minHeight, then the pane grows into a tall
+            // white hole with only a thin tile strip until we re-fit.
+            val pass = Runnable {
+                if (boundMap?.get() === map) fitNowIfPossible(map, force = true)
+            }
+            val delayed = Runnable {
+                if (boundMap?.get() === map) fitNowIfPossible(map, force = true)
+            }
+            refitPass = pass
+            refitDelayed = delayed
+            map.post(pass)
+            map.postDelayed(delayed, 350)
         } else {
             map.invalidate()
         }
@@ -116,20 +150,19 @@ object RouteMapController {
         }
         val geo = GeoPoint(lat, lon)
         val poly = trackPoly!!
-        val existing = poly.actualPoints
+        val existing = ArrayList(poly.actualPoints)
         when {
             pointCount == existing.size && existing.isNotEmpty() -> {
-                // Same-place time refresh should not call this; if it does,
-                // only nudge the last vertex (no zoom).
-                val copy = ArrayList(existing)
-                copy[copy.lastIndex] = geo
-                poly.setPoints(copy)
+                existing[existing.lastIndex] = geo
+                poly.setPoints(existing)
             }
             pointCount == existing.size + 1 -> {
                 poly.addPoint(geo)
+                existing.add(geo)
             }
             else -> return false
         }
+        pendingGeo = ArrayList(existing)
         val end = endMarker
         if (end != null) {
             end.position = geo
@@ -145,52 +178,54 @@ object RouteMapController {
     fun clearLiveState(map: MapView? = null) {
         val target = map ?: boundMap?.get()
         if (target != null) {
-            removeLayoutListener(target)
+            detachSizeListener(target)
+            refitPass?.let { target.removeCallbacks(it) }
+            refitDelayed?.let { target.removeCallbacks(it) }
         }
+        refitPass = null
+        refitDelayed = null
         boundMap = null
         shownDateIso = null
         trackPoly = null
         endMarker = null
+        pendingGeo = null
+        pendingJumps = emptyList()
+        lastFitWidth = 0
+        lastFitHeight = 0
     }
 
-    private fun fitWhenLaidOut(
-        map: MapView,
-        geoPoints: List<GeoPoint>,
-        jumps: List<JumpFilter.Jump>,
-        animateZoom: Boolean,
-    ) {
-        removeLayoutListener(map)
-        val apply = {
-            if (map.width > 0 && map.height > 0) {
-                applyCamera(map, geoPoints, jumps, animateZoom)
-                true
-            } else {
-                false
+    private fun attachSizeListener(map: MapView) {
+        detachSizeListener(map)
+        val listener = View.OnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
+            if (v === map && boundMap?.get() === map) {
+                fitNowIfPossible(map)
             }
         }
-        if (apply()) return
-        val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                if (apply()) {
-                    removeLayoutListener(map)
-                }
-            }
-        }
-        layoutListener = listener
-        map.viewTreeObserver.addOnGlobalLayoutListener(listener)
-        // Fallback center so the map is not left empty while waiting for layout.
-        map.controller.setZoom(15.0)
-        map.controller.setCenter(geoPoints.last())
-        map.invalidate()
+        sizeListener = listener
+        map.addOnLayoutChangeListener(listener)
     }
 
-    private fun removeLayoutListener(map: MapView) {
-        val listener = layoutListener ?: return
-        layoutListener = null
-        val observer = map.viewTreeObserver
-        if (observer.isAlive) {
-            observer.removeOnGlobalLayoutListener(listener)
+    private fun detachSizeListener(map: MapView) {
+        val listener = sizeListener ?: return
+        sizeListener = null
+        map.removeOnLayoutChangeListener(listener)
+    }
+
+    private fun fitNowIfPossible(map: MapView, force: Boolean = false) {
+        val geo = pendingGeo ?: return
+        if (geo.isEmpty()) return
+        val w = map.width
+        val h = map.height
+        if (w <= 0 || h <= 0) return
+        if (!force &&
+            abs(w - lastFitWidth) < MIN_REFIT_DELTA_PX &&
+            abs(h - lastFitHeight) < MIN_REFIT_DELTA_PX
+        ) {
+            return
         }
+        applyCamera(map, geo, pendingJumps, pendingAnimate)
+        lastFitWidth = w
+        lastFitHeight = h
     }
 
     private fun applyCamera(
@@ -209,18 +244,20 @@ object RouteMapController {
             map.controller.setZoom(14.0)
             map.controller.setCenter(focus)
         } else {
-            // osmdroid subtracts 2*border from width/height before computing zoom.
-            // Fixed border=96 on a short MapView (often <192px with the 6-card
-            // stats grid) yields non-positive/NaN zoom → blank white map forever
-            // (live updates never re-fit).
             val border = safeZoomBorder(map.width, map.height)
             map.zoomToBoundingBox(box, animateZoom, border)
-            // If zoom still blew up (tiny pane / first layout), fall back.
-            if (!map.zoomLevelDouble.isFinite() || map.zoomLevelDouble < 1.0) {
-                map.controller.setZoom(15.0)
-                map.controller.setCenter(geoPoints.last())
+            val zoom = map.zoomLevelDouble
+            if (!zoom.isFinite() || zoom < MIN_ZOOM) {
+                map.controller.setZoom(12.0)
+                map.controller.setCenter(box.centerWithDateLine)
+            } else if (zoom > MAX_ZOOM) {
+                map.controller.setZoom(MAX_ZOOM)
+                map.controller.setCenter(box.centerWithDateLine)
             }
         }
+        // Nudge center to rebuild projection for the current view size — without
+        // this, a fit done at minHeight can leave a tall white pane with a tile strip.
+        map.controller.setCenter(map.mapCenter)
         map.invalidate()
     }
 

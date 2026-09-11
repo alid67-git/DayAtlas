@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Son yedek: %1$s</string>
-    <string name="build_note">Sürüm 0.7.14 — Boş harita: zoom kenar boşluğu düzeltildi; harita kartların hemen altında.</string>
+    <string name="build_note">Sürüm 0.7.15 — Harita boyutu oturunca kamera yeniden sığdırılıyor; beyaz boşluk / ince şerit giderildi.</string>
 </resources>
