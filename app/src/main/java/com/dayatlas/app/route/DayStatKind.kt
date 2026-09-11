@@ -4,8 +4,7 @@ import com.dayatlas.app.R
 
 /**
  * One tile in the draggable/hideable day-stats grid on the Daily tab.
- * All kinds share one 3-column grid; accent backgrounds distinguish
- * speed/duration tiles from the default white cards.
+ * All kinds share one 3-column grid with a uniform white card background.
  */
 enum class DayStatKind(val key: String, val labelRes: Int) {
     DISTANCE("distance", R.string.map_day_distance),
@@ -16,15 +15,6 @@ enum class DayStatKind(val key: String, val labelRes: Int) {
     AVG_SPEED("avg_speed", R.string.stat_avg_speed),
     ACTIVE_DURATION("active_duration", R.string.stat_active_duration),
     ;
-
-    /** Optional tinted card background; null keeps the default white dash card. */
-    val cardBackgroundRes: Int?
-        get() = when (this) {
-            MAX_SPEED -> R.drawable.bg_speed_max
-            ACTIVE_DURATION -> R.drawable.bg_speed_active
-            AVG_SPEED -> R.drawable.bg_speed_avg
-            else -> null
-        }
 
     companion object {
         val DEFAULT_ORDER = entries.toList()

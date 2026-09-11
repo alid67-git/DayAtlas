@@ -8,6 +8,9 @@ import kotlin.math.sqrt
 object Geo {
     private const val EARTH_RADIUS_M = 6_371_000.0
 
+    /** In-place refresh threshold when appending a near-duplicate fix. */
+    const val PATH_NOISE_FLOOR_M = 25.0
+
     fun haversineMeters(
         lat1: Double,
         lon1: Double,
@@ -23,13 +26,16 @@ object Geo {
         return EARTH_RADIUS_M * c
     }
 
+    /**
+     * Sum of [TrackMotion]-qualified segment lengths so home GPS jitter does
+     * not inflate daily distance.
+     */
     fun pathLengthMeters(points: List<TrackPoint>): Double {
         if (points.size < 2) return 0.0
         var sum = 0.0
         for (i in 1 until points.size) {
-            val prev = points[i - 1]
-            val cur = points[i]
-            sum += haversineMeters(prev.lat, prev.lon, cur.lat, cur.lon)
+            val seg = TrackMotion.meaningfulSegment(points[i - 1], points[i]) ?: continue
+            sum += seg.distanceMeters
         }
         return sum
     }

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.8 — 2026-09-11
+
+- **Tek renk kartlar:** Günlük istatistik kutuları aynı beyaz kart stili.
+- **Aktif GPS alma hızı:** Etiket güncellendi (TR/EN/DE).
+- **Ev GPS toleransı:** 25 m içindeki titreşim yerinde güncellenir (spaghetti
+  büyümez); mesafe/aktif süre/maks. hız kısa ve yavaş segmentleri yok sayar.
+  Atlama engeli kayıtta zaten açıktı; mesafe hesabında da uygulanır.
+- **3. satır ortalı:** Eksik son satır yatayda ortalanır; kartlar biraz genişletildi.
+
 ## 0.7.7 — 2026-09-11
 
 - **Tam uygulama dilleri (TR / EN / DE):** Tüm arayüz metinleri üç dilde.

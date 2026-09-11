@@ -31,7 +31,7 @@
     <string name="stat_max_speed">Max speed</string>
     <string name="stat_avg_speed">Avg speed</string>
     <string name="stat_active_duration">Active time</string>
-    <string name="stat_gps_interval">GPS sample rate</string>
+    <string name="stat_gps_interval">Active GPS sample rate</string>
     <string name="interval_30s_short">30 s</string>
     <string name="interval_1_short">1 min</string>
     <string name="interval_3_short">3 min</string>
@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">The app UI is now available in Turkish, English, and German. Pick the language in Settings. Top-right GPX / Settings icons were removed (use Routes / More).</string>
+    <string name="build_note">Uniform cards; Active GPS sample rate. Home GPS jitter is ignored for distance/active time (25 m noise floor + jump block). Last stats row is centered. UI in TR/EN/DE.</string>
 </resources>

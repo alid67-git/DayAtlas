@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
+import com.dayatlas.app.data.Geo
 import com.dayatlas.app.data.JumpCleanupDialog
 import com.dayatlas.app.data.JumpFilter
 import com.dayatlas.app.data.RangeStats
@@ -493,7 +494,7 @@ class MainActivity : DayAtlasActivity() {
         binding.mapDistance.text = if (points.isEmpty()) {
             emDash
         } else {
-            DayTitle.formatDistance(record?.distanceMeters ?: 0.0)
+            DayTitle.formatDistance(Geo.pathLengthMeters(points))
         }
         binding.mapLastPoint.text = points.lastOrNull()?.let { point ->
             Instant.ofEpochMilli(point.timeMillis)
@@ -537,7 +538,7 @@ class MainActivity : DayAtlasActivity() {
             DayStatKind.DISTANCE to if (points.isEmpty()) {
                 emDash
             } else {
-                DayTitle.formatDistance(record?.distanceMeters ?: 0.0)
+                DayTitle.formatDistance(Geo.pathLengthMeters(points))
             },
             DayStatKind.LAST_POINT to (
                 points.lastOrNull()?.let { point ->

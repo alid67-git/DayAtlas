@@ -31,7 +31,7 @@
     <string name="stat_max_speed">Max. Geschw.</string>
     <string name="stat_avg_speed">Ø Geschw.</string>
     <string name="stat_active_duration">Aktive Zeit</string>
-    <string name="stat_gps_interval">GPS-Abtastrate</string>
+    <string name="stat_gps_interval">Aktive GPS-Abtastrate</string>
     <string name="interval_30s_short">30 s</string>
     <string name="interval_1_short">1 Min</string>
     <string name="interval_3_short">3 Min</string>
@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Die App-Oberfläche ist jetzt auf Türkisch, Englisch und Deutsch. Sprache in den Einstellungen wählen. Die GPX-/Einstellungs-Symbole oben rechts wurden entfernt (Routen / Mehr).</string>
+    <string name="build_note">Einheitliche Karten; Aktive GPS-Abtastrate. Heim-GPS-Rauschen zählt nicht für Distanz/aktive Zeit (25-m-Rauschboden + Sprungsperre). Letzte Statistikzeile zentriert. UI TR/EN/DE.</string>
 </resources>

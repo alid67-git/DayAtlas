@@ -16,9 +16,9 @@ class GeoTest {
     @Test
     fun pathLengthSumsSegments() {
         val points = listOf(
-            TrackPoint(1L, 41.0, 29.0, null),
-            TrackPoint(2L, 41.0, 29.001, null),
-            TrackPoint(3L, 41.0, 29.002, null),
+            TrackPoint(0L, 41.0, 29.0, null),
+            TrackPoint(60_000L, 41.0, 29.001, null),
+            TrackPoint(120_000L, 41.0, 29.002, null),
         )
         val len = Geo.pathLengthMeters(points)
         assertTrue(len in 140.0..220.0)
@@ -82,12 +82,28 @@ class SpeedStatsTest {
     fun stationaryJitterDoesNotCountAsActive() {
         val points = listOf(
             TrackPoint(0L, 41.0, 29.0, null),
-            // ~1 m of GPS jitter over a minute - well under the 1 km/h floor.
+            // ~1 m of GPS jitter over a minute - well under the noise floor.
             TrackPoint(60_000L, 41.0, 29.00001, null),
         )
         val stats = SpeedStats.compute(points)
         assertEquals(0L, stats.activeMillis)
         assertEquals(0.0, stats.avgSpeedKmh, 1e-9)
+        assertEquals(0.0, stats.maxSpeedKmh, 1e-9)
+    }
+
+    @Test
+    fun homeGpsWanderDoesNotInflateActiveOrMax() {
+        // ~50 m in 60 s ≈ 3 km/h — typical courtyard GPS bounce, not a walk.
+        val points = listOf(
+            TrackPoint(0L, 41.0, 29.0, null),
+            TrackPoint(60_000L, 41.0, 29.0006, null),
+            TrackPoint(120_000L, 41.0, 29.0, null),
+            TrackPoint(180_000L, 41.0, 29.0006, null),
+        )
+        val stats = SpeedStats.compute(points)
+        assertEquals(0L, stats.activeMillis)
+        assertEquals(0.0, stats.maxSpeedKmh, 1e-9)
+        assertTrue(Geo.pathLengthMeters(points) < 1.0)
     }
 
     @Test

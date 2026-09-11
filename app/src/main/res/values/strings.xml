@@ -31,7 +31,7 @@
     <string name="stat_max_speed">Maks. hız</string>
     <string name="stat_avg_speed">Ort. hız</string>
     <string name="stat_active_duration">Aktif süre</string>
-    <string name="stat_gps_interval">GPS alma hızı</string>
+    <string name="stat_gps_interval">Aktif GPS alma hızı</string>
     <string name="interval_30s_short">30 sn</string>
     <string name="interval_1_short">1 dk</string>
     <string name="interval_3_short">3 dk</string>
@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Son yedek: %1$s</string>
-    <string name="build_note">Uygulama arayüzü artık Türkçe, İngilizce ve Almanca. Dil seçimi Ayarlar’da. Üst sağdaki GPX / Ayarlar simgeleri kaldırıldı (Rotalar / Daha fazla).</string>
+    <string name="build_note">Kartlar tek renkte; Aktif GPS alma hızı. Ev GPS titreşimi mesafe/aktif süreye sayılmaz (25 m gürültü tabanı + atlama engeli). 3. satır ortalanır. Arayüz TR/EN/DE.</string>
 </resources>
