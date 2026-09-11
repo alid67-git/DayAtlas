@@ -109,6 +109,20 @@ class MainActivity : DayAtlasActivity() {
         }
         binding.moreVersion.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
 
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            showTab(item.itemId)
+            true
+        }
+        binding.bottomNav.selectedItemId = R.id.nav_daily
+
+        binding.moreSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        binding.moreHelp.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
+        binding.moreVersion.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
+
         binding.previousDay.setOnClickListener {
             mapDate = mapDate.minusDays(1)
             refreshMap()
