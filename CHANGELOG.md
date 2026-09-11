@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.2 — 2026-09-11
+
+- **Günlük sekme (Adım 2):** Marka şeridi; 2×2 sürüklenen veri kartları
+  (mesafe / son nokta / nokta / GPS alma hızı); üç renkli hız-süre şeridi
+  (maks / aktif süre / ort.). Harita ve gün gezici aynı.
+
 ## 0.7.1 — 2026-09-11
 
 - **Alt navigasyon (Adım 1):** Günlük / İstatistikler / Rotalar / Daha fazla.

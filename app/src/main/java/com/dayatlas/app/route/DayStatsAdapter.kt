@@ -2,12 +2,13 @@ package com.dayatlas.app.route
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.dayatlas.app.databinding.ItemDayStatBinding
 
 /**
- * Horizontal row of day-stat tiles. Visible tiles only (hidden ones are
+ * 2-column grid of day-stat tiles. Visible tiles only (hidden ones are
  * filtered out before [submit]); long-press drags a tile to reorder within
  * the visible set. Reordering fires [onReordered] with the full (visible-only)
  * order so the caller can persist it.
@@ -25,6 +26,8 @@ class DayStatsAdapter(
     }
 
     fun attachTo(recyclerView: RecyclerView) {
+        recyclerView.layoutManager = GridLayoutManager(recyclerView.context, 2)
+        recyclerView.isNestedScrollingEnabled = false
         ItemTouchHelper(TouchCallback()).attachToRecyclerView(recyclerView)
     }
 
@@ -44,7 +47,8 @@ class DayStatsAdapter(
     class ViewHolder(val binding: ItemDayStatBinding) : RecyclerView.ViewHolder(binding.root)
 
     private inner class TouchCallback : ItemTouchHelper.SimpleCallback(
-        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
+        ItemTouchHelper.UP or ItemTouchHelper.DOWN or
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
         0,
     ) {
         override fun onMove(

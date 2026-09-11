@@ -31,6 +31,12 @@
     <string name="stat_max_speed">Maks. hız</string>
     <string name="stat_avg_speed">Ort. hız</string>
     <string name="stat_active_duration">Aktif süre</string>
+    <string name="stat_gps_interval">GPS alma hızı</string>
+    <string name="interval_30s_short">30 sn</string>
+    <string name="interval_1_short">1 dk</string>
+    <string name="interval_3_short">3 dk</string>
+    <string name="interval_5_short">5 dk</string>
+    <string name="interval_seconds_short">%1$d sn</string>
     <string name="last_point">Son nokta</string>
     <string name="point_count">Nokta sayısı</string>
     <string name="em_dash">—</string>

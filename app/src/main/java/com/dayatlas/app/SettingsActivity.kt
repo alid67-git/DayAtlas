@@ -191,6 +191,7 @@ class SettingsActivity : DayAtlasActivity() {
             DayStatKind.DISTANCE to binding.statCheckDistance,
             DayStatKind.LAST_POINT to binding.statCheckLastPoint,
             DayStatKind.POINT_COUNT to binding.statCheckPointCount,
+            DayStatKind.GPS_INTERVAL to binding.statCheckGpsInterval,
             DayStatKind.MAX_SPEED to binding.statCheckMaxSpeed,
             DayStatKind.AVG_SPEED to binding.statCheckAvgSpeed,
             DayStatKind.ACTIVE_DURATION to binding.statCheckActiveDuration,
