@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Software updates are checked daily at 12:00 local time (also while tracking). Once per day.</string>
+    <string name="build_note">Fixed freeze / blank map while recording: GPS writes are off the UI thread and refreshes are debounced. Midday update check was in the previous build.</string>
 </resources>

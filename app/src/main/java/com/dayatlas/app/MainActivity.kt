@@ -8,12 +8,15 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
@@ -37,7 +40,6 @@ import com.dayatlas.app.route.RoutesAdapter
 import com.dayatlas.app.stats.StatsRange
 import com.dayatlas.app.update.UpdateCheckRunner
 import com.dayatlas.app.update.UpdateInstaller
-import androidx.recyclerview.widget.LinearLayoutManager
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -63,6 +65,8 @@ class MainActivity : DayAtlasActivity() {
     private var askedExactThisSession = false
     private var mapDate: LocalDate = DayTitle.localToday()
     private var statsRange: StatsRange = StatsRange.LAST_7
+    private val uiHandler = Handler(Looper.getMainLooper())
+    private val debouncedRefresh = Runnable { refresh() }
 
     private val locationLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
@@ -87,7 +91,12 @@ class MainActivity : DayAtlasActivity() {
     ) { continuePermissionChain() }
 
     private val pointReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = refresh()
+        override fun onReceive(context: Context?, intent: Intent?) {
+            // Coalesce rapid GPS ticks so we don't clear/rebuild the map on
+            // every sample while the Daily tab is open (ANR / blank map).
+            uiHandler.removeCallbacks(debouncedRefresh)
+            uiHandler.postDelayed(debouncedRefresh, REFRESH_DEBOUNCE_MS)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -197,23 +206,24 @@ class MainActivity : DayAtlasActivity() {
         refresh()
     }
 
-    override fun onStop() {
-        runCatching { unregisterReceiver(pointReceiver) }
-        super.onStop()
-    }
-
     override fun onResume() {
         super.onResume()
         if (binding.paneDaily.visibility == View.VISIBLE) {
             binding.routeMap.onResume()
         }
         UpdateInstaller.resumePending(this, offerUi = true)
-        refresh()
+        // onStart already refreshes; avoid a second full map rebuild here.
     }
 
     override fun onPause() {
         binding.routeMap.onPause()
         super.onPause()
+    }
+
+    override fun onStop() {
+        uiHandler.removeCallbacks(debouncedRefresh)
+        runCatching { unregisterReceiver(pointReceiver) }
+        super.onStop()
     }
 
     private fun showTab(itemId: Int) {
@@ -579,5 +589,6 @@ class MainActivity : DayAtlasActivity() {
 
     companion object {
         private val TIME_FMT = DateTimeFormatter.ofPattern("HH:mm")
+        private const val REFRESH_DEBOUNCE_MS = 1_200L
     }
 }

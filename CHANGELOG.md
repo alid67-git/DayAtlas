@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.12 — 2026-09-11
+
+- **ANR / boş harita düzeltmesi:** GPS kaydı disk yazımını ana thread’den
+  aldı; UI yenilemesi sönümlendi; her örnekte GPX yazımı kalktı; harita
+  zoom animasyonu canlı güncellemede kapatıldı. Yatayda haritaya min.
+  yükseklik.
+
 ## 0.7.11 — 2026-09-11
 
 - **Gün ortası güncelleme kontrolü:** Her gün yerel saat 12:00’te sessiz

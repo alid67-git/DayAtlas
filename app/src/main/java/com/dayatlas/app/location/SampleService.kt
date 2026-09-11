@@ -66,19 +66,20 @@ class SampleService : Service() {
         }
 
         val lm = getSystemService(LocationManager::class.java)
+        // Location callback may arrive on the sampler executor; keep all disk
+        // work off the main thread so an open Daily UI cannot ANR.
         LocationSampler.request(lm, io) { location ->
-            main.post {
-                if (location != null) {
-                    StationaryBackoff.recordSample(
-                        prefs,
-                        location.latitude,
-                        location.longitude,
-                    )
-                    runCatching { DayStore(applicationContext).append(location) }
-                    sendBroadcast(Intents.pointSaved(this))
-                }
-                stepDone()
+            if (location != null) {
+                StationaryBackoff.recordSample(
+                    prefs,
+                    location.latitude,
+                    location.longitude,
+                )
+                runCatching { DayStore(applicationContext).append(location) }
+                // Notify UI after I/O; receiver will debounce refresh.
+                sendBroadcast(Intents.pointSaved(this))
             }
+            main.post { stepDone() }
         }
         return START_NOT_STICKY
     }
