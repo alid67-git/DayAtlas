@@ -4,16 +4,24 @@ import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.dayatlas.app.R
 import com.dayatlas.app.databinding.ItemDayStatBinding
+import kotlin.math.ceil
 
 /**
  * 3-column grid of day-stat tiles. Visible tiles only (hidden ones are
  * filtered out before [submit]); long-press drags a tile to reorder within
  * the visible set. The last incomplete row is horizontally centered.
+ *
+ * Height is capped at [MAX_VISIBLE_ROWS] rows so a long tile list can never
+ * starve the map below it of space — a 3rd+ row used to squeeze the map
+ * pane down to almost nothing, which is what caused the blank/striped map
+ * regression to come back. Extra rows beyond the cap scroll internally
+ * instead of growing the grid.
  */
 class DayStatsAdapter(
     private val onReordered: (List<DayStatKind>) -> Unit,
@@ -45,6 +53,22 @@ class DayStatsAdapter(
         }
         recyclerView.addItemDecoration(CenterLastRowDecoration(span))
         ItemTouchHelper(TouchCallback()).attachToRecyclerView(recyclerView)
+        capHeightAfterFirstLayout(recyclerView, span)
+    }
+
+    /** Measures one row's real height (font scale / density can move it) once
+     * the grid has laid out its first rows, then locks in a max-2-row height
+     * if there are more rows than that so the rest scroll internally. */
+    private fun capHeightAfterFirstLayout(recyclerView: RecyclerView, span: Int) {
+        recyclerView.doOnPreDraw {
+            val rowCount = ceil(itemCount.toDouble() / span).toInt()
+            if (rowCount <= MAX_VISIBLE_ROWS) return@doOnPreDraw
+            val rowHeight = recyclerView.getChildAt(0)?.height ?: return@doOnPreDraw
+            if (rowHeight <= 0) return@doOnPreDraw
+            val lp = recyclerView.layoutParams ?: return@doOnPreDraw
+            lp.height = rowHeight * MAX_VISIBLE_ROWS
+            recyclerView.layoutParams = lp
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -106,9 +130,30 @@ class DayStatsAdapter(
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
 
+        override fun isLongPressDragEnabled(): Boolean = true
+
+        // Visible lift while dragging - otherwise a long-press-drag gives no
+        // feedback that the tile is actually grabbed.
+        override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+            super.onSelectedChanged(viewHolder, actionState)
+            if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                viewHolder?.itemView?.let {
+                    it.animate().scaleX(1.06f).scaleY(1.06f).alpha(0.9f).setDuration(120).start()
+                    it.elevation = DRAG_ELEVATION_PX
+                }
+            }
+        }
+
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
+            viewHolder.itemView.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(120).start()
+            viewHolder.itemView.elevation = 0f
             onReordered(items.map { it.first })
         }
+    }
+
+    companion object {
+        private const val MAX_VISIBLE_ROWS = 2
+        private const val DRAG_ELEVATION_PX = 16f
     }
 }

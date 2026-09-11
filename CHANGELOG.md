@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.18 — 2026-09-11
+
+- **Gün kartları 2 satırla sınırlandı:** 3. satıra geçince (7 kart) üst
+  ızgara çok yükseliyor, haritaya yeterince yer kalmıyordu — bu da harita
+  render sorununu geri getiriyordu. Izgara artık en fazla 2 satır
+  yüksekliğinde; fazlası ızgaranın içinde kaydırılarak görülür, harita
+  her zaman aynı boyutta kalır.
+- **Kartları sürükleyip sıralama:** uzun basıp sürüklerken artık kart
+  belirgin şekilde kalkıyor (büyüme + gölge) — sıralamanın çalıştığı
+  net görülüyor.
+
 ## 0.7.17 — 2026-09-11
 
 - **Gün gezici + seçili gün kartı haritanın üzerine taşındı:** Bu satırlar
