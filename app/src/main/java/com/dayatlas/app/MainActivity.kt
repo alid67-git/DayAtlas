@@ -130,7 +130,13 @@ class MainActivity : DayAtlasActivity() {
         binding.routeMap.setBackgroundColor(0xFFE8EEF4.toInt())
 
         binding.todayStats.adapter = dayStatsAdapter
-        dayStatsAdapter.attachTo(binding.todayStats)
+        val statsSpan =
+            if (resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+                6 // one row in landscape → more room for the map
+            } else {
+                3
+            }
+        dayStatsAdapter.attachTo(binding.todayStats, spanCount = statsSpan)
 
         binding.bottomNav.setOnItemSelectedListener { item ->
             showTab(item.itemId)

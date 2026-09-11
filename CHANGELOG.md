@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.15 — 2026-09-11
+
+- **Boş / şerit harita:** İlk kamera sığdırması çoğu zaman `minHeight`
+  ile oluyordu; pane büyüyünce projeksiyon güncellenmediği için uzun
+  beyaz alan + altta ince kiremit şeridi kalıyordu. Boyut değişince ve
+  layout oturunca kamera yeniden sığdırılıyor. Yatayda istatistikler tek
+  satır.
+
 ## 0.7.14 — 2026-09-11
 
 - **Boş harita:** Kısa MapView’da `zoomToBoundingBox` kenar boşluğu

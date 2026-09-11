@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 0.7.14 — Blank map fixed (safe zoom padding); map sits directly under the stats cards.</string>
+    <string name="build_note">Version 0.7.15 — Map camera re-fits after layout settles; fixes white gap / thin tile strip.</string>
 </resources>

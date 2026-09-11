@@ -36,8 +36,8 @@ class DayStatsAdapter(
         notifyItemChanged(index)
     }
 
-    fun attachTo(recyclerView: RecyclerView) {
-        val span = 3
+    fun attachTo(recyclerView: RecyclerView, spanCount: Int = 3) {
+        val span = spanCount.coerceAtLeast(1)
         recyclerView.layoutManager = GridLayoutManager(recyclerView.context, span)
         recyclerView.isNestedScrollingEnabled = false
         while (recyclerView.itemDecorationCount > 0) {
