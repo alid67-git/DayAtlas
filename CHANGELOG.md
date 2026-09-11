@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.16 — 2026-09-11
+
+- **Boş / şerit harita, kök sebep:** 0.7.12–0.7.15’teki yeniden sığdırma
+  mantığı sonuçtan (harita boyutu değişince) hareket ediyordu; asıl
+  sebep her açılışta ilk layout'un bugünün istatistik ızgarası ve
+  günlük mod'daki başlat/ipucu satırları henüz boşken çizilmesiydi —
+  harita o anda gereğinden büyük bir pay alıyor, veriler gelince
+  ızgara büyüyüp harita küçülüyor, osmdroid da yeni boyutu tam
+  yansıtamayıp beyaz alan + ince kiremit şeridi bırakıyordu. Artık
+  ızgaranın satır sayısı (yer tutucu değerlerle) ve günlük moddaki
+  başlat/ipucu görünürlüğü `onCreate`'te, ilk layout'tan önce,
+  senkron olarak ayarlanıyor — harita ilk kareden itibaren doğru
+  boyutta, sonradan küçülüp yeniden sığdırılması gerekmiyor.
+
 ## 0.7.15 — 2026-09-11
 
 - **Boş / şerit harita:** İlk kamera sığdırması çoğu zaman `minHeight`

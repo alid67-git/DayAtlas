@@ -137,6 +137,28 @@ class MainActivity : DayAtlasActivity() {
                 3
             }
         dayStatsAdapter.attachTo(binding.todayStats, spanCount = statsSpan)
+        // Reserve the grid's real row count (hence height) before the very
+        // first layout pass with placeholder values — the actual numbers
+        // come from the async refresh() below. Without this, the very first
+        // layout runs with an empty (0-row) grid, the map's weighted pane
+        // gets that space instead, and only shrinks back once refresh()
+        // populates the grid a frame later — the exact "tall white hole
+        // with a thin tile strip" RouteMapController's own refit logic is
+        // fighting. Reserving the row count up front means the map's pane
+        // is already correctly sized on frame one, so there is nothing
+        // left for it to resize into once real data arrives.
+        submitStatsSkeleton()
+        // Same reasoning as submitStatsSkeleton(): toggle/hint default to
+        // VISIBLE in the XML and only get corrected once the async refresh()
+        // below runs. prefs.dailyMode is already known synchronously, so set
+        // them now instead of leaving another post-first-layout resize for
+        // the map pane to absorb.
+        if (prefs.dailyMode) {
+            binding.toggle.visibility = View.GONE
+            binding.hint.visibility = View.GONE
+        } else {
+            binding.hint.text = getString(R.string.manual_hint)
+        }
 
         binding.bottomNav.setOnItemSelectedListener { item ->
             showTab(item.itemId)
@@ -747,6 +769,15 @@ class MainActivity : DayAtlasActivity() {
                 DayTitle.formatDuration(speed.activeMillis)
             },
         )
+    }
+
+    /** Placeholder tiles (em dash values) for the visible set, synchronous —
+     * see the call site in [onCreate] for why this must run before layout. */
+    private fun submitStatsSkeleton() {
+        val emDash = getString(R.string.em_dash)
+        val hidden = prefs.dayStatsHidden
+        val order = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
+        dayStatsAdapter.submit(order.filter { it.key !in hidden }.map { it to emDash })
     }
 
     private fun formatGpsInterval(seconds: Int): String = when (seconds) {
