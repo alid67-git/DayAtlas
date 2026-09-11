@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Son yedek: %1$s</string>
-    <string name="build_note">Otururken GPS alma hızı artık titreşimle sıkılaşmaz (~80 m çapa, 2 ölçüm hareket onayı). Kartlar / Aktif GPS / TR·EN·DE önceki sürümde.</string>
+    <string name="build_note">Aynı yerde (~80 m) üst üste nokta birikmez; saat güncellenir, pin çoğalmaz. Otururken GPS aralığı titreşimle sıkılaşmaz.</string>
 </resources>

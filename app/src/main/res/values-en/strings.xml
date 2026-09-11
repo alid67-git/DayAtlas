@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">While sitting still, GPS sample rate no longer speeds up from jitter (~80 m anchor, 2-fix movement confirm). Cards / Active GPS / TR·EN·DE were in the previous build.</string>
+    <string name="build_note">No stacked points while staying put (~80 m): the clock updates, the pin does not multiply. Sitting still no longer speeds up GPS sampling from jitter.</string>
 </resources>

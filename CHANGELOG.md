@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.10 — 2026-09-11
+
+- **Aynı yerde üst üste nokta yok:** Sabit dururken (~80 m) yeni GPS
+  ölçümü haritaya ikinci pin eklemez; son noktanın saati güncellenir.
+  Aralık seyrelirken spaghetti birikmez.
+
 ## 0.7.9 — 2026-09-11
 
 - **Sabit otururken GPS hızı:** Ev GPS titreşimi artık aralığı yeniden

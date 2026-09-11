@@ -8,8 +8,14 @@ import kotlin.math.sqrt
 object Geo {
     private const val EARTH_RADIUS_M = 6_371_000.0
 
-    /** In-place refresh threshold when appending a near-duplicate fix. */
-    const val PATH_NOISE_FLOOR_M = 25.0
+    /**
+     * Same-place radius used to collapse stacked GPS fixes while sitting still
+     * and as the stationary-backoff anchor (see [com.dayatlas.app.location.StationaryBackoff]).
+     */
+    const val SAME_PLACE_RADIUS_M = 80.0
+
+    /** @deprecated Prefer [SAME_PLACE_RADIUS_M]; kept as an alias for call sites. */
+    const val PATH_NOISE_FLOOR_M = SAME_PLACE_RADIUS_M
 
     fun haversineMeters(
         lat1: Double,

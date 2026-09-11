@@ -76,9 +76,10 @@ class DayStore(context: Context) {
         val last = existing.points.lastOrNull()
         if (last != null) {
             val drift = Geo.haversineMeters(last.lat, last.lon, point.lat, point.lon)
-            if (drift < Geo.PATH_NOISE_FLOOR_M) {
-                // Still at home / same spot — refresh the last fix in place so
-                // "Son nokta" advances without growing spaghetti or distance.
+            if (drift < Geo.SAME_PLACE_RADIUS_M) {
+                // Same place (incl. while the sample interval is coarsening) —
+                // refresh time on the existing fix; do not stack another pin
+                // or chase GPS jitter around the spot.
                 val refreshed = last.copy(
                     timeMillis = point.timeMillis,
                     accuracyMeters = point.accuracyMeters ?: last.accuracyMeters,

@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Im Sitzen wird die GPS-Abtastrate durch Rauschen nicht mehr beschleunigt (~80-m-Anker, 2 Messungen Bewegungsbestätigung). Karten / Aktive GPS / TR·EN·DE in der vorherigen Version.</string>
+    <string name="build_note">Keine gestapelten Punkte am gleichen Ort (~80 m): die Uhr aktualisiert sich, der Pin multipliziert sich nicht. Im Sitzen beschleunigt Rauschen die GPS-Abtastung nicht.</string>
 </resources>

@@ -16,7 +16,7 @@ import com.dayatlas.app.prefs.AppPrefs
  */
 object StationaryBackoff {
     /** Radius around the sit-still anchor; typical indoor/yard GPS wander. */
-    const val TOLERANCE_METERS = 80.0
+    const val TOLERANCE_METERS = Geo.SAME_PLACE_RADIUS_M
     const val STREAK_TO_STEP = 3
     /** One spike outside the circle is jitter; two in a row is real movement. */
     const val MOVEMENT_STREAK_TO_RESET = 2
