@@ -23,6 +23,9 @@ import java.lang.ref.WeakReference
  * re-zoom (those flash a blank map and can ANR as the day grows).
  */
 object RouteMapController {
+    private const val DEFAULT_ZOOM_BORDER_PX = 96
+    private const val MIN_ZOOM_INNER_PX = 48
+
     private var boundMap: WeakReference<MapView>? = null
     private var shownDateIso: String? = null
     private var trackPoly: Polyline? = null
@@ -206,9 +209,29 @@ object RouteMapController {
             map.controller.setZoom(14.0)
             map.controller.setCenter(focus)
         } else {
-            map.zoomToBoundingBox(box, animateZoom, 96)
+            // osmdroid subtracts 2*border from width/height before computing zoom.
+            // Fixed border=96 on a short landscape MapView (often <192px tall with
+            // the 6-card stats grid) yields non-positive/NaN zoom → blank gray map.
+            val border = safeZoomBorder(map.width, map.height)
+            map.zoomToBoundingBox(box, animateZoom, border)
         }
         map.invalidate()
+    }
+
+    /**
+     * Padding for [MapView.zoomToBoundingBox] that keeps the inner size positive.
+     * Exposed for unit tests.
+     */
+    internal fun safeZoomBorder(
+        mapWidthPx: Int,
+        mapHeightPx: Int,
+        preferred: Int = DEFAULT_ZOOM_BORDER_PX,
+        minInner: Int = MIN_ZOOM_INNER_PX,
+    ): Int {
+        if (mapWidthPx <= 0 || mapHeightPx <= 0) return 0
+        val maxByWidth = ((mapWidthPx - minInner) / 2).coerceAtLeast(0)
+        val maxByHeight = ((mapHeightPx - minInner) / 2).coerceAtLeast(0)
+        return minOf(preferred, maxByWidth, maxByHeight)
     }
 
     private fun marker(

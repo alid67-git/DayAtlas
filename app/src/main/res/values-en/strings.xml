@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 0.7.13 — Live map no longer clears/rebuilds on every GPS tick; blank screen / freeze fixed.</string>
+    <string name="build_note">Version 0.7.14 — Fixed landscape blank map: zoom padding now scales to the short MapView height.</string>
 </resources>
