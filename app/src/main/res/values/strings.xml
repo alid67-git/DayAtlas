@@ -128,6 +128,12 @@
     <string name="tab_placeholder_stats">Yakında: seçilebilir zaman aralığında toplam mesafe, aktif gün, hız ve hareket özeti.</string>
     <string name="tab_placeholder_routes">Yakında: kayıtlı gün listesi, haritada açma ve GPX dışa aktarma.</string>
 
+    <string name="routes_hint">Bir güne dokununca Günlük sekmesinde haritada açılır. Ok ile GPX paylaşılır.</string>
+    <string name="routes_export_range">Aralık GPX</string>
+    <string name="routes_empty">Henüz kayıtlı gün yok.</string>
+    <string name="routes_day_meta">%1$s · %2$d nokta · %3$s</string>
+    <string name="routes_day_meta_short">%1$s · %2$d nokta</string>
+
     <string name="stats_range_today">Bugün</string>
     <string name="stats_range_7">7 gün</string>
     <string name="stats_range_30">30 gün</string>

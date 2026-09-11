@@ -30,10 +30,13 @@ import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.route.DayStatKind
 import com.dayatlas.app.route.DayStatsAdapter
+import com.dayatlas.app.route.RouteDayRow
 import com.dayatlas.app.route.RouteMapController
+import com.dayatlas.app.route.RoutesAdapter
 import com.dayatlas.app.stats.StatsRange
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
+import androidx.recyclerview.widget.LinearLayoutManager
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -50,6 +53,10 @@ class MainActivity : DayAtlasActivity() {
     private val dayStatsAdapter = DayStatsAdapter { newOrder ->
         persistDayStatsOrder(newOrder)
     }
+    private val routesAdapter = RoutesAdapter(
+        onOpen = { date -> openRouteOnMap(date) },
+        onExport = { date -> GpxExportDialog.show(this, store, date) },
+    )
     private var pendingStart = false
     private var askedBatteryThisSession = false
     private var askedExactThisSession = false
@@ -116,6 +123,11 @@ class MainActivity : DayAtlasActivity() {
         binding.moreVersion.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
 
         setupStatsRangeChips()
+        binding.routesList.layoutManager = LinearLayoutManager(this)
+        binding.routesList.adapter = routesAdapter
+        binding.routesExportRange.setOnClickListener {
+            GpxExportDialog.show(this, store, mapDate)
+        }
 
         binding.previousDay.setOnClickListener {
             mapDate = mapDate.minusDays(1)
@@ -227,8 +239,48 @@ class MainActivity : DayAtlasActivity() {
                 binding.routeMap.onPause()
                 refreshStats()
             }
+            R.id.nav_routes -> {
+                binding.routeMap.onPause()
+                refreshRoutes()
+            }
             else -> binding.routeMap.onPause()
         }
+    }
+
+    private fun refreshRoutes() {
+        val rows = store.listDates().asReversed().mapNotNull { date ->
+            val record = store.load(DayTitle.iso(date)) ?: return@mapNotNull null
+            if (record.points.isEmpty()) return@mapNotNull null
+            val speed = SpeedStats.compute(record.points)
+            val meta = if (speed.activeMillis > 0) {
+                getString(
+                    R.string.routes_day_meta,
+                    DayTitle.formatDistance(record.distanceMeters),
+                    record.points.size,
+                    DayTitle.formatDuration(speed.activeMillis),
+                )
+            } else {
+                getString(
+                    R.string.routes_day_meta_short,
+                    DayTitle.formatDistance(record.distanceMeters),
+                    record.points.size,
+                )
+            }
+            RouteDayRow(
+                date = date,
+                title = DayTitle.format(date),
+                meta = meta,
+            )
+        }
+        routesAdapter.submit(rows)
+        binding.routesEmpty.visibility = if (rows.isEmpty()) View.VISIBLE else View.GONE
+        binding.routesList.visibility = if (rows.isEmpty()) View.GONE else View.VISIBLE
+    }
+
+    private fun openRouteOnMap(date: LocalDate) {
+        mapDate = date
+        binding.bottomNav.selectedItemId = R.id.nav_daily
+        // showTab runs via the selected-item listener.
     }
 
     private fun setupStatsRangeChips() {
