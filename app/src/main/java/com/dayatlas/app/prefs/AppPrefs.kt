@@ -134,10 +134,15 @@ class AppPrefs(context: Context) {
         get() = prefs.getString(LAST_SEEN_BUILD_NOTE, null)
         set(value) = prefs.edit().putString(LAST_SEEN_BUILD_NOTE, value).apply()
 
-    /** epoch millis of the last background (SampleService-driven) update check. */
+    /** epoch millis of the last background update check. */
     var lastUpdateCheckMillis: Long
         get() = prefs.getLong(LAST_UPDATE_CHECK, 0L)
         set(value) = prefs.edit().putLong(LAST_UPDATE_CHECK, value).apply()
+
+    /** Local calendar day (yyyy-MM-dd) of the last silent update check. */
+    var lastUpdateCheckDay: String?
+        get() = prefs.getString(LAST_UPDATE_CHECK_DAY, null)
+        set(value) = prefs.edit().putString(LAST_UPDATE_CHECK_DAY, value).apply()
 
     /** DownloadManager id for an in-flight update APK, or -1 when none / finished. */
     var pendingUpdateDownloadId: Long
@@ -218,6 +223,7 @@ class AppPrefs(context: Context) {
         private const val LAST_SAMPLE_LON = "last_sample_lon_bits"
         private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"
         private const val LAST_UPDATE_CHECK = "last_update_check_millis"
+        private const val LAST_UPDATE_CHECK_DAY = "last_update_check_day"
         private const val PENDING_UPDATE_DOWNLOAD_ID = "pending_update_download_id"
         private const val PENDING_UPDATE_VERSION = "pending_update_version"
         private const val PENDING_UPDATE_SILENT = "pending_update_silent"

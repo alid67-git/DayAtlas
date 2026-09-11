@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
+import com.dayatlas.app.update.UpdateCheckScheduler
 import com.dayatlas.app.update.UpdateInstaller
 
 class BootReceiver : BroadcastReceiver() {
@@ -17,6 +18,7 @@ class BootReceiver : BroadcastReceiver() {
             return
         }
         TrackingController.onAppStart(context, AppPrefs(context))
+        UpdateCheckScheduler.ensureScheduled(context)
     }
 }
 
@@ -25,5 +27,6 @@ class PackageReplacedReceiver : BroadcastReceiver() {
         if (intent?.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
         UpdateInstaller.onPackageReplaced(context)
         TrackingController.onAppStart(context, AppPrefs(context))
+        UpdateCheckScheduler.ensureScheduled(context)
     }
 }

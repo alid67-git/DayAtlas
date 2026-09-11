@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Keine gestapelten Punkte am gleichen Ort (~80 m): die Uhr aktualisiert sich, der Pin multipliziert sich nicht. Im Sitzen beschleunigt Rauschen die GPS-Abtastung nicht.</string>
+    <string name="build_note">Software-Updates werden täglich um 12:00 Ortszeit geprüft (auch während der Aufzeichnung). Einmal pro Tag.</string>
 </resources>

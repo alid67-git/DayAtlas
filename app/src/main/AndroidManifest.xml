@@ -93,6 +93,11 @@
             android:name=".location.SampleReceiver"
             android:exported="false" />
 
+        <receiver
+            android:name=".update.UpdateCheckReceiver"
+            android:exported="false"
+            android:enabled="true" />
+
         <service
             android:name=".location.SampleService"
             android:exported="false"

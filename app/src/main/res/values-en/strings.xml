@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">No stacked points while staying put (~80 m): the clock updates, the pin does not multiply. Sitting still no longer speeds up GPS sampling from jitter.</string>
+    <string name="build_note">Software updates are checked daily at 12:00 local time (also while tracking). Once per day.</string>
 </resources>

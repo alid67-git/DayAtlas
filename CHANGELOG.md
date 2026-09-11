@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.11 — 2026-09-11
+
+- **Gün ortası güncelleme kontrolü:** Her gün yerel saat 12:00’te sessiz
+  güncelleme kontrolü (GPS kaydından bağımsız). Öğleden sonra açılış /
+  örnekleme yedek olarak kaçan kontrolü tamamlar; günde bir kez.
+
 ## 0.7.10 — 2026-09-11
 
 - **Aynı yerde üst üste nokta yok:** Sabit dururken (~80 m) yeni GPS

@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Son yedek: %1$s</string>
-    <string name="build_note">Aynı yerde (~80 m) üst üste nokta birikmez; saat güncellenir, pin çoğalmaz. Otururken GPS aralığı titreşimle sıkılaşmaz.</string>
+    <string name="build_note">Her gün saat 12:00’te yazılım güncellemesi kontrol edilir (kayıt açıkken de). Günde bir kez.</string>
 </resources>
