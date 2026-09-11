@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.17 — 2026-09-11
+
+- **Gün gezici + seçili gün kartı haritanın üzerine taşındı:** Bu satırlar
+  artık haritanın altında ayrı yer kaplamıyor, haritanın üzerinde yüzen
+  bir katman olarak duruyor — harita her zaman tüm ayrılan alanı
+  kullanabiliyor.
+
 ## 0.7.16 — 2026-09-11
 
 - **Boş / şerit harita, kök sebep:** 0.7.12–0.7.15’teki yeniden sığdırma
