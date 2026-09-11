@@ -18,6 +18,7 @@ import com.dayatlas.app.R
 import com.dayatlas.app.backup.DriveFolderBackup
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.prefs.AppPrefs
+import com.dayatlas.app.update.UpdateCheckRunner
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
 import java.util.concurrent.Executors
@@ -44,10 +45,8 @@ class SampleService : Service() {
             return START_NOT_STICKY
         }
 
-        // The app may run unattended for days in daily mode with the UI never
-        // opened, so MainActivity's launch-time update check may never fire.
-        // Piggyback a once-a-day check on this already-scheduled, already
-        // wake-locked tick instead of adding a separate alarm/receiver.
+        // Backup: if midday alarm was killed, a sample tick can still check
+        // once per calendar day after noon.
         val pending = AtomicInteger(1)
         fun stepDone() {
             if (pending.decrementAndGet() == 0) {
@@ -55,12 +54,10 @@ class SampleService : Service() {
             }
         }
 
-        if (shouldCheckForUpdate(prefs)) {
+        if (UpdateCheckRunner.shouldCatchUp(prefs)) {
             pending.incrementAndGet()
             UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
-                // Stamp after the check so a failed/offline attempt can retry
-                // on the next sample tick instead of waiting a full day.
-                prefs.lastUpdateCheckMillis = System.currentTimeMillis()
+                UpdateCheckRunner.markChecked(AppPrefs(applicationContext))
                 if (info != null) {
                     UpdateInstaller.download(applicationContext, info, silent = true)
                 }
@@ -84,11 +81,6 @@ class SampleService : Service() {
             }
         }
         return START_NOT_STICKY
-    }
-
-    private fun shouldCheckForUpdate(prefs: AppPrefs): Boolean {
-        if (BuildConfig.DEBUG) return false
-        return System.currentTimeMillis() - prefs.lastUpdateCheckMillis >= UPDATE_CHECK_INTERVAL_MS
     }
 
     private fun finish(reschedule: Boolean) {
@@ -157,6 +149,5 @@ class SampleService : Service() {
     companion object {
         private const val CHANNEL_ID = "dayatlas_sample"
         private const val NOTIF_ID = 42
-        private const val UPDATE_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000L
     }
 }

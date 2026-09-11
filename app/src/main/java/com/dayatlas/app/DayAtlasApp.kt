@@ -4,6 +4,8 @@ import android.app.Application
 import com.dayatlas.app.backup.DriveFolderBackup
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
+import com.dayatlas.app.update.UpdateCheckRunner
+import com.dayatlas.app.update.UpdateCheckScheduler
 import java.io.File
 import org.osmdroid.config.Configuration
 
@@ -16,6 +18,9 @@ class DayAtlasApp : Application() {
         configureOsmdroid()
         TrackingController.onAppStart(this, prefs)
         DriveFolderBackup.maybeRunDaily(this)
+        UpdateCheckScheduler.ensureScheduled(this)
+        // If midday was missed (phone off at noon), catch up once today.
+        UpdateCheckRunner.maybeCheckAndDownload(this, prefs, requirePastMidday = true)
     }
 
     /**

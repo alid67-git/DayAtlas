@@ -35,7 +35,7 @@ import com.dayatlas.app.route.RouteDayRow
 import com.dayatlas.app.route.RouteMapController
 import com.dayatlas.app.route.RoutesAdapter
 import com.dayatlas.app.stats.StatsRange
-import com.dayatlas.app.update.UpdateChecker
+import com.dayatlas.app.update.UpdateCheckRunner
 import com.dayatlas.app.update.UpdateInstaller
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.time.Instant
@@ -181,11 +181,9 @@ class MainActivity : DayAtlasActivity() {
      * when the activity is no longer in the foreground.
      */
     private fun checkForUpdate() {
-        if (BuildConfig.DEBUG) return
-        UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
-            if (info == null) return@check
-            UpdateInstaller.download(applicationContext, info, silent = true)
-        }
+        // Prefer the midday alarm; only catch up here if noon already passed
+        // and today was not checked (e.g. phone was off at 12:00).
+        UpdateCheckRunner.maybeCheckAndDownload(this, prefs, requirePastMidday = true)
     }
 
     override fun onStart() {
