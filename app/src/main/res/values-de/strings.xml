@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 0.7.14 — Leere Querformat-Karte behoben: Zoom-Rand passt sich der kurzen MapView-Höhe an.</string>
+    <string name="build_note">Version 0.7.14 — Leere Karte behoben (sicherer Zoom-Rand); Karte direkt unter den Statistik-Karten.</string>
 </resources>

@@ -2,9 +2,11 @@
 
 ## 0.7.14 — 2026-09-11
 
-- **Yatay boş harita:** Kısa MapView’da `zoomToBoundingBox` kenar
-  boşluğu (96px) negatif iç boyut üretiyordu → NaN/max zoom ve gri
-  dikdörtgen. Kenar boşluğu harita boyutuna göre sınırlanıyor.
+- **Boş harita:** Kısa MapView’da `zoomToBoundingBox` kenar boşluğu
+  (96px) negatif iç boyut / NaN zoom üretiyordu → beyaz dikdörtgen.
+  Kenar boşluğu harita boyutuna göre sınırlanıyor; bozuk zoom’a düşme
+  koruması var. Harita kartların hemen altına alındı; bugün için tekrar
+  eden gün-özet şeridi gizleniyor.
 
 ## 0.7.13 — 2026-09-11
 

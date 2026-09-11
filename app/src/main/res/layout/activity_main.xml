@@ -116,6 +116,32 @@
                     tools:listitem="@layout/item_day_stat" />
             </LinearLayout>
 
+            <!-- Harita kartların hemen altında — zoom/fit buradaki yüksekliğe bağlı. -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="160dp">
+
+                <org.osmdroid.views.MapView
+                    android:id="@+id/routeMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/emptyState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_map_empty_label"
+                    android:elevation="4dp"
+                    android:text="@string/route_empty"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="@color/md_theme_on_surface"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </FrameLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -166,7 +192,7 @@
                     app:tint="@color/md_theme_on_surface" />
             </LinearLayout>
 
-            <!-- Seçili harita günü: Mesafe / Son nokta / Nokta sayısı. -->
+            <!-- Geçmiş gün seçilince: Mesafe / Son nokta / Nokta (bugün üst kartlarda). -->
             <LinearLayout
                 android:id="@+id/mapDayStats"
                 android:layout_width="match_parent"
@@ -177,7 +203,9 @@
                 android:background="@drawable/bg_map_day_stats"
                 android:orientation="horizontal"
                 android:paddingHorizontal="4dp"
-                android:paddingVertical="10dp">
+                android:paddingVertical="10dp"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -281,31 +309,6 @@
                 android:visibility="gone"
                 tools:text="Atlamalar (1) — dokunup sil"
                 tools:visibility="visible" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:minHeight="160dp">
-
-                <org.osmdroid.views.MapView
-                    android:id="@+id/routeMap"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <TextView
-                    android:id="@+id/emptyState"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/bg_map_empty_label"
-                    android:elevation="4dp"
-                    android:text="@string/route_empty"
-                    android:textAppearance="?attr/textAppearanceTitleMedium"
-                    android:textColor="@color/md_theme_on_surface"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-            </FrameLayout>
         </LinearLayout>
 
         <!-- İstatistikler — Adım 3: aralık seçimi + özet. -->

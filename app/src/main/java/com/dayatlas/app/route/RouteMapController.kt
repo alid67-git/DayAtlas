@@ -210,10 +210,16 @@ object RouteMapController {
             map.controller.setCenter(focus)
         } else {
             // osmdroid subtracts 2*border from width/height before computing zoom.
-            // Fixed border=96 on a short landscape MapView (often <192px tall with
-            // the 6-card stats grid) yields non-positive/NaN zoom → blank gray map.
+            // Fixed border=96 on a short MapView (often <192px with the 6-card
+            // stats grid) yields non-positive/NaN zoom → blank white map forever
+            // (live updates never re-fit).
             val border = safeZoomBorder(map.width, map.height)
             map.zoomToBoundingBox(box, animateZoom, border)
+            // If zoom still blew up (tiny pane / first layout), fall back.
+            if (!map.zoomLevelDouble.isFinite() || map.zoomLevelDouble < 1.0) {
+                map.controller.setZoom(15.0)
+                map.controller.setCenter(geoPoints.last())
+            }
         }
         map.invalidate()
     }

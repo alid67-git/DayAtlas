@@ -125,6 +125,9 @@ class MainActivity : DayAtlasActivity() {
 
         binding.routeMap.setTileSource(TileSourceFactory.MAPNIK)
         binding.routeMap.setMultiTouchControls(true)
+        binding.routeMap.isTilesScaledToDpi = true
+        // Avoid a pure-white “hole” while tiles / first camera fit settle.
+        binding.routeMap.setBackgroundColor(0xFFE8EEF4.toInt())
 
         binding.todayStats.adapter = dayStatsAdapter
         dayStatsAdapter.attachTo(binding.todayStats)
@@ -521,6 +524,8 @@ class MainActivity : DayAtlasActivity() {
         binding.mapDayTitle.text = DayTitle.format(date)
         binding.nextDay.isEnabled = date < today
         binding.goToday.visibility = if (date == today) View.GONE else View.VISIBLE
+        // Bugün zaten üstteki 6 kartta özet var — aynı şeridi gizleyip haritaya yer aç.
+        binding.mapDayStats.visibility = if (date == today) View.GONE else View.VISIBLE
         val emDash = getString(R.string.em_dash)
         binding.mapDistance.text = if (points.isEmpty()) {
             emDash
