@@ -101,13 +101,6 @@ class MainActivity : DayAtlasActivity() {
         binding.todayStats.adapter = dayStatsAdapter
         dayStatsAdapter.attachTo(binding.todayStats)
 
-        binding.headerExport.setOnClickListener {
-            GpxExportDialog.show(this, store, mapDate)
-        }
-        binding.headerSettings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
-
         binding.bottomNav.setOnItemSelectedListener { item ->
             showTab(item.itemId)
             true

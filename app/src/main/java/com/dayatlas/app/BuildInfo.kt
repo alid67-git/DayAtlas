@@ -8,8 +8,6 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Günlük: üst blok hep bugün; harita gün gezicisi geçmişi açar " +
-            "(mesafe / son nokta / nokta). Tüm kartlar daraltıldı ve " +
-            "sürüklenebilir. GPS alma hızı anlık aralığı gösterir. " +
-            "Modern mavi-gri-kırmızı palet. Yedek günde bir; GPX uzantısı sabit."
+        "Üst sağdaki GPX dışa aktar ve Ayarlar simgeleri kaldırıldı — " +
+            "GPX için Rotalar, ayarlar için Daha fazla sekmesi kullanılır."
 }
