@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1 — 2026-09-11
+
+- **Alt navigasyon (Adım 1):** Günlük / İstatistikler / Rotalar / Daha fazla.
+  Mevcut ana ekran Günlük sekmesinde; diğer iki sekme yer tutucu; Daha
+  fazla’da Ayarlar, Yardım ve sürüm bilgisi.
+
 ## 0.7.0 — 2026-09-10
 
 - **Bordo renk paleti:** Uygulama genelindeki yeşil tema bordo ağırlıklı

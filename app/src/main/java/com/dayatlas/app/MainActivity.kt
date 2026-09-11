@@ -106,6 +106,20 @@ class MainActivity : DayAtlasActivity() {
             }
         }
 
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            showTab(item.itemId)
+            true
+        }
+        binding.bottomNav.selectedItemId = R.id.nav_daily
+
+        binding.moreSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        binding.moreHelp.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
+        binding.moreVersion.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
+
         binding.previousDay.setOnClickListener {
             mapDate = mapDate.minusDays(1)
             refreshMap()
@@ -189,7 +203,9 @@ class MainActivity : DayAtlasActivity() {
 
     override fun onResume() {
         super.onResume()
-        binding.routeMap.onResume()
+        if (binding.paneDaily.visibility == View.VISIBLE) {
+            binding.routeMap.onResume()
+        }
         UpdateInstaller.resumePending(this, offerUi = true)
         refresh()
     }
@@ -197,6 +213,20 @@ class MainActivity : DayAtlasActivity() {
     override fun onPause() {
         binding.routeMap.onPause()
         super.onPause()
+    }
+
+    private fun showTab(itemId: Int) {
+        val daily = itemId == R.id.nav_daily
+        binding.paneDaily.visibility = if (daily) View.VISIBLE else View.GONE
+        binding.paneStats.visibility = if (itemId == R.id.nav_stats) View.VISIBLE else View.GONE
+        binding.paneRoutes.visibility = if (itemId == R.id.nav_routes) View.VISIBLE else View.GONE
+        binding.paneMore.visibility = if (itemId == R.id.nav_more) View.VISIBLE else View.GONE
+        if (daily) {
+            binding.routeMap.onResume()
+            refreshMap()
+        } else {
+            binding.routeMap.onPause()
+        }
     }
 
     private fun ensurePermissionsThenStart() {
