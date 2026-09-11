@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.dayatlas.app.R
 import com.dayatlas.app.databinding.ItemDayStatBinding
 
 /**
- * 2-column grid of day-stat tiles. Visible tiles only (hidden ones are
+ * 3-column grid of day-stat tiles. Visible tiles only (hidden ones are
  * filtered out before [submit]); long-press drags a tile to reorder within
  * the visible set. Reordering fires [onReordered] with the full (visible-only)
  * order so the caller can persist it.
@@ -26,7 +27,7 @@ class DayStatsAdapter(
     }
 
     fun attachTo(recyclerView: RecyclerView) {
-        recyclerView.layoutManager = GridLayoutManager(recyclerView.context, 2)
+        recyclerView.layoutManager = GridLayoutManager(recyclerView.context, 3)
         recyclerView.isNestedScrollingEnabled = false
         ItemTouchHelper(TouchCallback()).attachToRecyclerView(recyclerView)
     }
@@ -40,6 +41,9 @@ class DayStatsAdapter(
         val (kind, value) = items[position]
         holder.binding.statLabel.setText(kind.labelRes)
         holder.binding.statValue.text = value
+        holder.binding.root.setBackgroundResource(
+            kind.cardBackgroundRes ?: R.drawable.bg_dash_card,
+        )
     }
 
     override fun getItemCount(): Int = items.size

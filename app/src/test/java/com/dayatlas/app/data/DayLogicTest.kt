@@ -201,6 +201,18 @@ class GpxExporterNameTest {
     }
 
     @Test
+    fun sanitizeStripsAnyExtension() {
+        assertEquals(
+            "rota",
+            com.dayatlas.app.export.GpxExporter.sanitizeFileName("rota.kml"),
+        )
+        assertEquals(
+            "DayAtlas-2026-09-11.gpx",
+            com.dayatlas.app.export.GpxExporter.withGpxExtension("DayAtlas-2026-09-11.txt"),
+        )
+    }
+
+    @Test
     fun withGpxExtensionAlwaysAppends() {
         assertEquals(
             "rota.gpx",

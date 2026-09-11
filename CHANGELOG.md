@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.5 — 2026-09-11
+
+- **Günlük sabit üst / gezici alt:** Üst özet ve kartlar her zaman bugünü
+  gösterir; alttaki gün okları önceki günlerin haritasını ve kompakt
+  Mesafe / Son nokta / Nokta sayısı şeridini değiştirir.
+- **Daraltılmış sürüklenen kartlar:** Tüm gün istatistikleri (hız/süre
+  dahil) tek 3 sütunluk ızgarada; uzun basıp yer değiştirilebilir.
+- **Dinamik GPS alma hızı:** Kart, ayardaki sabit değer yerine o anki
+  etkili örnekleme aralığını gösterir.
+- **Modern klasik palet:** Gri / mavi / kırmızı / beyaz.
+- **Yedek / GPX:** Otomatik Drive yedeği takvim gününde bir kez; aynı
+  boyutlu dosyalar yeniden yüklenmez. Dışa aktarım adı her zaman `.gpx`.
+
 ## 0.7.4 — 2026-09-11
 
 - **Rotalar (Adım 4):** Kayıtlı gün listesi (mesafe / nokta / aktif süre).
