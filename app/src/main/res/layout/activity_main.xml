@@ -7,225 +7,352 @@
     android:orientation="vertical"
     android:background="@color/md_theme_surface">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/md_theme_primary"
-        android:minHeight="?attr/actionBarSize"
-        app:title="@string/app_name"
-        app:titleTextColor="@color/md_theme_on_primary"
-        app:menu="@menu/main" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="8dp">
-
-        <TextView
-            android:id="@+id/dayTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceTitleLarge"
-            android:textColor="@color/md_theme_on_surface"
-            tools:text="Günlük 28 Ağu 2026" />
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="@color/status_on"
-            tools:text="Kayıt açık" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/today_distance"
-                    android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:textColor="@color/md_theme_outline" />
-
-                <TextView
-                    android:id="@+id/distance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                    android:textColor="@color/md_theme_on_surface"
-                    tools:text="3,2 km" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/last_point"
-                    android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:textColor="@color/md_theme_outline" />
-
-                <TextView
-                    android:id="@+id/lastPoint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?attr/textAppearanceTitleMedium"
-                    tools:text="14:32" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/point_count"
-                    android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:textColor="@color/md_theme_outline" />
-
-                <TextView
-                    android:id="@+id/pointCount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?attr/textAppearanceTitleMedium"
-                    tools:text="18" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/toggle"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/start" />
-
-        <TextView
-            android:id="@+id/hint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="@string/manual_hint"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="@color/md_theme_outline" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="4dp"
-        android:paddingBottom="4dp">
-
-        <ImageButton
-            android:id="@+id/previousDay"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/route_previous_day"
-            android:src="@drawable/ic_chevron_left"
-            app:tint="@color/md_theme_on_surface" />
-
-        <TextView
-            android:id="@+id/mapDayTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textAppearance="?attr/textAppearanceTitleSmall"
-            android:textColor="@color/md_theme_on_surface"
-            tools:text="Günlük 8 Eyl 2026" />
-
-        <ImageButton
-            android:id="@+id/goToday"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/route_go_today"
-            android:src="@drawable/ic_today"
-            android:visibility="gone"
-            app:tint="@color/md_theme_primary"
-            tools:visibility="visible" />
-
-        <ImageButton
-            android:id="@+id/nextDay"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/route_next_day"
-            android:src="@drawable/ic_chevron_right"
-            app:tint="@color/md_theme_on_surface" />
-    </LinearLayout>
-
-    <!-- Selected map-day summary: sits with the day picker so the stats
-         match the route on the map (top block stays "today / recording").
-         Tiles are drag-reorderable (long-press) and individually hideable
-         from Settings - see DayStatsAdapter / DayStatKind. -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mapDayStats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="8dp"
-        android:clipToPadding="false"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_day_stat" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/jumpsButton"
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginBottom="8dp"
-        android:text=""
-        android:visibility="gone"
-        tools:text="Atlamalar (1) — dokunup sil"
-        tools:visibility="visible" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <org.osmdroid.views.MapView
-            android:id="@+id/routeMap"
+        <!-- Günlük: mevcut ana içerik (Adım 2'de mockup düzenine çekilecek). -->
+        <LinearLayout
+            android:id="@+id/paneDaily"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/emptyState"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_map_empty_label"
-            android:elevation="4dp"
-            android:text="@string/route_empty"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:textColor="@color/md_theme_on_surface"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/md_theme_primary"
+                android:minHeight="?attr/actionBarSize"
+                app:title="@string/app_name"
+                app:titleTextColor="@color/md_theme_on_primary"
+                app:menu="@menu/main" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/dayTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceTitleLarge"
+                    android:textColor="@color/md_theme_on_surface"
+                    tools:text="Günlük 28 Ağu 2026" />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="@color/status_on"
+                    tools:text="Kayıt açık" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/today_distance"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="@color/md_theme_outline" />
+
+                        <TextView
+                            android:id="@+id/distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                            android:textColor="@color/md_theme_on_surface"
+                            tools:text="3,2 km" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/last_point"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="@color/md_theme_outline" />
+
+                        <TextView
+                            android:id="@+id/lastPoint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            tools:text="14:32" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/point_count"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="@color/md_theme_outline" />
+
+                        <TextView
+                            android:id="@+id/pointCount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            tools:text="18" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/toggle"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/start" />
+
+                <TextView
+                    android:id="@+id/hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/manual_hint"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="@color/md_theme_outline" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="4dp"
+                android:paddingBottom="4dp">
+
+                <ImageButton
+                    android:id="@+id/previousDay"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_previous_day"
+                    android:src="@drawable/ic_chevron_left"
+                    app:tint="@color/md_theme_on_surface" />
+
+                <TextView
+                    android:id="@+id/mapDayTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textColor="@color/md_theme_on_surface"
+                    tools:text="Günlük 8 Eyl 2026" />
+
+                <ImageButton
+                    android:id="@+id/goToday"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_go_today"
+                    android:src="@drawable/ic_today"
+                    android:visibility="gone"
+                    app:tint="@color/md_theme_primary"
+                    tools:visibility="visible" />
+
+                <ImageButton
+                    android:id="@+id/nextDay"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_next_day"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/md_theme_on_surface" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mapDayStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="8dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_day_stat" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/jumpsButton"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginBottom="8dp"
+                android:text=""
+                android:visibility="gone"
+                tools:text="Atlamalar (1) — dokunup sil"
+                tools:visibility="visible" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <org.osmdroid.views.MapView
+                    android:id="@+id/routeMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/emptyState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_map_empty_label"
+                    android:elevation="4dp"
+                    android:text="@string/route_empty"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="@color/md_theme_on_surface"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- İstatistikler — Adım 3'te doldurulacak. -->
+        <LinearLayout
+            android:id="@+id/paneStats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:visibility="gone"
-            tools:visibility="visible" />
+            android:padding="24dp"
+            tools:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nav_stats"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:textColor="@color/md_theme_on_surface" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/tab_placeholder_stats"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="@color/md_theme_outline" />
+        </LinearLayout>
+
+        <!-- Rotalar — Adım 4'te doldurulacak. -->
+        <LinearLayout
+            android:id="@+id/paneRoutes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nav_routes"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:textColor="@color/md_theme_on_surface" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/tab_placeholder_routes"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="@color/md_theme_outline" />
+        </LinearLayout>
+
+        <!-- Daha fazla — Ayarlar / Yardım kısayolları (Adım 5'te genişler). -->
+        <ScrollView
+            android:id="@+id/paneMore"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nav_more"
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                    android:textColor="@color/md_theme_on_surface" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/moreSettings"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/settings" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/moreHelp"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/action_help" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/app_footer_credit"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="@color/md_theme_outline" />
+
+                <TextView
+                    android:id="@+id/moreVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="@color/md_theme_outline"
+                    tools:text="Sürüm 0.7.1" />
+            </LinearLayout>
+        </ScrollView>
     </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_theme_surface"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav" />
 </LinearLayout>

@@ -114,4 +114,11 @@
     <string name="gps_check_rate">GPS kontrol hızı: %1$s</string>
     <string name="app_footer_credit">Geliştiren: Ali Dinçer</string>
     <string name="action_help">Yardım</string>
+
+    <string name="nav_daily">Günlük</string>
+    <string name="nav_stats">İstatistikler</string>
+    <string name="nav_routes">Rotalar</string>
+    <string name="nav_more">Daha fazla</string>
+    <string name="tab_placeholder_stats">Yakında: seçilebilir zaman aralığında toplam mesafe, aktif gün, hız ve hareket özeti.</string>
+    <string name="tab_placeholder_routes">Yakında: kayıtlı gün listesi, haritada açma ve GPX dışa aktarma.</string>
 </resources>

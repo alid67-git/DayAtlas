@@ -8,7 +8,7 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Google Drive yedek: Ayarlar’dan bir Drive klasörü seçin, günlük " +
-            "otomatik yedeği açın. Günde bir kez JSON+GPX o klasöre " +
-            "kopyalanır; Drive uygulaması buluta senkronlar."
+        "Alt menü geldi: Günlük / İstatistikler / Rotalar / Daha fazla. " +
+            "İlk adımda iskelet; istatistik ve rota içerikleri sonraki " +
+            "sürümlerde dolacak. Ayarlar ve Yardım ‘Daha fazla’dan açılır."
 }
