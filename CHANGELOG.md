@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.9 — 2026-09-11
+
+- **Sabit otururken GPS hızı:** Ev GPS titreşimi artık aralığı yeniden
+  sıkılaştırmaz. Sabit çapa (~80 m) + ardışık 2 dış ölçüm şartı; tek
+  sıçrama seyreltilmiş aralığı bozmaz.
+
 ## 0.7.8 — 2026-09-11
 
 - **Tek renk kartlar:** Günlük istatistik kutuları aynı beyaz kart stili.

@@ -47,7 +47,7 @@
     <string name="settings_daily_mode">Tagesmodus</string>
     <string name="settings_daily_mode_summary">Wenn aktiv, startet oder setzt die heutige Aufnahme ohne Nachfrage fort, sobald die App oder das Telefon geöffnet wird.</string>
     <string name="settings_interval">Abtastintervall</string>
-    <string name="settings_interval_hint">Nach 3 Messungen am gleichen Ort (~25 m) wird das Intervall gestuft (30 s → 1 → 3 → 5 Min). Bei Bewegung gilt wieder Ihr gewähltes Intervall — spart Akku, wenn Sie nachts stillstehen.</string>
+    <string name="settings_interval_hint">Nach 3 Messungen am gleichen Ort (~80 m) wird das Intervall gestuft (30 s → 1 → 3 → 5 Min). Echte Bewegung (2 Messungen hintereinander außerhalb) stellt Ihr Intervall wieder her — Heim-GPS-Rauschen beschleunigt die Abtastung nicht erneut.</string>
     <string name="interval_30s">30 Sekunden (0,5 Min)</string>
     <string name="interval_1">1 Minute (empfohlen)</string>
     <string name="interval_3">3 Minuten</string>
@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Einheitliche Karten; Aktive GPS-Abtastrate. Heim-GPS-Rauschen zählt nicht für Distanz/aktive Zeit (25-m-Rauschboden + Sprungsperre). Letzte Statistikzeile zentriert. UI TR/EN/DE.</string>
+    <string name="build_note">Im Sitzen wird die GPS-Abtastrate durch Rauschen nicht mehr beschleunigt (~80-m-Anker, 2 Messungen Bewegungsbestätigung). Karten / Aktive GPS / TR·EN·DE in der vorherigen Version.</string>
 </resources>

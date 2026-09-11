@@ -84,6 +84,10 @@ class AppPrefs(context: Context) {
         get() = prefs.getInt(STATIONARY_STREAK, 0).coerceAtLeast(0)
         set(value) = prefs.edit().putInt(STATIONARY_STREAK, value.coerceAtLeast(0)).apply()
 
+    var movingStreak: Int
+        get() = prefs.getInt(MOVING_STREAK, 0).coerceAtLeast(0)
+        set(value) = prefs.edit().putInt(MOVING_STREAK, value.coerceAtLeast(0)).apply()
+
     var lastSampleLat: Double?
         get() =
             if (prefs.contains(LAST_SAMPLE_LAT)) {
@@ -119,6 +123,7 @@ class AppPrefs(context: Context) {
         prefs.edit()
             .putInt(EFFECTIVE_INTERVAL_SECONDS, intervalSeconds)
             .putInt(STATIONARY_STREAK, 0)
+            .putInt(MOVING_STREAK, 0)
             .remove(LAST_SAMPLE_LAT)
             .remove(LAST_SAMPLE_LON)
             .apply()
@@ -208,6 +213,7 @@ class AppPrefs(context: Context) {
         private const val INTERVAL_MINUTES_LEGACY = "interval_minutes"
         private const val EFFECTIVE_INTERVAL_SECONDS = "effective_interval_seconds"
         private const val STATIONARY_STREAK = "stationary_streak"
+        private const val MOVING_STREAK = "moving_streak"
         private const val LAST_SAMPLE_LAT = "last_sample_lat_bits"
         private const val LAST_SAMPLE_LON = "last_sample_lon_bits"
         private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"

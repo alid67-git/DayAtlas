@@ -10,7 +10,7 @@ Manuel mod: Günlük mod kapalıyken ana ekrandaki Başlat/Durdur düğmesiyle k
 
 2) ÖRNEKLEME ARALIĞI
 
-Ayarlar'dan 30 saniye, 1, 3 veya 5 dakikada bir nokta alınmasını seçebilirsiniz. Aynı yerde (~25 m içinde) art arda 3 ölçüm olursa aralık otomatik olarak bir kademe seyreltilir (ör. 1 dk → 3 dk); hareket edince seçtiğiniz aralığa geri döner. Bu, gece sabit dururken pili korur.
+Ayarlar'dan 30 saniye, 1, 3 veya 5 dakikada bir nokta alınmasını seçebilirsiniz. Aynı yerde (~80 m içinde) art arda 3 ölçüm olursa aralık otomatik olarak bir kademe seyreltilir (ör. 1 dk → 3 dk); gerçek hareket (dışarıda ardışık 2 ölçüm) olunca seçtiğiniz aralığa geri döner. Ev GPS titreşimi aralığı yeniden sıkılaştırmaz. Bu, gece sabit dururken pili korur.
 
 3) İZİNLER VE PİL
 

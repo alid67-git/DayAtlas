@@ -47,7 +47,7 @@
     <string name="settings_daily_mode">Günlük mod</string>
     <string name="settings_daily_mode_summary">Açıkken uygulama veya telefon açılınca bugünün kaydı onay sormadan başlar / devam eder.</string>
     <string name="settings_interval">Örnekleme aralığı</string>
-    <string name="settings_interval_hint">Aynı yerde (~25 m) art arda 3 ölçüm olunca aralık bir üst kademeye seyreltilir (30 sn → 1 → 3 → 5 dk). Hareket edince seçtiğiniz aralığa döner — gece sabit otururken pili korur.</string>
+    <string name="settings_interval_hint">Aynı yerde (~80 m) art arda 3 ölçüm olunca aralık bir üst kademeye seyreltilir (30 sn → 1 → 3 → 5 dk). Gerçek hareket (ardışık 2 ölçüm dışarıda) olunca seçtiğiniz aralığa döner — ev GPS titreşimi hızı yeniden sıkılaştırmaz.</string>
     <string name="interval_30s">30 saniye (0,5 dk)</string>
     <string name="interval_1">1 dakika (önerilen)</string>
     <string name="interval_3">3 dakika</string>
@@ -156,5 +156,5 @@
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
     <string name="drive_last_backup">Son yedek: %1$s</string>
-    <string name="build_note">Kartlar tek renkte; Aktif GPS alma hızı. Ev GPS titreşimi mesafe/aktif süreye sayılmaz (25 m gürültü tabanı + atlama engeli). 3. satır ortalanır. Arayüz TR/EN/DE.</string>
+    <string name="build_note">Otururken GPS alma hızı artık titreşimle sıkılaşmaz (~80 m çapa, 2 ölçüm hareket onayı). Kartlar / Aktif GPS / TR·EN·DE önceki sürümde.</string>
 </resources>
