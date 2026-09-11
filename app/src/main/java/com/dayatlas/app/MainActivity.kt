@@ -98,8 +98,8 @@ class MainActivity : DayAtlasActivity() {
         binding.routeMap.setTileSource(TileSourceFactory.MAPNIK)
         binding.routeMap.setMultiTouchControls(true)
 
-        binding.mapDayStats.adapter = dayStatsAdapter
-        dayStatsAdapter.attachTo(binding.mapDayStats)
+        binding.todayStats.adapter = dayStatsAdapter
+        dayStatsAdapter.attachTo(binding.todayStats)
 
         binding.headerExport.setOnClickListener {
             GpxExportDialog.show(this, store, mapDate)
@@ -455,6 +455,8 @@ class MainActivity : DayAtlasActivity() {
         val today = DayTitle.localToday()
         if (mapDate.isAfter(today)) mapDate = today
 
+        // Top block always mirrors the live "today" record — day carousel
+        // below must not rewrite this title / cards.
         val record = store.loadToday()
         binding.dayTitle.text = record.title
         val recording = prefs.trackingEnabled || prefs.dailyMode
@@ -479,27 +481,40 @@ class MainActivity : DayAtlasActivity() {
             binding.hint.text = getString(R.string.manual_hint)
         }
 
+        val todayPoints = record.points
+        val todayValues = dayStatValues(record, todayPoints)
+        val hidden = prefs.dayStatsHidden
+        val order = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
+        dayStatsAdapter.submit(
+            order.filter { it.key !in hidden }
+                .map { it to (todayValues[it] ?: getString(R.string.em_dash)) },
+        )
+
         refreshMap()
     }
 
     private fun refreshMap() {
         val today = DayTitle.localToday()
         val dayLabel = DayTitle.format(mapDate)
-        binding.dayTitle.text = dayLabel
         binding.mapDayTitle.text = dayLabel
         binding.nextDay.isEnabled = mapDate < today
         binding.goToday.visibility = if (mapDate == today) View.GONE else View.VISIBLE
         val dateIso = DayTitle.iso(mapDate)
         val record = store.load(dateIso)
         val points = record?.points.orEmpty()
-        val values = dayStatValues(record, points)
-        val hidden = prefs.dayStatsHidden
-        val order = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
-        dayStatsAdapter.submit(
-            order.filter { it in DayStatKind.PRIMARY && it.key !in hidden }
-                .map { it to (values[it] ?: getString(R.string.em_dash)) },
-        )
-        bindSpeedRow(values, hidden)
+        val emDash = getString(R.string.em_dash)
+        binding.mapDistance.text = if (points.isEmpty()) {
+            emDash
+        } else {
+            DayTitle.formatDistance(record?.distanceMeters ?: 0.0)
+        }
+        binding.mapLastPoint.text = points.lastOrNull()?.let { point ->
+            Instant.ofEpochMilli(point.timeMillis)
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime()
+                .format(TIME_FMT)
+        } ?: emDash
+        binding.mapPointCount.text = points.size.toString()
 
         val jumps = JumpFilter.findJumps(points)
         if (jumps.isEmpty()) {
@@ -557,23 +572,6 @@ class MainActivity : DayAtlasActivity() {
         )
     }
 
-    private fun bindSpeedRow(values: Map<DayStatKind, String>, hidden: Set<String>) {
-        val emDash = getString(R.string.em_dash)
-        fun show(card: View, valueView: android.widget.TextView, kind: DayStatKind) {
-            if (kind.key in hidden) {
-                card.visibility = View.GONE
-            } else {
-                card.visibility = View.VISIBLE
-                valueView.text = values[kind] ?: emDash
-            }
-        }
-        show(binding.cardMaxSpeed, binding.speedMaxValue, DayStatKind.MAX_SPEED)
-        show(binding.cardActiveDuration, binding.speedActiveValue, DayStatKind.ACTIVE_DURATION)
-        show(binding.cardAvgSpeed, binding.speedAvgValue, DayStatKind.AVG_SPEED)
-        binding.speedRow.visibility =
-            if (DayStatKind.SECONDARY.any { it.key !in hidden }) View.VISIBLE else View.GONE
-    }
-
     private fun formatGpsInterval(seconds: Int): String = when (seconds) {
         30 -> getString(R.string.interval_30s_short)
         60 -> getString(R.string.interval_1_short)
@@ -583,16 +581,14 @@ class MainActivity : DayAtlasActivity() {
     }
 
     /**
-     * Reordering only touches visible primary tiles; secondary and hidden
-     * kinds keep their previous relative order and are appended after.
+     * Persist the full visible order from the grid; hidden kinds keep their
+     * previous relative order and are appended after.
      */
-    private fun persistDayStatsOrder(newVisiblePrimary: List<DayStatKind>) {
+    private fun persistDayStatsOrder(newVisible: List<DayStatKind>) {
         val hidden = prefs.dayStatsHidden
         val oldOrder = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
-        val secondary = oldOrder.filter { it in DayStatKind.SECONDARY && it.key !in hidden }
         val hiddenOrdered = oldOrder.filter { it.key in hidden }
-        prefs.dayStatsOrderRaw =
-            DayStatKind.joinOrder(newVisiblePrimary + secondary + hiddenOrdered)
+        prefs.dayStatsOrderRaw = DayStatKind.joinOrder(newVisible + hiddenOrdered)
     }
 
     companion object {

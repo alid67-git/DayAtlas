@@ -12,15 +12,16 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <!-- Günlük — Adım 2: marka şeridi + 2×2 sürüklenen kartlar + hız şeridi. -->
+        <!-- Günlük: üstte bugün sabiti; altta gün gezici + seçili gün özeti + harita. -->
         <LinearLayout
             android:id="@+id/paneDaily"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!-- id=toolbar: DayAtlasActivity status-bar inset uygular (bir satır aşağı). -->
             <LinearLayout
-                android:id="@+id/brandHeader"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_brand_header"
@@ -120,119 +121,28 @@
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="@color/md_theme_outline" />
 
-                <!-- 2×2 sürüklenen birincil kartlar (seçili gün). -->
+                <!-- Bugünün tüm istatistikleri; 3 sütun, sürüklenerek sıralanır. -->
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/mapDayStats"
+                    android:id="@+id/todayStats"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
-                    tools:itemCount="4"
+                    tools:itemCount="7"
                     tools:listitem="@layout/item_day_stat" />
-
-                <!-- Üç renkli hız / süre kartı. -->
-                <LinearLayout
-                    android:id="@+id/speedRow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/cardMaxSpeed"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_speed_max"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/stat_max_speed"
-                            android:textAppearance="?attr/textAppearanceLabelSmall"
-                            android:textColor="@color/md_theme_outline" />
-
-                        <TextView
-                            android:id="@+id/speedMaxValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
-                            android:textColor="@color/md_theme_on_surface"
-                            android:textStyle="bold"
-                            tools:text="124 km/sa" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/cardActiveDuration"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_speed_active"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/stat_active_duration"
-                            android:textAppearance="?attr/textAppearanceLabelSmall"
-                            android:textColor="@color/md_theme_outline" />
-
-                        <TextView
-                            android:id="@+id/speedActiveValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
-                            android:textColor="@color/md_theme_on_surface"
-                            android:textStyle="bold"
-                            tools:text="2 sa 48 dk" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/cardAvgSpeed"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_speed_avg"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/stat_avg_speed"
-                            android:textAppearance="?attr/textAppearanceLabelSmall"
-                            android:textColor="@color/md_theme_outline" />
-
-                        <TextView
-                            android:id="@+id/speedAvgValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
-                            android:textColor="@color/md_theme_on_surface"
-                            android:textStyle="bold"
-                            tools:text="41 km/sa" />
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/history_bar"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="4dp"
-                android:paddingBottom="4dp">
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp">
 
                 <ImageButton
                     android:id="@+id/previousDay"
@@ -272,6 +182,110 @@
                     android:contentDescription="@string/route_next_day"
                     android:src="@drawable/ic_chevron_right"
                     app:tint="@color/md_theme_on_surface" />
+            </LinearLayout>
+
+            <!-- Seçili harita günü: Mesafe / Son nokta / Nokta sayısı. -->
+            <LinearLayout
+                android:id="@+id/mapDayStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/bg_map_day_stats"
+                android:orientation="horizontal"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="10dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/map_day_distance"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:textColor="@color/md_theme_on_primary_container" />
+
+                    <TextView
+                        android:id="@+id/mapDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textColor="@color/md_theme_on_primary_container"
+                        android:textStyle="bold"
+                        tools:text="12,4 km" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="4dp"
+                    android:background="@color/divider_subtle" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/last_point"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:textColor="@color/md_theme_on_primary_container" />
+
+                    <TextView
+                        android:id="@+id/mapLastPoint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textColor="@color/md_theme_on_primary_container"
+                        android:textStyle="bold"
+                        tools:text="18:40" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="4dp"
+                    android:background="@color/divider_subtle" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/point_count"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:textColor="@color/md_theme_on_primary_container" />
+
+                    <TextView
+                        android:id="@+id/mapPointCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textColor="@color/md_theme_on_primary_container"
+                        android:textStyle="bold"
+                        tools:text="42" />
+                </LinearLayout>
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton

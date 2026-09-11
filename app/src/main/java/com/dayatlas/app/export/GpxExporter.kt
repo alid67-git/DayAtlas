@@ -26,10 +26,10 @@ object GpxExporter {
             "${DayTitle.format(from)} – ${DayTitle.format(to)}"
         }
 
-    /** Stem only (no extension). Always strip a trailing .gpx if the user typed one. */
+    /** Stem only (no extension). Strips a trailing extension so share always ends in `.gpx`. */
     fun sanitizeFileName(raw: String): String {
         val trimmed = raw.trim().ifEmpty { "DayAtlas" }
-        val withoutExt = trimmed.removeSuffix(".gpx").removeSuffix(".GPX")
+        val withoutExt = trimmed.replace(Regex("""\.[A-Za-z0-9]{1,8}$"""), "")
         val cleaned = withoutExt
             .replace(Regex("""[\\/:*?"<>|]"""), "-")
             .replace(Regex("\\s+"), " ")
