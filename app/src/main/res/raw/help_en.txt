@@ -28,7 +28,7 @@ GPS can occasionally record a bad, jumpy point. These show up as orange markers 
 
 6) GPX EXPORT
 
-Use the export icon in the toolbar to share a single day or a date range as a GPX file (Drive, email, mapping apps, etc.).
+From the Routes tab, share a single day (row export) or a date range via Range GPX as a GPX file (Drive, email, mapping apps, etc.). Open Settings from the More tab.
 
 7) GOOGLE DRIVE BACKUP AND RESTORE
 

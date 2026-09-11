@@ -28,7 +28,7 @@ Bazen GPS hatalı bir sıçrama noktası kaydedebilir. Böyle noktalar haritada 
 
 6) GPX DIŞA AKTARMA
 
-Araç çubuğundaki dışa aktar simgesiyle tek bir günü veya bir tarih aralığını GPX dosyası olarak paylaşabilirsiniz (Drive, e-posta, harita uygulamaları vb.).
+Rotalar sekmesinden tek bir günü (satırdaki dışa aktar) veya üstteki Aralık GPX ile bir tarih aralığını GPX dosyası olarak paylaşabilirsiniz (Drive, e-posta, harita uygulamaları vb.). Ayarlar için Daha fazla sekmesini kullanın.
 
 7) GOOGLE DRIVE YEDEK VE GERİ YÜKLEME
 

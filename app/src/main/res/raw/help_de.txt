@@ -28,7 +28,7 @@ Gelegentlich kann das GPS einen fehlerhaften Sprungpunkt aufzeichnen. Solche Pun
 
 6) GPX-EXPORT
 
-Über das Export-Symbol in der Symbolleiste können Sie einen einzelnen Tag oder einen Datumsbereich als GPX-Datei teilen (Drive, E-Mail, Kartenanwendungen usw.).
+Im Reiter Routen können Sie einen einzelnen Tag (Export in der Zeile) oder über Bereichs-GPX einen Datumsbereich als GPX-Datei teilen (Drive, E-Mail, Kartenanwendungen usw.). Einstellungen öffnen Sie im Reiter Mehr.
 
 7) GOOGLE-DRIVE-SICHERUNG UND -WIEDERHERSTELLUNG
 

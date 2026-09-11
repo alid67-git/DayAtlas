@@ -59,24 +59,6 @@
                         android:textColor="#CCFFFFFF"
                         android:textSize="11sp" />
                 </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/headerExport"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/action_export_gpx"
-                    android:src="@drawable/ic_export"
-                    app:tint="@color/md_theme_on_primary" />
-
-                <ImageButton
-                    android:id="@+id/headerSettings"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/settings"
-                    android:src="@drawable/ic_settings"
-                    app:tint="@color/md_theme_on_primary" />
             </LinearLayout>
 
             <LinearLayout

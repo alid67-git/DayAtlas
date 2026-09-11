@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.6 — 2026-09-11
+
+- **Üst sağ ikonlar kaldırıldı:** Marka şeridindeki GPX dışa aktar ve
+  Ayarlar düğmeleri çıkarıldı (Rotalar / Daha fazla sekmelerinde zaten
+  var).
+
 ## 0.7.5 — 2026-09-11
 
 - **Günlük sabit üst / gezici alt:** Üst özet ve kartlar her zaman bugünü
