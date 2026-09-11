@@ -8,7 +8,7 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "Günlük sekme yenilendi: marka şeridi, 2×2 sürüklenen veri kartları " +
-            "ve üç renkli hız/süre şeridi. Kartları uzun basıp sıralayabilir, " +
-            "Ayarlar’dan göstereceklerinizi seçebilirsiniz."
+        "İstatistikler sekmesi: Bugün / 7 gün / 30 gün / Bu ay / Tümü " +
+            "aralığında toplam mesafe, aktif gün, hız, süre ve günlük " +
+            "mesafe çubukları."
 }

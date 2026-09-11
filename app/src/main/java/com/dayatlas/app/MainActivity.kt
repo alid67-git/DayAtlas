@@ -19,6 +19,7 @@ import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
 import com.dayatlas.app.data.JumpCleanupDialog
 import com.dayatlas.app.data.JumpFilter
+import com.dayatlas.app.data.RangeStats
 import com.dayatlas.app.data.SpeedStats
 import com.dayatlas.app.data.TrackPoint
 import com.dayatlas.app.databinding.ActivityMainBinding
@@ -30,13 +31,17 @@ import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.route.DayStatKind
 import com.dayatlas.app.route.DayStatsAdapter
 import com.dayatlas.app.route.RouteMapController
+import com.dayatlas.app.stats.StatsRange
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import android.view.LayoutInflater
+import android.widget.TextView
 
 class MainActivity : DayAtlasActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -49,6 +54,7 @@ class MainActivity : DayAtlasActivity() {
     private var askedBatteryThisSession = false
     private var askedExactThisSession = false
     private var mapDate: LocalDate = DayTitle.localToday()
+    private var statsRange: StatsRange = StatsRange.LAST_7
 
     private val locationLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
@@ -109,19 +115,7 @@ class MainActivity : DayAtlasActivity() {
         }
         binding.moreVersion.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
 
-        binding.bottomNav.setOnItemSelectedListener { item ->
-            showTab(item.itemId)
-            true
-        }
-        binding.bottomNav.selectedItemId = R.id.nav_daily
-
-        binding.moreSettings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
-        binding.moreHelp.setOnClickListener {
-            startActivity(Intent(this, HelpActivity::class.java))
-        }
-        binding.moreVersion.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
+        setupStatsRangeChips()
 
         binding.previousDay.setOnClickListener {
             mapDate = mapDate.minusDays(1)
@@ -224,12 +218,127 @@ class MainActivity : DayAtlasActivity() {
         binding.paneStats.visibility = if (itemId == R.id.nav_stats) View.VISIBLE else View.GONE
         binding.paneRoutes.visibility = if (itemId == R.id.nav_routes) View.VISIBLE else View.GONE
         binding.paneMore.visibility = if (itemId == R.id.nav_more) View.VISIBLE else View.GONE
-        if (daily) {
-            binding.routeMap.onResume()
-            refreshMap()
-        } else {
-            binding.routeMap.onPause()
+        when (itemId) {
+            R.id.nav_daily -> {
+                binding.routeMap.onResume()
+                refreshMap()
+            }
+            R.id.nav_stats -> {
+                binding.routeMap.onPause()
+                refreshStats()
+            }
+            else -> binding.routeMap.onPause()
         }
+    }
+
+    private fun setupStatsRangeChips() {
+        binding.chipRange7.isChecked = true
+        binding.statsRangeChips.setOnCheckedStateChangeListener { _, checkedIds ->
+            val id = checkedIds.firstOrNull() ?: return@setOnCheckedStateChangeListener
+            statsRange = when (id) {
+                R.id.chipRangeToday -> StatsRange.TODAY
+                R.id.chipRange7 -> StatsRange.LAST_7
+                R.id.chipRange30 -> StatsRange.LAST_30
+                R.id.chipRangeMonth -> StatsRange.THIS_MONTH
+                R.id.chipRangeAll -> StatsRange.ALL
+                else -> return@setOnCheckedStateChangeListener
+            }
+            refreshStats()
+        }
+    }
+
+    private fun refreshStats() {
+        val today = DayTitle.localToday()
+        val dates = store.listDates()
+        val bounds = statsRange.bounds(today, dates.firstOrNull())
+        if (bounds == null) {
+            bindStatsSummary(RangeStats.Summary.EMPTY, rangeLabel = null)
+            return
+        }
+        val (from, to) = bounds
+        val records = store.loadRange(from, to)
+        val label = if (from == to) {
+            getString(R.string.stats_range_label_single, formatStatsDay(from))
+        } else {
+            getString(
+                R.string.stats_range_label,
+                formatStatsDay(from),
+                formatStatsDay(to),
+            )
+        }
+        bindStatsSummary(RangeStats.summarize(records), label)
+    }
+
+    private fun bindStatsSummary(summary: RangeStats.Summary, rangeLabel: String?) {
+        binding.statsRangeLabel.text = rangeLabel.orEmpty()
+        val empty = summary.dayCount == 0
+        binding.statsEmpty.visibility = if (empty) View.VISIBLE else View.GONE
+        binding.statsTotalDistance.text =
+            if (empty) getString(R.string.em_dash) else DayTitle.formatDistance(summary.totalDistanceMeters)
+        binding.statsActiveDays.text =
+            if (empty) getString(R.string.em_dash) else summary.dayCount.toString()
+        binding.statsMaxSpeed.text =
+            if (empty || summary.maxSpeedKmh <= 0) {
+                getString(R.string.em_dash)
+            } else {
+                DayTitle.formatSpeed(summary.maxSpeedKmh)
+            }
+        binding.statsActiveDuration.text =
+            if (empty || summary.activeMillis <= 0) {
+                getString(R.string.em_dash)
+            } else {
+                DayTitle.formatDuration(summary.activeMillis)
+            }
+        binding.statsAvgSpeed.text =
+            if (empty || summary.avgSpeedKmh <= 0) {
+                getString(R.string.em_dash)
+            } else {
+                DayTitle.formatSpeed(summary.avgSpeedKmh)
+            }
+        binding.statsPointsBest.text = when {
+            empty -> getString(R.string.em_dash)
+            summary.bestDayIso != null -> getString(
+                R.string.stats_points_and_best,
+                summary.totalPoints,
+                formatStatsDay(LocalDate.parse(summary.bestDayIso)),
+                DayTitle.formatDistance(summary.bestDayDistanceMeters),
+            )
+            else -> getString(R.string.stats_points_only, summary.totalPoints)
+        }
+        renderDailyBars(summary)
+    }
+
+    private fun renderDailyBars(summary: RangeStats.Summary) {
+        val container = binding.statsDailyBars
+        container.removeAllViews()
+        if (summary.dailyDistances.isEmpty()) return
+        val maxMeters = summary.dailyDistances.maxOf { it.second }.coerceAtLeast(1.0)
+        // Keep the strip readable when "All" spans many months.
+        val rows = summary.dailyDistances.takeLast(60)
+        val inflater = LayoutInflater.from(this)
+        for ((iso, meters) in rows) {
+            val row = inflater.inflate(R.layout.item_stats_day_bar, container, false)
+            row.findViewById<TextView>(R.id.barDayLabel).text =
+                formatStatsDay(LocalDate.parse(iso))
+            row.findViewById<TextView>(R.id.barDayValue).text =
+                if (meters <= 0) getString(R.string.em_dash) else DayTitle.formatDistance(meters)
+            val fill = row.findViewById<View>(R.id.barFill)
+            fill.post {
+                val trackWidth = (fill.parent as View).width
+                val lp = fill.layoutParams
+                lp.width = ((meters / maxMeters) * trackWidth).toInt().coerceAtLeast(if (meters > 0) 4 else 0)
+                fill.layoutParams = lp
+            }
+            container.addView(row)
+        }
+    }
+
+    private fun formatStatsDay(date: LocalDate): String {
+        val months = arrayOf(
+            "Oca", "Şub", "Mar", "Nis", "May", "Haz",
+            "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara",
+        )
+        return "${date.dayOfMonth} ${months[date.monthValue - 1]}"
     }
 
     private fun ensurePermissionsThenStart() {

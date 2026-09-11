@@ -311,30 +311,296 @@
             </FrameLayout>
         </LinearLayout>
 
-        <!-- İstatistikler — Adım 3'te doldurulacak. -->
+        <!-- İstatistikler — Adım 3: aralık seçimi + özet. -->
         <LinearLayout
             android:id="@+id/paneStats"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:visibility="gone"
-            android:padding="24dp"
             tools:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
                 android:text="@string/nav_stats"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                android:textColor="@color/md_theme_on_surface" />
+                android:textColor="@color/md_theme_on_surface"
+                android:textStyle="bold" />
 
-            <TextView
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/tab_placeholder_stats"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="@color/md_theme_outline" />
+                android:paddingHorizontal="12dp"
+                android:paddingTop="12dp"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/statsRangeChips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipRangeToday"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/stats_range_today" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipRange7"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats_range_7" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipRange30"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats_range_30" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipRangeMonth"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats_range_month" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipRangeAll"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats_range_all" />
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/statsRangeLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="8dp"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="@color/md_theme_outline"
+                tools:text="1–11 Eyl 2026" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_dash_card"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stats_total_distance"
+                                android:textAppearance="?attr/textAppearanceLabelMedium"
+                                android:textColor="@color/md_theme_outline" />
+
+                            <TextView
+                                android:id="@+id/statsTotalDistance"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                                android:textColor="@color/md_theme_on_surface"
+                                android:textStyle="bold"
+                                tools:text="342,1 km" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_dash_card"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stats_active_days"
+                                android:textAppearance="?attr/textAppearanceLabelMedium"
+                                android:textColor="@color/md_theme_outline" />
+
+                            <TextView
+                                android:id="@+id/statsActiveDays"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                                android:textColor="@color/md_theme_on_surface"
+                                android:textStyle="bold"
+                                tools:text="8" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_speed_max"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stat_max_speed"
+                                android:textAppearance="?attr/textAppearanceLabelSmall"
+                                android:textColor="@color/md_theme_outline" />
+
+                            <TextView
+                                android:id="@+id/statsMaxSpeed"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textAppearance="?attr/textAppearanceTitleMedium"
+                                android:textStyle="bold"
+                                tools:text="124 km/sa" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_speed_active"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stat_active_duration"
+                                android:textAppearance="?attr/textAppearanceLabelSmall"
+                                android:textColor="@color/md_theme_outline" />
+
+                            <TextView
+                                android:id="@+id/statsActiveDuration"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textAppearance="?attr/textAppearanceTitleMedium"
+                                android:textStyle="bold"
+                                tools:text="14 sa 20 dk" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_speed_avg"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stat_avg_speed"
+                                android:textAppearance="?attr/textAppearanceLabelSmall"
+                                android:textColor="@color/md_theme_outline" />
+
+                            <TextView
+                                android:id="@+id/statsAvgSpeed"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textAppearance="?attr/textAppearanceTitleMedium"
+                                android:textStyle="bold"
+                                tools:text="38 km/sa" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:background="@drawable/bg_dash_card"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/stats_detail_heading"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="@color/md_theme_outline" />
+
+                        <TextView
+                            android:id="@+id/statsPointsBest"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="@color/md_theme_on_surface"
+                            tools:text="1.240 nokta · en uzun: 10 Eyl (48,2 km)" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/stats_daily_breakdown"
+                        android:textAppearance="?attr/textAppearanceTitleSmall"
+                        android:textColor="@color/md_theme_on_surface" />
+
+                    <LinearLayout
+                        android:id="@+id/statsDailyBars"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/statsEmpty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:gravity="center"
+                        android:text="@string/stats_empty"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="@color/md_theme_outline"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
 
         <!-- Rotalar — Adım 4'te doldurulacak. -->

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.3 — 2026-09-11
+
+- **İstatistikler (Adım 3):** Bugün / 7 gün / 30 gün / Bu ay / Tümü
+  aralığında toplam mesafe, aktif gün, maks/ort. hız, aktif süre, en uzun
+  gün ve günlük mesafe çubukları.
+
 ## 0.7.2 — 2026-09-11
 
 - **Günlük sekme (Adım 2):** Marka şeridi; 2×2 sürüklenen veri kartları
