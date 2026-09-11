@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.4 — 2026-09-11
+
+- **Rotalar (Adım 4):** Kayıtlı gün listesi (mesafe / nokta / aktif süre).
+  Dokununca Günlük haritasında açılır; satırdaki dışa aktar ile tek gün
+  GPX; üstteki Aralık GPX ile aralık seçimi.
+
 ## 0.7.3 — 2026-09-11
 
 - **İstatistikler (Adım 3):** Bugün / 7 gün / 30 gün / Bu ay / Tümü

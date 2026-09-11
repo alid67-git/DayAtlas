@@ -8,7 +8,7 @@ package com.dayatlas.app
  */
 object BuildInfo {
     const val BUILD_NOTE =
-        "İstatistikler sekmesi: Bugün / 7 gün / 30 gün / Bu ay / Tümü " +
-            "aralığında toplam mesafe, aktif gün, hız, süre ve günlük " +
-            "mesafe çubukları."
+        "Rotalar sekmesi: kayıtlı günler listelenir; dokununca haritada " +
+            "açılır, ok ile o günün GPX’i paylaşılır. Üstteki ‘Aralık GPX’ " +
+            "çok gün dışa aktarır."
 }
