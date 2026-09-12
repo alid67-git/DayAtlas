@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.19 — 2026-09-12
+
+- **Harita daha uzaktan gösteriliyor:** Rota sığdırılırken bırakılan kenar
+  boşluğu artırıldı, tek nokta / tek sıçrama görünümlerinin sabit zoom
+  seviyeleri bir kademe düşürüldü — harita artık rotanın etrafında daha
+  büyük bir alan gösteriyor, gereğinden fazla yakınlaşmıyor.
+
 ## 0.7.18 — 2026-09-11
 
 - **Gün kartları 2 satırla sınırlandı:** 3. satıra geçince (7 kart) üst

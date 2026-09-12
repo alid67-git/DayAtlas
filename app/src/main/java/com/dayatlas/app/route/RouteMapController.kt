@@ -27,7 +27,7 @@ import kotlin.math.abs
  * tall white hole with only a thin tile strip at the bottom.
  */
 object RouteMapController {
-    private const val DEFAULT_ZOOM_BORDER_PX = 96
+    private const val DEFAULT_ZOOM_BORDER_PX = 160
     private const val MIN_ZOOM_INNER_PX = 48
     private const val MIN_REFIT_DELTA_PX = 24
     private const val MAX_ZOOM = 18.0
@@ -238,10 +238,10 @@ object RouteMapController {
         val box = boundingBoxOf(geoPoints)
         val degenerate = box.latitudeSpan < 1e-6 && box.longitudeSpan < 1e-6
         if (degenerate) {
-            map.controller.setZoom(17.0)
+            map.controller.setZoom(16.0)
             map.controller.setCenter(geoPoints.last())
         } else if (focus != null && jumps.size == 1) {
-            map.controller.setZoom(14.0)
+            map.controller.setZoom(13.0)
             map.controller.setCenter(focus)
         } else {
             val border = safeZoomBorder(map.width, map.height)
