@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Conservative fallback for short/unusual available heights (small or
+         old devices, split-screen, etc.) - only 1 row of today-stat tiles so
+         the map below always keeps most of the screen. Devices with normal
+         or tall screens override this back to 2 in values-h600dp. -->
+    <integer name="day_stat_max_visible_rows">1</integer>
+</resources>

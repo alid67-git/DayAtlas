@@ -17,11 +17,11 @@ import kotlin.math.ceil
  * filtered out before [submit]); long-press drags a tile to reorder within
  * the visible set. The last incomplete row is horizontally centered.
  *
- * Height is capped at [MAX_VISIBLE_ROWS] rows so a long tile list can never
- * starve the map below it of space — a 3rd+ row used to squeeze the map
- * pane down to almost nothing, which is what caused the blank/striped map
- * regression to come back. Extra rows beyond the cap scroll internally
- * instead of growing the grid.
+ * Height is capped at R.integer.day_stat_max_visible_rows rows so a long
+ * tile list can never starve the map below it of space — a 3rd+ row used to
+ * squeeze the map pane down to almost nothing, which is what caused the
+ * blank/striped map regression to come back. Extra rows beyond the cap
+ * scroll internally instead of growing the grid.
  */
 class DayStatsAdapter(
     private val onReordered: (List<DayStatKind>) -> Unit,
@@ -57,16 +57,20 @@ class DayStatsAdapter(
     }
 
     /** Measures one row's real height (font scale / density can move it) once
-     * the grid has laid out its first rows, then locks in a max-2-row height
-     * if there are more rows than that so the rest scroll internally. */
+     * the grid has laid out its first rows, then locks in a max-row height
+     * if there are more rows than that so the rest scroll internally. The
+     * row cap itself comes from [R.integer.day_stat_max_visible_rows], which
+     * is lower on short/small screens (values-h600dp) so the map below
+     * always keeps most of the available space. */
     private fun capHeightAfterFirstLayout(recyclerView: RecyclerView, span: Int) {
         recyclerView.doOnPreDraw {
+            val maxRows = recyclerView.resources.getInteger(R.integer.day_stat_max_visible_rows)
             val rowCount = ceil(itemCount.toDouble() / span).toInt()
-            if (rowCount <= MAX_VISIBLE_ROWS) return@doOnPreDraw
+            if (rowCount <= maxRows) return@doOnPreDraw
             val rowHeight = recyclerView.getChildAt(0)?.height ?: return@doOnPreDraw
             if (rowHeight <= 0) return@doOnPreDraw
             val lp = recyclerView.layoutParams ?: return@doOnPreDraw
-            lp.height = rowHeight * MAX_VISIBLE_ROWS
+            lp.height = rowHeight * maxRows
             recyclerView.layoutParams = lp
         }
     }
@@ -153,7 +157,6 @@ class DayStatsAdapter(
     }
 
     companion object {
-        private const val MAX_VISIBLE_ROWS = 2
         private const val DRAG_ELEVATION_PX = 16f
     }
 }
