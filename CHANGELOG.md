@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.22 — 2026-09-12
+
+- **Play Store yayını için altyapı:** Yeni bir `playRelease` derleme türü ve
+  imzalama yapılandırması eklendi — repoya asla commit edilmeyen, yerel
+  `keystore.properties` dosyasından okunan ayrı bir yükleme anahtarıyla
+  imzalanıyor. Bu dosya yoksa (CI dahil her zamanki durum) yeni derleme
+  türü hiç var olmuyor; mevcut sideload akışı tamamen değişmeden kalıyor.
+  Play Store'a yüklenecek `.aab` şu şekilde alınır:
+  `./gradlew bundlePlayRelease`.
+
 ## 0.7.21 — 2026-09-12
 
 - **Küçük ekranlara özel sıkıştırma:** Bugün kartları ızgarasının satır
