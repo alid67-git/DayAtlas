@@ -1,6 +1,21 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+}
+
+// Play Store upload key - loaded from a local, gitignored properties file
+// that's never committed, so the key and its passwords never end up in git
+// history. Only present on a machine actually preparing a Play Store
+// release (see keystore.properties.example); CI and everyday sideload
+// builds never have this file, so the playRelease signing config/build
+// type below simply don't exist for them.
+val playKeystorePropertiesFile = rootProject.file("keystore.properties")
+val playKeystoreProperties = Properties().apply {
+    if (playKeystorePropertiesFile.exists()) {
+        load(playKeystorePropertiesFile.inputStream())
+    }
 }
 
 android {
@@ -11,8 +26,8 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 44
-        versionName = "0.7.21"
+        versionCode = 45
+        versionName = "0.7.22"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,6 +47,14 @@ android {
             keyAlias = "dayatlas"
             keyPassword = "dayatlas123"
         }
+        if (playKeystorePropertiesFile.exists()) {
+            create("playRelease") {
+                storeFile = file(playKeystoreProperties.getProperty("storeFile"))
+                storePassword = playKeystoreProperties.getProperty("storePassword")
+                keyAlias = playKeystoreProperties.getProperty("keyAlias")
+                keyPassword = playKeystoreProperties.getProperty("keyPassword")
+            }
+        }
     }
 
     buildTypes {
@@ -46,6 +69,15 @@ android {
         }
         debug {
             versionNameSuffix = "-debug"
+        }
+        // Same release settings, signed with the Play Store upload key
+        // instead of the sideload one - only exists when keystore.properties
+        // is present. Build with: ./gradlew bundlePlayRelease
+        if (playKeystorePropertiesFile.exists()) {
+            create("playRelease") {
+                initWith(getByName("release"))
+                signingConfig = signingConfigs.getByName("playRelease")
+            }
         }
     }
 
