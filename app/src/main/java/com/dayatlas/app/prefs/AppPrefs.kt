@@ -8,8 +8,11 @@ class AppPrefs(context: Context) {
     private val prefs: SharedPreferences =
         context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
+    // Defaults to on: automatic all-day recording with no manual Start/Stop
+    // step is the experience we want out of the box, not something a user
+    // has to find in Settings first.
     var dailyMode: Boolean
-        get() = prefs.getBoolean(DAILY_MODE, false)
+        get() = prefs.getBoolean(DAILY_MODE, true)
         set(value) = prefs.edit().putBoolean(DAILY_MODE, value).apply()
 
     var trackingEnabled: Boolean

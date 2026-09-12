@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.20 — 2026-09-12
+
+- **Günlük mod artık varsayılan olarak açık:** Ayarlar'a hiç girmemiş
+  kurulumlarda uygulama artık otomatik olarak tüm günü kaydediyor —
+  elle Başlat/Durdur düğmesi ve ipucu satırı bu durumda hiç görünmüyor.
+  İsteyen Ayarlar'dan Günlük Modu kapatıp elle kontrole geçebilir.
+
 ## 0.7.19 — 2026-09-12
 
 - **Harita daha uzaktan gösteriliyor:** Rota sığdırılırken bırakılan kenar
