@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.21 — 2026-09-12
+
+- **Küçük ekranlara özel sıkıştırma:** Bugün kartları ızgarasının satır
+  sınırı artık ekranın gerçek yüksekliğine göre ayarlanıyor. Normal/büyük
+  ekranlarda hiçbir şey değişmedi (yine 2 satıra kadar); yükseklik payı
+  dar olan cihazlarda ızgara 1 satıra düşüyor, harita için daha fazla yer
+  kalıyor.
+
 ## 0.7.20 — 2026-09-12
 
 - **Günlük mod artık varsayılan olarak açık:** Ayarlar'a hiç girmemiş

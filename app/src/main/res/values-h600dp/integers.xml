@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Available height >= 600dp - today's normal/tall-screen behavior,
+         unchanged from before this became configurable. -->
+    <integer name="day_stat_max_visible_rows">2</integer>
+</resources>
