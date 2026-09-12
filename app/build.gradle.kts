@@ -11,8 +11,8 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 41
-        versionName = "0.7.18"
+        versionCode = 42
+        versionName = "0.7.19"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
