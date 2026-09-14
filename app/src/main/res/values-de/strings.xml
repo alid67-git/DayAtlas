@@ -96,7 +96,7 @@
 
     <string name="settings_drive_backup">Google-Drive-Sicherung</string>
     <string name="settings_drive_backup_toggle">Tägliche automatische Sicherung</string>
-    <string name="settings_drive_backup_summary">Wenn aktiv, werden alle Tagesdateien (JSON + GPX) einmal täglich in den gewählten Ordner kopiert. Ein Google-Drive-Ordner wird über die Drive-App in die Cloud synchronisiert. Legen Sie zuerst einen Ordner in Drive an und wählen Sie ihn unten.</string>
+    <string name="settings_drive_backup_summary">Wenn aktiv, wird die GPX-Datei jedes Tages einmal in den gewählten Ordner kopiert — danach wird dieser Tag nicht erneut gesichert, weder manuell noch automatisch. Ein Google-Drive-Ordner wird über die Drive-App in die Cloud synchronisiert. Legen Sie zuerst einen Ordner in Drive an und wählen Sie ihn unten.</string>
     <string name="drive_pick_folder">Sicherungsordner wählen</string>
     <string name="drive_backup_now">Jetzt sichern</string>
     <string name="drive_folder_none">Kein Ordner gewählt</string>

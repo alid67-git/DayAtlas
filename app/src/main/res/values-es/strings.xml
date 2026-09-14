@@ -96,7 +96,7 @@
 
     <string name="settings_drive_backup">Copia de seguridad en Google Drive</string>
     <string name="settings_drive_backup_toggle">Copia de seguridad automática diaria</string>
-    <string name="settings_drive_backup_summary">Si está activado, todos los archivos del día (JSON + GPX) se copian una vez al día a la carpeta elegida. Una carpeta de Google Drive se sincroniza con la nube mediante la app de Drive. Crea primero una carpeta en Drive y selecciónala abajo.</string>
+    <string name="settings_drive_backup_summary">Si está activado, el archivo GPX de cada día se copia una vez a la carpeta elegida — después no se vuelve a respaldar ese día, ni manual ni automáticamente. Una carpeta de Google Drive se sincroniza con la nube mediante la app de Drive. Crea primero una carpeta en Drive y selecciónala abajo.</string>
     <string name="drive_pick_folder">Elegir carpeta de copia</string>
     <string name="drive_backup_now">Hacer copia ahora</string>
     <string name="drive_folder_none">Ninguna carpeta seleccionada</string>

@@ -96,7 +96,7 @@
 
     <string name="settings_drive_backup">Sauvegarde Google Drive</string>
     <string name="settings_drive_backup_toggle">Sauvegarde automatique quotidienne</string>
-    <string name="settings_drive_backup_summary">Lorsqu\'elle est activée, tous les fichiers du jour (JSON + GPX) sont copiés une fois par jour dans le dossier choisi. Un dossier Google Drive se synchronise dans le cloud via l\'application Drive. Créez d\'abord un dossier dans Drive, puis sélectionnez-le ci-dessous.</string>
+    <string name="settings_drive_backup_summary">Lorsqu\'elle est activée, le fichier GPX de chaque jour est copié une fois dans le dossier choisi — ce jour n\'est ensuite plus sauvegardé, ni manuellement ni automatiquement. Un dossier Google Drive se synchronise dans le cloud via l\'application Drive. Créez d\'abord un dossier dans Drive, puis sélectionnez-le ci-dessous.</string>
     <string name="drive_pick_folder">Choisir le dossier de sauvegarde</string>
     <string name="drive_backup_now">Sauvegarder maintenant</string>
     <string name="drive_folder_none">Aucun dossier sélectionné</string>

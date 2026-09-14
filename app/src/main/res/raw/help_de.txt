@@ -36,7 +36,7 @@ Im Reiter Routen können Sie einen einzelnen Tag (der Export-Pfeil in seiner Zei
 
 7) GOOGLE-DRIVE-SICHERUNG UND -WIEDERHERSTELLUNG
 
-Wählen Sie in den Einstellungen einen Ordner aus (idealerweise einen leeren, in Drive angelegten Ordner), um die tägliche automatische Sicherung zu aktivieren. Es werden nur neue oder geänderte Tagesdateien hochgeladen - bereits gesicherte, unveränderte Dateien werden übersprungen, was Sicherungen schnell und datensparsam hält.
+Wählen Sie in den Einstellungen einen Ordner aus (idealerweise einen leeren, in Drive angelegten Ordner), um die tägliche automatische Sicherung zu aktivieren. Jeder Tag wird als eigene GPX-Datei genau einmal gesichert - danach nie erneut, weder manuell noch automatisch, sodass derselbe Tag nicht mehrfach hochgeladen wird.
 
 Beim Wechsel auf ein neues Telefon oder nach einer Neuinstallation der App: denselben Sicherungsordner erneut auswählen und auf „Aus Sicherung wiederherstellen“ tippen - alle Tagesdateien aus diesem Ordner werden zurück auf das Telefon kopiert, ohne dass etwas verloren geht.
 

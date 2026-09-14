@@ -36,7 +36,7 @@ Desde la pestaña Rutas, comparte un solo día (la flecha de exportar en su fila
 
 7) COPIA DE SEGURIDAD Y RESTAURACIÓN EN GOOGLE DRIVE
 
-Elige una carpeta en Ajustes (idealmente una carpeta vacía creada en Drive) para activar la copia de seguridad automática diaria. Solo se suben los archivos del día nuevos o modificados; los ya respaldados y sin cambios se omiten, lo que mantiene las copias rápidas y eficientes.
+Elige una carpeta en Ajustes (idealmente una carpeta vacía creada en Drive) para activar la copia de seguridad automática diaria. Cada día se respalda exactamente una vez, como su propio archivo GPX; después no se vuelve a subir, ni manual ni automáticamente, lo que evita que un mismo día se respalde varias veces.
 
 Al cambiar a un teléfono nuevo o tras reinstalar la app: elige de nuevo la misma carpeta de copia de seguridad y pulsa "Restaurar copia de seguridad"; todos los archivos del día de esa carpeta se copian de vuelta al teléfono, sin perder nada.
 

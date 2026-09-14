@@ -36,7 +36,7 @@ Depuis l'onglet Trajets, partagez un seul jour (la flèche d'export sur sa ligne
 
 7) SAUVEGARDE ET RESTAURATION GOOGLE DRIVE
 
-Choisissez un dossier dans les Paramètres (idéalement un dossier vide créé dans Drive) pour activer la sauvegarde automatique quotidienne. Seuls les fichiers du jour nouveaux ou modifiés sont envoyés - les fichiers déjà sauvegardés et inchangés sont ignorés, ce qui rend les sauvegardes rapides et économes en données.
+Choisissez un dossier dans les Paramètres (idéalement un dossier vide créé dans Drive) pour activer la sauvegarde automatique quotidienne. Chaque jour est sauvegardé exactement une fois, sous la forme de son propre fichier GPX - il n'est plus jamais renvoyé après cela, ni manuellement ni automatiquement, ce qui évite qu'un même jour soit sauvegardé plusieurs fois.
 
 Lors du passage à un nouveau téléphone, ou après une réinstallation de l'application : sélectionnez à nouveau le même dossier de sauvegarde et appuyez sur « Restaurer depuis la sauvegarde » - tous les fichiers du jour de ce dossier sont recopiés sur le téléphone, sans rien perdre.
 

@@ -3,6 +3,7 @@ package com.dayatlas.app.boot
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.dayatlas.app.backup.BackupScheduler
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.update.UpdateCheckScheduler
@@ -19,6 +20,7 @@ class BootReceiver : BroadcastReceiver() {
         }
         TrackingController.onAppStart(context, AppPrefs(context))
         UpdateCheckScheduler.ensureScheduled(context)
+        BackupScheduler.ensureScheduled(context)
     }
 }
 
@@ -28,5 +30,6 @@ class PackageReplacedReceiver : BroadcastReceiver() {
         UpdateInstaller.onPackageReplaced(context)
         TrackingController.onAppStart(context, AppPrefs(context))
         UpdateCheckScheduler.ensureScheduled(context)
+        BackupScheduler.ensureScheduled(context)
     }
 }

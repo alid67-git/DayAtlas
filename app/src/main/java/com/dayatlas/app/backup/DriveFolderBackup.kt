@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
+import com.dayatlas.app.data.DayJson
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
 import com.dayatlas.app.prefs.AppPrefs
@@ -15,12 +16,22 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Copies local `files/days/` day files into a user-picked folder (typically Google Drive
- * via the system folder picker). Drive's own client then syncs that folder to
- * the cloud — no OAuth / Play Services Drive SDK.
+ * Copies each local day's GPX file into a user-picked folder (typically
+ * Google Drive via the system folder picker). Drive's own client then syncs
+ * that folder to the cloud — no OAuth / Play Services Drive SDK.
  *
- * Daily auto-run: once per local calendar day (piggybacked on SampleService /
- * app start). Manual run available from Settings.
+ * Each day is backed up exactly once, ever: once a day's GPX file exists in
+ * the backup folder — from an auto run or a manual one, whichever happened
+ * first — it is never re-uploaded, even if the local copy changes later
+ * that day (more points appended, a jump deleted). This is deliberate: a
+ * day's backup is a final snapshot, not something that keeps getting
+ * overwritten.
+ *
+ * Auto-run triggers: [BackupScheduler]'s daily 23:00 alarm (independent of
+ * app activity), plus opportunistic piggybacks on SampleService and app
+ * start that can catch a day earlier in case the alarm is delayed. Manual
+ * run available from Settings ("Şimdi yedekle") — same once-only rule
+ * applies, so a manual backup does not get re-done by the next auto run.
  */
 object DriveFolderBackup {
     private const val TAG = "DriveFolderBackup"
@@ -73,19 +84,26 @@ object DriveFolderBackup {
 
     /**
      * If auto-backup is on and we have not yet backed up for [today], run once.
-     * Silent — for alarms / SampleService / Application.onCreate. Once a full
-     * backup has completed at least once ([AppPrefs.driveInitialBackupDone]),
-     * this only needs to check today's file — every earlier day is already
-     * up there and never changes on its own.
+     * Silent — for [BackupCheckReceiver] / SampleService / Application.onCreate.
+     * Once a full backup has completed at least once
+     * ([AppPrefs.driveInitialBackupDone]), this only needs to check today's
+     * file — every earlier day is already up there (or was already skipped
+     * as unavailable) and, per the once-only rule, is never revisited.
      */
-    fun maybeRunDaily(context: Context) {
+    fun maybeRunDaily(context: Context, onDone: (() -> Unit)? = null) {
         val app = context.applicationContext
         val prefs = AppPrefs(app)
-        if (!prefs.driveBackupEnabled || !hasFolder(prefs)) return
+        if (!prefs.driveBackupEnabled || !hasFolder(prefs)) {
+            onDone?.invoke()
+            return
+        }
         val today = DayTitle.iso(DayTitle.localToday())
-        if (prefs.lastDriveBackupDay == today) return
+        if (prefs.lastDriveBackupDay == today) {
+            onDone?.invoke()
+            return
+        }
         val fullScan = !prefs.driveInitialBackupDone
-        runAsync(app, prefs, fullScan = fullScan) { /* silent */ }
+        runAsync(app, prefs, fullScan = fullScan) { onDone?.invoke() }
     }
 
     /** Manual "Şimdi yedekle": always a full scan, so a jump deleted on an
@@ -149,7 +167,7 @@ object DriveFolderBackup {
         }
         val files = daysDir.listFiles()
             ?.filter {
-                it.isFile && (it.name.endsWith(".json") || it.name.endsWith(".gpx")) &&
+                it.isFile && it.name.endsWith(".gpx") &&
                     (fullScan || it.name.startsWith(todayIso))
             }
             ?.sortedBy { it.name }
@@ -160,31 +178,24 @@ object DriveFolderBackup {
 
         var count = 0
         for (file in files) {
-            // Already backed up and unchanged since (size is a cheap enough
-            // proxy — a day file only grows as points are appended, or its
-            // size changes when a jump point is deleted). Skip re-uploading
-            // the same bytes on every manual/daily run.
-            val existing = tree.findFile(file.name)
-            if (existing != null && existing.length() == file.length()) continue
+            // Once a day's file exists in the backup folder, it is final —
+            // never re-uploaded, no matter how the local copy changes
+            // afterward. See the once-only rule in the class doc comment.
+            if (tree.findFile(file.name) != null) continue
 
-            val mime = when {
-                file.name.endsWith(".json") -> "application/json"
-                file.name.endsWith(".gpx") -> "application/gpx+xml"
-                else -> "application/octet-stream"
-            }
-            upsert(context, tree, file.name, mime, file.readBytes())
+            upsert(context, tree, file.name, "application/gpx+xml", file.readBytes())
             count++
         }
         return Result(true, uploaded = count)
     }
 
     /**
-     * Copies every `.json` day file found in the selected Drive folder back
-     * into local `files/days/`, overwriting any local file with the same
-     * name. For a fresh install / new phone where local storage is empty —
-     * the backup folder is treated as the source of truth. GPX files are not
-     * restored: they are a derived export, not app-read data (see
-     * [DriveFolderBackup] and [com.dayatlas.app.data.DayStore]).
+     * Reads every `.gpx` day file found in the selected Drive folder — the
+     * backup format — and rebuilds the matching local `files/days/*.json`
+     * from it, overwriting any local file for that date. For a fresh
+     * install / new phone where local storage is empty, the backup folder
+     * is treated as the source of truth. JSON stays the local live-storage
+     * format either way; only the on-disk backup is GPX.
      */
     fun restoreNow(
         context: Context,
@@ -217,17 +228,20 @@ object DriveFolderBackup {
         }
 
         val daysDir = File(context.filesDir, "days").also { it.mkdirs() }
-        val jsonFiles = tree.listFiles().filter { it.isFile && it.name?.endsWith(".json") == true }
-        if (jsonFiles.isEmpty()) {
+        val gpxFiles = tree.listFiles().filter { it.isFile && it.name?.endsWith(".gpx") == true }
+        if (gpxFiles.isEmpty()) {
             return RestoreResult(true, restored = 0)
         }
 
         var count = 0
-        for (doc in jsonFiles) {
+        for (doc in gpxFiles) {
             val name = doc.name ?: continue
+            val dateIso = name.removeSuffix(".gpx")
             val bytes = context.contentResolver.openInputStream(doc.uri)?.use { it.readBytes() }
                 ?: continue
-            File(daysDir, name).writeBytes(bytes)
+            val record = runCatching { DayJson.fromGpx(dateIso, String(bytes, Charsets.UTF_8)) }
+                .getOrNull() ?: continue
+            DayJson.writeAtomic(File(daysDir, "$dateIso.json"), DayJson.toJson(record))
             count++
         }
         return RestoreResult(true, restored = count)

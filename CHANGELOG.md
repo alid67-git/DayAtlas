@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.7.26 — 2026-09-14
+
+- **Yedekleme yeniden kurgulandı:** Her gün artık yalnızca kendi GPX
+  dosyası olarak, bir kez yedekleniyor — elle "Şimdi yedekle" ile alınan
+  bir yedekten sonra otomatik yedek aynı günü tekrar yüklemiyor, ve
+  otomatik yedek de elle tekrar tetiklenirse aynı günü tekrar yüklemiyor.
+  Eskiden hem JSON hem GPX yükleniyor ve gün dosyası büyüdükçe tekrar
+  tekrar üzerine yazılıyordu; artık ilk yedekleme o günün kalıcı,
+  değişmeyen yedeği oluyor.
+- **Günlük yedek artık daha güvenilir tetikleniyor:** Otomatik yedek
+  önceden yalnızca GPS örneklemesine veya uygulama açılışına
+  "tosluyordu" — uygulama o gün hiç açılmazsa veya arka planda
+  çalışamazsa yedek de hiç alınmıyordu. Artık güncelleme kontrolündeki
+  gibi, buna bağlı olmayan, her gün saat 23:00'te çalışan ayrı bir
+  alarm da eklendi.
+- **Geri yükleme GPX'ten çalışıyor:** Drive klasöründeki `.gpx`
+  dosyaları okunup yerel kayıtlar buradan yeniden oluşturuluyor
+  (uygulamanın kendi iç deposu hâlâ JSON kullanıyor, sadece Drive'a
+  giden yedek formatı değişti).
+
 ## 0.7.25 — 2026-09-14
 
 - **"Günlük" başlığı artık her dilde doğru çeviriyor:** Ana ekrandaki büyük
