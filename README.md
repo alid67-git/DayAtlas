@@ -207,6 +207,29 @@ APK:
 
 CI her push’ta aynı APK’ları artifact olarak yükler.
 
+## Play Store yayın derlemesi
+
+`playRelease` (imzalı `.aab`, `PAYWALL_ENABLED=true`, self-update kapalı)
+yerelde `keystore.properties` gerektirir (bkz. `keystore.properties.example`)
+— bu dosya ve işaret ettiği `.keystore` asla commit edilmez (`.gitignore`).
+
+Yerel Android SDK/Studio olmadan üretmek için `.github/workflows/play-release.yml`
+elle tetiklenen bir GitHub Actions iş akışıdır. Bir kerelik kurulum:
+
+1. Repo → **Settings → Secrets and variables → Actions → New repository secret**,
+   dört secret ekleyin:
+   - `PLAY_KEYSTORE_BASE64` — `.keystore` dosyasının base64 hâli
+     (`base64 -i dayatlas-play-release.keystore | pbcopy` macOS,
+     `base64 -w0 dayatlas-play-release.keystore` Linux — çıktıyı secret'a yapıştırın)
+   - `PLAY_KEYSTORE_STORE_PASSWORD`, `PLAY_KEYSTORE_KEY_ALIAS`, `PLAY_KEYSTORE_KEY_PASSWORD`
+     — `keystore.properties`'teki değerlerin aynısı
+2. **Actions** sekmesi → *Build Play Store release (.aab)* → **Run workflow**.
+3. Tamamlanan run'ın **Artifacts** bölümünden `DayAtlas-playRelease-aab`'yi indirip
+   içindeki `.aab`'yi Play Console'a yükleyin.
+
+Keystore hiçbir zaman repoya veya commit geçmişine girmez — runner'da geçici
+olarak decode edilir, derlemede kullanılır, iş bitince silinir.
+
 ## Nasıl test edilir
 
 1. Debug APK kur, uygulamayı aç.

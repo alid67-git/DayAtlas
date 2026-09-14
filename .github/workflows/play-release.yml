@@ -1,0 +1,67 @@
+# Manually-triggered build of the Play Store signed bundle (.aab). Needs
+# four repo secrets set once under Settings > Secrets and variables >
+# Actions (see README's "Play Store release build" section):
+#   PLAY_KEYSTORE_BASE64        - base64 of the .keystore file
+#   PLAY_KEYSTORE_STORE_PASSWORD
+#   PLAY_KEYSTORE_KEY_ALIAS
+#   PLAY_KEYSTORE_KEY_PASSWORD
+# The keystore never touches the repo or its history - it's decoded into
+# the ephemeral runner's workspace, used to build, then deleted before the
+# job ends. Output is an artifact you download from the run page, not a
+# committed file.
+name: Build Play Store release (.aab)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-aab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      # See android.yml for why packages is pinned to just platform-tools.
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "platform-tools"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Decode Play keystore
+        run: echo "${{ secrets.PLAY_KEYSTORE_BASE64 }}" | base64 -d > dayatlas-play-release.keystore
+
+      - name: Write keystore.properties
+        run: |
+          cat > keystore.properties <<EOF
+          storeFile=dayatlas-play-release.keystore
+          storePassword=${{ secrets.PLAY_KEYSTORE_STORE_PASSWORD }}
+          keyAlias=${{ secrets.PLAY_KEYSTORE_KEY_ALIAS }}
+          keyPassword=${{ secrets.PLAY_KEYSTORE_KEY_PASSWORD }}
+          EOF
+
+      - name: Build Play release bundle
+        run: ./gradlew bundlePlayRelease --stacktrace
+
+      - name: Upload .aab
+        uses: actions/upload-artifact@v4
+        with:
+          name: DayAtlas-playRelease-aab
+          path: app/build/outputs/bundle/playRelease/*.aab
+          retention-days: 14
+
+      - name: Remove keystore and properties from the runner
+        if: always()
+        run: rm -f dayatlas-play-release.keystore keystore.properties
