@@ -17,38 +17,79 @@
         app:title="@string/action_help"
         app:titleTextColor="@color/md_theme_on_primary" />
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/languageGroup"
+    <!-- 8 languages no longer fit as equal-width buttons on one row, so this
+         scrolls horizontally like the stats-range chips on the Daily tab. -->
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:singleSelection="true"
-        app:selectionRequired="true">
+        android:paddingHorizontal="12dp"
+        android:paddingTop="16dp"
+        android:scrollbars="none">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/langTr"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/languageGroup"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Türkçe" />
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/langEn"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="English" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/langTr"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Türkçe" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/langDe"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Deutsch" />
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/langEn"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="English" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/langDe"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Deutsch" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/langZh"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="中文" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/langHi"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="हिन्दी" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/langEs"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Español" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/langFr"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Français" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/langAr"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="العربية" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
 
     <ScrollView
         android:layout_width="match_parent"

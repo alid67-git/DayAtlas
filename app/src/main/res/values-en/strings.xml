@@ -150,11 +150,16 @@
     <string name="stats_range_label_single">%1$s</string>
 
     <string name="settings_language">Language</string>
-    <string name="settings_language_hint">The app UI can be Turkish, English, or German. System follows the phone language.</string>
+    <string name="settings_language_hint">The app UI can be shown in any of the languages below. System follows the phone language.</string>
     <string name="language_system">System language</string>
     <string name="language_tr">Türkçe</string>
     <string name="language_en">English</string>
     <string name="language_de">Deutsch</string>
+    <string name="language_zh">中文</string>
+    <string name="language_hi">हिन्दी</string>
+    <string name="language_es">Español</string>
+    <string name="language_fr">Français</string>
+    <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 0.7.15 — Map camera re-fits after layout settles; fixes white gap / thin tile strip.</string>
+    <string name="build_note">The map now shows a wider area, Daily Mode is on by default, and on small screens the day-stat cards leave more room for the map.</string>
 </resources>

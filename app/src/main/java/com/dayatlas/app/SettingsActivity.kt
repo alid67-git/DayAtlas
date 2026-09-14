@@ -186,6 +186,11 @@ class SettingsActivity : DayAtlasActivity() {
             AppLocale.TR -> binding.languageTr.isChecked = true
             AppLocale.EN -> binding.languageEn.isChecked = true
             AppLocale.DE -> binding.languageDe.isChecked = true
+            AppLocale.ZH -> binding.languageZh.isChecked = true
+            AppLocale.HI -> binding.languageHi.isChecked = true
+            AppLocale.ES -> binding.languageEs.isChecked = true
+            AppLocale.FR -> binding.languageFr.isChecked = true
+            AppLocale.AR -> binding.languageAr.isChecked = true
             else -> binding.languageSystem.isChecked = true
         }
         binding.languageGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -193,6 +198,11 @@ class SettingsActivity : DayAtlasActivity() {
                 R.id.languageTr -> AppLocale.TR
                 R.id.languageEn -> AppLocale.EN
                 R.id.languageDe -> AppLocale.DE
+                R.id.languageZh -> AppLocale.ZH
+                R.id.languageHi -> AppLocale.HI
+                R.id.languageEs -> AppLocale.ES
+                R.id.languageFr -> AppLocale.FR
+                R.id.languageAr -> AppLocale.AR
                 else -> AppLocale.SYSTEM
             }
             if (tag == prefs.appLanguage) return@setOnCheckedChangeListener

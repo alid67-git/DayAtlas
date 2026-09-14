@@ -1,47 +1,75 @@
 DayAtlas Yardım
 
-DayAtlas, gün boyunca konumunuzu arka planda kaydeden, günlük rota ve mesafe geçmişi tutan bir uygulamadır. Verileriniz yalnızca telefonunuzda saklanır; isterseniz Google Drive'a (veya başka bir klasöre) yedekleyebilirsiniz.
+DayAtlas, gün boyunca konumunuzu arka planda kaydeden, günlük rota ve mesafe geçmişi tutan bir uygulamadır. Tüm veriler yalnızca telefonunuzda saklanır; hiçbir sunucuya otomatik olarak gönderilmez. İsterseniz Google Drive'a (veya cihazınızdaki başka bir klasöre) yedekleyebilirsiniz.
+
+HIZLI BAŞLANGIÇ
+
+İlk açılışta konum izni istenir. "Her zaman izin ver" seçeneğini onaylayın ki uygulama arka planda da (ekran kapalıyken) çalışabilsin. Ardından Ayarlar'dan Günlük Modu açmanız yeterli — uygulama sizin için otomatik olarak kayda başlar, başka bir şey yapmanız gerekmez.
 
 1) KAYIT MODLARI
 
-Günlük mod (önerilen): Ayarlar'dan açtığınızda, uygulama veya telefon her açıldığında kayıt otomatik başlar/devam eder, onay sormaz. Durdurmak için Ayarlar'dan günlük modu kapatın.
+Günlük mod (önerilen ve varsayılan): Ayarlar'dan açıldığında, uygulama veya telefon her açıldığında kayıt otomatik başlar/devam eder, onay sormaz. Ana ekranda Başlat/Durdur düğmesi ve ipucu metni bu modda görünmez, çünkü siz hiçbir şeye dokunmak zorunda değilsiniz. Durdurmak isterseniz Ayarlar'dan günlük modu kapatın.
 
-Manuel mod: Günlük mod kapalıyken ana ekrandaki Başlat/Durdur düğmesiyle kaydı siz yönetirsiniz.
+Manuel mod: Günlük mod kapalıyken ana ekrandaki Başlat/Durdur düğmesiyle kaydı siz yönetirsiniz — örneğin sadece belirli bir yolculuğu kaydetmek istediğinizde kullanışlıdır.
 
 2) ÖRNEKLEME ARALIĞI
 
-Ayarlar'dan 30 saniye, 1, 3 veya 5 dakikada bir nokta alınmasını seçebilirsiniz. Aynı yerde (~80 m içinde) art arda 3 ölçüm olursa aralık otomatik olarak bir kademe seyreltilir (ör. 1 dk → 3 dk); gerçek hareket (dışarıda ardışık 2 ölçüm) olunca seçtiğiniz aralığa geri döner. Ev GPS titreşimi aralığı yeniden sıkılaştırmaz. Bu, gece sabit dururken pili korur.
+Ayarlar'dan 30 saniye, 1, 3 veya 5 dakikada bir nokta alınmasını seçebilirsiniz; 1 dakika çoğu kullanım için önerilir. Aynı yerde (~80 m içinde) art arda 3 ölçüm olursa aralık otomatik olarak bir kademe seyreltilir (ör. 1 dk → 3 dk); gerçek hareket (dışarıda ardışık 2 ölçüm) olunca seçtiğiniz aralığa geri döner. Ev GPS titreşimi aralığı yeniden sıkılaştırmaz. Bu mekanizma, siz hareketsizken (örneğin gece uyurken) pili gereksiz yere tüketmemek için tasarlandı; hareket ettiğinizde otomatik olarak normal hassasiyete döner, ayarlarda hiçbir şey değiştirmenize gerek kalmaz.
 
 3) İZİNLER VE PİL
 
-Arka planda çalışabilmesi için konum izninin "Her zaman izin ver" olması, bildirim izni ve mümkünse pil optimizasyonundan muafiyet gerekir. Ayarlar ekranındaki düğmeler ilgili sistem ekranlarını doğrudan açar. Bazı telefonlarda (Xiaomi, Huawei, Oppo, Samsung) ayrıca "otomatik başlat" açılmalıdır; cihazınız destekleniyorsa Ayarlar'da bu ekrana giden bir düğme de görünür.
+Arka planda çalışabilmesi için üç şey gerekir: konum izninin "Her zaman izin ver" olması, bildirim izni ve mümkünse pil optimizasyonundan muafiyet. Ayarlar ekranındaki düğmeler ilgili sistem ekranlarını doğrudan açar, elle telefon ayarlarında aramanıza gerek kalmaz. Bazı telefon üreticilerinde (Xiaomi, Huawei, Oppo, Samsung gibi) Android'in standart izinleri yetmez, ayrıca "otomatik başlat" da açılmalıdır; cihazınız destekleniyorsa Ayarlar'da bu ekrana giden bir düğme de görünür. Bu izinler doğru verilmezse, telefon yeniden başlatıldığında veya uzun süre kullanılmadığında kayıt sessizce durabilir.
 
 4) HARİTA VE GÜN İSTATİSTİKLERİ
 
-Ana ekranın altında seçili günün rotası basit bir haritada gösterilir. Ok tuşlarıyla önceki/sonraki güne geçebilir, "bugüne dön" ile hızlıca geri dönebilirsiniz.
+Ana ekranın altında seçili günün rotası basit bir haritada gösterilir. Haritanın üzerindeki gezinme çubuğundan ok tuşlarıyla önceki/sonraki güne geçebilir, "bugüne dön" ile hızlıca geri dönebilirsiniz; geçmiş bir gün seçildiğinde o günün mesafe, son nokta ve nokta sayısı bilgileri de haritanın üzerinde görünür.
 
-Haritanın üstündeki kartlarda mesafe, son nokta, nokta sayısı, maksimum hız, ortalama hız ve aktif sürüş süresi gibi bilgiler yer alır. Bu kartlara uzun basıp sürükleyerek sırasını değiştirebilir, Ayarlar'daki "Harita gün istatistikleri" bölümünden hangilerinin görüneceğini seçebilirsiniz.
+Bugünün kartlarında mesafe, son nokta, nokta sayısı, aktif GPS alma hızı, maksimum hız, ortalama hız ve aktif sürüş süresi gibi bilgiler yer alır. Bu kartlara uzun basıp sürükleyerek sırasını değiştirebilir, Ayarlar'daki "Harita gün istatistikleri" bölümünden hangilerinin görüneceğini seçebilirsiniz. Ekranı dar olan cihazlarda kartlar otomatik olarak tek satıra sıkışır, haritaya her zaman yeterli yer bırakılır.
 
 5) GPS ATLAMALARI
 
-Bazen GPS hatalı bir sıçrama noktası kaydedebilir. Böyle noktalar haritada turuncu işaretle gösterilir ve "Atlamalar" düğmesinden listelenip tek tek silinebilir; mesafe otomatik yeniden hesaplanır.
+Bazen GPS sinyali zayıfladığında hatalı, gerçek dışı bir sıçrama noktası kaydedilebilir (örneğin bir anda birkaç kilometre öteye "ışınlanma"). Böyle noktalar haritada turuncu işaretle gösterilir ve "Atlamalar" düğmesinden listelenip tek tek silinebilir; silindiğinde mesafe otomatik olarak yeniden hesaplanır, orijinal kayıt dosyanız bozulmaz.
 
 6) GPX DIŞA AKTARMA
 
-Rotalar sekmesinden tek bir günü (satırdaki dışa aktar) veya üstteki Aralık GPX ile bir tarih aralığını GPX dosyası olarak paylaşabilirsiniz (Drive, e-posta, harita uygulamaları vb.). Ayarlar için Daha fazla sekmesini kullanın.
+Rotalar sekmesinden tek bir günü (satırdaki dışa aktar oku) veya üstteki "Aralık GPX" ile bir tarih aralığını tek bir GPX dosyası olarak paylaşabilirsiniz. GPX, çoğu harita/spor uygulaması tarafından okunabilen standart bir rota formatıdır — Google Earth, Strava, Komoot gibi uygulamalara aktarabilir veya e-posta/Drive ile paylaşabilirsiniz.
 
 7) GOOGLE DRIVE YEDEK VE GERİ YÜKLEME
 
-Ayarlar'dan bir klasör seçip (tercihen Drive'da oluşturduğunuz boş bir klasör) günlük otomatik yedeği açabilirsiniz. Sadece yeni veya değişen gün dosyaları yüklenir; zaten yedeklenmiş, değişmemiş dosyalar tekrar yüklenmez.
+Ayarlar'dan bir klasör seçip (tercihen Drive'da oluşturduğunuz boş bir klasör) günlük otomatik yedeği açabilirsiniz. Sadece yeni veya değişen gün dosyaları yüklenir; zaten yedeklenmiş, değişmemiş dosyalar tekrar yüklenmez, bu da yedeklemeyi hızlı ve veri tasarruflu tutar.
 
-Yeni bir telefona geçtiğinizde veya uygulamayı silip yeniden kurduğunuzda: aynı yedek klasörünü seçip "Yedekten geri yükle" düğmesine basın — klasördeki tüm gün kayıtları telefona geri kopyalanır.
+Yeni bir telefona geçtiğinizde veya uygulamayı silip yeniden kurduğunuzda: aynı yedek klasörünü seçip "Yedekten geri yükle" düğmesine basın — klasördeki tüm gün kayıtları telefona geri kopyalanır, hiçbir veri kaybetmezsiniz.
 
 8) GÜNCELLEMELER
 
-Uygulama arka planda yeni sürüm olup olmadığını kontrol eder; bulursa indirir ve kurulum için bildirim gösterir. Ayarlar'dan "Güncellemeleri kontrol et" ile elle de kontrol edebilirsiniz. Kurulum için "bilinmeyen kaynaklardan yükleme" izni gerekebilir.
+Uygulama arka planda günde bir kez yeni sürüm olup olmadığını kontrol eder; bulursa indirir ve kurulum için bildirim gösterir. Ayarlar'dan "Güncellemeleri kontrol et" ile elle de kontrol edebilirsiniz. Kurulum için "bilinmeyen kaynaklardan yükleme" izni gerekebilir — bu, uygulamanın Play Store dışından dağıtıldığı durumlarda Android'in standart bir güvenlik adımıdır.
 
-9) BİLİNEN SINIRLAMALAR
+9) DİL
+
+Uygulama arayüzü Ayarlar > Dil bölümünden Türkçe, İngilizce, Almanca, Çince, Hintçe, İspanyolca, Fransızca veya Arapça olarak değiştirilebilir; "Sistem dili" seçeneği telefonunuzun dilini otomatik izler. Bu yardım sayfasındaki dil seçimi ayrı çalışır, sadece bu ekranı etkiler.
+
+10) VERİ VE GİZLİLİK
+
+Konum verileriniz sadece telefonunuzda, uygulamanın kendi deposunda (files/days/) saklanır. Hiçbir reklam, analiz veya izleme kütüphanesi yoktur; veri hiçbir sunucuya gönderilmez. Haritayı çizmek için yalnızca OpenStreetMap kiremit sunucularından, görüntülenen bölgenin harita görselleri indirilir — bu istekler konum geçmişinizi içermez. Google Drive yedeği tamamen isteğe bağlıdır; açmadığınız sürece hiçbir dosya cihazınızdan çıkmaz.
+
+11) BİLİNEN SINIRLAMALAR
 
 Bazı üretici arayüzlerinde (özellikle Samsung One UI) uygulama, arka planda çalışırken görev değiştirici / son uygulamalar listesinde zaman zaman bir kart bırakabilir. Bu bir OEM davranışı olup kaydı etkilemez.
+
+Bazı çok eski veya agresif pil yönetimi yapan cihazlarda, "otomatik başlat" ve pil muafiyeti izinleri verilse bile üretici arka plan uygulamalarını periyodik olarak kapatabilir; böyle bir durumda uygulamayı günde bir kez açıp kontrol etmeniz kaydın sürekliliğini garantiler.
+
+SIK SORULAN SORULAR
+
+Uygulamayı kapatırsam kayıt durur mu?
+Hayır. Günlük mod açıkken kayıt arka planda, uygulama ekranı kapalıyken de devam eder — yukarıdaki izinler doğru verildiği sürece.
+
+Verilerim internete mi gidiyor?
+Hayır, Google Drive yedeğini siz açık olarak seçmediğiniz sürece veriler yalnızca telefonunuzda kalır.
+
+Telefonumu değiştirirsem eski kayıtlarımı nasıl taşırım?
+Eski telefonda Drive yedeği alın (Ayarlar > Google Drive yedek), yeni telefonda aynı klasörü seçip "Yedekten geri yükle" düğmesine basın.
+
+Yanlış bir GPS noktası mesafeyi bozdu, ne yapmalıyım?
+Haritadaki "Atlamalar" düğmesinden hatalı noktayı bulup silin; mesafe otomatik olarak yeniden hesaplanır.
 
 Geliştiren: Ali Dinçer
