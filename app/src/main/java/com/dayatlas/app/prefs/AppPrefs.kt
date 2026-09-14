@@ -209,6 +209,30 @@ class AppPrefs(context: Context) {
         get() = AppLocale.normalize(prefs.getString(APP_LANGUAGE, AppLocale.SYSTEM))
         set(value) = prefs.edit().putString(APP_LANGUAGE, AppLocale.normalize(value)).apply()
 
+    /**
+     * Cached result of the last Play Billing entitlement check for the
+     * [com.dayatlas.app.billing.SubscriptionManager] paywall (Play build
+     * only). Lets the app open straight to the normal UI without waiting on
+     * a Play Store round trip on every launch; the real check still runs in
+     * the background and updates this.
+     */
+    var subscriptionActive: Boolean
+        get() = prefs.getBoolean(SUBSCRIPTION_ACTIVE, false)
+        set(value) = prefs.edit().putBoolean(SUBSCRIPTION_ACTIVE, value).apply()
+
+    /** epoch millis of the last successful (non-error) entitlement check. */
+    var subscriptionLastVerifiedMillis: Long
+        get() = prefs.getLong(SUBSCRIPTION_LAST_VERIFIED, 0L)
+        set(value) = prefs.edit().putLong(SUBSCRIPTION_LAST_VERIFIED, value).apply()
+
+    /**
+     * epoch millis until which [com.dayatlas.app.billing.PromoCode]'s local,
+     * Play-Billing-independent unlock is active (0 / past = none).
+     */
+    var promoUnlockExpiresAtMillis: Long
+        get() = prefs.getLong(PROMO_UNLOCK_EXPIRES_AT, 0L)
+        set(value) = prefs.edit().putLong(PROMO_UNLOCK_EXPIRES_AT, value).apply()
+
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
         const val DEFAULT_INTERVAL_SECONDS = 60
@@ -237,5 +261,8 @@ class AppPrefs(context: Context) {
         private const val DAY_STATS_ORDER = "day_stats_order"
         private const val DAY_STATS_HIDDEN = "day_stats_hidden"
         private const val APP_LANGUAGE = "app_language"
+        private const val SUBSCRIPTION_ACTIVE = "subscription_active"
+        private const val SUBSCRIPTION_LAST_VERIFIED = "subscription_last_verified_millis"
+        private const val PROMO_UNLOCK_EXPIRES_AT = "promo_unlock_expires_at_millis"
     }
 }

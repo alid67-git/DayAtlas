@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DayAtlas — Privacy Policy</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    margin: 0;
+    padding: 2rem 1.25rem 4rem;
+    max-width: 42rem;
+    margin-inline: auto;
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e8e8e8; background: #14161a; }
+    a { color: #7fc7ff; }
+    table { border-color: #333 !important; }
+    td, th { border-color: #333 !important; }
+    code { background: #23262c !important; }
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.15rem; margin-top: 2.25rem; border-top: 1px solid #ddd; padding-top: 1.25rem; }
+  .updated { color: #777; font-size: 0.9rem; margin-top: 0; }
+  .lede { font-size: 1.02rem; }
+  table { border-collapse: collapse; width: 100%; margin: 0.75rem 0 1.25rem; font-size: 0.95rem; }
+  th, td { text-align: left; border: 1px solid #ddd; padding: 0.5rem 0.6rem; vertical-align: top; }
+  th { background: rgba(31,111,91,0.08); }
+  code { background: #eee; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.9em; }
+  .lang { margin-top: 3.5rem; padding-top: 1rem; border-top: 3px double #ccc; }
+  footer { margin-top: 3rem; color: #777; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<h1>DayAtlas — Privacy Policy</h1>
+<p class="updated">Last updated: September 14, 2026</p>
+
+<p class="lede">DayAtlas is a lightweight daily travel-log app for Android. It has
+no ads, no analytics or tracking SDKs, no user accounts, and no server of its
+own. This page explains exactly what data the app touches and where it goes.</p>
+
+<h2>Location data</h2>
+<p>DayAtlas uses your device's location (precise and, on Android 10+,
+background location) for one purpose only: to record a sparse trail of GPS
+points and a distance summary for each calendar day, while tracking is
+switched on ("daily mode" or manual start/stop). Points are taken at the
+interval you choose in Settings (30 seconds to 5 minutes) — DayAtlas never
+streams continuous location.</p>
+
+<h2>Where your data lives</h2>
+<p>Everything DayAtlas records is stored only on your device, in the app's
+private storage, as <code>yyyy-MM-dd.json</code> / <code>.gpx</code> files.
+DayAtlas does not operate a server or send this data anywhere by itself.</p>
+
+<h2>Optional backup (your own folder)</h2>
+<p>If you turn on "Daily automatic backup" in Settings, you pick a folder
+(for example, one inside your own Google Drive) using Android's built-in
+folder picker. DayAtlas copies each day's files into that folder — it does
+not sign in to any Google account or use any Drive API of its own; whatever
+cloud sync you already have on that folder (Google Drive, or none) applies
+exactly as it would for any file you saved there yourself. If you never
+enable this, nothing leaves your device.</p>
+
+<h2>Map tiles</h2>
+<p>The route screen shows your day's track on an OpenStreetMap map
+(via osmdroid). While that screen is open, map tile images are fetched
+from OpenStreetMap's tile servers — standard behavior for any online map,
+and the only reason DayAtlas needs internet access outside of the optional
+backup and (sideload only, see below) update check. No Google Maps API key
+or Google Play services are used.</p>
+
+<h2>Update checks — sideload builds only</h2>
+<p>APKs installed directly from
+<a href="https://github.com/alid67-git/DayAtlas/releases">GitHub Releases</a>
+(not the Google Play version) silently check GitHub's public release API
+once a day for a newer build. <strong>This feature, and the Android
+permission it needs, are both completely absent from the Google Play
+version of DayAtlas</strong> — the Play version is updated only through the
+Play Store, as required by Play policy.</p>
+
+<h2>What DayAtlas does not do</h2>
+<ul>
+  <li>No advertising or ad-tracking SDK</li>
+  <li>No analytics or crash-reporting SDK</li>
+  <li>No account, sign-in, or user profile</li>
+  <li>No selling or sharing of your data with third parties</li>
+  <li>No location or file data collected while tracking is off</li>
+</ul>
+
+<h2>Permissions used</h2>
+<table>
+  <tr><th>Permission</th><th>Why</th></tr>
+  <tr><td>Location (precise / approximate)</td><td>Recording a GPS point</td></tr>
+  <tr><td>Background location</td><td>Recording points while the screen is off / app is in the background</td></tr>
+  <tr><td>Notifications</td><td>Required foreground-service notification while a point is being taken</td></tr>
+  <tr><td>Ignore battery optimizations</td><td>Lets the sampling alarm run reliably in Doze mode</td></tr>
+  <tr><td>Schedule exact alarms</td><td>Keeps short (30s–5min) sampling intervals accurate</td></tr>
+  <tr><td>Boot / package-replaced receiver</td><td>Resumes daily mode after a restart or app update</td></tr>
+  <tr><td>Internet</td><td>Map tiles, optional backup folder, and (sideload only) update checks</td></tr>
+</table>
+
+<h2>Deleting your data</h2>
+<p>Uninstalling DayAtlas deletes all data stored on your device. Files
+already copied to a backup folder you chose are not deleted automatically —
+remove them yourself from that folder whenever you like.</p>
+
+<h2>Children</h2>
+<p>DayAtlas is not directed at children and does not knowingly collect data
+from children.</p>
+
+<h2>Changes to this policy</h2>
+<p>If this policy changes, the update will be posted on this same page with
+a new "Last updated" date.</p>
+
+<h2>Contact</h2>
+<p>Questions about this policy or your data:
+<a href="mailto:alidincerler@gmail.com">alidincerler@gmail.com</a></p>
+
+<div class="lang">
+
+<h1>DayAtlas — Gizlilik Politikası</h1>
+<p class="updated">Son güncelleme: 14 Eylül 2026</p>
+
+<p class="lede">DayAtlas, Android için hafif bir günlük iz/rota kayıt
+uygulamasıdır. Reklam yoktur, analiz/izleme SDK'sı yoktur, kullanıcı hesabı
+yoktur ve uygulamanın kendi sunucusu yoktur. Bu sayfa uygulamanın hangi
+veriye dokunduğunu ve o verinin nereye gittiğini tam olarak anlatır.</p>
+
+<h2>Konum verisi</h2>
+<p>DayAtlas, cihazınızın konumunu (hassas ve Android 10+'ta arka plan
+konumu) tek bir amaç için kullanır: kayıt açıkken ("günlük mod" veya elle
+başlat/durdur) her takvim günü için seyrek bir GPS iz noktası dizisi ve
+mesafe özeti tutmak. Noktalar, Ayarlar'dan seçtiğiniz aralıkla (30 saniye –
+5 dakika) alınır — DayAtlas hiçbir zaman sürekli bir konum akışı çalıştırmaz.</p>
+
+<h2>Verileriniz nerede tutulur</h2>
+<p>DayAtlas'ın kaydettiği her şey yalnızca cihazınızda, uygulamanın özel
+deposunda <code>yyyy-MM-dd.json</code> / <code>.gpx</code> dosyaları olarak
+saklanır. DayAtlas bir sunucu çalıştırmaz, bu veriyi kendiliğinden hiçbir
+yere göndermez.</p>
+
+<h2>Opsiyonel yedek (kendi klasörünüz)</h2>
+<p>Ayarlar'dan "Günlük otomatik yedek"i açarsanız, Android'in sistem klasör
+seçicisiyle bir klasör seçersiniz (örneğin kendi Google Drive'ınızdaki bir
+klasör). DayAtlas her günün dosyasını o klasöre kopyalar — kendi adına bir
+Google hesabına giriş yapmaz veya bir Drive API'si kullanmaz; o klasörde
+zaten sahip olduğunuz bulut senkronizasyonu (Google Drive veya hiçbiri) ne
+ise, elle kaydettiğiniz herhangi bir dosya gibi aynen geçerli olur. Bu
+özelliği hiç açmazsanız, cihazınızdan hiçbir şey çıkmaz.</p>
+
+<h2>Harita karoları</h2>
+<p>Rota ekranı, günün izini OpenStreetMap tabanlı bir harita üzerinde
+gösterir (osmdroid ile). Bu ekran açıkken harita karosu görselleri
+OpenStreetMap'in sunucularından indirilir — herhangi bir çevrimiçi harita
+için standart bir davranıştır ve DayAtlas'ın internet erişimine ihtiyaç
+duymasının tek nedeni budur (opsiyonel yedek ve — yalnızca sideload
+sürümünde — güncelleme kontrolü hariç). Google Haritalar API anahtarı veya
+Google Play Hizmetleri kullanılmaz.</p>
+
+<h2>Güncelleme kontrolü — yalnızca sideload derlemeler</h2>
+<p><a href="https://github.com/alid67-git/DayAtlas/releases">GitHub
+Releases</a>'ten doğrudan kurulan APK'lar (Google Play sürümü değil), günde
+bir kez GitHub'ın herkese açık release API'sini sessizce kontrol eder.
+<strong>Bu özellik ve gerektirdiği Android izni, DayAtlas'ın Google Play
+sürümünde tamamen yoktur</strong> — Play sürümü yalnızca Play Store
+üzerinden güncellenir, tıpkı Play politikasının gerektirdiği gibi.</p>
+
+<h2>DayAtlas'ın yapmadıkları</h2>
+<ul>
+  <li>Reklam veya reklam izleme SDK'sı yok</li>
+  <li>Analiz veya çökme raporlama SDK'sı yok</li>
+  <li>Hesap, giriş veya kullanıcı profili yok</li>
+  <li>Verinizin üçüncü taraflara satılması veya paylaşılması yok</li>
+  <li>Kayıt kapalıyken konum veya dosya verisi toplanmaz</li>
+</ul>
+
+<h2>Kullanılan izinler</h2>
+<table>
+  <tr><th>İzin</th><th>Neden</th></tr>
+  <tr><td>Konum (hassas / yaklaşık)</td><td>Bir GPS noktası almak</td></tr>
+  <tr><td>Arka plan konumu</td><td>Ekran kapalıyken / uygulama arka plandayken nokta almak</td></tr>
+  <tr><td>Bildirimler</td><td>Nokta alınırken zorunlu ön plan servisi bildirimi</td></tr>
+  <tr><td>Pil optimizasyonu muafiyeti</td><td>Örnekleme alarmının Doze modunda güvenilir çalışması</td></tr>
+  <tr><td>Tam alarm planlama</td><td>Kısa (30sn–5dk) örnekleme aralıklarının doğru kalması</td></tr>
+  <tr><td>Açılış / paket değişimi alıcısı</td><td>Yeniden başlatma veya güncelleme sonrası günlük modun devam etmesi</td></tr>
+  <tr><td>İnternet</td><td>Harita karoları, opsiyonel yedek klasörü ve (yalnızca sideload'da) güncelleme kontrolü</td></tr>
+</table>
+
+<h2>Verilerinizi silme</h2>
+<p>DayAtlas'ı kaldırmak, cihazınızda saklanan tüm veriyi siler. Seçtiğiniz
+yedek klasörüne zaten kopyalanmış dosyalar otomatik silinmez — istediğiniz
+zaman o klasörden kendiniz silebilirsiniz.</p>
+
+<h2>Çocuklar</h2>
+<p>DayAtlas çocuklara yönelik değildir ve bilerek çocuklardan veri toplamaz.</p>
+
+<h2>Bu politikadaki değişiklikler</h2>
+<p>Bu politika değişirse, güncelleme yeni bir "Son güncelleme" tarihiyle
+birlikte bu sayfada yayınlanır.</p>
+
+<h2>İletişim</h2>
+<p>Bu politika veya verileriniz hakkında sorularınız için:
+<a href="mailto:alidincerler@gmail.com">alidincerler@gmail.com</a></p>
+
+</div>
+
+<footer>DayAtlas — <a href="https://github.com/alid67-git/DayAtlas">github.com/alid67-git/DayAtlas</a></footer>
+
+</body>
+</html>

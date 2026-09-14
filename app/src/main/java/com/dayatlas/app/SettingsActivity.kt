@@ -161,23 +161,30 @@ class SettingsActivity : DayAtlasActivity() {
         refreshDriveUi()
 
         binding.versionLabel.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
-        binding.checkUpdates.setOnClickListener {
-            Toast.makeText(this, R.string.checking_for_updates, Toast.LENGTH_SHORT).show()
-            UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
-                if (isFinishing) return@check
-                if (info == null) {
-                    Toast.makeText(this, R.string.up_to_date, Toast.LENGTH_SHORT).show()
-                } else {
-                    AlertDialog.Builder(this)
-                        .setTitle(R.string.update_available_title)
-                        .setMessage(getString(R.string.update_available_message, info.version))
-                        .setPositiveButton(R.string.update_download) { _, _ ->
-                            UpdateInstaller.download(this, info)
-                        }
-                        .setNegativeButton(R.string.update_later, null)
-                        .show()
+        if (BuildConfig.SELF_UPDATE_ENABLED) {
+            binding.checkUpdates.setOnClickListener {
+                Toast.makeText(this, R.string.checking_for_updates, Toast.LENGTH_SHORT).show()
+                UpdateChecker.check(BuildConfig.VERSION_NAME) { info ->
+                    if (isFinishing) return@check
+                    if (info == null) {
+                        Toast.makeText(this, R.string.up_to_date, Toast.LENGTH_SHORT).show()
+                    } else {
+                        AlertDialog.Builder(this)
+                            .setTitle(R.string.update_available_title)
+                            .setMessage(getString(R.string.update_available_message, info.version))
+                            .setPositiveButton(R.string.update_download) { _, _ ->
+                                UpdateInstaller.download(this, info)
+                            }
+                            .setNegativeButton(R.string.update_later, null)
+                            .show()
+                    }
                 }
             }
+        } else {
+            // Play build: updates come from the Play Store itself, not the
+            // GitHub-release self-updater - hide the manual check button
+            // rather than leave a control that would silently do nothing.
+            binding.checkUpdates.visibility = View.GONE
         }
     }
 

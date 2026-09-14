@@ -46,6 +46,12 @@
         </activity>
 
         <activity
+            android:name=".PaywallActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:autoRemoveFromRecents="true" />
+
+        <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"

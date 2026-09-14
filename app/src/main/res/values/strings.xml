@@ -161,5 +161,15 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Son yedek: %1$s</string>
+    <string name="paywall_title">DayAtlas Pro</string>
+    <string name="paywall_description">7 gün ücretsiz deneyin, sonra ayda %1$s.</string>
+    <string name="paywall_description_fallback">7 gün ücretsiz deneyin, sonra aylık ücretli olarak devam eder.</string>
+    <string name="paywall_subscribe">Abone Ol</string>
+    <string name="paywall_restore">Satın alımı geri yükle</string>
+    <string name="paywall_no_active_subscription">Aktif bir abonelik bulunamadı.</string>
+    <string name="paywall_promo_hint">Kodun var mı?</string>
+    <string name="paywall_promo_button">Kodu Kullan</string>
+    <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
+    <string name="paywall_promo_invalid">Geçersiz kod</string>
     <string name="build_note">Harita artık daha geniş bir alan gösteriyor, Günlük Mod varsayılan olarak açık geliyor ve küçük ekranlarda gün kartları haritaya daha fazla yer bırakıyor.</string>
 </resources>
