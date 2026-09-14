@@ -1,0 +1,75 @@
+Ayuda de DayAtlas
+
+DayAtlas registra tu ubicación en segundo plano durante todo el día, manteniendo un historial diario de rutas y distancia. Todos los datos se guardan únicamente en tu teléfono; no se envía nada automáticamente a ningún servidor. De forma opcional puedes hacer una copia de seguridad en Google Drive (o en cualquier otra carpeta de tu dispositivo).
+
+INICIO RÁPIDO
+
+En el primer inicio se te pedirá permiso de ubicación. Elige "Permitir todo el tiempo" para que la app pueda seguir funcionando en segundo plano (con la pantalla apagada). Después solo tienes que activar el Modo diario en Ajustes: la app empieza a grabar automáticamente por ti, no hay que hacer nada más.
+
+1) MODOS DE GRABACIÓN
+
+Modo diario (recomendado y activado de forma predeterminada): una vez activado en Ajustes, la grabación se inicia o continúa automáticamente cada vez que se abre la app o el teléfono, sin pedir confirmación. En este modo, el botón Iniciar/Detener y el texto de ayuda ni siquiera aparecen en la pantalla principal, porque no hay nada que pulsar. Para detenerlo, desactiva el modo diario en Ajustes.
+
+Modo manual: con el modo diario desactivado, controlas la grabación tú mismo con el botón Iniciar/Detener de la pantalla principal, útil cuando solo quieres registrar un trayecto concreto.
+
+2) INTERVALO DE MUESTREO
+
+Elige 30 segundos, 1, 3 o 5 minutos entre puntos en Ajustes; se recomienda 1 minuto para la mayoría de los usos. Tras 3 lecturas consecutivas en el mismo lugar (~80 m), el intervalo aumenta automáticamente un nivel (p. ej. 1 min -> 3 min); vuelve al intervalo elegido tras confirmarse un movimiento real (2 lecturas seguidas fuera de esa zona). Las vibraciones del GPS en casa no aceleran el muestreo de nuevo. Esto existe para que la app no gaste batería mientras estás quieto (por ejemplo, dormido por la noche); en cuanto te mueves de verdad, vuelve de inmediato a la precisión completa, sin que tengas que cambiar nada.
+
+3) PERMISOS Y BATERÍA
+
+El funcionamiento en segundo plano necesita tres cosas: el permiso de ubicación en "Permitir todo el tiempo", el permiso de notificaciones y, a ser posible, una exención de la optimización de batería. Los botones de Ajustes abren directamente las pantallas del sistema correspondientes, para que no tengas que buscarlas tú mismo. En algunos fabricantes (Xiaomi, Huawei, Oppo, Samsung y similares), los permisos estándar de Android no bastan: también hay que activar el "inicio automático"; si tu dispositivo es compatible, aparece un botón a esa pantalla en Ajustes. Si estos permisos no se conceden correctamente, la grabación puede detenerse silenciosamente tras reiniciar o tras un largo periodo sin uso.
+
+4) MAPA Y ESTADÍSTICAS DEL DÍA
+
+En la parte inferior de la pantalla principal se muestra la ruta del día seleccionado en un mapa sencillo. Usa las flechas de la barra flotante sobre el mapa para ir al día anterior/siguiente, o "volver a hoy" para regresar rápidamente; al seleccionar un día pasado, también aparecen sobre el mapa su distancia, último punto y número de puntos.
+
+Las tarjetas de hoy muestran distancia, último punto, número de puntos, frecuencia de muestreo GPS activa, velocidad máxima, velocidad media y tiempo activo de conducción. Mantén pulsada una tarjeta y arrástrala para reordenarla, y elige cuáles se muestran desde la sección "Estadísticas diarias del mapa" en Ajustes. En pantallas más estrechas, las tarjetas se comprimen automáticamente en una sola fila para que el mapa siempre tenga suficiente espacio.
+
+5) SALTOS DE GPS
+
+A veces el GPS puede registrar un punto erróneo e implausible cuando la señal es débil (por ejemplo, "teletransportándose" unos kilómetros durante un instante). Estos puntos aparecen marcados en naranja en el mapa y se listan bajo el botón "Saltos", donde puedes eliminarlos uno por uno; la distancia se recalcula automáticamente y el resto de tu archivo de registro no se ve afectado.
+
+6) EXPORTAR GPX
+
+Desde la pestaña Rutas, comparte un solo día (la flecha de exportar en su fila) o un intervalo de fechas mediante "GPX del intervalo" como un único archivo GPX. GPX es un formato de ruta estándar que leen la mayoría de las apps de mapas y deportivas: impórtalo en Google Earth, Strava, Komoot y apps similares, o compártelo por correo o Drive.
+
+7) COPIA DE SEGURIDAD Y RESTAURACIÓN EN GOOGLE DRIVE
+
+Elige una carpeta en Ajustes (idealmente una carpeta vacía creada en Drive) para activar la copia de seguridad automática diaria. Solo se suben los archivos del día nuevos o modificados; los ya respaldados y sin cambios se omiten, lo que mantiene las copias rápidas y eficientes.
+
+Al cambiar a un teléfono nuevo o tras reinstalar la app: elige de nuevo la misma carpeta de copia de seguridad y pulsa "Restaurar copia de seguridad"; todos los archivos del día de esa carpeta se copian de vuelta al teléfono, sin perder nada.
+
+8) ACTUALIZACIONES
+
+La app comprueba una vez al día, en segundo plano, si hay una versión más reciente; si la encuentra, la descarga y muestra una notificación para instalarla. También puedes comprobarlo manualmente desde Ajustes ("Buscar actualizaciones"). La instalación puede requerir el permiso "Instalar apps desconocidas": es la medida de seguridad estándar de Android cuando una app se distribuye fuera de la Play Store.
+
+9) IDIOMA
+
+La interfaz de la app se puede cambiar entre turco, inglés, alemán, chino, hindi, español, francés y árabe desde Ajustes > Idioma; "Idioma del sistema" sigue automáticamente el idioma de tu teléfono. El selector de idioma de esta página de ayuda funciona de forma independiente y solo afecta a esta pantalla.
+
+10) DATOS Y PRIVACIDAD
+
+Tus datos de ubicación viven únicamente en tu teléfono, en el almacenamiento propio de la app (files/days/). No hay ninguna biblioteca de publicidad, análisis o seguimiento; no se envía nada a ningún servidor. El único tráfico de red es la descarga de imágenes de mapa (teselas) de OpenStreetMap para la zona que se muestra en pantalla; esas solicitudes no incluyen tu historial de ubicación. La copia de seguridad en Google Drive es totalmente opcional; ningún archivo sale de tu dispositivo a menos que la actives.
+
+11) LIMITACIONES CONOCIDAS
+
+En algunas interfaces de fabricante (especialmente Samsung One UI), la app puede dejar ocasionalmente una tarjeta en la lista de apps recientes mientras se ejecuta en segundo plano. Es una particularidad visual del fabricante y no afecta a la grabación.
+
+En algunos dispositivos muy antiguos, o con una gestión de batería muy agresiva, el fabricante puede cerrar periódicamente las apps en segundo plano incluso con el inicio automático y la exención de batería concedidos; abrir la app una vez al día es una buena forma de garantizar la grabación continua en esos dispositivos.
+
+PREGUNTAS FRECUENTES
+
+¿Se detiene la grabación si cierro la app?
+No. Con el modo diario activado, la grabación continúa en segundo plano aunque la pantalla de la app esté cerrada, siempre que los permisos anteriores estén concedidos correctamente.
+
+¿Mis datos van a internet?
+No; salvo que actives explícitamente la copia de seguridad en Google Drive, tus datos permanecen únicamente en tu teléfono.
+
+¿Cómo traslado mis registros antiguos a un teléfono nuevo?
+Haz una copia en Drive en el teléfono antiguo (Ajustes > Copia de seguridad en Google Drive) y, en el nuevo, elige la misma carpeta y pulsa "Restaurar copia de seguridad".
+
+Un punto GPS erróneo ha alterado mi distancia, ¿qué hago?
+Búscalo y elimínalo desde el botón "Saltos" del mapa; la distancia se recalcula automáticamente.
+
+Desarrollado por: Ali Dinçer

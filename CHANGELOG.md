@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.23 — 2026-09-14
+
+- **5 yeni dil eklendi:** Çince, Hintçe, İspanyolca, Fransızca ve Arapça —
+  toplamda TR/EN/DE ile birlikte 8 dil. Yardım sayfasındaki dil seçici artık
+  yatayda kaydırılan bir çip satırı (8 buton tek satıra sığmadığı için);
+  Ayarlar'daki dil listesi de aynı 8 seçeneği içeriyor.
+- **Çeviriler gözden geçirildi:** Uygulama içi "yenilikler" mesajı (build_note)
+  0.7.15'ten beri güncellenmemişti, artık güncel; dil seçimi ipucu metni de
+  8 dili kapsayacak şekilde yeniden yazıldı — her iki metin TR/EN/DE'de
+  düzeltildi, yeni 5 dilde de eklendi.
+- **Yardım sayfası genişletildi:** Hızlı başlangıç, dil, veri & gizlilik ve
+  sık sorulan sorular bölümleri eklendi; mevcut bölümler daha detaylı
+  anlatıldı. Tüm 8 dilde tutarlı, tam çevrilmiş içerik.
+
 ## 0.7.22 — 2026-09-12
 
 - **Play Store yayını için altyapı:** Yeni bir `playRelease` derleme türü ve

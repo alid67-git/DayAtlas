@@ -1,0 +1,75 @@
+Aide DayAtlas
+
+DayAtlas enregistre votre position en arrière-plan tout au long de la journée, en conservant un historique quotidien de trajets et de distances. Toutes les données sont stockées uniquement sur votre téléphone ; rien n'est envoyé automatiquement à un serveur. Vous pouvez, si vous le souhaitez, les sauvegarder sur Google Drive (ou tout autre dossier de votre appareil).
+
+DÉMARRAGE RAPIDE
+
+Au premier lancement, l'autorisation de localisation vous sera demandée. Choisissez « Toujours autoriser » pour que l'application puisse continuer à fonctionner en arrière-plan (écran éteint). Il vous suffit ensuite d'activer le Mode journalier dans les Paramètres : l'application commence automatiquement à enregistrer pour vous, il n'y a rien d'autre à faire.
+
+1) MODES D'ENREGISTREMENT
+
+Mode journalier (recommandé, et activé par défaut) : une fois activé dans les Paramètres, l'enregistrement démarre ou continue automatiquement à chaque ouverture de l'application ou du téléphone, sans demande de confirmation. Le bouton Démarrer/Arrêter et le texte d'aide n'apparaissent même pas sur l'écran d'accueil dans ce mode, puisqu'il n'y a rien à toucher. Pour l'arrêter, désactivez le mode journalier dans les Paramètres.
+
+Mode manuel : lorsque le mode journalier est désactivé, vous contrôlez vous-même l'enregistrement avec le bouton Démarrer/Arrêter de l'écran d'accueil - pratique lorsque vous ne souhaitez enregistrer qu'un trajet précis.
+
+2) INTERVALLE D'ÉCHANTILLONNAGE
+
+Choisissez 30 secondes, 1, 3 ou 5 minutes entre les points dans les Paramètres ; 1 minute est recommandée pour la plupart des usages. Après 3 mesures consécutives au même endroit (~80 m), l'intervalle passe automatiquement au palier suivant (par ex. 1 min -> 3 min) ; il revient à l'intervalle choisi dès qu'un déplacement réel est confirmé (2 mesures consécutives hors de cette zone). Les fluctuations du GPS à domicile ne raccourcissent pas l'intervalle. Cela permet à l'application de ne pas gaspiller de batterie pendant que vous êtes immobile (la nuit, par exemple) ; dès que vous bougez réellement, elle revient aussitôt à une précision maximale, sans rien à régler de votre côté.
+
+3) AUTORISATIONS ET BATTERIE
+
+Le fonctionnement en arrière-plan nécessite trois choses : l'autorisation de localisation réglée sur « Toujours autoriser », l'autorisation de notifications et, idéalement, une exemption d'optimisation de la batterie. Les boutons des Paramètres ouvrent directement les écrans système correspondants, sans avoir à les chercher vous-même. Sur certains fabricants (Xiaomi, Huawei, Oppo, Samsung et similaires), les autorisations standard d'Android ne suffisent pas - il faut aussi activer le « démarrage automatique » ; un bouton vers cet écran apparaît dans les Paramètres si votre appareil est reconnu. Si ces autorisations ne sont pas correctement accordées, l'enregistrement peut s'arrêter silencieusement après un redémarrage ou une longue période d'inactivité.
+
+4) CARTE ET STATISTIQUES DU JOUR
+
+Le bas de l'écran d'accueil affiche le trajet du jour sélectionné sur une carte simple. Utilisez les flèches de la barre flottant au-dessus de la carte pour passer au jour précédent/suivant, ou « aujourd'hui » pour revenir rapidement ; lorsqu'un jour passé est sélectionné, sa distance, son dernier point et son nombre de points s'affichent également au-dessus de la carte.
+
+Les cartes du jour affichent la distance, le dernier point, le nombre de points, la fréquence d'échantillonnage GPS active, la vitesse maximale, la vitesse moyenne et le temps de conduite actif. Un appui long suivi d'un glissement permet de réordonner une carte, et vous choisissez celles qui s'affichent dans la section « Statistiques journalières de la carte » des Paramètres. Sur les écrans plus étroits, les cartes se compressent automatiquement sur une seule ligne afin que la carte dispose toujours de suffisamment de place.
+
+5) SAUTS GPS
+
+Le GPS peut parfois enregistrer un point erroné et invraisemblable lorsque le signal est faible (par exemple en se « téléportant » à quelques kilomètres pendant un instant). Ces points apparaissent en orange sur la carte et sont listés sous le bouton « Sauts », où vous pouvez les supprimer un par un - la distance est recalculée automatiquement et le reste de votre fichier d'enregistrement n'est pas affecté.
+
+6) EXPORT GPX
+
+Depuis l'onglet Trajets, partagez un seul jour (la flèche d'export sur sa ligne) ou une plage de dates via « GPX de la plage » sous forme d'un seul fichier GPX. Le GPX est un format de trajet standard lisible par la plupart des applications de cartographie et de sport - importez-le dans Google Earth, Strava, Komoot et applications similaires, ou partagez-le par e-mail ou via Drive.
+
+7) SAUVEGARDE ET RESTAURATION GOOGLE DRIVE
+
+Choisissez un dossier dans les Paramètres (idéalement un dossier vide créé dans Drive) pour activer la sauvegarde automatique quotidienne. Seuls les fichiers du jour nouveaux ou modifiés sont envoyés - les fichiers déjà sauvegardés et inchangés sont ignorés, ce qui rend les sauvegardes rapides et économes en données.
+
+Lors du passage à un nouveau téléphone, ou après une réinstallation de l'application : sélectionnez à nouveau le même dossier de sauvegarde et appuyez sur « Restaurer depuis la sauvegarde » - tous les fichiers du jour de ce dossier sont recopiés sur le téléphone, sans rien perdre.
+
+8) MISES À JOUR
+
+L'application vérifie une fois par jour, en arrière-plan, si une nouvelle version est disponible ; si c'est le cas, elle la télécharge et affiche une notification pour l'installer. Vous pouvez aussi vérifier manuellement depuis les Paramètres (« Vérifier les mises à jour »). L'installation peut nécessiter l'autorisation « Installer des applications inconnues » - c'est la mesure de sécurité standard d'Android lorsqu'une application est distribuée en dehors du Play Store.
+
+9) LANGUE
+
+L'interface de l'application peut être changée entre le turc, l'anglais, l'allemand, le chinois, l'hindi, l'espagnol, le français et l'arabe depuis Paramètres > Langue ; « Langue du système » suit automatiquement la langue de votre téléphone. Le sélecteur de langue de cette page d'aide fonctionne indépendamment et n'affecte que cet écran.
+
+10) DONNÉES ET CONFIDENTIALITÉ
+
+Vos données de localisation ne se trouvent que sur votre téléphone, dans le stockage propre de l'application (files/days/). Il n'y a aucune bibliothèque de publicité, d'analyse ou de suivi ; rien n'est envoyé à un serveur. Le seul trafic réseau consiste à récupérer les images de tuiles cartographiques d'OpenStreetMap pour la zone affichée à l'écran - ces requêtes n'incluent pas votre historique de localisation. La sauvegarde Google Drive est entièrement facultative ; aucun fichier ne quitte votre appareil tant que vous ne l'activez pas.
+
+11) LIMITATIONS CONNUES
+
+Sur certaines interfaces constructeur (notamment Samsung One UI), l'application peut occasionnellement laisser une carte dans la liste des applications récentes / gestionnaire de tâches lorsqu'elle fonctionne en arrière-plan. Il s'agit d'une particularité d'affichage du fabricant qui n'affecte pas l'enregistrement.
+
+Sur certains appareils très anciens, ou dotés d'une gestion de batterie très agressive, le fabricant peut arrêter périodiquement les applications en arrière-plan même lorsque le démarrage automatique et l'exemption de batterie ont été accordés ; ouvrir l'application une fois par jour est un bon moyen de garantir un enregistrement continu sur ces appareils.
+
+QUESTIONS FRÉQUENTES
+
+L'enregistrement s'arrête-t-il si je ferme l'application ?
+Non. Lorsque le mode journalier est activé, l'enregistrement se poursuit en arrière-plan même lorsque l'écran de l'application est fermé - tant que les autorisations ci-dessus sont correctement accordées.
+
+Mes données vont-elles sur internet ?
+Non, sauf si vous activez explicitement la sauvegarde Google Drive, vos données restent uniquement sur votre téléphone.
+
+Comment transférer mes anciens enregistrements vers un nouveau téléphone ?
+Effectuez une sauvegarde Drive sur l'ancien téléphone (Paramètres > Sauvegarde Google Drive), puis, sur le nouveau, sélectionnez le même dossier et appuyez sur « Restaurer depuis la sauvegarde ».
+
+Un point GPS erroné a faussé ma distance, que faire ?
+Trouvez-le et supprimez-le depuis le bouton « Sauts » sur la carte ; la distance est recalculée automatiquement.
+
+Développé par : Ali Dinçer

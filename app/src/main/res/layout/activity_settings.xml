@@ -88,6 +88,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/language_de" />
+
+                <RadioButton
+                    android:id="@+id/languageZh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_zh" />
+
+                <RadioButton
+                    android:id="@+id/languageHi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_hi" />
+
+                <RadioButton
+                    android:id="@+id/languageEs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_es" />
+
+                <RadioButton
+                    android:id="@+id/languageFr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_fr" />
+
+                <RadioButton
+                    android:id="@+id/languageAr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_ar" />
             </RadioGroup>
 
             <TextView
