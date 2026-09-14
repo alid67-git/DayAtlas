@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.android.billingclient.api.ProductDetails
+import com.dayatlas.app.billing.PromoCode
 import com.dayatlas.app.billing.SubscriptionManager
 import com.dayatlas.app.databinding.ActivityPaywallBinding
 
@@ -22,6 +23,21 @@ class PaywallActivity : DayAtlasActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPaywallBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (PromoCode.isActive(this)) {
+            goToMain()
+            return
+        }
+
+        binding.promoRedeemButton.setOnClickListener {
+            val input = binding.promoCodeInput.text?.toString().orEmpty()
+            if (PromoCode.redeem(this, input)) {
+                Toast.makeText(this, R.string.paywall_promo_success, Toast.LENGTH_LONG).show()
+                goToMain()
+            } else {
+                Toast.makeText(this, R.string.paywall_promo_invalid, Toast.LENGTH_SHORT).show()
+            }
+        }
 
         binding.subscribeButton.isEnabled = false
         binding.subscribeButton.setOnClickListener {

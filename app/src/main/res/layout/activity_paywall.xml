@@ -49,4 +49,22 @@
         android:layout_marginTop="12dp"
         android:text="@string/paywall_restore" />
 
+    <EditText
+        android:id="@+id/promoCodeInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:autofillHints=""
+        android:hint="@string/paywall_promo_hint"
+        android:inputType="textVisiblePassword"
+        android:maxLines="1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/promoRedeemButton"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/paywall_promo_button" />
+
 </LinearLayout>

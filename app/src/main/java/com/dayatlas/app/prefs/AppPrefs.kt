@@ -225,6 +225,14 @@ class AppPrefs(context: Context) {
         get() = prefs.getLong(SUBSCRIPTION_LAST_VERIFIED, 0L)
         set(value) = prefs.edit().putLong(SUBSCRIPTION_LAST_VERIFIED, value).apply()
 
+    /**
+     * epoch millis until which [com.dayatlas.app.billing.PromoCode]'s local,
+     * Play-Billing-independent unlock is active (0 / past = none).
+     */
+    var promoUnlockExpiresAtMillis: Long
+        get() = prefs.getLong(PROMO_UNLOCK_EXPIRES_AT, 0L)
+        set(value) = prefs.edit().putLong(PROMO_UNLOCK_EXPIRES_AT, value).apply()
+
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
         const val DEFAULT_INTERVAL_SECONDS = 60
@@ -255,5 +263,6 @@ class AppPrefs(context: Context) {
         private const val APP_LANGUAGE = "app_language"
         private const val SUBSCRIPTION_ACTIVE = "subscription_active"
         private const val SUBSCRIPTION_LAST_VERIFIED = "subscription_last_verified_millis"
+        private const val PROMO_UNLOCK_EXPIRES_AT = "promo_unlock_expires_at_millis"
     }
 }

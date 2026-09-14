@@ -167,5 +167,9 @@
     <string name="paywall_subscribe">Abone Ol</string>
     <string name="paywall_restore">Satın alımı geri yükle</string>
     <string name="paywall_no_active_subscription">Aktif bir abonelik bulunamadı.</string>
+    <string name="paywall_promo_hint">Kodun var mı?</string>
+    <string name="paywall_promo_button">Kodu Kullan</string>
+    <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
+    <string name="paywall_promo_invalid">Geçersiz kod</string>
     <string name="build_note">Harita artık daha geniş bir alan gösteriyor, Günlük Mod varsayılan olarak açık geliyor ve küçük ekranlarda gün kartları haritaya daha fazla yer bırakıyor.</string>
 </resources>

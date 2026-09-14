@@ -168,4 +168,8 @@
     <string name="paywall_subscribe">Subscribe</string>
     <string name="paywall_restore">Restore purchase</string>
     <string name="paywall_no_active_subscription">No active subscription found.</string>
+    <string name="paywall_promo_hint">Have a code?</string>
+    <string name="paywall_promo_button">Redeem Code</string>
+    <string name="paywall_promo_success">30 days of access unlocked!</string>
+    <string name="paywall_promo_invalid">Invalid code</string>
 </resources>
