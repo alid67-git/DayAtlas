@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Play Store build overrides: Play policy forbids apps updating themselves
+    outside Play's own mechanism, so the GitHub-release self-updater (see
+    BuildConfig.SELF_UPDATE_ENABLED in build.gradle.kts) is fully disabled in
+    code for this build type. These merger rules also strip the permission
+    and receiver it would otherwise need, so the Play build never even
+    declares the ability to install packages on its own.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission
+        android:name="android.permission.REQUEST_INSTALL_PACKAGES"
+        tools:node="remove" />
+
+    <application>
+        <receiver
+            android:name=".update.DownloadCompleteReceiver"
+            tools:node="remove" />
+    </application>
+</manifest>

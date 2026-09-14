@@ -25,6 +25,7 @@ object UpdateCheckScheduler {
     }
 
     fun scheduleNext(context: Context, zoneId: ZoneId = ZoneId.systemDefault()) {
+        if (!BuildConfig.SELF_UPDATE_ENABLED) return
         val app = context.applicationContext
         val now = ZonedDateTime.now(zoneId)
         var next = now.toLocalDate().atTime(MIDDAY).atZone(zoneId)
@@ -57,6 +58,7 @@ object UpdateCheckScheduler {
 /** Shared gate + silent check for midday alarm, SampleService, and launch catch-up. */
 object UpdateCheckRunner {
     fun shouldCheckToday(prefs: AppPrefs): Boolean {
+        if (!BuildConfig.SELF_UPDATE_ENABLED) return false
         if (BuildConfig.DEBUG) return false
         val today = DayTitle.iso(DayTitle.localToday())
         return prefs.lastUpdateCheckDay != today

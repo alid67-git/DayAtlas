@@ -29,6 +29,11 @@ android {
         versionCode = 49
         versionName = "0.7.26"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Play policy forbids apps updating themselves outside Play's own
+        // mechanism, so the GitHub-release self-updater (see UpdateChecker /
+        // UpdateInstaller) must be off in the Play build - see playRelease
+        // build type below, which flips this back to false.
+        buildConfigField("boolean", "SELF_UPDATE_ENABLED", "true")
     }
 
     // A committed, stable keystore - NOT Android's default auto-generated
@@ -77,6 +82,7 @@ android {
             create("playRelease") {
                 initWith(getByName("release"))
                 signingConfig = signingConfigs.getByName("playRelease")
+                buildConfigField("boolean", "SELF_UPDATE_ENABLED", "false")
             }
         }
     }

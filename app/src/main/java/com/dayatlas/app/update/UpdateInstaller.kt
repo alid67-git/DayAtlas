@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.dayatlas.app.BuildConfig
 import com.dayatlas.app.R
 import com.dayatlas.app.RecentsHider
 import com.dayatlas.app.prefs.AppPrefs
@@ -53,6 +54,7 @@ object UpdateInstaller {
      * make startActivity unreliable, so the notification is the reliable path.
      */
     fun download(context: Context, info: UpdateInfo, silent: Boolean = false) {
+        if (!BuildConfig.SELF_UPDATE_ENABLED) return
         val appContext = context.applicationContext
         val prefs = AppPrefs(appContext)
 
