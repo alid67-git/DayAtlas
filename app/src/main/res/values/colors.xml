@@ -10,6 +10,11 @@
     <color name="md_theme_surface">#F5F7FA</color>
     <color name="md_theme_on_surface">#1A1F29</color>
     <color name="md_theme_outline">#6B7380</color>
+    <!-- Card/tile fill - was hardcoded #FFFFFF inline in a couple of
+         drawables; pulled out to a token so dark mode can override it. -->
+    <color name="md_theme_card">#FFFFFF</color>
+    <!-- Translucent label chip shown over the map (e.g. "no track today"). -->
+    <color name="map_label_bg">#E6FFFFFF</color>
     <color name="ic_launcher_background">#1E5AA8</color>
     <color name="status_on">#1E5AA8</color>
     <color name="status_off">#6B7380</color>
