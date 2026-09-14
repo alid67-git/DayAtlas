@@ -40,8 +40,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # The signingConfigs block in app/build.gradle.kts resolves storeFile
+      # with Gradle's file(), which is relative to the app module directory
+      # (not the repo root) - same as the committed sideload debug keystore
+      # (app/dayatlas-debug.keystore). Decode here to match, or Gradle looks
+      # for app/dayatlas-play-release.keystore and fails validateSigning.
       - name: Decode Play keystore
-        run: echo "${{ secrets.PLAY_KEYSTORE_BASE64 }}" | base64 -d > dayatlas-play-release.keystore
+        run: echo "${{ secrets.PLAY_KEYSTORE_BASE64 }}" | base64 -d > app/dayatlas-play-release.keystore
 
       - name: Write keystore.properties
         run: |
@@ -64,4 +69,4 @@ jobs:
 
       - name: Remove keystore and properties from the runner
         if: always()
-        run: rm -f dayatlas-play-release.keystore keystore.properties
+        run: rm -f app/dayatlas-play-release.keystore keystore.properties
