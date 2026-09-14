@@ -2,10 +2,13 @@ package com.dayatlas.app.data
 
 import org.json.JSONArray
 import org.json.JSONObject
+import org.xml.sax.InputSource
 import java.io.File
+import java.io.StringReader
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import javax.xml.parsers.DocumentBuilderFactory
 
 object DayJson {
     private val GPX_TIME: DateTimeFormatter =
@@ -101,6 +104,42 @@ object DayJson {
 
     fun formatGpxTime(timeMillis: Long): String =
         GPX_TIME.format(Instant.ofEpochMilli(timeMillis))
+
+    /**
+     * Parses a GPX file this app wrote (see [toGpx]) back into a [DayRecord].
+     * [dateIso] comes from the backup file's name (`yyyy-MM-dd.gpx`) — GPX
+     * has no day-level date field of its own, only a per-point `<time>`.
+     * Returns null for content that isn't parseable GPX at all; a track
+     * with zero points is still a valid (empty) day.
+     */
+    fun fromGpx(dateIso: String, raw: String): DayRecord? {
+        // javax.xml (not android.util.Xml) so this also runs under plain
+        // JVM unit tests, not just on-device.
+        val doc = runCatching {
+            DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(InputSource(StringReader(raw)))
+        }.getOrNull() ?: return null
+
+        val title = doc.getElementsByTagName("name").item(0)?.textContent
+
+        val trkpts = doc.getElementsByTagName("trkpt")
+        val points = ArrayList<TrackPoint>(trkpts.length)
+        for (i in 0 until trkpts.length) {
+            val el = trkpts.item(i) as? org.w3c.dom.Element ?: continue
+            val lat = el.getAttribute("lat").toDoubleOrNull() ?: continue
+            val lon = el.getAttribute("lon").toDoubleOrNull() ?: continue
+            val timeText = el.getElementsByTagName("time").item(0)?.textContent ?: continue
+            val timeMillis = runCatching { Instant.parse(timeText).toEpochMilli() }.getOrNull() ?: continue
+            val accuracy = el.getElementsByTagName("hdop").item(0)?.textContent?.toFloatOrNull()
+            points.add(TrackPoint(timeMillis, lat, lon, accuracy))
+        }
+        val sorted = points.sortedBy { it.timeMillis }
+        return DayRecord(
+            date = dateIso,
+            title = title ?: dateIso,
+            points = sorted,
+            distanceMeters = Geo.pathLengthMeters(sorted),
+        )
+    }
 
     fun writeAtomic(file: File, content: String) {
         val tmp = File(file.parentFile, file.name + ".tmp")

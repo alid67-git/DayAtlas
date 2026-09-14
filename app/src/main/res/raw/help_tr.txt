@@ -36,7 +36,7 @@ Rotalar sekmesinden tek bir günü (satırdaki dışa aktar oku) veya üstteki "
 
 7) GOOGLE DRIVE YEDEK VE GERİ YÜKLEME
 
-Ayarlar'dan bir klasör seçip (tercihen Drive'da oluşturduğunuz boş bir klasör) günlük otomatik yedeği açabilirsiniz. Sadece yeni veya değişen gün dosyaları yüklenir; zaten yedeklenmiş, değişmemiş dosyalar tekrar yüklenmez, bu da yedeklemeyi hızlı ve veri tasarruflu tutar.
+Ayarlar'dan bir klasör seçip (tercihen Drive'da oluşturduğunuz boş bir klasör) günlük otomatik yedeği açabilirsiniz. Her gün kendi GPX dosyası olarak yalnızca bir kez yedeklenir; o gün için daha sonra elle veya otomatik tekrar yedekleme yapılmaz — bu, aynı günün birden fazla kez yüklenmesini önler.
 
 Yeni bir telefona geçtiğinizde veya uygulamayı silip yeniden kurduğunuzda: aynı yedek klasörünü seçip "Yedekten geri yükle" düğmesine basın — klasördeki tüm gün kayıtları telefona geri kopyalanır, hiçbir veri kaybetmezsiniz.
 

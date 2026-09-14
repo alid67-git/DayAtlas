@@ -96,7 +96,7 @@
 
     <string name="settings_drive_backup">Google Drive yedek</string>
     <string name="settings_drive_backup_toggle">Günlük otomatik yedek</string>
-    <string name="settings_drive_backup_summary">Açıkken günde bir kez tüm gün dosyaları (JSON + GPX) seçtiğiniz klasöre kopyalanır. Google Drive klasörü seçerseniz Drive uygulaması buluta senkronlar. Önce Drive’da bir klasör oluşturup aşağıdan seçin.</string>
+    <string name="settings_drive_backup_summary">Açıkken her günün GPX dosyası seçtiğiniz klasöre bir kez kopyalanır — o gün için elle veya otomatik bir daha yedeklenmez. Google Drive klasörü seçerseniz Drive uygulaması buluta senkronlar. Önce Drive’da bir klasör oluşturup aşağıdan seçin.</string>
     <string name="drive_pick_folder">Yedek klasörü seç</string>
     <string name="drive_backup_now">Şimdi yedekle</string>
     <string name="drive_folder_none">Klasör seçilmedi</string>

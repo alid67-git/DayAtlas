@@ -223,6 +223,33 @@ class DayJsonTest {
     fun gpxTimeIsUtcWithoutMillis() {
         assertEquals("1970-01-01T00:00:01Z", DayJson.formatGpxTime(1_000L))
     }
+
+    @Test
+    fun gpxRoundTripPreservesPointsAndTitle() {
+        val record = DayRecord(
+            date = "2026-08-28",
+            title = "Günlük 28 Ağu 2026",
+            points = listOf(
+                TrackPoint(1_720_000_000_000L, 41.01, 29.02, 12.5f),
+                TrackPoint(1_720_000_060_000L, 41.02, 29.03, null),
+            ),
+            distanceMeters = 0.0,
+        )
+        val parsed = DayJson.fromGpx(record.date, DayJson.toGpx(record))
+        assertEquals(record.date, parsed?.date)
+        assertEquals(record.title, parsed?.title)
+        assertEquals(2, parsed?.points?.size)
+        assertEquals(41.01, parsed?.points?.get(0)?.lat ?: 0.0, 1e-6)
+        assertEquals(29.02, parsed?.points?.get(0)?.lon ?: 0.0, 1e-6)
+        assertEquals(12.5f, parsed?.points?.get(0)?.accuracyMeters)
+        assertEquals(1_720_000_000_000L, parsed?.points?.get(0)?.timeMillis)
+        assertEquals(null, parsed?.points?.get(1)?.accuracyMeters)
+    }
+
+    @Test
+    fun fromGpxRejectsGarbage() {
+        assertEquals(null, DayJson.fromGpx("2026-08-28", "not xml at all"))
+    }
 }
 
 class GpxExporterNameTest {

@@ -36,7 +36,7 @@ From the Routes tab, share a single day (the export arrow on its row) or a date 
 
 7) GOOGLE DRIVE BACKUP AND RESTORE
 
-Pick a folder in Settings (ideally an empty folder you created in Drive) to enable daily automatic backup. Only new or changed day files are uploaded - files already backed up and unchanged are skipped, which keeps backups fast and data-efficient.
+Pick a folder in Settings (ideally an empty folder you created in Drive) to enable daily automatic backup. Each day is backed up exactly once, as its own GPX file - it is never re-uploaded after that, manually or automatically, which is what keeps a single day from being backed up over and over.
 
 When moving to a new phone, or after reinstalling the app: pick the same backup folder again and tap "Restore from backup" - every day file in that folder is copied back onto the phone, with nothing lost.
 

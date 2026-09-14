@@ -96,7 +96,7 @@
 
     <string name="settings_drive_backup">Google Drive backup</string>
     <string name="settings_drive_backup_toggle">Daily automatic backup</string>
-    <string name="settings_drive_backup_summary">When on, all day files (JSON + GPX) are copied once a day to your chosen folder. A Google Drive folder syncs to the cloud via the Drive app. Create a folder in Drive first, then pick it below.</string>
+    <string name="settings_drive_backup_summary">When on, each day\'s GPX file is copied to your chosen folder once — it isn\'t backed up again after that, manually or automatically. A Google Drive folder syncs to the cloud via the Drive app. Create a folder in Drive first, then pick it below.</string>
     <string name="drive_pick_folder">Choose backup folder</string>
     <string name="drive_backup_now">Back up now</string>
     <string name="drive_folder_none">No folder selected</string>

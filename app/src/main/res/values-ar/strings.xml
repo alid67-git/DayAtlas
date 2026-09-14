@@ -96,7 +96,7 @@
 
     <string name="settings_drive_backup">نسخ احتياطي على Google Drive</string>
     <string name="settings_drive_backup_toggle">نسخ احتياطي تلقائي يومي</string>
-    <string name="settings_drive_backup_summary">عند التفعيل، تُنسخ جميع ملفات اليوم (JSON + GPX) مرة واحدة يوميًا إلى المجلد الذي تختاره. يؤدي اختيار مجلد في Google Drive إلى مزامنته مع السحابة عبر تطبيق Drive. أنشئ مجلدًا في Drive أولًا، ثم اخترْه أدناه.</string>
+    <string name="settings_drive_backup_summary">عند التفعيل، يُنسخ ملف GPX الخاص بكل يوم مرة واحدة فقط إلى المجلد الذي تختاره — ولا تُؤخذ نسخة احتياطية لذلك اليوم مرة أخرى بعد ذلك، سواء يدويًا أو تلقائيًا. يؤدي اختيار مجلد في Google Drive إلى مزامنته مع السحابة عبر تطبيق Drive. أنشئ مجلدًا في Drive أولًا، ثم اخترْه أدناه.</string>
     <string name="drive_pick_folder">اختيار مجلد النسخ الاحتياطي</string>
     <string name="drive_backup_now">نسخ احتياطي الآن</string>
     <string name="drive_folder_none">لم يتم اختيار مجلد</string>
