@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.25 — 2026-09-14
+
+- **"Günlük" başlığı artık her dilde doğru çeviriyor:** Ana ekrandaki büyük
+  gün başlığı, o günün dosyası ilk yazıldığında hangi dil aktifse o dilde
+  kalıcı olarak saklanıyordu — dili sonradan değiştirseniz bile eski
+  dildeki başlık ("Günlük ...") görünmeye devam ediyordu. Artık başlık
+  her seferinde geçerli uygulama diline göre yeniden hesaplanıyor.
+  Ayrıca tarih başlığı ve süre biçimlendirmesi (gün/ay adı, "sa/dk" gibi
+  kısaltmalar) artık yeni eklenen 5 dili de kapsıyor — önceden bu diller
+  sessizce İngilizce'ye düşüyordu.
+
 ## 0.7.24 — 2026-09-14
 
 - **Gerçek karanlık tema:** Uygulamanın kendi renkleri (arka plan, kart
