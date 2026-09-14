@@ -191,7 +191,7 @@ object DriveFolderBackup {
 
     /**
      * Reads every `.gpx` day file found in the selected Drive folder — the
-     * backup format — and rebuilds the matching local `files/days/*.json`
+     * backup format — and rebuilds the matching local `files/days/<date>.json`
      * from it, overwriting any local file for that date. For a fresh
      * install / new phone where local storage is empty, the backup folder
      * is treated as the source of truth. JSON stays the local live-storage
