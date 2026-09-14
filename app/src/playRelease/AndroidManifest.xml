@@ -14,6 +14,11 @@
         android:name="android.permission.REQUEST_INSTALL_PACKAGES"
         tools:node="remove" />
 
+    <!-- Only the Play build sells the subscription (see PAYWALL_ENABLED in
+         build.gradle.kts) - the sideload build has no billing code path, so
+         it has no need for this permission either. -->
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <application>
         <receiver
             android:name=".update.DownloadCompleteReceiver"

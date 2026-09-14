@@ -34,6 +34,12 @@ android {
         // UpdateInstaller) must be off in the Play build - see playRelease
         // build type below, which flips this back to false.
         buildConfigField("boolean", "SELF_UPDATE_ENABLED", "true")
+        // The subscription paywall (see billing/SubscriptionManager and
+        // PaywallActivity) only makes sense where Play Billing can actually
+        // complete a purchase - a sideloaded, non-Play-signed APK generally
+        // can't. So the sideload/debug build stays free like before, and
+        // only playRelease flips this on below.
+        buildConfigField("boolean", "PAYWALL_ENABLED", "false")
     }
 
     // A committed, stable keystore - NOT Android's default auto-generated
@@ -83,6 +89,7 @@ android {
                 initWith(getByName("release"))
                 signingConfig = signingConfigs.getByName("playRelease")
                 buildConfigField("boolean", "SELF_UPDATE_ENABLED", "false")
+                buildConfigField("boolean", "PAYWALL_ENABLED", "true")
             }
         }
     }
@@ -118,6 +125,12 @@ dependencies {
     implementation("androidx.documentfile:documentfile:1.0.1")
     // Drag-to-reorder day-stat tiles on the map screen.
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    // Google Play Billing for the Play-only subscription paywall. Written
+    // against the 7.x API surface - if Gradle later resolves a newer major
+    // version with a different callback shape (Play Billing's async
+    // callbacks have changed signature across majors before), update
+    // SubscriptionManager to match before shipping.
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
     testImplementation("junit:junit:4.13.2")
     // Local unit tests run against the mockable android.jar, whose
     // org.json.* methods all throw RuntimeException("Stub!"). This puts the

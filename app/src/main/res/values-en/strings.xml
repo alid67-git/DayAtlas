@@ -162,4 +162,10 @@
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
     <string name="build_note">The map now shows a wider area, Daily Mode is on by default, and on small screens the day-stat cards leave more room for the map.</string>
+    <string name="paywall_title">DayAtlas Pro</string>
+    <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
+    <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>
+    <string name="paywall_subscribe">Subscribe</string>
+    <string name="paywall_restore">Restore purchase</string>
+    <string name="paywall_no_active_subscription">No active subscription found.</string>
 </resources>

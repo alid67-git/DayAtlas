@@ -26,6 +26,7 @@ import com.dayatlas.app.data.JumpFilter
 import com.dayatlas.app.data.RangeStats
 import com.dayatlas.app.data.SpeedStats
 import com.dayatlas.app.data.TrackPoint
+import com.dayatlas.app.billing.SubscriptionManager
 import com.dayatlas.app.databinding.ActivityMainBinding
 import com.dayatlas.app.export.GpxExportDialog
 import com.dayatlas.app.location.Intents
@@ -119,6 +120,11 @@ class MainActivity : DayAtlasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (BuildConfig.PAYWALL_ENABLED && !AppPrefs(this).subscriptionActive) {
+            startActivity(Intent(this, PaywallActivity::class.java))
+            finish()
+            return
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         prefs = AppPrefs(this)
@@ -252,6 +258,16 @@ class MainActivity : DayAtlasActivity() {
             IntentFilter(Intents.ACTION_POINT_SAVED),
             ContextCompat.RECEIVER_NOT_EXPORTED,
         )
+        if (BuildConfig.PAYWALL_ENABLED) {
+            // Catches a subscription that lapsed/was cancelled while this
+            // activity was backgrounded - onCreate's gate only runs once.
+            SubscriptionManager.refreshEntitlement(this) { entitled ->
+                if (!entitled && !isFinishing) {
+                    startActivity(Intent(this, PaywallActivity::class.java))
+                    finish()
+                }
+            }
+        }
         refresh()
     }
 
