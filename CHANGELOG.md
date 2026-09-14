@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.24 — 2026-09-14
+
+- **Gerçek karanlık tema:** Uygulamanın kendi renkleri (arka plan, kart
+  zemini, başlıklar, ipucu metinleri) karanlık mod için hiç tanımlanmamıştı
+  — telefon karanlık moddayken bazı metinler Android'in varsayılan açık
+  renklerini kullanırken arka plan hep açık renk kalıyor, metin okunmuyordu
+  (örn. Ayarlar'daki "Daily mode" başlığı, dil seçim listesi). Artık tüm
+  ekranlar için ayrı bir koyu renk paleti var; karanlık modda arka planlar
+  gerçekten koyulaşıyor, metinler buna göre açık renkte kalıyor.
+
 ## 0.7.23 — 2026-09-14
 
 - **5 yeni dil eklendi:** Çince, Hintçe, İspanyolca, Fransızca ve Arapça —

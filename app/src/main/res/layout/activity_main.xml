@@ -189,7 +189,7 @@
                             android:contentDescription="@string/route_go_today"
                             android:src="@drawable/ic_today"
                             android:visibility="gone"
-                            app:tint="@color/md_theme_primary"
+                            app:tint="@color/status_on"
                             tools:visibility="visible" />
 
                         <ImageButton

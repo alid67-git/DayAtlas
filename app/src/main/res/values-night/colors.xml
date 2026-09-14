@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark counterpart of values/colors.xml. md_theme_primary/on_primary
+         stay the same brand blue+white in both modes - it's a self-contained
+         fill (used on filled buttons and the header) so its own contrast
+         doesn't depend on what's behind it. Everything that sits directly on
+         the app's background (surface/on_surface/outline and friends) gets
+         a real dark-mode value here instead of inheriting the light one,
+         which is what made text unreadable before this file existed. -->
+    <color name="md_theme_primary">#1E5AA8</color>
+    <color name="md_theme_on_primary">#FFFFFF</color>
+    <color name="md_theme_primary_container">#1B3A5C</color>
+    <color name="md_theme_on_primary_container">#CFE1F7</color>
+    <color name="md_theme_secondary">#6FA8EC</color>
+    <color name="md_theme_accent">#FF7A6E</color>
+    <color name="md_theme_surface">#14181F</color>
+    <color name="md_theme_on_surface">#ECEEF2</color>
+    <color name="md_theme_outline">#8B93A3</color>
+    <color name="md_theme_card">#1D222C</color>
+    <color name="map_label_bg">#CC1D222C</color>
+    <color name="ic_launcher_background">#1E5AA8</color>
+    <!-- Brighter than md_theme_primary on purpose: this paints text/icons
+         directly on the dark surface (bottom nav selection, status line),
+         where the plain brand blue would be too close to the background. -->
+    <color name="status_on">#6FA8EC</color>
+    <color name="status_off">#8B93A3</color>
+    <color name="history_bar">#1D222C</color>
+    <color name="divider_subtle">#40FFFFFF</color>
+    <color name="card_stroke">#1FFFFFFF</color>
+    <color name="speed_max_bg">#3A2426</color>
+    <color name="speed_active_bg">#1C2A3D</color>
+    <color name="speed_avg_bg">#192736</color>
+</resources>

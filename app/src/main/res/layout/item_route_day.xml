@@ -51,6 +51,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_export_gpx"
             android:src="@drawable/ic_export"
-            app:tint="@color/md_theme_primary" />
+            app:tint="@color/status_on" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
