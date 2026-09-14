@@ -23,8 +23,14 @@ jobs:
           java-version: "17"
           cache: gradle
 
+      # packages defaults to "tools platform-tools" - the standalone "tools"
+      # package was removed from Google's SDK repository, so the default
+      # always fails now. platform-tools is all this workflow actually needs
+      # (AGP fetches build-tools/platforms itself during the Gradle build).
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: "platform-tools"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
