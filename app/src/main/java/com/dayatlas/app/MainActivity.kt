@@ -584,7 +584,11 @@ class MainActivity : DayAtlasActivity() {
         intervalSeconds: Int,
         todaySpeed: SpeedStats.Stats,
     ) {
-        binding.dayTitle.text = record.title
+        // record.title is whatever locale was active when this day's file
+        // was first written, and stays that way in the JSON forever - format
+        // fresh from the date so it follows the app's current language
+        // instead of being stuck in whatever language created the file.
+        binding.dayTitle.text = DayTitle.format(LocalDate.parse(record.date))
         val recording = trackingEnabled || dailyMode
         binding.status.text = when {
             dailyMode -> getString(R.string.status_daily)

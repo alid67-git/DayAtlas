@@ -163,6 +163,16 @@ class DayTitleTest {
         assertEquals("Daily 28 Aug 2026", DayTitle.format(date, Locale.ENGLISH))
         assertEquals("Tag 28 Aug 2026", DayTitle.format(date, Locale.GERMAN))
     }
+
+    @Test
+    fun formatTitlesForNewerLanguages() {
+        val date = LocalDate.of(2026, 8, 28)
+        assertEquals("Diario 28 Ago 2026", DayTitle.format(date, Locale("es")))
+        assertEquals("Journalier 28 Aoû 2026", DayTitle.format(date, Locale("fr")))
+        assertEquals("每日 28 8月 2026", DayTitle.format(date, Locale("zh")))
+        assertEquals("दैनिक 28 अग 2026", DayTitle.format(date, Locale("hi")))
+        assertEquals("يومي 28 أغسطس 2026", DayTitle.format(date, Locale("ar")))
+    }
 }
 
 class DayJsonTest {
