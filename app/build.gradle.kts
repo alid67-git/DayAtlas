@@ -29,8 +29,10 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 49
-        versionName = "0.7.26"
+        // 1.0.0: first public release (Play Store launch with the
+        // subscription paywall) - previous 0.x versions were pre-release.
+        versionCode = 50
+        versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /
