@@ -171,5 +171,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">DayAtlas artık 1.0.0 sürümünde — Google Play'de yayında.</string>
+    <string name="build_note">DayAtlas artık 1.0.0 sürümünde — Google Play\'de yayında.</string>
 </resources>
