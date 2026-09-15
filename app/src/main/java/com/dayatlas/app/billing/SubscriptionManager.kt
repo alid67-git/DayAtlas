@@ -109,9 +109,12 @@ object SubscriptionManager : PurchasesUpdatedListener {
             val params = QueryProductDetailsParams.newBuilder()
                 .setProductList(listOf(product))
                 .build()
-            billingClient.queryProductDetailsAsync(params) { result, productDetailsList ->
+            // Billing Library 8.x wraps the result in QueryProductDetailsResult
+            // (fetched + unfetched product lists) instead of returning a bare
+            // List<ProductDetails> as 7.x did.
+            billingClient.queryProductDetailsAsync(params) { result, queryProductDetailsResult ->
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                    onResult(productDetailsList.firstOrNull())
+                    onResult(queryProductDetailsResult.productDetailsList.firstOrNull())
                 } else {
                     onResult(null)
                 }
