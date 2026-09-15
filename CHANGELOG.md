@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0 — 2026-09-15
+
+- **İlk genel yayın (Google Play):** Play sürümüne 7 gün ücretsiz deneme +
+  aylık abonelik eklendi, self-update mekanizması Play politikası gereği
+  Play derlemesinde kapatıldı, gizlilik politikası yayınlandı. Sideload
+  (GitHub) sürümü değişmeden ücretsiz kalmaya devam ediyor.
+- Hedef API düzeyi 36'ya, Play Billing kütüphanesi 8.0.0'a yükseltildi.
+
 ## 0.7.26 — 2026-09-14
 
 - **Yedekleme yeniden kurgulandı:** Her gün artık yalnızca kendi GPX
