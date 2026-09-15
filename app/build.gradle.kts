@@ -20,12 +20,15 @@ val playKeystoreProperties = Properties().apply {
 
 android {
     namespace = "com.dayatlas.app"
-    compileSdk = 35
+    // Play Console now requires targeting at least API 36 (previously 35) -
+    // bumped here since the playRelease bundle failed Play's pre-launch
+    // report with "must target API level 36".
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.dayatlas.app"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 49
         versionName = "0.7.26"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -125,12 +128,12 @@ dependencies {
     implementation("androidx.documentfile:documentfile:1.0.1")
     // Drag-to-reorder day-stat tiles on the map screen.
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    // Google Play Billing for the Play-only subscription paywall. Written
-    // against the 7.x API surface - if Gradle later resolves a newer major
-    // version with a different callback shape (Play Billing's async
-    // callbacks have changed signature across majors before), update
-    // SubscriptionManager to match before shipping.
-    implementation("com.android.billingclient:billing-ktx:7.1.1")
+    // Google Play Billing for the Play-only subscription paywall. Play
+    // Console's pre-launch report requires at least 8.0.0 (was on 7.1.1).
+    // Bumping a Billing Library major version can change async callback
+    // shapes - if this breaks the build, check SubscriptionManager's
+    // BillingClient calls against the 8.x API before anything else.
+    implementation("com.android.billingclient:billing-ktx:8.0.0")
     testImplementation("junit:junit:4.13.2")
     // Local unit tests run against the mockable android.jar, whose
     // org.json.* methods all throw RuntimeException("Stub!"). This puts the
