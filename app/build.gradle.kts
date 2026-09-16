@@ -29,10 +29,12 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        // 1.0.0: first public release (Play Store launch with the
-        // subscription paywall) - previous 0.x versions were pre-release.
-        versionCode = 50
-        versionName = "1.0.0"
+        // 1.1.0: day notes, smarter GPS-jump cleanup, day photos (max 3,
+        // auto-downsized, backed up to Drive), a closer default map zoom,
+        // and a motion-sensor hint that shortens the "just started moving"
+        // GPS latency after sitting still.
+        versionCode = 51
+        versionName = "1.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /

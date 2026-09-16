@@ -69,6 +69,13 @@ object JumpCleanupDialog {
                 } else {
                     Toast.makeText(activity, R.string.jump_deleted, Toast.LENGTH_SHORT).show()
                     onChanged()
+                    // Re-list rather than stop after one: indices shift once
+                    // a point is removed, so jumps found before this delete
+                    // can no longer be trusted - a fresh findJumps() call is
+                    // the only safe way to keep going. Lets a day with
+                    // several bad fixes be cleared in one pass instead of
+                    // re-tapping the Sıçramalar button after every point.
+                    show(activity, store, dateIso, onChanged)
                 }
             }
             .setNegativeButton(R.string.export_cancel, null)

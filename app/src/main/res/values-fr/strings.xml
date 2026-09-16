@@ -94,9 +94,20 @@
     <string name="jump_deleted">Saut supprimé.</string>
     <string name="jump_delete_failed">Impossible de supprimer le point.</string>
 
+    <string name="day_note_button">Note du jour</string>
+    <string name="day_note_title">Note du jour</string>
+    <string name="day_note_hint">Une note pour ce jour (500 caractères max)</string>
+    <string name="day_note_save">Enregistrer</string>
+    <string name="day_note_clear">Supprimer la note</string>
+
+    <string name="day_photo_thumbnail">Photo du jour</string>
+    <string name="day_photo_add">Ajouter une photo</string>
+    <string name="day_photo_add_failed">Impossible d\'ajouter la photo.</string>
+    <string name="day_photo_delete">Supprimer</string>
+
     <string name="settings_drive_backup">Sauvegarde Google Drive</string>
     <string name="settings_drive_backup_toggle">Sauvegarde automatique quotidienne</string>
-    <string name="settings_drive_backup_summary">Lorsqu\'elle est activée, le fichier GPX de chaque jour est copié une fois dans le dossier choisi — ce jour n\'est ensuite plus sauvegardé, ni manuellement ni automatiquement. Un dossier Google Drive se synchronise dans le cloud via l\'application Drive. Créez d\'abord un dossier dans Drive, puis sélectionnez-le ci-dessous.</string>
+    <string name="settings_drive_backup_summary">Lorsqu\'elle est activée, le fichier GPX et les photos de chaque jour sont copiés une fois dans le dossier choisi — ce jour n\'est ensuite plus sauvegardé, ni manuellement ni automatiquement. Un dossier Google Drive se synchronise dans le cloud via l\'application Drive. Créez d\'abord un dossier dans Drive, puis sélectionnez-le ci-dessous.</string>
     <string name="drive_pick_folder">Choisir le dossier de sauvegarde</string>
     <string name="drive_backup_now">Sauvegarder maintenant</string>
     <string name="drive_folder_none">Aucun dossier sélectionné</string>
@@ -161,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">La carte affiche désormais une zone plus large, le Mode journalier est activé par défaut, et sur les petits écrans les cartes de statistiques du jour laissent plus de place à la carte.</string>
+    <string name="build_note">Nouveau : notes du jour, photos du jour (jusqu\'à 3), un nettoyage des sauts GPS plus intelligent et une détection plus rapide du mouvement après un arrêt.</string>
 </resources>

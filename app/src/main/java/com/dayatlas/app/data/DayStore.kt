@@ -122,16 +122,67 @@ class DayStore(context: Context) {
         if (index !in existing.points.indices) return@withLock null
         val points = existing.points.toMutableList().also { it.removeAt(index) }
         if (points.isEmpty()) {
-            jsonFile(dateIso).delete()
-            gpxFile(dateIso).delete()
-            if (memoryToday?.date == dateIso) memoryToday = null
-            return@withLock DayRecord.empty(dateIso, existing.title)
+            // A note or photos keep the day file alive even with zero
+            // points left - otherwise deleting the last point would
+            // silently take them with it.
+            if (existing.note.isNullOrEmpty() && existing.photos.isEmpty()) {
+                jsonFile(dateIso).delete()
+                gpxFile(dateIso).delete()
+                if (memoryToday?.date == dateIso) memoryToday = null
+                return@withLock DayRecord.empty(dateIso, existing.title)
+            }
+            val emptied = existing.copy(points = points, distanceMeters = 0.0)
+            persistUnlocked(emptied, writeGpx = true)
+            return@withLock emptied
         }
         val updated = existing.copy(
             points = points,
             distanceMeters = Geo.pathLengthMeters(points),
         )
         persistUnlocked(updated, writeGpx = true)
+        updated
+    }
+
+    /**
+     * Sets or clears this day's free-form note - works for any date,
+     * including one with no GPS points yet (a fresh JSON file is created
+     * just to hold the note) or one in the past. Clearing the note on an
+     * otherwise-pointless day deletes the file again instead of leaving an
+     * empty husk that [listDates] would then treat as a real day.
+     */
+    fun setNote(dateIso: String, note: String?): DayRecord = lock.withLock {
+        val trimmed = note?.trim()?.take(NOTE_MAX_LENGTH)?.ifEmpty { null }
+        val existing = loadUnlocked(dateIso)
+            ?: DayRecord.empty(dateIso, DayTitle.format(LocalDate.parse(dateIso)))
+        val updated = existing.copy(note = trimmed)
+        if (updated.points.isEmpty() && trimmed == null && updated.photos.isEmpty()) {
+            jsonFile(dateIso).delete()
+            gpxFile(dateIso).delete()
+            if (memoryToday?.date == dateIso) memoryToday = null
+            return@withLock updated
+        }
+        persistUnlocked(
+            updated,
+            writeGpx = updated.points.isNotEmpty() || trimmed != null || updated.photos.isNotEmpty(),
+        )
+        updated
+    }
+
+    /** Replaces this day's photo file-name list (see [PhotoStore]) after an add/delete. */
+    fun setPhotos(dateIso: String, photos: List<String>): DayRecord = lock.withLock {
+        val existing = loadUnlocked(dateIso)
+            ?: DayRecord.empty(dateIso, DayTitle.format(LocalDate.parse(dateIso)))
+        val updated = existing.copy(photos = photos)
+        if (updated.points.isEmpty() && updated.note.isNullOrEmpty() && photos.isEmpty()) {
+            jsonFile(dateIso).delete()
+            gpxFile(dateIso).delete()
+            if (memoryToday?.date == dateIso) memoryToday = null
+            return@withLock updated
+        }
+        persistUnlocked(
+            updated,
+            writeGpx = updated.points.isNotEmpty() || !updated.note.isNullOrEmpty() || updated.photos.isNotEmpty(),
+        )
         updated
     }
 
@@ -177,5 +228,8 @@ class DayStore(context: Context) {
         /** Process-wide — SampleService / UI / backup must serialize on one lock. */
         private val lock = ReentrantLock()
         private var memoryToday: DayRecord? = null
+
+        /** Matches the editor UI's own EditText/TextInputLayout counter cap. */
+        const val NOTE_MAX_LENGTH = 500
     }
 }

@@ -238,7 +238,10 @@ object RouteMapController {
         val box = boundingBoxOf(geoPoints)
         val degenerate = box.latitudeSpan < 1e-6 && box.longitudeSpan < 1e-6
         if (degenerate) {
-            map.controller.setZoom(16.0)
+            // One step closer than before (16 -> 17) - a fresh/empty day
+            // with just the current location was opening noticeably
+            // farther out than felt right for a single point.
+            map.controller.setZoom(17.0)
             map.controller.setCenter(geoPoints.last())
         } else if (focus != null && jumps.size == 1) {
             map.controller.setZoom(13.0)

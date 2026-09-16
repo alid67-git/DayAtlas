@@ -1,5 +1,44 @@
 # Changelog
 
+## 1.1.0 — 2026-09-16
+
+- **Gün notu:** Her güne (geçmiş günler dahil) en fazla 500 karakterlik
+  serbest bir not eklenebiliyor — haritanın üzerindeki gün gezici çubuğunda
+  yeni bir not ikonuyla açılıyor, not varsa ikon renkleniyor. Not, o günün
+  GPX yedeğinde de (`<desc>` alanında) korunuyor.
+- **GPS sıçrama tespiti düzeltildi:** Eskiden tek bir hatalı GPS noktası,
+  hem kendisini hem de kendisinden sonraki DOĞRU noktayı "sıçrama" olarak
+  işaretliyordu (çünkü karşılaştırma bir önceki ham noktayla yapılıyordu) —
+  bu da listede hangisinin gerçek hata olduğunu anlamayı zorlaştırıyordu.
+  Artık her nokta, kendisinden önceki son *kabul edilmiş* noktayla
+  karşılaştırılıyor (canlı kayıttaki mantıkla aynı), böylece her gerçek
+  sıçrama listede yalnızca bir kez görünüyor. "Sıçramalar" penceresi de
+  artık bir nokta silindikten sonra otomatik olarak yenileniyor, tek tek
+  "Sıçramalar" düğmesine tekrar basmaya gerek kalmadan art arda
+  temizlenebiliyor.
+- **Güne fotoğraf ekleme (en fazla 3):** Fotoğraflar otomatik olarak
+  küçültülüp sıkıştırılıyor (görüntüleme için ~1280px, şerit için ~320px
+  küçük resim), cihaz deposunu şişirmiyor. Google Drive yedeği açıksa, bir
+  günün fotoğrafları Drive'a yüklendiği doğrulandıktan sonra tam boyutlu
+  yerel kopyalar silinip yalnızca küçük resim bırakılıyor — tam kalite hâlâ
+  Drive'daki yedekte duruyor. Yeni telefonda "Yedekten geri yükle" fotoğrafları
+  da geri getiriyor.
+- **Harita varsayılan zumu bir kademe yakınlaştırıldı:** Boş/yeni bir günün
+  haritası (henüz hiç nokta yokken, yalnızca anlık konum gösterildiğinde)
+  artık bir kademe daha yakından açılıyor.
+- **Hareketsizlik sonrası GPS gecikmesi kısaltıldı:** Uzun süre
+  hareketsizken örnekleme aralığı kademeli olarak açılıyordu (ör. 1
+  dakikadan 5 dakikaya); ama hareket tam bu uzun aralığın ortasında
+  başladığında, sonraki GPS kontrolü aralığın tamamı geçene kadar
+  tetiklenmiyor, üstüne hıza dönmek için de art arda 2 ölçüm gerektiği için
+  gerçek hareketin fark edilmesi dakikalarca gecikebiliyordu. Artık
+  cihazın düşük güçlü "önemli hareket" sensörü (destekleyen cihazlarda)
+  hareketi algıladığı anda zamanlanmış bekleme atlanıp anlık bir GPS
+  kontrolü tetikleniyor; gerçek hareketse örnekleme hemen hızlanıyor, yanlış
+  alarmsa (ör. telefon elden alındı) mevcut yavaş aralık değişmeden devam
+  ediyor. Bu sensörü desteklemeyen cihazlarda davranış öncekiyle aynı
+  kalıyor.
+
 ## 1.0.0 — 2026-09-15
 
 - **İlk genel yayın (Google Play):** Play sürümüne 7 gün ücretsiz deneme +

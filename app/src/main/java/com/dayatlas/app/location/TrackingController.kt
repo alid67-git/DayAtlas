@@ -10,6 +10,7 @@ object TrackingController {
         }
         if (prefs.trackingEnabled) {
             SampleScheduler.ensureScheduled(context, prefs)
+            MotionWakeTrigger.register(context)
         }
     }
 
@@ -21,12 +22,14 @@ object TrackingController {
         } else {
             SampleScheduler.ensureScheduled(context, prefs)
         }
+        MotionWakeTrigger.register(context)
     }
 
     fun stop(context: Context, prefs: AppPrefs = AppPrefs(context)) {
         prefs.trackingEnabled = false
         prefs.resetStationaryBackoff()
         SampleScheduler.cancel(context)
+        MotionWakeTrigger.unregister(context)
     }
 
     fun setDailyMode(context: Context, enabled: Boolean, prefs: AppPrefs = AppPrefs(context)) {

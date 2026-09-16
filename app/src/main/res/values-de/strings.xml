@@ -94,9 +94,20 @@
     <string name="jump_deleted">Sprung gelöscht.</string>
     <string name="jump_delete_failed">Punkt konnte nicht gelöscht werden.</string>
 
+    <string name="day_note_button">Tagesnotiz</string>
+    <string name="day_note_title">Tagesnotiz</string>
+    <string name="day_note_hint">Notiz zu diesem Tag (max. 500 Zeichen)</string>
+    <string name="day_note_save">Speichern</string>
+    <string name="day_note_clear">Notiz löschen</string>
+
+    <string name="day_photo_thumbnail">Tagesfoto</string>
+    <string name="day_photo_add">Foto hinzufügen</string>
+    <string name="day_photo_add_failed">Foto konnte nicht hinzugefügt werden.</string>
+    <string name="day_photo_delete">Löschen</string>
+
     <string name="settings_drive_backup">Google-Drive-Sicherung</string>
     <string name="settings_drive_backup_toggle">Tägliche automatische Sicherung</string>
-    <string name="settings_drive_backup_summary">Wenn aktiv, wird die GPX-Datei jedes Tages einmal in den gewählten Ordner kopiert — danach wird dieser Tag nicht erneut gesichert, weder manuell noch automatisch. Ein Google-Drive-Ordner wird über die Drive-App in die Cloud synchronisiert. Legen Sie zuerst einen Ordner in Drive an und wählen Sie ihn unten.</string>
+    <string name="settings_drive_backup_summary">Wenn aktiv, werden die GPX-Datei und die Fotos jedes Tages einmal in den gewählten Ordner kopiert — danach wird dieser Tag nicht erneut gesichert, weder manuell noch automatisch. Ein Google-Drive-Ordner wird über die Drive-App in die Cloud synchronisiert. Legen Sie zuerst einen Ordner in Drive an und wählen Sie ihn unten.</string>
     <string name="drive_pick_folder">Sicherungsordner wählen</string>
     <string name="drive_backup_now">Jetzt sichern</string>
     <string name="drive_folder_none">Kein Ordner gewählt</string>
@@ -161,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Die Karte zeigt jetzt einen größeren Bereich, der Tagesmodus ist standardmäßig aktiviert, und auf kleinen Bildschirmen lassen die Tageskarten mehr Platz für die Karte.</string>
+    <string name="build_note">Neu: Tagesnotizen, Tagesfotos (bis zu 3), intelligentere GPS-Sprungbereinigung und schnellere GPS-Erkennung von Bewegung nach dem Stillstehen.</string>
 </resources>

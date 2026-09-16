@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,12 +18,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dayatlas.app.data.DayNoteDialog
 import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
 import com.dayatlas.app.data.Geo
 import com.dayatlas.app.data.JumpCleanupDialog
 import com.dayatlas.app.data.JumpFilter
+import com.dayatlas.app.data.PhotoStore
+import com.dayatlas.app.data.PhotoViewerDialog
 import com.dayatlas.app.data.RangeStats
 import com.dayatlas.app.data.SpeedStats
 import com.dayatlas.app.data.TrackPoint
@@ -57,6 +61,7 @@ class MainActivity : DayAtlasActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var prefs: AppPrefs
     private val store by lazy { DayStore(this) }
+    private val photoStore by lazy { PhotoStore(this) }
     private val dayStatsAdapter = DayStatsAdapter { newOrder ->
         persistDayStatsOrder(newOrder)
     }
@@ -103,6 +108,19 @@ class MainActivity : DayAtlasActivity() {
     private val notificationLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) { continuePermissionChain() }
+
+    private val pickPhotoLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent(),
+    ) { uri ->
+        if (uri == null) return@registerForActivityResult
+        val dateIso = DayTitle.iso(mapDate)
+        photoStore.addPhotoAsync(dateIso, uri, store) { ok ->
+            if (!ok) {
+                Toast.makeText(this, R.string.day_photo_add_failed, Toast.LENGTH_SHORT).show()
+            }
+            refresh()
+        }
+    }
 
     private val pointReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -212,6 +230,31 @@ class MainActivity : DayAtlasActivity() {
                 store,
                 DayTitle.iso(mapDate),
             ) { refresh() }
+        }
+
+        binding.dayNoteButton.setOnClickListener {
+            DayNoteDialog.show(
+                this,
+                store,
+                DayTitle.iso(mapDate),
+            ) { refresh() }
+        }
+
+        binding.addPhotoButton.setOnClickListener {
+            pickPhotoLauncher.launch("image/*")
+        }
+        val photoViews = listOf(binding.dayPhoto1, binding.dayPhoto2, binding.dayPhoto3)
+        photoViews.forEach { view ->
+            view.setOnClickListener {
+                val name = view.tag as? String ?: return@setOnClickListener
+                PhotoViewerDialog.show(
+                    this,
+                    store,
+                    photoStore,
+                    DayTitle.iso(mapDate),
+                    name,
+                ) { refresh() }
+            }
         }
 
         binding.toggle.setOnClickListener {
@@ -587,12 +630,40 @@ class MainActivity : DayAtlasActivity() {
                 .format(TIME_FMT)
         } ?: emDash
         binding.mapPointCount.text = points.size.toString()
+        // Tint the note icon like the "go to today" one when this day
+        // already has a note, so there's a hint without opening the dialog.
+        binding.dayNoteButton.imageTintList = ContextCompat.getColorStateList(
+            this,
+            if (record?.note.isNullOrEmpty()) R.color.md_theme_on_surface else R.color.status_on,
+        )
         if (jumps.isEmpty()) {
             binding.jumpsButton.visibility = View.GONE
         } else {
             binding.jumpsButton.visibility = View.VISIBLE
             binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
         }
+        applyDayPhotos(DayTitle.iso(date), record?.photos.orEmpty())
+    }
+
+    private fun applyDayPhotos(dateIso: String, photos: List<String>) {
+        val slots = listOf(binding.dayPhoto1, binding.dayPhoto2, binding.dayPhoto3)
+        slots.forEachIndexed { i, view ->
+            val name = photos.getOrNull(i)
+            if (name == null) {
+                view.visibility = View.GONE
+                view.tag = null
+                view.setImageDrawable(null)
+                return@forEachIndexed
+            }
+            view.visibility = View.VISIBLE
+            view.tag = name
+            val thumb = photoStore.thumbFile(dateIso, name)
+            view.setImageBitmap(
+                if (thumb.exists()) BitmapFactory.decodeFile(thumb.absolutePath) else null,
+            )
+        }
+        binding.addPhotoButton.visibility =
+            if (photos.size >= PhotoStore.MAX_PHOTOS_PER_DAY) View.GONE else View.VISIBLE
     }
 
     private fun applyTodayChrome(

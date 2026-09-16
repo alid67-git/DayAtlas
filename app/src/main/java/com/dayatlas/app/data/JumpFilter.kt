@@ -43,15 +43,32 @@ object JumpFilter {
         return !isJump(previous, candidate)
     }
 
+    /**
+     * Walks the day comparing each point to the last **accepted** (non-jump)
+     * point, not to its raw predecessor — the same anchor [shouldAccept]
+     * uses live. Comparing to the raw predecessor instead (the old approach)
+     * meant one bad fix corrupted two segments: it flagged the bad point
+     * itself, then also flagged the very next *good* point, since that
+     * point's distance from the bad one still looked like a teleport. That
+     * produced two flagged rows for one actual mistake, with no way to tell
+     * from the list which one was real — deleting the wrong row left the
+     * other stuck showing a jump forever. Anchoring on the last accepted
+     * point instead means each real gap gets exactly one row, and once it's
+     * deleted the rest of the day is already consistent.
+     */
     fun findJumps(points: List<TrackPoint>): List<Jump> {
         if (points.size < 2) return emptyList()
         val out = ArrayList<Jump>()
+        var anchorIndex = 0
         for (i in 1 until points.size) {
-            val prev = points[i - 1]
+            val anchor = points[anchorIndex]
             val cur = points[i]
-            if (!isJump(prev, cur)) continue
-            val distance = Geo.haversineMeters(prev.lat, prev.lon, cur.lat, cur.lon)
-            val dt = (cur.timeMillis - prev.timeMillis).coerceAtLeast(1L)
+            if (!isJump(anchor, cur)) {
+                anchorIndex = i
+                continue
+            }
+            val distance = Geo.haversineMeters(anchor.lat, anchor.lon, cur.lat, cur.lon)
+            val dt = (cur.timeMillis - anchor.timeMillis).coerceAtLeast(1L)
             val speedKmh = (distance / (dt / 1_000.0)) * 3.6
             out.add(
                 Jump(
@@ -59,9 +76,11 @@ object JumpFilter {
                     point = cur,
                     distanceMeters = distance,
                     speedKmh = speedKmh,
-                    deltaMillis = cur.timeMillis - prev.timeMillis,
+                    deltaMillis = cur.timeMillis - anchor.timeMillis,
                 ),
             )
+            // anchorIndex stays put — cur was rejected, so the next point is
+            // still judged against the last point we trust, not against cur.
         }
         return out
     }

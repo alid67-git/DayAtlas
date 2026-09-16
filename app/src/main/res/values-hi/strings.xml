@@ -94,9 +94,20 @@
     <string name="jump_deleted">जंप हटा दिया गया।</string>
     <string name="jump_delete_failed">बिंदु हटाया नहीं जा सका।</string>
 
+    <string name="day_note_button">दिन का नोट</string>
+    <string name="day_note_title">दिन का नोट</string>
+    <string name="day_note_hint">इस दिन के लिए नोट (अधिकतम 500 अक्षर)</string>
+    <string name="day_note_save">सहेजें</string>
+    <string name="day_note_clear">नोट हटाएँ</string>
+
+    <string name="day_photo_thumbnail">दिन की फ़ोटो</string>
+    <string name="day_photo_add">फ़ोटो जोड़ें</string>
+    <string name="day_photo_add_failed">फ़ोटो नहीं जोड़ी जा सकी।</string>
+    <string name="day_photo_delete">हटाएँ</string>
+
     <string name="settings_drive_backup">Google Drive बैकअप</string>
     <string name="settings_drive_backup_toggle">दैनिक स्वचालित बैकअप</string>
-    <string name="settings_drive_backup_summary">चालू होने पर, हर दिन की GPX फ़ाइल आपके चुने फ़ोल्डर में केवल एक बार कॉपी होती है — उसके बाद उस दिन का बैकअप न तो मैन्युअल रूप से और न ही स्वतः दोबारा लिया जाता है। Google Drive फ़ोल्डर चुनने पर Drive ऐप उसे क्लाउड में सिंक करता है। पहले Drive में एक फ़ोल्डर बनाएँ, फिर नीचे उसे चुनें।</string>
+    <string name="settings_drive_backup_summary">चालू होने पर, हर दिन की GPX फ़ाइल और फ़ोटो आपके चुने फ़ोल्डर में केवल एक बार कॉपी होती हैं — उसके बाद उस दिन का बैकअप न तो मैन्युअल रूप से और न ही स्वतः दोबारा लिया जाता है। Google Drive फ़ोल्डर चुनने पर Drive ऐप उसे क्लाउड में सिंक करता है। पहले Drive में एक फ़ोल्डर बनाएँ, फिर नीचे उसे चुनें।</string>
     <string name="drive_pick_folder">बैकअप फ़ोल्डर चुनें</string>
     <string name="drive_backup_now">अभी बैकअप लें</string>
     <string name="drive_folder_none">कोई फ़ोल्डर चुना नहीं गया</string>
@@ -161,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">मानचित्र अब एक बड़ा क्षेत्र दिखाता है, दैनिक मोड डिफ़ॉल्ट रूप से चालू रहता है, और छोटी स्क्रीन पर दिन के आँकड़ों वाले कार्ड मानचित्र के लिए अधिक जगह छोड़ते हैं।</string>
+    <string name="build_note">नया: दिन का नोट, दिन की फ़ोटो (अधिकतम 3), अधिक समझदार GPS जंप सफ़ाई, और स्थिर रहने के बाद गति को GPS द्वारा तेज़ी से पहचानना।</string>
 </resources>
