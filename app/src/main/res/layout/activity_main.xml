@@ -182,6 +182,15 @@
                             tools:text="Günlük 8 Eyl 2026" />
 
                         <ImageButton
+                            android:id="@+id/dayNoteButton"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/day_note_button"
+                            android:src="@drawable/ic_note"
+                            app:tint="@color/md_theme_on_surface" />
+
+                        <ImageButton
                             android:id="@+id/goToday"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -321,6 +330,58 @@
                 android:visibility="gone"
                 tools:text="Atlamalar (1) — dokunup sil"
                 tools:visibility="visible" />
+
+            <!-- En fazla 3 fotoğraf; dolunca ekle butonu gizlenir. -->
+            <LinearLayout
+                android:id="@+id/dayPhotosRow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/dayPhoto1"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_dash_card"
+                    android:contentDescription="@string/day_photo_thumbnail"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/dayPhoto2"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_dash_card"
+                    android:contentDescription="@string/day_photo_thumbnail"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/dayPhoto3"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_dash_card"
+                    android:contentDescription="@string/day_photo_thumbnail"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/addPhotoButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:background="@drawable/bg_dash_card"
+                    android:contentDescription="@string/day_photo_add"
+                    android:padding="14dp"
+                    android:src="@drawable/ic_add_photo"
+                    app:tint="@color/md_theme_on_surface" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- İstatistikler — Adım 3: aralık seçimi + özet. -->

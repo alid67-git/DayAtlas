@@ -53,6 +53,19 @@ class JumpFilterTest {
         val only = TrackPoint(0L, 41.0, 29.0, null)
         assertTrue(JumpFilter.shouldAccept(emptyList(), only))
     }
+
+    @Test
+    fun singleBadFixDoesNotAlsoFlagTheGoodPointAfterIt() {
+        val a = TrackPoint(0L, 41.0, 29.0, null)
+        // ~111 km north in 60 s - a single bad fix.
+        val b = TrackPoint(60_000L, 42.0, 29.0, null)
+        // Back near `a`, continuing the real path (~111 m in 120 s from a) -
+        // but ~111 km / 60 s if measured from the bad point `b` instead.
+        val c = TrackPoint(120_000L, 41.001, 29.0, null)
+        val jumps = JumpFilter.findJumps(listOf(a, b, c))
+        assertEquals(1, jumps.size)
+        assertEquals(1, jumps[0].index)
+    }
 }
 
 class SpeedStatsTest {
@@ -249,6 +262,47 @@ class DayJsonTest {
     @Test
     fun fromGpxRejectsGarbage() {
         assertEquals(null, DayJson.fromGpx("2026-08-28", "not xml at all"))
+    }
+
+    @Test
+    fun jsonRoundTripPreservesNote() {
+        val record = DayRecord(
+            date = "2026-09-16",
+            title = "Günlük 16 Eyl 2026",
+            points = emptyList(),
+            distanceMeters = 0.0,
+            note = "Bugün evde dinlendim.",
+        )
+        val parsed = DayJson.fromJson(DayJson.toJson(record))
+        assertEquals("Bugün evde dinlendim.", parsed.note)
+    }
+
+    @Test
+    fun jsonRoundTripOmitsBlankNote() {
+        val record = DayRecord("2026-09-16", "x", emptyList(), 0.0, note = null)
+        val parsed = DayJson.fromJson(DayJson.toJson(record))
+        assertEquals(null, parsed.note)
+    }
+
+    @Test
+    fun gpxRoundTripPreservesNoteEvenWithoutPoints() {
+        val record = DayRecord(
+            date = "2026-09-16",
+            title = "Günlük 16 Eyl 2026",
+            points = emptyList(),
+            distanceMeters = 0.0,
+            note = "İzin günü.",
+        )
+        val parsed = DayJson.fromGpx(record.date, DayJson.toGpx(record))
+        assertEquals("İzin günü.", parsed?.note)
+        assertEquals(0, parsed?.points?.size)
+    }
+
+    @Test
+    fun toGpxSkipsDaysWithNoPointsAndNoNote() {
+        val record = DayRecord("2026-09-16", "x", emptyList(), 0.0, note = null)
+        val gpx = DayJson.toGpx(listOf(record))
+        assertEquals(false, gpx.contains("<trk>"))
     }
 }
 

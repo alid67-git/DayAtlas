@@ -94,9 +94,20 @@
     <string name="jump_deleted">Atlama silindi.</string>
     <string name="jump_delete_failed">Nokta silinemedi.</string>
 
+    <string name="day_note_button">Gün notu</string>
+    <string name="day_note_title">Gün notu</string>
+    <string name="day_note_hint">Bu güne dair not (en fazla 500 karakter)</string>
+    <string name="day_note_save">Kaydet</string>
+    <string name="day_note_clear">Notu sil</string>
+
+    <string name="day_photo_thumbnail">Gün fotoğrafı</string>
+    <string name="day_photo_add">Fotoğraf ekle</string>
+    <string name="day_photo_add_failed">Fotoğraf eklenemedi.</string>
+    <string name="day_photo_delete">Sil</string>
+
     <string name="settings_drive_backup">Google Drive yedek</string>
     <string name="settings_drive_backup_toggle">Günlük otomatik yedek</string>
-    <string name="settings_drive_backup_summary">Açıkken her günün GPX dosyası seçtiğiniz klasöre bir kez kopyalanır — o gün için elle veya otomatik bir daha yedeklenmez. Google Drive klasörü seçerseniz Drive uygulaması buluta senkronlar. Önce Drive’da bir klasör oluşturup aşağıdan seçin.</string>
+    <string name="settings_drive_backup_summary">Açıkken her günün GPX dosyası ve o güne eklenen fotoğraflar seçtiğiniz klasöre bir kez kopyalanır — o gün için elle veya otomatik bir daha yedeklenmez. Google Drive klasörü seçerseniz Drive uygulaması buluta senkronlar. Önce Drive’da bir klasör oluşturup aşağıdan seçin.</string>
     <string name="drive_pick_folder">Yedek klasörü seç</string>
     <string name="drive_backup_now">Şimdi yedekle</string>
     <string name="drive_folder_none">Klasör seçilmedi</string>
@@ -171,5 +182,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">DayAtlas artık 1.0.0 sürümünde — Google Play\'de yayında.</string>
+    <string name="build_note">Gün notu, güne fotoğraf ekleme (en fazla 3), daha akıllı GPS sıçrama temizliği ve hareketsizlik sonrası GPS\'in hareketi daha hızlı fark etmesi eklendi.</string>
 </resources>

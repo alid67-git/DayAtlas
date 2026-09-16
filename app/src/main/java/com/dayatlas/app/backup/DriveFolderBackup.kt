@@ -8,8 +8,10 @@ import android.os.Looper
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import com.dayatlas.app.data.DayJson
+import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
+import com.dayatlas.app.data.PhotoStore
 import com.dayatlas.app.prefs.AppPrefs
 import java.io.File
 import java.util.concurrent.Executors
@@ -160,11 +162,10 @@ object DriveFolderBackup {
             return Result(true, uploaded = 0)
         }
         val todayIso = DayTitle.iso(DayTitle.localToday())
+        val store = DayStore(context)
+        val photoStore = PhotoStore(context)
         // Refresh derived GPX from JSON before upload.
-        DayStore(context).let { store ->
-            if (fullScan) store.ensureGpxForAllDays()
-            else store.ensureGpx(todayIso)
-        }
+        if (fullScan) store.ensureGpxForAllDays() else store.ensureGpx(todayIso)
         val files = daysDir.listFiles()
             ?.filter {
                 it.isFile && it.name.endsWith(".gpx") &&
@@ -178,15 +179,50 @@ object DriveFolderBackup {
 
         var count = 0
         for (file in files) {
+            val dateIso = file.name.removeSuffix(".gpx")
             // Once a day's file exists in the backup folder, it is final —
             // never re-uploaded, no matter how the local copy changes
             // afterward. See the once-only rule in the class doc comment.
-            if (tree.findFile(file.name) != null) continue
-
-            upsert(context, tree, file.name, "application/gpx+xml", file.readBytes())
-            count++
+            if (tree.findFile(file.name) == null) {
+                upsert(context, tree, file.name, "application/gpx+xml", file.readBytes())
+                count++
+            }
+            count += backupPhotosForDay(context, tree, store, photoStore, dateIso)
         }
         return Result(true, uploaded = count)
+    }
+
+    /**
+     * Uploads whichever of [dateIso]'s full-size photos aren't already in
+     * the backup folder — named `<date>-<file>` so they sit flat alongside
+     * the GPX files — then, once every one of that day's photos is
+     * confirmed present there, drops the local full copies (see
+     * [PhotoStore.dropFullCopiesAfterBackup]; the thumbnail stays).
+     */
+    private fun backupPhotosForDay(
+        context: Context,
+        tree: DocumentFile,
+        store: DayStore,
+        photoStore: PhotoStore,
+        dateIso: String,
+    ): Int {
+        val photos = store.load(dateIso)?.photos.orEmpty()
+        if (photos.isEmpty()) return 0
+        var uploaded = 0
+        for (name in photos) {
+            val driveName = "$dateIso-$name"
+            if (tree.findFile(driveName) != null) continue
+            val file = photoStore.fullFile(dateIso, name)
+            // Missing locally means an earlier run already backed it up and
+            // dropped the full copy - nothing left to upload for it.
+            if (!file.exists()) continue
+            upsert(context, tree, driveName, "image/jpeg", file.readBytes())
+            uploaded++
+        }
+        if (photos.all { tree.findFile("$dateIso-$it") != null }) {
+            photoStore.dropFullCopiesAfterBackup(dateIso, photos)
+        }
+        return uploaded
     }
 
     /**
@@ -228,7 +264,8 @@ object DriveFolderBackup {
         }
 
         val daysDir = File(context.filesDir, "days").also { it.mkdirs() }
-        val gpxFiles = tree.listFiles().filter { it.isFile && it.name?.endsWith(".gpx") == true }
+        val allDocs = tree.listFiles().toList()
+        val gpxFiles = allDocs.filter { it.isFile && it.name?.endsWith(".gpx") == true }
         if (gpxFiles.isEmpty()) {
             return RestoreResult(true, restored = 0)
         }
@@ -244,7 +281,44 @@ object DriveFolderBackup {
             DayJson.writeAtomic(File(daysDir, "$dateIso.json"), DayJson.toJson(record))
             count++
         }
+        restorePhotos(context, allDocs, daysDir)
         return RestoreResult(true, restored = count)
+    }
+
+    private val photoBackupNamePattern = Regex("""^(\d{4}-\d{2}-\d{2})-(.+\.jpe?g)$""", RegexOption.IGNORE_CASE)
+
+    /**
+     * Copies back every `<date>-<file>.jpg` the Drive folder holds (see
+     * [backupPhotosForDay]) and folds each into its day's JSON `photos`
+     * list. A day whose photos restore but whose GPX didn't (or doesn't
+     * exist, e.g. a photo-only day) still gets a JSON file created here.
+     */
+    private fun restorePhotos(context: Context, docs: List<DocumentFile>, daysDir: File) {
+        val photoStore = PhotoStore(context)
+        val byDate = HashMap<String, MutableList<String>>()
+        for (doc in docs) {
+            if (!doc.isFile) continue
+            val docName = doc.name ?: continue
+            val match = photoBackupNamePattern.matchEntire(docName) ?: continue
+            val (dateIso, photoName) = match.destructured
+            val bytes = context.contentResolver.openInputStream(doc.uri)?.use { it.readBytes() }
+                ?: continue
+            photoStore.fullFile(dateIso, photoName).writeBytes(bytes)
+            photoStore.ensureThumbnail(dateIso, photoName)
+            byDate.getOrPut(dateIso) { mutableListOf() }.add(photoName)
+        }
+        byDate.forEach { (dateIso, names) ->
+            val jsonFile = File(daysDir, "$dateIso.json")
+            val existing = if (jsonFile.exists()) {
+                runCatching { DayJson.fromJson(jsonFile.readText()) }.getOrNull()
+            } else {
+                null
+            } ?: DayRecord.empty(dateIso, dateIso)
+            val merged = existing.copy(
+                photos = (existing.photos + names).distinct().take(PhotoStore.MAX_PHOTOS_PER_DAY),
+            )
+            DayJson.writeAtomic(jsonFile, DayJson.toJson(merged))
+        }
     }
 
     private fun upsert(

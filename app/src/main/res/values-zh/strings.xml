@@ -94,9 +94,20 @@
     <string name="jump_deleted">跳变点已删除。</string>
     <string name="jump_delete_failed">无法删除该点。</string>
 
+    <string name="day_note_button">当天备注</string>
+    <string name="day_note_title">当天备注</string>
+    <string name="day_note_hint">为这一天添加备注（最多 500 字）</string>
+    <string name="day_note_save">保存</string>
+    <string name="day_note_clear">删除备注</string>
+
+    <string name="day_photo_thumbnail">当天照片</string>
+    <string name="day_photo_add">添加照片</string>
+    <string name="day_photo_add_failed">无法添加照片。</string>
+    <string name="day_photo_delete">删除</string>
+
     <string name="settings_drive_backup">Google Drive 备份</string>
     <string name="settings_drive_backup_toggle">每日自动备份</string>
-    <string name="settings_drive_backup_summary">开启后，每天的 GPX 文件只会复制到您选择的文件夹一次——此后无论手动还是自动都不会再次备份该日。如果选择 Google Drive 文件夹，Drive 应用会将其同步到云端。请先在 Drive 中创建一个文件夹，然后在下方选择它。</string>
+    <string name="settings_drive_backup_summary">开启后，每天的 GPX 文件和照片只会复制到您选择的文件夹一次——此后无论手动还是自动都不会再次备份该日。如果选择 Google Drive 文件夹，Drive 应用会将其同步到云端。请先在 Drive 中创建一个文件夹，然后在下方选择它。</string>
     <string name="drive_pick_folder">选择备份文件夹</string>
     <string name="drive_backup_now">立即备份</string>
     <string name="drive_folder_none">未选择文件夹</string>
@@ -161,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">地图现在会显示更大的区域，每日模式默认开启，在小屏幕设备上，当日统计卡片会为地图留出更多空间。</string>
+    <string name="build_note">新增：当天备注、当天照片（最多 3 张）、更智能的 GPS 跳变清理，以及静止后重新移动时更快被 GPS 察觉。</string>
 </resources>

@@ -94,9 +94,20 @@
     <string name="jump_deleted">تم حذف القفزة.</string>
     <string name="jump_delete_failed">تعذر حذف النقطة.</string>
 
+    <string name="day_note_button">ملاحظة اليوم</string>
+    <string name="day_note_title">ملاحظة اليوم</string>
+    <string name="day_note_hint">ملاحظة لهذا اليوم (بحد أقصى 500 حرف)</string>
+    <string name="day_note_save">حفظ</string>
+    <string name="day_note_clear">حذف الملاحظة</string>
+
+    <string name="day_photo_thumbnail">صورة اليوم</string>
+    <string name="day_photo_add">إضافة صورة</string>
+    <string name="day_photo_add_failed">تعذّرت إضافة الصورة.</string>
+    <string name="day_photo_delete">حذف</string>
+
     <string name="settings_drive_backup">نسخ احتياطي على Google Drive</string>
     <string name="settings_drive_backup_toggle">نسخ احتياطي تلقائي يومي</string>
-    <string name="settings_drive_backup_summary">عند التفعيل، يُنسخ ملف GPX الخاص بكل يوم مرة واحدة فقط إلى المجلد الذي تختاره — ولا تُؤخذ نسخة احتياطية لذلك اليوم مرة أخرى بعد ذلك، سواء يدويًا أو تلقائيًا. يؤدي اختيار مجلد في Google Drive إلى مزامنته مع السحابة عبر تطبيق Drive. أنشئ مجلدًا في Drive أولًا، ثم اخترْه أدناه.</string>
+    <string name="settings_drive_backup_summary">عند التفعيل، يُنسخ ملف GPX الخاص بكل يوم وصوره مرة واحدة فقط إلى المجلد الذي تختاره — ولا تُؤخذ نسخة احتياطية لذلك اليوم مرة أخرى بعد ذلك، سواء يدويًا أو تلقائيًا. يؤدي اختيار مجلد في Google Drive إلى مزامنته مع السحابة عبر تطبيق Drive. أنشئ مجلدًا في Drive أولًا، ثم اخترْه أدناه.</string>
     <string name="drive_pick_folder">اختيار مجلد النسخ الاحتياطي</string>
     <string name="drive_backup_now">نسخ احتياطي الآن</string>
     <string name="drive_folder_none">لم يتم اختيار مجلد</string>
@@ -161,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">تعرض الخريطة الآن منطقة أوسع، ويكون الوضع اليومي مفعَّلًا افتراضيًا، وعلى الشاشات الصغيرة تترك بطاقات إحصاءات اليوم مساحة أكبر للخريطة.</string>
+    <string name="build_note">جديد: ملاحظة اليوم، صور اليوم (حتى 3)، تنظيف أذكى لقفزات GPS، واكتشاف أسرع للحركة بواسطة GPS بعد التوقف.</string>
 </resources>

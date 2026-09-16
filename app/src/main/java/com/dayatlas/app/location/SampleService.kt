@@ -112,6 +112,11 @@ class SampleService : Service() {
                 prefs,
                 delayMs = prefs.effectiveIntervalMillis,
             )
+            // Belt-and-suspenders re-arm: MotionWakeTrigger already re-arms
+            // itself right when it fires, but this catches the case where
+            // registration was lost some other way (e.g. the process was
+            // recreated) without waiting for the next actual motion.
+            MotionWakeTrigger.register(this)
         }
         releaseWakeLock()
         stopForeground(STOP_FOREGROUND_REMOVE)

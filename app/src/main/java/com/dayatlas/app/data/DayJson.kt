@@ -20,6 +20,12 @@ object DayJson {
             .put("date", record.date)
             .put("title", record.title)
             .put("distanceMeters", record.distanceMeters)
+        if (!record.note.isNullOrEmpty()) {
+            root.put("note", record.note)
+        }
+        if (record.photos.isNotEmpty()) {
+            root.put("photos", JSONArray(record.photos))
+        }
         val points = JSONArray()
         record.points.forEach { p ->
             val o = JSONObject()
@@ -40,6 +46,13 @@ object DayJson {
         val root = JSONObject(raw)
         val date = root.getString("date")
         val title = root.optString("title", date)
+        val note = root.optString("note", "").ifEmpty { null }
+        val photosArr = root.optJSONArray("photos")
+        val photos = if (photosArr != null) {
+            (0 until photosArr.length()).map { photosArr.getString(it) }
+        } else {
+            emptyList()
+        }
         val arr = root.optJSONArray("points") ?: JSONArray()
         val points = ArrayList<TrackPoint>(arr.length())
         for (i in 0 until arr.length()) {
@@ -58,7 +71,14 @@ object DayJson {
         } else {
             Geo.pathLengthMeters(points)
         }
-        return DayRecord(date = date, title = title, points = points, distanceMeters = distance)
+        return DayRecord(
+            date = date,
+            title = title,
+            points = points,
+            distanceMeters = distance,
+            note = note,
+            photos = photos,
+        )
     }
 
     fun toGpx(record: DayRecord): String = toGpx(listOf(record), exportName = record.title)
@@ -71,9 +91,18 @@ object DayJson {
      * [exportName] is used as the sole track name when there is only one day;
      * for multi-day ranges each track keeps that day's title (optionally
      * prefixed with [exportName]).
+     *
+     * A day with a note and/or photos but no points still gets a trackless
+     * `<trk>` (just `<name>`/`<desc>`, no `<trkseg>`) — not for the note
+     * itself alone, but so that day's `.gpx` file exists at all, which is
+     * what [com.dayatlas.app.backup.DriveFolderBackup] scans for to decide
+     * which days to back up (including that day's photos). A genuinely
+     * empty day (no points, no note, no photos) is still skipped.
      */
     fun toGpx(records: List<DayRecord>, exportName: String? = null): String {
-        val withPoints = records.filter { it.points.isNotEmpty() }
+        val withPoints = records.filter {
+            it.points.isNotEmpty() || !it.note.isNullOrEmpty() || it.photos.isNotEmpty()
+        }
         val sb = StringBuilder()
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
         sb.append("<gpx version=\"1.1\" creator=\"DayAtlas\" xmlns=\"http://www.topografix.com/GPX/1/1\">\n")
@@ -86,6 +115,9 @@ object DayJson {
             }
             sb.append("  <trk>\n")
             sb.append("    <name>").append(escapeXml(name)).append("</name>\n")
+            if (!record.note.isNullOrEmpty()) {
+                sb.append("    <desc>").append(escapeXml(record.note)).append("</desc>\n")
+            }
             sb.append("    <trkseg>\n")
             record.points.forEach { p ->
                 sb.append("      <trkpt lat=\"").append(p.lat).append("\" lon=\"").append(p.lon).append("\">\n")
@@ -120,6 +152,7 @@ object DayJson {
         }.getOrNull() ?: return null
 
         val title = doc.getElementsByTagName("name").item(0)?.textContent
+        val note = doc.getElementsByTagName("desc").item(0)?.textContent?.ifEmpty { null }
 
         val trkpts = doc.getElementsByTagName("trkpt")
         val points = ArrayList<TrackPoint>(trkpts.length)
@@ -138,6 +171,7 @@ object DayJson {
             title = title ?: dateIso,
             points = sorted,
             distanceMeters = Geo.pathLengthMeters(sorted),
+            note = note,
         )
     }
 
