@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.1.1 — 2026-09-17
+
+- **Hareketsizken tek bir gürültülü GPS noktası artık "hareket" sayılmıyor:**
+  1.1.0'daki hareket sensörü iyileştirmesi gerçek bir gerileme yarattı —
+  evde saatlerce hareketsiz kalınsa bile, iç mekan GPS sapması (bina
+  içi/çok yollu sinyal) tek bir noktayı gerçek yerden 80m'den uzakta
+  gösterebiliyordu; eski kural "arka arkaya 2 uzak nokta = hareket"
+  olduğundan, TAMAMEN FARKLI yönlerdeki iki ayrı gürültülü nokta bile
+  "kesin hareket" sayılıp hem örnekleme aralığını hızlı ayara
+  sıfırlıyordu hem de haritaya gerçek dışı, birbirini kesen çizgiler
+  (harita üzerinde "patlama" gibi görünen desen) çiziyordu. Telefonu
+  elden almak da (hareket sensörü ekstra bir GPS kontrolü tetiklediği
+  için) bu ihtimali artırıyordu. Artık "hareket" sayılması için art arda
+  gelen iki uzak nokta birbiriyle de tutarlı olmalı (yani cihaz gerçekten
+  yeni bir yere yerleşmiş olmalı, rastgele sıçramamalı) — bkz.
+  `MovementConfirmation`. Bu mantık hem örnekleme aralığına hem de günün
+  haritaya çizilen rotasına uygulanıyor.
+
 ## 1.1.0 — 2026-09-16
 
 - **Gün notu:** Her güne (geçmiş günler dahil) en fazla 500 karakterlik

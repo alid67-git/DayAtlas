@@ -182,5 +182,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Gün notu, güne fotoğraf ekleme (en fazla 3), daha akıllı GPS sıçrama temizliği ve hareketsizlik sonrası GPS\'in hareketi daha hızlı fark etmesi eklendi.</string>
+    <string name="build_note">Hata düzeltmesi: Hareketsizken tek bir gürültülü GPS noktası artık örnekleme aralığını hızlandırmıyor ve haritaya yanlış çizgiler çizmiyor.</string>
 </resources>

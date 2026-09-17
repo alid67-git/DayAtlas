@@ -121,6 +121,41 @@ class AppPrefs(context: Context) {
             }
         }
 
+    /**
+     * Not-yet-confirmed "away from anchor" candidate fix - see
+     * [com.dayatlas.app.data.MovementConfirmation]. Null when there is no
+     * pending candidate (stationary, or already confirmed/reset).
+     */
+    var movingCandidateLat: Double?
+        get() =
+            if (prefs.contains(MOVING_CANDIDATE_LAT)) {
+                Double.fromBits(prefs.getLong(MOVING_CANDIDATE_LAT, 0L))
+            } else {
+                null
+            }
+        set(value) {
+            if (value == null) {
+                prefs.edit().remove(MOVING_CANDIDATE_LAT).apply()
+            } else {
+                prefs.edit().putLong(MOVING_CANDIDATE_LAT, value.toRawBits()).apply()
+            }
+        }
+
+    var movingCandidateLon: Double?
+        get() =
+            if (prefs.contains(MOVING_CANDIDATE_LON)) {
+                Double.fromBits(prefs.getLong(MOVING_CANDIDATE_LON, 0L))
+            } else {
+                null
+            }
+        set(value) {
+            if (value == null) {
+                prefs.edit().remove(MOVING_CANDIDATE_LON).apply()
+            } else {
+                prefs.edit().putLong(MOVING_CANDIDATE_LON, value.toRawBits()).apply()
+            }
+        }
+
     /** Clear adaptive backoff (e.g. settings interval change or tracking start). */
     fun resetStationaryBackoff() {
         prefs.edit()
@@ -129,6 +164,8 @@ class AppPrefs(context: Context) {
             .putInt(MOVING_STREAK, 0)
             .remove(LAST_SAMPLE_LAT)
             .remove(LAST_SAMPLE_LON)
+            .remove(MOVING_CANDIDATE_LAT)
+            .remove(MOVING_CANDIDATE_LON)
             .apply()
     }
 
@@ -248,6 +285,8 @@ class AppPrefs(context: Context) {
         private const val MOVING_STREAK = "moving_streak"
         private const val LAST_SAMPLE_LAT = "last_sample_lat_bits"
         private const val LAST_SAMPLE_LON = "last_sample_lon_bits"
+        private const val MOVING_CANDIDATE_LAT = "moving_candidate_lat_bits"
+        private const val MOVING_CANDIDATE_LON = "moving_candidate_lon_bits"
         private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"
         private const val LAST_UPDATE_CHECK = "last_update_check_millis"
         private const val LAST_UPDATE_CHECK_DAY = "last_update_check_day"

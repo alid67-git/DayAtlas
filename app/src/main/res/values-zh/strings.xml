@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">新增：当天备注、当天照片（最多 3 张）、更智能的 GPS 跳变清理，以及静止后重新移动时更快被 GPS 察觉。</string>
+    <string name="build_note">错误修复：静止时的单次 GPS 噪声读数不再加快采样速度，也不会在地图上画出错误的线条。</string>
 </resources>

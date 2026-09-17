@@ -13,7 +13,8 @@ data class AppendResult(
     val record: DayRecord,
     /** True when a new pin was added (not same-place time refresh / reject). */
     val geometryChanged: Boolean,
-    /** False when a teleport jump was rejected and nothing was written. */
+    /** False when nothing was written: a teleport jump was rejected, or the
+     *  fix is an unconfirmed movement candidate (see [MovementConfirmation]). */
     val wrote: Boolean,
 )
 
@@ -85,22 +86,50 @@ class DayStore(context: Context) {
         }
         val last = existing.points.lastOrNull()
         if (last != null) {
-            val drift = Geo.haversineMeters(last.lat, last.lon, point.lat, point.lon)
-            if (drift < Geo.SAME_PLACE_RADIUS_M) {
-                // Same place (incl. while the sample interval is coarsening) —
-                // refresh time on the existing fix; do not stack another pin
-                // or chase GPS jitter around the spot.
-                val refreshed = last.copy(
-                    timeMillis = point.timeMillis,
-                    accuracyMeters = point.accuracyMeters ?: last.accuracyMeters,
-                )
-                val points = existing.points.dropLast(1) + refreshed
-                val updated = existing.copy(
-                    points = points,
-                    distanceMeters = Geo.pathLengthMeters(points),
-                )
-                persistUnlocked(updated)
-                return@withLock AppendResult(updated, geometryChanged = false, wrote = true)
+            val anchor = MovementConfirmation.Anchor(
+                lat = last.lat,
+                lon = last.lon,
+                candidateLat = pendingCandidateLat.takeIf { pendingDateIso == iso },
+                candidateLon = pendingCandidateLon.takeIf { pendingDateIso == iso },
+            )
+            val result = MovementConfirmation.classify(anchor, point.lat, point.lon, Geo.SAME_PLACE_RADIUS_M)
+            when (result.outcome) {
+                MovementConfirmation.Outcome.STATIONARY -> {
+                    clearPendingCandidate()
+                    // Same place (incl. while the sample interval is coarsening) —
+                    // refresh time on the existing fix; do not stack another pin
+                    // or chase GPS jitter around the spot.
+                    val refreshed = last.copy(
+                        timeMillis = point.timeMillis,
+                        accuracyMeters = point.accuracyMeters ?: last.accuracyMeters,
+                    )
+                    val points = existing.points.dropLast(1) + refreshed
+                    val updated = existing.copy(
+                        points = points,
+                        distanceMeters = Geo.pathLengthMeters(points),
+                    )
+                    persistUnlocked(updated)
+                    return@withLock AppendResult(updated, geometryChanged = false, wrote = true)
+                }
+                MovementConfirmation.Outcome.PENDING -> {
+                    // A lone (or inconsistent) fix outside the same-place
+                    // radius — could be real departure just starting, or
+                    // could be indoor/urban GPS multipath scattering to a
+                    // different spot each time (see MovementConfirmation's
+                    // doc). Note it as the candidate, but don't touch the
+                    // track yet — this is exactly what used to draw a
+                    // "starburst" of crisscrossing lines around a spot the
+                    // device never actually left.
+                    pendingDateIso = iso
+                    pendingCandidateLat = result.anchor.candidateLat
+                    pendingCandidateLon = result.anchor.candidateLon
+                    return@withLock AppendResult(existing, geometryChanged = false, wrote = false)
+                }
+                MovementConfirmation.Outcome.CONFIRMED -> {
+                    // Two consistent fixes away from the last point — real
+                    // movement. Falls through to append `point` below.
+                    clearPendingCandidate()
+                }
             }
         }
         val points = existing.points + point
@@ -110,6 +139,12 @@ class DayStore(context: Context) {
         )
         persistUnlocked(updated)
         AppendResult(updated, geometryChanged = true, wrote = true)
+    }
+
+    private fun clearPendingCandidate() {
+        pendingDateIso = null
+        pendingCandidateLat = null
+        pendingCandidateLon = null
     }
 
     /**
@@ -231,5 +266,14 @@ class DayStore(context: Context) {
 
         /** Matches the editor UI's own EditText/TextInputLayout counter cap. */
         const val NOTE_MAX_LENGTH = 500
+
+        // Not-yet-confirmed "away from the last point" candidate fix, for
+        // the date it belongs to — see MovementConfirmation. In-memory only
+        // (like memoryToday above): losing this on process death just means
+        // the next sample starts a fresh candidate, one sample slower to
+        // confirm, never anything worse.
+        private var pendingDateIso: String? = null
+        private var pendingCandidateLat: Double? = null
+        private var pendingCandidateLon: Double? = null
     }
 }

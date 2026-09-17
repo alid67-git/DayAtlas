@@ -29,12 +29,14 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        // 1.1.0: day notes, smarter GPS-jump cleanup, day photos (max 3,
-        // auto-downsized, backed up to Drive), a closer default map zoom,
-        // and a motion-sensor hint that shortens the "just started moving"
-        // GPS latency after sitting still.
-        versionCode = 51
-        versionName = "1.1.0"
+        // 1.1.1: fixes a real regression from 1.1.0 - a single noisy indoor
+        // GPS fix could look like "confirmed movement" (interval snapping
+        // back to the fast base rate, a spurious point drawn on the map),
+        // and MotionWakeTrigger's extra sampling made it worse. Now two
+        // *consistent* fixes are required, not just two fixes that both
+        // happen to be far from the anchor. See MovementConfirmation.
+        versionCode = 52
+        versionName = "1.1.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /

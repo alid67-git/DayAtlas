@@ -1,6 +1,7 @@
 package com.dayatlas.app.location
 
 import com.dayatlas.app.data.Geo
+import com.dayatlas.app.data.MovementConfirmation
 import com.dayatlas.app.prefs.AppPrefs
 
 /**
@@ -11,14 +12,16 @@ import com.dayatlas.app.prefs.AppPrefs
  * Home GPS often wanders tens of meters while you sit still. Comparing each
  * fix to the previous fix (and resetting on any >25 m hop) made the interval
  * speed back up. Instead we keep the **anchor** fixed while you stay inside
- * the tolerance circle, and only treat real departure after
- * [MOVEMENT_STREAK_TO_RESET] consecutive fixes outside that circle.
+ * the tolerance circle, and only treat real departure once
+ * [MovementConfirmation] confirms it — two consecutive fixes outside that
+ * circle that also agree with *each other*, not just one noisy outlier (see
+ * [MovementConfirmation]'s own doc for why a lone outlier isn't enough).
  */
 object StationaryBackoff {
     /** Radius around the sit-still anchor; typical indoor/yard GPS wander. */
     const val TOLERANCE_METERS = Geo.SAME_PLACE_RADIUS_M
     const val STREAK_TO_STEP = 3
-    /** One spike outside the circle is jitter; two in a row is real movement. */
+    /** One spike outside the circle is jitter; two *consistent* ones is real movement. */
     const val MOVEMENT_STREAK_TO_RESET = 2
 
     data class State(
@@ -26,7 +29,10 @@ object StationaryBackoff {
         val stationaryStreak: Int,
         val lastLat: Double?,
         val lastLon: Double?,
+        /** 1 when there's an unconfirmed "away" candidate pending, else 0. */
         val movingStreak: Int = 0,
+        val movingLat: Double? = null,
+        val movingLon: Double? = null,
     )
 
     fun read(prefs: AppPrefs): State =
@@ -36,6 +42,8 @@ object StationaryBackoff {
             lastLat = prefs.lastSampleLat,
             lastLon = prefs.lastSampleLon,
             movingStreak = prefs.movingStreak,
+            movingLat = prefs.movingCandidateLat,
+            movingLon = prefs.movingCandidateLon,
         )
 
     fun write(prefs: AppPrefs, state: State) {
@@ -44,6 +52,8 @@ object StationaryBackoff {
         prefs.lastSampleLat = state.lastLat
         prefs.lastSampleLon = state.lastLon
         prefs.movingStreak = state.movingStreak
+        prefs.movingCandidateLat = state.movingLat
+        prefs.movingCandidateLon = state.movingLon
     }
 
     /** Apply a successful fix and persist the updated adaptive interval. */
@@ -65,6 +75,8 @@ object StationaryBackoff {
             lastLat = null,
             lastLon = null,
             movingStreak = 0,
+            movingLat = null,
+            movingLon = null,
         )
     }
 
@@ -90,34 +102,48 @@ object StationaryBackoff {
                 lastLat = lat,
                 lastLon = lon,
                 movingStreak = 0,
+                movingLat = null,
+                movingLon = null,
             )
         }
 
-        val distance = Geo.haversineMeters(prevLat, prevLon, lat, lon)
         var effective = clampToAllowed(state.effectiveIntervalSeconds, allowed)
         if (effective < base) effective = base
 
-        if (distance > TOLERANCE_METERS) {
-            val moveStreak = state.movingStreak + 1
-            if (moveStreak < MOVEMENT_STREAK_TO_RESET) {
-                // Likely GPS spike while still sitting — keep coarse interval
-                // and the original anchor.
+        val anchor = MovementConfirmation.Anchor(prevLat, prevLon, state.movingLat, state.movingLon)
+        val result = MovementConfirmation.classify(anchor, lat, lon, TOLERANCE_METERS)
+
+        when (result.outcome) {
+            MovementConfirmation.Outcome.PENDING -> {
+                // A lone (or inconsistent) outlier - likely a GPS spike while
+                // still sitting. Keep the coarse interval and the original
+                // anchor; just remember this fix as the new candidate.
                 return State(
                     effectiveIntervalSeconds = effective,
                     stationaryStreak = 0,
                     lastLat = prevLat,
                     lastLon = prevLon,
-                    movingStreak = moveStreak,
+                    movingStreak = 1,
+                    movingLat = result.anchor.candidateLat,
+                    movingLon = result.anchor.candidateLon,
                 )
             }
-            // Confirmed departure — new anchor, back to user base rate.
-            return State(
-                effectiveIntervalSeconds = base,
-                stationaryStreak = 0,
-                lastLat = lat,
-                lastLon = lon,
-                movingStreak = 0,
-            )
+            MovementConfirmation.Outcome.CONFIRMED -> {
+                // Two consistent readings away from the anchor — confirmed
+                // departure, new anchor, back to user base rate.
+                return State(
+                    effectiveIntervalSeconds = base,
+                    stationaryStreak = 0,
+                    lastLat = lat,
+                    lastLon = lon,
+                    movingStreak = 0,
+                    movingLat = null,
+                    movingLon = null,
+                )
+            }
+            MovementConfirmation.Outcome.STATIONARY -> {
+                // Falls through to the stationary-streak handling below.
+            }
         }
 
         val streak = state.stationaryStreak + 1
@@ -128,6 +154,8 @@ object StationaryBackoff {
                 lastLat = prevLat,
                 lastLon = prevLon,
                 movingStreak = 0,
+                movingLat = null,
+                movingLon = null,
             )
         }
 
@@ -139,6 +167,8 @@ object StationaryBackoff {
                 lastLat = prevLat,
                 lastLon = prevLon,
                 movingStreak = 0,
+                movingLat = null,
+                movingLon = null,
             )
         } else {
             State(
@@ -147,6 +177,8 @@ object StationaryBackoff {
                 lastLat = prevLat,
                 lastLon = prevLon,
                 movingStreak = 0,
+                movingLat = null,
+                movingLon = null,
             )
         }
     }

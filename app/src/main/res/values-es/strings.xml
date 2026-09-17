@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Novedades: notas del día, fotos del día (hasta 3), una limpieza de saltos GPS más inteligente y una detección más rápida del movimiento tras estar parado.</string>
+    <string name="build_note">Corrección de error: una sola lectura de GPS ruidosa estando parado ya no acelera el muestreo ni dibuja líneas falsas en el mapa.</string>
 </resources>
