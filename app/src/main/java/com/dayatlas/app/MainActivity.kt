@@ -66,7 +66,7 @@ class MainActivity : DayAtlasActivity() {
         persistDayStatsOrder(newOrder)
     }
     private val routesAdapter = RoutesAdapter(
-        onOpen = { date -> openRouteOnMap(date) },
+        onOpen = { date -> startActivity(DayDetailActivity.intent(this, DayTitle.iso(date))) },
         onExport = { date -> GpxExportDialog.show(this, store, date) },
     )
     private var pendingStart = false
@@ -395,17 +395,12 @@ class MainActivity : DayAtlasActivity() {
                 date = date,
                 title = DayTitle.format(date),
                 meta = meta,
+                hasNote = !record.note.isNullOrEmpty(),
             )
         }
         routesAdapter.submit(rows)
         binding.routesEmpty.visibility = if (rows.isEmpty()) View.VISIBLE else View.GONE
         binding.routesList.visibility = if (rows.isEmpty()) View.GONE else View.VISIBLE
-    }
-
-    private fun openRouteOnMap(date: LocalDate) {
-        mapDate = date
-        binding.bottomNav.selectedItemId = R.id.nav_daily
-        // showTab runs via the selected-item listener.
     }
 
     private fun setupStatsRangeChips() {

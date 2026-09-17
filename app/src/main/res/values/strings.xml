@@ -139,7 +139,7 @@
     <string name="tab_placeholder_stats">Yakında: seçilebilir zaman aralığında toplam mesafe, aktif gün, hız ve hareket özeti.</string>
     <string name="tab_placeholder_routes">Yakında: kayıtlı gün listesi, haritada açma ve GPX dışa aktarma.</string>
 
-    <string name="routes_hint">Bir güne dokununca Günlük sekmesinde haritada açılır. Ok ile GPX paylaşılır.</string>
+    <string name="routes_hint">Bir güne dokununca o günün detay ekranı açılır. Ok ile GPX paylaşılır.</string>
     <string name="routes_export_range">Aralık GPX</string>
     <string name="routes_empty">Henüz kayıtlı gün yok.</string>
     <string name="routes_day_meta">%1$s · %2$d nokta · %3$s</string>
@@ -182,5 +182,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Hata düzeltmesi: Hareketsizken tek bir gürültülü GPS noktası artık örnekleme aralığını hızlandırmıyor ve haritaya yanlış çizgiler çizmiyor.</string>
+    <string name="build_note">Rotalar listesinde bir güne dokununca artık büyük haritalı, tam detaylı (not ve fotoğraflar dahil) ayrı bir ekran açılıyor.</string>
 </resources>

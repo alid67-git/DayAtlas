@@ -44,6 +44,17 @@
                 tools:text="42,3 km · 186 nokta · 1 sa 12 dk" />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/routeNoteIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/day_note_button"
+            android:src="@drawable/ic_note"
+            android:visibility="gone"
+            app:tint="@color/status_on"
+            tools:visibility="visible" />
+
         <ImageButton
             android:id="@+id/routeExport"
             android:layout_width="40dp"

@@ -139,7 +139,7 @@
     <string name="tab_placeholder_stats">Coming soon: total distance, active days, speed and movement summary for a chosen range.</string>
     <string name="tab_placeholder_routes">Coming soon: list of saved days, open on map, and GPX export.</string>
 
-    <string name="routes_hint">Tap a day to open it on the Daily map. Use the arrow to share GPX.</string>
+    <string name="routes_hint">Tap a day to open its detail screen. Use the arrow to share GPX.</string>
     <string name="routes_export_range">Range GPX</string>
     <string name="routes_empty">No saved days yet.</string>
     <string name="routes_day_meta">%1$s · %2$d points · %3$s</string>
@@ -172,7 +172,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Bug fix: a single noisy GPS reading while stationary no longer speeds up sampling or draws bogus lines on the map.</string>
+    <string name="build_note">Tapping a day in the Routes list now opens a dedicated full-detail screen (bigger map, note, photos).</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

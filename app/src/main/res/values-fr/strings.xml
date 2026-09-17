@@ -139,7 +139,7 @@
     <string name="tab_placeholder_stats">Bientôt disponible : distance totale, jours actifs, vitesse et résumé des déplacements pour une plage choisie.</string>
     <string name="tab_placeholder_routes">Bientôt disponible : liste des jours enregistrés, ouverture sur la carte et export GPX.</string>
 
-    <string name="routes_hint">Appuyez sur un jour pour l\'ouvrir sur la carte de l\'onglet Journalier. Utilisez la flèche pour partager le GPX.</string>
+    <string name="routes_hint">Appuyez sur un jour pour ouvrir son écran de détails. Utilisez la flèche pour partager le GPX.</string>
     <string name="routes_export_range">GPX de la plage</string>
     <string name="routes_empty">Aucun jour enregistré pour le moment.</string>
     <string name="routes_day_meta">%1$s · %2$d points · %3$s</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Correction de bug : une seule lecture GPS bruitée à l\'arrêt n\'accélère plus l\'échantillonnage et ne trace plus de fausses lignes sur la carte.</string>
+    <string name="build_note">Appuyer sur un jour dans la liste des itinéraires ouvre désormais un écran de détails dédié (carte plus grande, note, photos).</string>
 </resources>

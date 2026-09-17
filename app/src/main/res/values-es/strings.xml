@@ -139,7 +139,7 @@
     <string name="tab_placeholder_stats">Próximamente: distancia total, días activos, velocidad y resumen de movimiento para un intervalo elegido.</string>
     <string name="tab_placeholder_routes">Próximamente: lista de días guardados, abrir en el mapa y exportar GPX.</string>
 
-    <string name="routes_hint">Toca un día para abrirlo en el mapa de la pestaña Diario. Usa la flecha para compartir el GPX.</string>
+    <string name="routes_hint">Toca un día para abrir su pantalla de detalles. Usa la flecha para compartir el GPX.</string>
     <string name="routes_export_range">GPX del intervalo</string>
     <string name="routes_empty">Aún no hay días guardados.</string>
     <string name="routes_day_meta">%1$s · %2$d puntos · %3$s</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Corrección de error: una sola lectura de GPS ruidosa estando parado ya no acelera el muestreo ni dibuja líneas falsas en el mapa.</string>
+    <string name="build_note">Al tocar un día en la lista de rutas ahora se abre una pantalla de detalles dedicada (mapa más grande, nota, fotos).</string>
 </resources>

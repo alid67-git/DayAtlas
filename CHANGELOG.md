@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0 — 2026-09-17
+
+- **Rotalar listesi artık tam detay ekranına açılıyor:** Bir güne
+  dokunmak eskiden Günlük sekmesine geçip o günü küçük haritada
+  gösteriyordu. Artık kendine ait, daha büyük bir haritayla, o günün tüm
+  detaylarıyla (mesafe, son nokta, nokta sayısı, maks./ort. hız, aktif
+  süre), notuyla (varsa) ve fotoğraflarıyla açılan ayrı bir ekran açılıyor
+  — GPX dışa aktarma ve sıçrama temizleme de bu ekranda.
+- **Rota listesinde not ikonu:** Bir günün notu varsa, o günün satırında
+  dışa aktar okunun yanında küçük bir not ikonu görünüyor.
+
 ## 1.1.1 — 2026-09-17
 
 - **Hareketsizken tek bir gürültülü GPS noktası artık "hareket" sayılmıyor:**
