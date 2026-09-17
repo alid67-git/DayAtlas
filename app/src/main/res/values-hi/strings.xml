@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">नया: दिन का नोट, दिन की फ़ोटो (अधिकतम 3), अधिक समझदार GPS जंप सफ़ाई, और स्थिर रहने के बाद गति को GPS द्वारा तेज़ी से पहचानना।</string>
+    <string name="build_note">बग फिक्स: स्थिर रहते समय एक भी शोरयुक्त GPS रीडिंग अब सैंपलिंग तेज़ नहीं करती और मानचित्र पर गलत रेखाएँ नहीं खींचती।</string>
 </resources>

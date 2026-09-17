@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Neu: Tagesnotizen, Tagesfotos (bis zu 3), intelligentere GPS-Sprungbereinigung und schnellere GPS-Erkennung von Bewegung nach dem Stillstehen.</string>
+    <string name="build_note">Fehlerbehebung: Eine einzelne verrauschte GPS-Messung im Stillstand beschleunigt die Abtastung nicht mehr und zeichnet keine falschen Linien auf der Karte.</string>
 </resources>
