@@ -139,7 +139,7 @@
     <string name="tab_placeholder_stats">Demnächst: Gesamtdistanz, aktive Tage, Geschwindigkeit und Bewegungsübersicht für einen Zeitraum.</string>
     <string name="tab_placeholder_routes">Demnächst: Liste gespeicherter Tage, auf Karte öffnen und GPX-Export.</string>
 
-    <string name="routes_hint">Tippen Sie auf einen Tag, um ihn auf der Tageskarte zu öffnen. Mit dem Pfeil GPX teilen.</string>
+    <string name="routes_hint">Tippen Sie auf einen Tag, um dessen Detailansicht zu öffnen. Mit dem Pfeil GPX teilen.</string>
     <string name="routes_export_range">Bereichs-GPX</string>
     <string name="routes_empty">Noch keine gespeicherten Tage.</string>
     <string name="routes_day_meta">%1$s · %2$d Punkte · %3$s</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Fehlerbehebung: Eine einzelne verrauschte GPS-Messung im Stillstand beschleunigt die Abtastung nicht mehr und zeichnet keine falschen Linien auf der Karte.</string>
+    <string name="build_note">Das Antippen eines Tages in der Routenliste öffnet jetzt einen eigenen Detailbildschirm (größere Karte, Notiz, Fotos).</string>
 </resources>

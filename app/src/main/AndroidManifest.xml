@@ -65,6 +65,13 @@
             android:excludeFromRecents="true"
             android:autoRemoveFromRecents="true" />
 
+        <activity
+            android:name=".DayDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+            android:excludeFromRecents="true"
+            android:autoRemoveFromRecents="true" />
+
         <receiver
             android:name=".boot.BootReceiver"
             android:exported="true"

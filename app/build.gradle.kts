@@ -29,14 +29,12 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        // 1.1.1: fixes a real regression from 1.1.0 - a single noisy indoor
-        // GPS fix could look like "confirmed movement" (interval snapping
-        // back to the fast base rate, a spurious point drawn on the map),
-        // and MotionWakeTrigger's extra sampling made it worse. Now two
-        // *consistent* fixes are required, not just two fixes that both
-        // happen to be far from the anchor. See MovementConfirmation.
-        versionCode = 52
-        versionName = "1.1.1"
+        // 1.2.0: tapping a day in the Routes list now opens a dedicated,
+        // full-detail screen (bigger map, full stats, note, photos) instead
+        // of jumping to the Daily tab's compact map. Route rows also show a
+        // note icon when that day has one.
+        versionCode = 53
+        versionName = "1.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /

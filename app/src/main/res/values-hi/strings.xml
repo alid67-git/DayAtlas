@@ -139,7 +139,7 @@
     <string name="tab_placeholder_stats">जल्द आ रहा है: चुनी गई अवधि के लिए कुल दूरी, सक्रिय दिन, गति और गति-सारांश।</string>
     <string name="tab_placeholder_routes">जल्द आ रहा है: सहेजे गए दिनों की सूची, मानचित्र पर खोलना और GPX निर्यात।</string>
 
-    <string name="routes_hint">किसी दिन को टैप करें ताकि वह दैनिक मानचित्र पर खुल जाए। GPX साझा करने के लिए तीर का उपयोग करें।</string>
+    <string name="routes_hint">किसी दिन को टैप करें ताकि उसका विस्तृत विवरण खुल जाए। GPX साझा करने के लिए तीर का उपयोग करें।</string>
     <string name="routes_export_range">सीमा GPX</string>
     <string name="routes_empty">अभी तक कोई सहेजा गया दिन नहीं है।</string>
     <string name="routes_day_meta">%1$s · %2$d बिंदु · %3$s</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">बग फिक्स: स्थिर रहते समय एक भी शोरयुक्त GPS रीडिंग अब सैंपलिंग तेज़ नहीं करती और मानचित्र पर गलत रेखाएँ नहीं खींचती।</string>
+    <string name="build_note">रूट सूची में किसी दिन को टैप करने पर अब एक समर्पित विस्तृत स्क्रीन खुलती है (बड़ा मानचित्र, नोट, फ़ोटो)।</string>
 </resources>

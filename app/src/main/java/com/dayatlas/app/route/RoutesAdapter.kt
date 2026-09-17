@@ -1,6 +1,7 @@
 package com.dayatlas.app.route
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dayatlas.app.databinding.ItemRouteDayBinding
@@ -10,6 +11,7 @@ data class RouteDayRow(
     val date: LocalDate,
     val title: String,
     val meta: String,
+    val hasNote: Boolean = false,
 )
 
 class RoutesAdapter(
@@ -34,6 +36,7 @@ class RoutesAdapter(
         val row = items[position]
         holder.binding.routeDayTitle.text = row.title
         holder.binding.routeDayMeta.text = row.meta
+        holder.binding.routeNoteIcon.visibility = if (row.hasNote) View.VISIBLE else View.GONE
         holder.binding.root.setOnClickListener { onOpen(row.date) }
         holder.binding.routeExport.setOnClickListener { onExport(row.date) }
     }

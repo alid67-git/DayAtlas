@@ -139,7 +139,7 @@
     <string name="tab_placeholder_stats">即将推出：所选时间范围内的总距离、活跃天数、速度和移动概览。</string>
     <string name="tab_placeholder_routes">即将推出：已保存日期列表、在地图中打开及导出 GPX。</string>
 
-    <string name="routes_hint">点击某一天可在"每日"地图中打开它。点击箭头分享 GPX。</string>
+    <string name="routes_hint">点击某一天可打开该日的详情页。点击箭头分享 GPX。</string>
     <string name="routes_export_range">范围 GPX</string>
     <string name="routes_empty">尚无已保存的日期。</string>
     <string name="routes_day_meta">%1$s · %2$d 个点 · %3$s</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">错误修复：静止时的单次 GPS 噪声读数不再加快采样速度，也不会在地图上画出错误的线条。</string>
+    <string name="build_note">在路线列表中点击某一天，现在会打开一个独立的详情页（更大的地图、备注、照片）。</string>
 </resources>

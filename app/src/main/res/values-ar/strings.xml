@@ -139,7 +139,7 @@
     <string name="tab_placeholder_stats">قريبًا: إجمالي المسافة، الأيام النشطة، ملخص السرعة والحركة لنطاق زمني تختاره.</string>
     <string name="tab_placeholder_routes">قريبًا: قائمة الأيام المحفوظة، وفتحها على الخريطة، وتصدير GPX.</string>
 
-    <string name="routes_hint">اضغط على يوم لفتحه على خريطة تبويب «يومي». استخدم السهم لمشاركة ملف GPX.</string>
+    <string name="routes_hint">اضغط على يوم لفتح شاشة تفاصيله. استخدم السهم لمشاركة ملف GPX.</string>
     <string name="routes_export_range">GPX للنطاق</string>
     <string name="routes_empty">لا توجد أيام محفوظة بعد.</string>
     <string name="routes_day_meta">%1$s · %2$d نقطة · %3$s</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">إصلاح خطأ: لم تعد قراءة GPS واحدة مشوشة أثناء الثبات تُسرّع أخذ العينات أو ترسم خطوطًا خاطئة على الخريطة.</string>
+    <string name="build_note">أصبح النقر على يوم في قائمة المسارات يفتح شاشة تفاصيل مخصّصة (خريطة أكبر، ملاحظة، صور).</string>
 </resources>
