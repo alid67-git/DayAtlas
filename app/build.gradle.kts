@@ -29,12 +29,14 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        // 1.2.0: tapping a day in the Routes list now opens a dedicated,
-        // full-detail screen (bigger map, full stats, note, photos) instead
-        // of jumping to the Daily tab's compact map. Route rows also show a
-        // note icon when that day has one.
-        versionCode = 53
-        versionName = "1.2.0"
+        // 1.3.0: Day Detail's note collapses to a small icon so the map gets
+        // more room; the Stats screen's summary cards stay fixed while only
+        // the daily bars scroll, and tapping a bar opens that day's detail
+        // screen; Help is now a tappable topic list instead of one long
+        // page; "Daha fazla" opens Settings directly, with Help moved to a
+        // toolbar icon there.
+        versionCode = 54
+        versionName = "1.3.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /

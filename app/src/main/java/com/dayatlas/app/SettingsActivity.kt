@@ -46,6 +46,9 @@ class SettingsActivity : DayAtlasActivity() {
         prefs = AppPrefs(this)
 
         binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.helpButton.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
 
         binding.dailyMode.isChecked = prefs.dailyMode
         binding.dailyMode.setOnCheckedChangeListener { _, checked ->

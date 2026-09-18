@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -91,19 +92,85 @@
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
+    <!-- Adım 1: giriş özeti + konu listesi (dokununca ilgili bölüm açılır). -->
     <ScrollView
+        android:id="@+id/paneHelpToc"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/helpText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:lineSpacingExtra="4dp"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="@color/md_theme_on_surface"
-            android:textIsSelectable="true" />
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/helpIntro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="@color/md_theme_on_surface"
+                tools:text="DayAtlas, gün boyunca konumunuzu arka planda kaydeden bir uygulamadır." />
+
+            <LinearLayout
+                android:id="@+id/helpSectionList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_help_section" />
+
+            <TextView
+                android:id="@+id/helpFooter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="@color/md_theme_outline"
+                tools:text="Geliştiren: Ali Dinçer" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Adım 2: tek bir bölümün detayı - geri tuşu TOC'a döner. -->
+    <ScrollView
+        android:id="@+id/paneHelpSection"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/helpSectionHeading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textColor="@color/md_theme_on_surface"
+                android:textStyle="bold"
+                tools:text="1) KAYIT MODLARI" />
+
+            <TextView
+                android:id="@+id/helpSectionBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:lineSpacingExtra="4dp"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="@color/md_theme_on_surface"
+                android:textIsSelectable="true"
+                tools:text="Günlük mod (önerilen ve varsayılan): Ayarlar'dan açıldığında..." />
+        </LinearLayout>
     </ScrollView>
 </LinearLayout>

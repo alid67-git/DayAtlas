@@ -7,16 +7,33 @@
     android:orientation="vertical"
     android:background="@color/md_theme_surface">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/md_theme_primary"
-        android:minHeight="?attr/actionBarSize"
-        app:navigationIcon="?attr/homeAsUpIndicator"
-        app:navigationIconTint="@color/md_theme_on_primary"
-        app:title="@string/settings"
-        app:titleTextColor="@color/md_theme_on_primary" />
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md_theme_primary"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="@color/md_theme_on_primary"
+            app:title="@string/settings"
+            app:titleTextColor="@color/md_theme_on_primary" />
+
+        <ImageButton
+            android:id="@+id/helpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_help"
+            android:padding="12dp"
+            android:src="@drawable/ic_help"
+            app:tint="@color/md_theme_on_primary" />
+    </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
