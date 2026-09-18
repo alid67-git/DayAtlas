@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.3.0 — 2026-09-18
+
+- **Günlük detay ekranında not artık küçük bir ikon:** Not, dışa aktar
+  düğmesinin yanında küçük bir simgeye sıkıştı — notu olan bir günde
+  simgenin üzerinde beyaz bir nokta görünüyor, dokununca not açılır
+  pencerede gösteriliyor. Bu değişiklikle haritaya ayrılan alan büyüdü.
+- **İstatistikler ekranında üst kartlar artık sabit:** Toplam mesafe,
+  aktif gün, hız ve süre kartları kaydırma sırasında yerinde duruyor;
+  yalnızca aşağıdaki günlük mesafe çubukları kayıyor. Bir günün çubuğuna
+  dokunmak o günün tam detay ekranını açıyor — hem Rotalar listesinden
+  hem İstatistikler'den ulaşılan bu ekranda geri tuşu, hangi ekrandan
+  gelindiyse oraya geri dönüyor.
+- **Yardım ekranı artık tıklanabilir bir konu listesi:** Tüm metni alt
+  alta göstermek yerine, kısa bir giriş özetinin altında konu başlıkları
+  (Kayıt Modları, Örnekleme Aralığı, Sık Sorulan Sorular vb.) listeleniyor
+  — bir başlığa dokunmak yalnızca o bölümü açıyor, geri tuşu listeye
+  dönüyor.
+- **"Daha fazla" artık doğrudan Ayarlar'ı açıyor:** Eskiden Ayarlar ve
+  Yardım'a giden ara bir menüydü; şimdi doğrudan Ayarlar ekranını
+  açıyor, Yardım'a ise Ayarlar'ın üst çubuğundaki simgeden ulaşılıyor.
+
 ## 1.2.0 — 2026-09-17
 
 - **Rotalar listesi artık tam detay ekranına açılıyor:** Bir güne

@@ -172,7 +172,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Tapping a day in the Routes list now opens a dedicated full-detail screen (bigger map, note, photos).</string>
+    <string name="build_note">Day Detail's note is now a small icon; Stats keeps its summary cards fixed and opens a day's detail when you tap its bar; Help is now a tappable topic list; "More" opens Settings directly.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>
