@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.1 — 2026-09-18
+
+- **Dil seçimi artık yanlış dile takılmıyor:** Ayarlar'da bir dil
+  seçildiğinde uygulamanın kendisi ekranı zaten yeniden oluşturuyordu;
+  ayrıca elle de tetiklenen ikinci bir yeniden oluşturma bu ikisinin
+  çakışmasına ve bazen yanlış dilin seçili görünmesine yol açıyordu —
+  o ikinci tetikleme kaldırıldı.
+- **Dil ve örnekleme aralığı artık açılır menü:** Uzun radyo düğmesi
+  listeleri yerine, ikisi de tek dokunuşla açılan birer açılır menüye
+  dönüştü.
+- **Harita gün istatistikleri ve izinler artık açılır bölüm:** Ayarlar
+  ekranındaki bu iki uzun liste artık başlığa dokunulduğunda açılıp
+  kapanıyor, ekran daha kısa ve düzenli görünüyor.
+
 ## 1.3.0 — 2026-09-18
 
 - **Günlük detay ekranında not artık küçük bir ikon:** Not, dışa aktar

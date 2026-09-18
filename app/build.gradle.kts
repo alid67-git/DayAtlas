@@ -29,14 +29,13 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        // 1.3.0: Day Detail's note collapses to a small icon so the map gets
-        // more room; the Stats screen's summary cards stay fixed while only
-        // the daily bars scroll, and tapping a bar opens that day's detail
-        // screen; Help is now a tappable topic list instead of one long
-        // page; "Daha fazla" opens Settings directly, with Help moved to a
-        // toolbar icon there.
-        versionCode = 54
-        versionName = "1.3.0"
+        // 1.3.1: fixes the Settings language picker sometimes ending up on
+        // the wrong selection (an explicit recreate() was racing with
+        // AppCompatDelegate's own locale-change recreate). Language and
+        // sampling-interval pickers are now dropdown menus, and the map day
+        // stats / permissions sections collapse behind an expandable header.
+        versionCode = 55
+        versionName = "1.3.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /
