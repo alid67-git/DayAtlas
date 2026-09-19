@@ -32,8 +32,13 @@ private val VERSION_IN_NAME: Pattern = Pattern.compile("v[\\d.]+(?:-[\\w]+)?$")
  * crash or block the caller.
  */
 object UpdateChecker {
-    private val io = Executors.newSingleThreadExecutor()
-    private val main = Handler(Looper.getMainLooper())
+    // Lazy: parseReleaseVersion() is a pure function callers (including
+    // unit tests) may use without touching Android's Looper - eagerly
+    // constructing Handler(Looper.getMainLooper()) here would run that
+    // Android-only call the moment anything on this object is first
+    // accessed, which crashes in a plain JVM unit test.
+    private val io by lazy { Executors.newSingleThreadExecutor() }
+    private val main by lazy { Handler(Looper.getMainLooper()) }
 
     fun check(currentVersion: String, onResult: (UpdateInfo?) -> Unit) {
         // Debug builds carry a "-debug" versionNameSuffix; strip it so a
