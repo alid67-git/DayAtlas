@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Se corrigió un falso \"ya está actualizado\" - la etiqueta \"-diag1\" de la versión de diagnóstico anterior impedía leer el número de versión al buscar actualizaciones.</string>
+    <string name="build_note">La búsqueda de actualizaciones ahora sí funciona - la corrección anterior mantuvo el mismo nombre de versión, así que seguía diciendo que no había actualización; el nombre de esta versión sí cambió.</string>
 </resources>

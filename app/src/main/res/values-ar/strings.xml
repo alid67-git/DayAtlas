@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">تم إصلاح رسالة \"محدّث بالفعل\" الخاطئة — كانت علامة \"-diag1\" في الإصدار التشخيصي السابق تمنع فحص التحديثات من قراءة رقم الإصدار.</string>
+    <string name="build_note">فحص التحديثات يعمل الآن فعليًا — الإصلاح السابق أبقى نفس اسم الإصدار، فظل يقول لا يوجد تحديث؛ اسم هذا الإصدار تغيّر فعليًا.</string>
 </resources>

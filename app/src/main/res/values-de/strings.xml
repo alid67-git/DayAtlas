@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Ein falsches \"bereits aktuell\"-Ergebnis wurde behoben - das \"-diag1\"-Tag der vorherigen Diagnoseversion hatte die Versionserkennung der Update-Prüfung gestört.</string>
+    <string name="build_note">Die Update-Prüfung funktioniert jetzt wirklich - die vorherige Korrektur behielt denselben Versionsnamen, also meldete sie weiterhin kein Update; dieser Build hat einen wirklich neuen Namen.</string>
 </resources>

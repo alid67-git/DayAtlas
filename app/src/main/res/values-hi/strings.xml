@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">गलत \"पहले से अद्यतित\" संदेश ठीक किया गया — पिछले परीक्षण संस्करण के \"-diag1\" टैग के कारण अपडेट जांच सही संस्करण संख्या नहीं पढ़ पा रही थी।</string>
+    <string name="build_note">अपडेट जांच अब वाकई काम करती है — पिछला सुधार वही संस्करण नाम रखता था, इसलिए फिर भी अपडेट नहीं दिखा रहा था; इस संस्करण का नाम वाकई बदला है।</string>
 </resources>
