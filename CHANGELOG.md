@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.0 (geri alma) — 2026-09-19
+
+- **1.1.1'deki hareket algılama düzeltmesi de geri alındı:** 1.2.0'a
+  geri almanın üzerine, arka plan/örnekleme aralığı şikayetinin
+  `MovementConfirmation` mantığıyla ilgili olup olmadığını test etmek
+  için 1.1.1'in "tek bir gürültülü GPS noktası artık hareket sayılmıyor"
+  düzeltmesi de geri alındı — konum kaydı mantığı artık 1.1.0'daki
+  haline döndü. 1.2.0'ın Gün Detayı ekranı gibi ilgisiz arayüz
+  değişiklikleri yerinde kaldı. **Bilinen risk:** bu, 1.1.1'in düzelttiği
+  eski hatayı geri getiriyor — hareketsizken tek bir gürültülü nokta
+  yanlışlıkla "hareket" sayılıp hem aralığı sıfırlayabilir hem de
+  haritada gerçek dışı, birbirini kesen çizgiler oluşturabilir.
+
 ## 1.2.0 (geri alma) — 2026-09-19
 
 - **1.3.0 ve 1.3.1'deki tüm değişiklikler geri alındı:** Kullanıcının
