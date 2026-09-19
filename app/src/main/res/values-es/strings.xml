@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Para ayudar a aislar un problema reportado de segundo plano/intervalo de muestreo, también se revirtió la corrección de detección de movimiento de 1.1.1; la lógica de registro vuelve a la de 1.1.0.</string>
+    <string name="build_note">Versión de diagnóstico: el intervalo de muestreo ya no se alarga estando quieto, para probar si la alarma en segundo plano realmente se dispara en el intervalo elegido. El consumo de batería puede subir; no es permanente.</string>
 </resources>

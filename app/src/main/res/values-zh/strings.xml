@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">为排查一个已报告的后台/采样间隔问题，1.1.1 的移动检测修复也被撤销；定位记录逻辑回到了 1.1.0 的状态。</string>
+    <string name="build_note">诊断版本：静止时采样间隔不再自动变长，用于测试后台闹钟是否真的按所选间隔触发。可能会增加耗电，非正式版本。</string>
 </resources>

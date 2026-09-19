@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Um ein gemeldetes Hintergrund-/Abtastintervall-Problem einzugrenzen, wurde auch die Bewegungserkennung aus 1.1.1 rückgängig gemacht; die Aufzeichnungslogik ist wieder auf dem Stand von 1.1.0.</string>
+    <string name="build_note">Diagnoseversion: Das Abtastintervall wird im Stillstand nicht mehr verlängert, um zu testen, ob der Hintergrundalarm wirklich im gewählten Intervall auslöst. Akkuverbrauch kann steigen, nicht dauerhaft.</string>
 </resources>

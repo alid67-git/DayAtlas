@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0-diag1 (teşhis) — 2026-09-19
+
+- **Hareketsizken bile örnekleme aralığı seyreltilmiyor (geçici):**
+  Gerçek bir yolculukta (14,6 km, ~18 dk, 1 dk aralık seçiliyken) yalnızca
+  8 nokta kaydedildiği görüldü — bu, arka plandaki gerçek örnekleme
+  sıklığının seçilen aralıktan çok daha seyrek olduğunu gösteriyor.
+  1.1.1'in hareket algılama mantığının geri alınmasından SONRA bile aynı
+  sorun sürdüğü için, bir sonraki adım olarak `StationaryBackoff`'un
+  hareketsizlikte aralığı otomatik seyreltmesi (30 sn → 1 → 3 → 5 dk)
+  geçici olarak kapatıldı — böylece arka plandaki alarmın, hareket
+  durumundan bağımsız olarak seçilen aralıkta gerçekten tetiklenip
+  tetiklenmediği doğrudan gözlemlenebilir. Bu sadece bir teşhis sürümü;
+  pil tüketimi artabilir, kalıcı bir sürüm değil.
+
 ## 1.1.0 (geri alma) — 2026-09-19
 
 - **1.1.1'deki hareket algılama düzeltmesi de geri alındı:** 1.2.0'a

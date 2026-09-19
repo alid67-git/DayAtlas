@@ -38,6 +38,18 @@ class StationaryBackoffTest {
     }
 
     @Test
+    fun coarseningDisabledKeepsUserBaseWhileStationary() {
+        // Diagnostic override: recordSample runs with coarseningEnabled=false
+        // so the real alarm cadence can be observed independent of backoff.
+        var state = StationaryBackoff.reset(60)
+        state = StationaryBackoff.onSample(41.0, 29.0, 60, state, allowed, coarseningEnabled = false)
+        repeat(12) {
+            state = StationaryBackoff.onSample(41.0, 29.0, 60, state, allowed, coarseningEnabled = false)
+            assertEquals(60, state.effectiveIntervalSeconds)
+        }
+    }
+
+    @Test
     fun stepsContinueTowardMaxThenStay() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)

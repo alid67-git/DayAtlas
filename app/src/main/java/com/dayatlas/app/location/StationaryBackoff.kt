@@ -21,6 +21,19 @@ object StationaryBackoff {
     /** One spike outside the circle is jitter; two in a row is real movement. */
     const val MOVEMENT_STREAK_TO_RESET = 2
 
+    /**
+     * Diagnostic override (2026-09-19): [recordSample] keeps sampling at the
+     * user's chosen interval even while stationary instead of backing off,
+     * so we can confirm whether the background alarm itself checks in
+     * reliably regardless of movement - a reported background-tracking
+     * problem persisted even after reverting the movement-confirmation
+     * logic, so the next thing to rule out is the coarsening itself masking
+     * how often the alarm actually fires. The coarsening math below is
+     * untouched and still covered by its own tests; flip this back to true
+     * once the background issue is understood.
+     */
+    const val COARSENING_ENABLED = false
+
     data class State(
         val effectiveIntervalSeconds: Int,
         val stationaryStreak: Int,
@@ -53,6 +66,7 @@ object StationaryBackoff {
             lon = lon,
             userBaseSeconds = prefs.intervalSeconds,
             state = read(prefs),
+            coarseningEnabled = COARSENING_ENABLED,
         )
         write(prefs, next)
     }
@@ -79,6 +93,7 @@ object StationaryBackoff {
         userBaseSeconds: Int,
         state: State,
         allowed: IntArray = AppPrefs.ALLOWED_INTERVAL_SECONDS,
+        coarseningEnabled: Boolean = true,
     ): State {
         val base = clampToAllowed(userBaseSeconds, allowed)
         val prevLat = state.lastLat
@@ -131,7 +146,7 @@ object StationaryBackoff {
             )
         }
 
-        val next = nextCoarser(effective, allowed)
+        val next = if (coarseningEnabled) nextCoarser(effective, allowed) else null
         return if (next != null) {
             State(
                 effectiveIntervalSeconds = next.coerceAtLeast(base),
