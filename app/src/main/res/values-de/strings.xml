@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Diese Version macht die Änderungen aus 1.3.0 und 1.3.1 rückgängig und geht zurück auf den Code von 1.2.0, um ein gemeldetes Hintergrund-Tracking-Problem einzugrenzen.</string>
+    <string name="build_note">Um ein gemeldetes Hintergrund-/Abtastintervall-Problem einzugrenzen, wurde auch die Bewegungserkennung aus 1.1.1 rückgängig gemacht; die Aufzeichnungslogik ist wieder auf dem Stand von 1.1.0.</string>
 </resources>

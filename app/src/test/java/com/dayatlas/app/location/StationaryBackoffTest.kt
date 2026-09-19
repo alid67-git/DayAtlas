@@ -99,32 +99,6 @@ class StationaryBackoffTest {
     }
 
     @Test
-    fun twoInconsistentOutliersDoNotConfirmMovement() {
-        // Regression test: indoor/urban GPS multipath can easily put two
-        // *different* far-looking fixes on either side of the anchor while
-        // the device never moved - the old rule ("2 fixes outside the
-        // circle, in a row") treated that as confirmed departure. Only a
-        // second fix that agrees with the *first* away fix should confirm.
-        var state = StationaryBackoff.reset(30)
-        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        repeat(9) {
-            state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        }
-        assertEquals(300, state.effectiveIntervalSeconds)
-        // ~1 km away to the east.
-        state = StationaryBackoff.onSample(41.0, 29.01, 30, state, allowed)
-        assertEquals(300, state.effectiveIntervalSeconds)
-        // ~1 km away to the *west* instead - disagrees with the first
-        // outlier, so this is scatter, not a settled new location.
-        state = StationaryBackoff.onSample(41.0, 28.99, 30, state, allowed)
-        assertEquals(300, state.effectiveIntervalSeconds)
-        assertEquals(0, state.stationaryStreak)
-        // A third fix that agrees with the *second* outlier now confirms it.
-        state = StationaryBackoff.onSample(41.0, 28.99, 30, state, allowed)
-        assertEquals(30, state.effectiveIntervalSeconds)
-    }
-
-    @Test
     fun nextCoarserLadder() {
         assertEquals(60, StationaryBackoff.nextCoarser(30, allowed))
         assertEquals(180, StationaryBackoff.nextCoarser(60, allowed))
