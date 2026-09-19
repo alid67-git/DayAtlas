@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">La note du détail du jour est désormais une petite icône ; les cartes récapitulatives des Statistiques restent fixes et toucher une barre ouvre le détail de ce jour ; l\'Aide est maintenant une liste de sujets à toucher ; « Plus » ouvre directement les Réglages.</string>
+    <string name="build_note">Appuyer sur un jour dans la liste des itinéraires ouvre désormais un écran de détails dédié (carte plus grande, note, photos).</string>
 </resources>

@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">日详情中的备注现在是一个小图标；统计页顶部摘要卡片保持固定，点击某一天的柱状条即可打开该日详情；帮助现在是可点击的主题列表；\"更多\"现在直接打开设置。</string>
+    <string name="build_note">在路线列表中点击某一天，现在会打开一个独立的详情页（更大的地图、备注、照片）。</string>
 </resources>

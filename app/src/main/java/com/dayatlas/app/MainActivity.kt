@@ -189,17 +189,18 @@ class MainActivity : DayAtlasActivity() {
         }
 
         binding.bottomNav.setOnItemSelectedListener { item ->
-            if (item.itemId == R.id.nav_more) {
-                // "Daha fazla" is a shortcut into Settings, not a pane of its
-                // own - returning false keeps whichever tab is already
-                // selected checked instead of highlighting this one.
-                startActivity(Intent(this, SettingsActivity::class.java))
-                return@setOnItemSelectedListener false
-            }
             showTab(item.itemId)
             true
         }
         binding.bottomNav.selectedItemId = R.id.nav_daily
+
+        binding.moreSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        binding.moreHelp.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
+        binding.moreVersion.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
 
         setupStatsRangeChips()
         binding.routesList.layoutManager = LinearLayoutManager(this)
@@ -353,6 +354,7 @@ class MainActivity : DayAtlasActivity() {
         binding.paneDaily.visibility = if (daily) View.VISIBLE else View.GONE
         binding.paneStats.visibility = if (itemId == R.id.nav_stats) View.VISIBLE else View.GONE
         binding.paneRoutes.visibility = if (itemId == R.id.nav_routes) View.VISIBLE else View.GONE
+        binding.paneMore.visibility = if (itemId == R.id.nav_more) View.VISIBLE else View.GONE
         when (itemId) {
             R.id.nav_daily -> {
                 binding.routeMap.onResume()
@@ -499,7 +501,6 @@ class MainActivity : DayAtlasActivity() {
                 lp.width = ((meters / maxMeters) * trackWidth).toInt().coerceAtLeast(if (meters > 0) 4 else 0)
                 fill.layoutParams = lp
             }
-            row.setOnClickListener { startActivity(DayDetailActivity.intent(this, iso)) }
             container.addView(row)
         }
     }

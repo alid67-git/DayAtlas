@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Die Notiz in der Tagesdetailansicht ist jetzt ein kleines Symbol; die Statistik-Übersichtskarten bleiben fixiert, ein Tippen auf einen Balken öffnet die Tagesdetails; die Hilfe ist jetzt eine antippbare Themenliste; \"Mehr\" öffnet direkt die Einstellungen.</string>
+    <string name="build_note">Das Antippen eines Tages in der Routenliste öffnet jetzt einen eigenen Detailbildschirm (größere Karte, Notiz, Fotos).</string>
 </resources>
