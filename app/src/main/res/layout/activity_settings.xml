@@ -76,19 +76,66 @@
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textColor="@color/md_theme_outline" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <RadioGroup
+                android:id="@+id/languageGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="@string/settings_language">
+                android:layout_marginTop="8dp">
 
-                <AutoCompleteTextView
-                    android:id="@+id/languageDropdown"
+                <RadioButton
+                    android:id="@+id/languageSystem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/language_system" />
+
+                <RadioButton
+                    android:id="@+id/languageTr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_tr" />
+
+                <RadioButton
+                    android:id="@+id/languageEn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_en" />
+
+                <RadioButton
+                    android:id="@+id/languageDe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_de" />
+
+                <RadioButton
+                    android:id="@+id/languageZh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_zh" />
+
+                <RadioButton
+                    android:id="@+id/languageHi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_hi" />
+
+                <RadioButton
+                    android:id="@+id/languageEs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_es" />
+
+                <RadioButton
+                    android:id="@+id/languageFr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_fr" />
+
+                <RadioButton
+                    android:id="@+id/languageAr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_ar" />
+            </RadioGroup>
 
             <TextView
                 android:layout_width="match_parent"
@@ -104,194 +151,145 @@
                 android:text="@string/settings_interval_hint"
                 android:textAppearance="?attr/textAppearanceBodySmall" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <RadioGroup
+                android:id="@+id/intervalGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <RadioButton
+                    android:id="@+id/interval30s"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/interval_30s" />
+
+                <RadioButton
+                    android:id="@+id/interval1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/interval_1" />
+
+                <RadioButton
+                    android:id="@+id/interval3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/interval_3" />
+
+                <RadioButton
+                    android:id="@+id/interval5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/interval_5" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/settings_day_stats"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/settings_day_stats_hint"
+                android:textAppearance="?attr/textAppearanceBodySmall" />
+
+            <CheckBox
+                android:id="@+id/statCheckDistance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="@string/settings_interval">
+                android:text="@string/map_day_distance" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/intervalDropdown"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <CheckBox
+                android:id="@+id/statCheckLastPoint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/last_point" />
 
-            <LinearLayout
-                android:id="@+id/dayStatsHeader"
+            <CheckBox
+                android:id="@+id/statCheckPointCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/point_count" />
+
+            <CheckBox
+                android:id="@+id/statCheckGpsInterval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_gps_interval" />
+
+            <CheckBox
+                android:id="@+id/statCheckMaxSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_max_speed" />
+
+            <CheckBox
+                android:id="@+id/statCheckAvgSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_avg_speed" />
+
+            <CheckBox
+                android:id="@+id/statCheckActiveDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_active_duration" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:text="@string/settings_permissions"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_day_stats"
-                        android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/settings_day_stats_hint"
-                        android:textAppearance="?attr/textAppearanceBodySmall" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/dayStatsChevron"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="8dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/md_theme_outline" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/dayStatsContent"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/locationSettings"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginTop="8dp"
+                android:text="@string/open_location_settings" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/batteryExemption"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/request_battery_exemption" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/batterySettings"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/open_battery_settings" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/alarmSettings"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/open_alarm_settings" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/autostartSettings"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:visibility="gone"
-                tools:visibility="visible">
+                android:text="@string/open_autostart_settings" />
 
-                <CheckBox
-                    android:id="@+id/statCheckDistance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/map_day_distance" />
-
-                <CheckBox
-                    android:id="@+id/statCheckLastPoint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/last_point" />
-
-                <CheckBox
-                    android:id="@+id/statCheckPointCount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/point_count" />
-
-                <CheckBox
-                    android:id="@+id/statCheckGpsInterval"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stat_gps_interval" />
-
-                <CheckBox
-                    android:id="@+id/statCheckMaxSpeed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stat_max_speed" />
-
-                <CheckBox
-                    android:id="@+id/statCheckAvgSpeed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stat_avg_speed" />
-
-                <CheckBox
-                    android:id="@+id/statCheckActiveDuration"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stat_active_duration" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/permissionsHeader"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/settings_permissions"
-                    android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                <ImageView
-                    android:id="@+id/permissionsChevron"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="8dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/md_theme_outline" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/permissionsContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/locationSettings"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/open_location_settings" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/batteryExemption"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/request_battery_exemption" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/batterySettings"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/open_battery_settings" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/alarmSettings"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/open_alarm_settings" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/autostartSettings"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="@string/open_autostart_settings" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/oem_note"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textColor="@color/md_theme_outline" />
-            </LinearLayout>
+                android:layout_marginTop="20dp"
+                android:text="@string/oem_note"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="@color/md_theme_outline" />
 
             <TextView
                 android:id="@+id/filesHint"

@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Se corrigió que el selector de idioma a veces terminara en la opción equivocada; idioma e intervalo de muestreo ahora son menús desplegables; las estadísticas del día y los permisos ahora son secciones que se despliegan.</string>
+    <string name="build_note">La nota del detalle del día ahora es un pequeño icono; las tarjetas de resumen de Estadísticas quedan fijas y tocar una barra abre el detalle de ese día; la Ayuda ahora es una lista de temas pulsable; \"Más\" abre Ajustes directamente.</string>
 </resources>

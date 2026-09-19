@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Correction du sélecteur de langue qui se retrouvait parfois sur la mauvaise sélection ; la langue et l\'intervalle d\'échantillonnage sont maintenant des menus déroulants ; les statistiques du jour et les autorisations sont maintenant des sections repliables.</string>
+    <string name="build_note">La note du détail du jour est désormais une petite icône ; les cartes récapitulatives des Statistiques restent fixes et toucher une barre ouvre le détail de ce jour ; l\'Aide est maintenant une liste de sujets à toucher ; « Plus » ouvre directement les Réglages.</string>
 </resources>

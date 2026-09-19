@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Die Sprachauswahl landet nicht mehr manchmal auf der falschen Auswahl; Sprache und Abtastintervall sind jetzt Aufklapp-Menüs; Tagesstatistiken und Berechtigungen klappen jetzt als eigene Abschnitte auf.</string>
+    <string name="build_note">Die Notiz in der Tagesdetailansicht ist jetzt ein kleines Symbol; die Statistik-Übersichtskarten bleiben fixiert, ein Tippen auf einen Balken öffnet die Tagesdetails; die Hilfe ist jetzt eine antippbare Themenliste; \"Mehr\" öffnet direkt die Einstellungen.</string>
 </resources>
