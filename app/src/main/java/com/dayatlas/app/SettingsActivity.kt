@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,9 +46,6 @@ class SettingsActivity : DayAtlasActivity() {
         prefs = AppPrefs(this)
 
         binding.toolbar.setNavigationOnClickListener { finish() }
-        binding.helpButton.setOnClickListener {
-            startActivity(Intent(this, HelpActivity::class.java))
-        }
 
         binding.dailyMode.isChecked = prefs.dailyMode
         binding.dailyMode.setOnCheckedChangeListener { _, checked ->
@@ -60,13 +56,31 @@ class SettingsActivity : DayAtlasActivity() {
         }
 
         setupLanguagePicker()
-        setupIntervalPicker()
+
+        when (prefs.intervalSeconds) {
+            30 -> binding.interval30s.isChecked = true
+            60 -> binding.interval1.isChecked = true
+            180 -> binding.interval3.isChecked = true
+            else -> binding.interval5.isChecked = true
+        }
+        binding.intervalGroup.setOnCheckedChangeListener { _, checkedId ->
+            val seconds = when (checkedId) {
+                R.id.interval30s -> 30
+                R.id.interval1 -> 60
+                R.id.interval3 -> 180
+                else -> 300
+            }
+            prefs.intervalSeconds = seconds
+            prefs.resetStationaryBackoff()
+            if (prefs.trackingEnabled || prefs.dailyMode) {
+                TrackingController.start(this, prefs, sampleSoon = false)
+            }
+            binding.gpsRateLabel.text = getString(R.string.gps_check_rate, formatIntervalSeconds(seconds))
+        }
         binding.gpsRateLabel.text =
             getString(R.string.gps_check_rate, formatIntervalSeconds(prefs.intervalSeconds))
 
         setupDayStatsCheckboxes()
-        setupExpandable(binding.dayStatsHeader, binding.dayStatsChevron, binding.dayStatsContent)
-        setupExpandable(binding.permissionsHeader, binding.permissionsChevron, binding.permissionsContent)
 
         binding.locationSettings.setOnClickListener {
             startActivity(
@@ -175,50 +189,34 @@ class SettingsActivity : DayAtlasActivity() {
     }
 
     private fun setupLanguagePicker() {
-        val tags = listOf(AppLocale.SYSTEM) + AppLocale.SUPPORTED
-        binding.languageDropdown.setAdapter(
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, tags.map(::languageLabel)),
-        )
-        binding.languageDropdown.setText(languageLabel(prefs.appLanguage), false)
-        binding.languageDropdown.setOnItemClickListener { _, _, position, _ ->
-            val tag = tags[position]
-            if (tag == prefs.appLanguage) return@setOnItemClickListener
-            prefs.appLanguage = tag
-            // AppCompatDelegate recreates every active activity on its own
-            // once the locale change lands - an extra recreate() call here
-            // used to race with that and was why the wrong language could
-            // end up shown as selected after switching.
-            AppLocale.apply(tag)
+        when (prefs.appLanguage) {
+            AppLocale.TR -> binding.languageTr.isChecked = true
+            AppLocale.EN -> binding.languageEn.isChecked = true
+            AppLocale.DE -> binding.languageDe.isChecked = true
+            AppLocale.ZH -> binding.languageZh.isChecked = true
+            AppLocale.HI -> binding.languageHi.isChecked = true
+            AppLocale.ES -> binding.languageEs.isChecked = true
+            AppLocale.FR -> binding.languageFr.isChecked = true
+            AppLocale.AR -> binding.languageAr.isChecked = true
+            else -> binding.languageSystem.isChecked = true
         }
-    }
-
-    private fun languageLabel(tag: String): String = when (tag) {
-        AppLocale.TR -> getString(R.string.language_tr)
-        AppLocale.EN -> getString(R.string.language_en)
-        AppLocale.DE -> getString(R.string.language_de)
-        AppLocale.ZH -> getString(R.string.language_zh)
-        AppLocale.HI -> getString(R.string.language_hi)
-        AppLocale.ES -> getString(R.string.language_es)
-        AppLocale.FR -> getString(R.string.language_fr)
-        AppLocale.AR -> getString(R.string.language_ar)
-        else -> getString(R.string.language_system)
-    }
-
-    private fun setupIntervalPicker() {
-        val seconds = intArrayOf(30, 60, 180, 300)
-        binding.intervalDropdown.setAdapter(
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, seconds.map(::formatIntervalSeconds)),
-        )
-        binding.intervalDropdown.setText(formatIntervalSeconds(prefs.intervalSeconds), false)
-        binding.intervalDropdown.setOnItemClickListener { _, _, position, _ ->
-            val newSeconds = seconds[position]
-            if (newSeconds == prefs.intervalSeconds) return@setOnItemClickListener
-            prefs.intervalSeconds = newSeconds
-            prefs.resetStationaryBackoff()
-            if (prefs.trackingEnabled || prefs.dailyMode) {
-                TrackingController.start(this, prefs, sampleSoon = false)
+        binding.languageGroup.setOnCheckedChangeListener { _, checkedId ->
+            val tag = when (checkedId) {
+                R.id.languageTr -> AppLocale.TR
+                R.id.languageEn -> AppLocale.EN
+                R.id.languageDe -> AppLocale.DE
+                R.id.languageZh -> AppLocale.ZH
+                R.id.languageHi -> AppLocale.HI
+                R.id.languageEs -> AppLocale.ES
+                R.id.languageFr -> AppLocale.FR
+                R.id.languageAr -> AppLocale.AR
+                else -> AppLocale.SYSTEM
             }
-            binding.gpsRateLabel.text = getString(R.string.gps_check_rate, formatIntervalSeconds(newSeconds))
+            if (tag == prefs.appLanguage) return@setOnCheckedChangeListener
+            prefs.appLanguage = tag
+            AppLocale.apply(tag)
+            // Recreate so every string/label refreshes in the new locale.
+            recreate()
         }
     }
 
@@ -227,14 +225,6 @@ class SettingsActivity : DayAtlasActivity() {
         60 -> getString(R.string.interval_1)
         180 -> getString(R.string.interval_3)
         else -> getString(R.string.interval_5)
-    }
-
-    private fun setupExpandable(header: View, chevron: View, content: View) {
-        header.setOnClickListener {
-            val expand = content.visibility != View.VISIBLE
-            content.visibility = if (expand) View.VISIBLE else View.GONE
-            chevron.animate().rotation(if (expand) 90f else 0f).setDuration(150).start()
-        }
     }
 
     private fun setupDayStatsCheckboxes() {

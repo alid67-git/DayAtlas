@@ -29,13 +29,14 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        // 1.3.1: fixes the Settings language picker sometimes ending up on
-        // the wrong selection (an explicit recreate() was racing with
-        // AppCompatDelegate's own locale-change recreate). Language and
-        // sampling-interval pickers are now dropdown menus, and the map day
-        // stats / permissions sections collapse behind an expandable header.
-        versionCode = 55
-        versionName = "1.3.1"
+        // Reverted to 1.2.0's code (1.3.0 and 1.3.1 undone) at the user's
+        // request, to isolate a reported background-tracking problem from
+        // those two releases' changes. versionCode still has to increase
+        // (Android refuses to install a lower one over what's already on a
+        // phone), so it stays ahead of 1.3.1's even though versionName goes
+        // back to 1.2.0.
+        versionCode = 56
+        versionName = "1.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /

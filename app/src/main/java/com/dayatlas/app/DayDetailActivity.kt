@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import com.dayatlas.app.data.DayNoteDialog
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
@@ -79,7 +80,7 @@ class DayDetailActivity : DayAtlasActivity() {
         binding.exportButton.setOnClickListener {
             GpxExportDialog.show(this, store, date)
         }
-        binding.noteButton.setOnClickListener {
+        binding.noteRow.setOnClickListener {
             DayNoteDialog.show(this, store, dateIso) { refresh() }
         }
         binding.jumpsButton.setOnClickListener {
@@ -152,7 +153,16 @@ class DayDetailActivity : DayAtlasActivity() {
             binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
         }
 
-        binding.noteBadge.visibility = if (record?.note.isNullOrEmpty()) View.GONE else View.VISIBLE
+        val note = record?.note
+        if (note.isNullOrEmpty()) {
+            binding.noteText.text = getString(R.string.day_note_hint)
+            binding.noteIcon.imageTintList =
+                ContextCompat.getColorStateList(this, R.color.md_theme_on_surface)
+        } else {
+            binding.noteText.text = note
+            binding.noteIcon.imageTintList =
+                ContextCompat.getColorStateList(this, R.color.status_on)
+        }
 
         applyDayPhotos(record?.photos.orEmpty())
 

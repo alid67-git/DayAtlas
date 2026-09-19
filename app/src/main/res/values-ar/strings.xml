@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">تم إصلاح مشكلة استقرار اختيار اللغة أحيانًا على خيار خاطئ؛ أصبحت اللغة وفاصل أخذ العينات قائمتين منسدلتين؛ أصبحت إحصاءات اليوم على الخريطة والأذونات أقسامًا تُفتح عند النقر.</string>
+    <string name="build_note">يعيد هذا الإصدار التراجع عن تغييرات 1.3.0 و1.3.1 ليعود إلى كود 1.2.0، للمساعدة في عزل مشكلة تتبع في الخلفية تم الإبلاغ عنها.</string>
 </resources>

@@ -1,39 +1,15 @@
 # Changelog
 
-## 1.3.1 — 2026-09-18
+## 1.2.0 (geri alma) — 2026-09-19
 
-- **Dil seçimi artık yanlış dile takılmıyor:** Ayarlar'da bir dil
-  seçildiğinde uygulamanın kendisi ekranı zaten yeniden oluşturuyordu;
-  ayrıca elle de tetiklenen ikinci bir yeniden oluşturma bu ikisinin
-  çakışmasına ve bazen yanlış dilin seçili görünmesine yol açıyordu —
-  o ikinci tetikleme kaldırıldı.
-- **Dil ve örnekleme aralığı artık açılır menü:** Uzun radyo düğmesi
-  listeleri yerine, ikisi de tek dokunuşla açılan birer açılır menüye
-  dönüştü.
-- **Harita gün istatistikleri ve izinler artık açılır bölüm:** Ayarlar
-  ekranındaki bu iki uzun liste artık başlığa dokunulduğunda açılıp
-  kapanıyor, ekran daha kısa ve düzenli görünüyor.
-
-## 1.3.0 — 2026-09-18
-
-- **Günlük detay ekranında not artık küçük bir ikon:** Not, dışa aktar
-  düğmesinin yanında küçük bir simgeye sıkıştı — notu olan bir günde
-  simgenin üzerinde beyaz bir nokta görünüyor, dokununca not açılır
-  pencerede gösteriliyor. Bu değişiklikle haritaya ayrılan alan büyüdü.
-- **İstatistikler ekranında üst kartlar artık sabit:** Toplam mesafe,
-  aktif gün, hız ve süre kartları kaydırma sırasında yerinde duruyor;
-  yalnızca aşağıdaki günlük mesafe çubukları kayıyor. Bir günün çubuğuna
-  dokunmak o günün tam detay ekranını açıyor — hem Rotalar listesinden
-  hem İstatistikler'den ulaşılan bu ekranda geri tuşu, hangi ekrandan
-  gelindiyse oraya geri dönüyor.
-- **Yardım ekranı artık tıklanabilir bir konu listesi:** Tüm metni alt
-  alta göstermek yerine, kısa bir giriş özetinin altında konu başlıkları
-  (Kayıt Modları, Örnekleme Aralığı, Sık Sorulan Sorular vb.) listeleniyor
-  — bir başlığa dokunmak yalnızca o bölümü açıyor, geri tuşu listeye
-  dönüyor.
-- **"Daha fazla" artık doğrudan Ayarlar'ı açıyor:** Eskiden Ayarlar ve
-  Yardım'a giden ara bir menüydü; şimdi doğrudan Ayarlar ekranını
-  açıyor, Yardım'a ise Ayarlar'ın üst çubuğundaki simgeden ulaşılıyor.
+- **1.3.0 ve 1.3.1'deki tüm değişiklikler geri alındı:** Kullanıcının
+  isteğiyle, arka planda konum kaydının çalışmadığı şikayetini o iki
+  sürümün değişikliklerinden ayırmak için kod 1.2.0'daki haline
+  döndürüldü — Günlük Detay ekranı, İstatistikler/Yardım/Ayarlar
+  yenilemeleri ve dil seçimi düzeltmesi bu sürümde yok. Sürüm numarası
+  görünürde 1.2.0'a döndü, ama Android'in güncelleme kuralı gereği
+  içerideki sürüm kodu yine de yükseldi — telefonunuzdaki 1.3.1'in
+  üzerine normal bir güncelleme gibi kurulabilir.
 
 ## 1.2.0 — 2026-09-17
 

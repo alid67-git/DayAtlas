@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">भाषा चयन अब कभी-कभी गलत भाषा पर अटकने की समस्या ठीक हुई; भाषा और सैंपलिंग अंतराल अब ड्रॉपडाउन मेनू हैं; मानचित्र दिन आँकड़े और अनुमतियाँ अब टैप करने पर खुलने वाले भाग हैं।</string>
+    <string name="build_note">यह संस्करण बैकग्राउंड ट्रैकिंग की एक रिपोर्ट की गई समस्या को अलग करने में मदद के लिए 1.3.0 और 1.3.1 के बदलावों को वापस लेकर 1.2.0 के कोड पर लौटता है।</string>
 </resources>

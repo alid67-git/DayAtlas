@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Die Sprachauswahl landet nicht mehr manchmal auf der falschen Auswahl; Sprache und Abtastintervall sind jetzt Aufklapp-Menüs; Tagesstatistiken und Berechtigungen klappen jetzt als eigene Abschnitte auf.</string>
+    <string name="build_note">Diese Version macht die Änderungen aus 1.3.0 und 1.3.1 rückgängig und geht zurück auf den Code von 1.2.0, um ein gemeldetes Hintergrund-Tracking-Problem einzugrenzen.</string>
 </resources>
