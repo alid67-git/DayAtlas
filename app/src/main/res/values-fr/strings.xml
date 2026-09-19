@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Appuyer sur un jour dans la liste des itinéraires ouvre désormais un écran de détails dédié (carte plus grande, note, photos).</string>
+    <string name="build_note">Cette version annule les changements de 1.3.0 et 1.3.1 pour revenir au code de 1.2.0, afin d\'isoler un problème signalé de suivi en arrière-plan.</string>
 </resources>

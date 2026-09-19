@@ -29,11 +29,13 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        // 1.2.0: tapping a day in the Routes list now opens a dedicated,
-        // full-detail screen (bigger map, full stats, note, photos) instead
-        // of jumping to the Daily tab's compact map. Route rows also show a
-        // note icon when that day has one.
-        versionCode = 53
+        // Reverted to 1.2.0's code (1.3.0 and 1.3.1 undone) at the user's
+        // request, to isolate a reported background-tracking problem from
+        // those two releases' changes. versionCode still has to increase
+        // (Android refuses to install a lower one over what's already on a
+        // phone), so it stays ahead of 1.3.1's even though versionName goes
+        // back to 1.2.0.
+        versionCode = 56
         versionName = "1.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own

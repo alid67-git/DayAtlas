@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0 (geri alma) — 2026-09-19
+
+- **1.3.0 ve 1.3.1'deki tüm değişiklikler geri alındı:** Kullanıcının
+  isteğiyle, arka planda konum kaydının çalışmadığı şikayetini o iki
+  sürümün değişikliklerinden ayırmak için kod 1.2.0'daki haline
+  döndürüldü — Günlük Detay ekranı, İstatistikler/Yardım/Ayarlar
+  yenilemeleri ve dil seçimi düzeltmesi bu sürümde yok. Sürüm numarası
+  görünürde 1.2.0'a döndü, ama Android'in güncelleme kuralı gereği
+  içerideki sürüm kodu yine de yükseldi — telefonunuzdaki 1.3.1'in
+  üzerine normal bir güncelleme gibi kurulabilir.
+
 ## 1.2.0 — 2026-09-17
 
 - **Rotalar listesi artık tam detay ekranına açılıyor:** Bir güne
