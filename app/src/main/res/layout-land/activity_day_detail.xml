@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Landscape: map dominates the left; chrome stays on the right. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/md_theme_surface">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md_theme_primary"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="@color/md_theme_on_primary"
+            app:titleTextColor="@color/md_theme_on_primary"
+            tools:title="Günlük 8 Eyl 2026" />
+
+        <ImageButton
+            android:id="@+id/exportButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_export_gpx"
+            android:padding="12dp"
+            android:src="@drawable/ic_export"
+            app:tint="@color/md_theme_on_primary" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <org.osmdroid.views.MapView
+                android:id="@+id/routeMap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/emptyState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_map_empty_label"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:elevation="4dp"
+                android:text="@string/route_empty"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textColor="@color/md_theme_on_surface"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="12dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/jumpsButton"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/jumps_button_none" />
+
+                <LinearLayout
+                    android:id="@+id/dayPhotosRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/dayNoteButton"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_dash_card"
+                        android:contentDescription="@string/day_note_button"
+                        android:padding="14dp"
+                        android:src="@drawable/ic_note"
+                        app:tint="@color/md_theme_on_surface" />
+
+                    <ImageView
+                        android:id="@+id/dayPhoto1"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_dash_card"
+                        android:contentDescription="@string/day_photo_thumbnail"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/dayPhoto2"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_dash_card"
+                        android:contentDescription="@string/day_photo_thumbnail"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/dayPhoto3"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_dash_card"
+                        android:contentDescription="@string/day_photo_thumbnail"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/addPhotoButton"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_dash_card"
+                        android:contentDescription="@string/day_photo_add"
+                        android:padding="14dp"
+                        android:src="@drawable/ic_add_photo"
+                        app:tint="@color/md_theme_on_surface" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/dayStats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    tools:itemCount="6"
+                    tools:listitem="@layout/item_day_stat" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</LinearLayout>

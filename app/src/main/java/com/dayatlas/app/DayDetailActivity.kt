@@ -166,11 +166,12 @@ class DayDetailActivity : DayAtlasActivity() {
         )
 
         if (jumps.isEmpty()) {
-            binding.jumpsButton.visibility = View.GONE
+            binding.jumpsButton.text = getString(R.string.jumps_button_none)
         } else {
-            binding.jumpsButton.visibility = View.VISIBLE
             binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
         }
+        binding.jumpsButton.visibility = View.VISIBLE
+
 
         binding.dayNoteButton.imageTintList = ContextCompat.getColorStateList(
             this,

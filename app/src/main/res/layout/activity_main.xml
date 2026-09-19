@@ -326,10 +326,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="12dp"
                 android:layout_marginBottom="8dp"
-                android:text=""
-                android:visibility="gone"
-                tools:text="Atlamalar (1) — dokunup sil"
-                tools:visibility="visible" />
+                android:text="@string/jumps_button_none"
+                tools:text="Atlamalar (1) — dokunup sil" />
 
             <!-- En fazla 3 fotoğraf; dolunca ekle butonu gizlenir. -->
             <LinearLayout

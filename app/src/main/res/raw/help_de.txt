@@ -32,6 +32,8 @@ Gelegentlich kann das GPS bei schwachem Signal einen fehlerhaften, unplausiblen 
 
 Tippen Sie in Statistik auf eine Tagesleiste (oder in Routen auf einen Tag), um die Tagesdetailansicht zu öffnen; Zurück führt wieder zum jeweiligen Reiter.
 
+Die Schaltfläche „Sprünge“ liegt immer direkt unter der Karte (Tagesansicht und Tagesdetail). Ohne Sprünge steht dort „Keine Sprünge“.
+
 6) GPX-EXPORT
 
 Im Reiter Routen können Sie einen einzelnen Tag (der Export-Pfeil in seiner Zeile) oder über „Bereichs-GPX“ einen Datumsbereich als einzelne GPX-Datei teilen. GPX ist ein Standardformat für Routen, das von den meisten Karten- und Sport-Apps gelesen werden kann - importieren Sie es in Google Earth, Strava, Komoot und ähnliche Apps, oder teilen Sie es per E-Mail oder Drive.

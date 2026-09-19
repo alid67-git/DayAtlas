@@ -85,8 +85,9 @@
     <string name="up_to_date">En güncel sürümdesiniz.</string>
 
     <string name="jumps_button">Atlamalar (%1$d) — dokunup sil</string>
+    <string name="jumps_button_none">Atlamalar yok</string>
     <string name="jumps_title">GPS atlamaları (%1$d)</string>
-    <string name="jumps_none">Bu günde atlama yok.</string>
+    <string name="jumps_none">Bu günde silinecek GPS atlaması yok. (Sert sıçramalar burada listelenir; soft spike’lar otomatik düşer.)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">Atlamayı sil?</string>
     <string name="jump_delete_message">%1$s saatindeki nokta (%2$s sıçrama) kayıttan çıkarılacak. Mesafe yeniden hesaplanır.</string>
@@ -185,5 +186,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.2 — Soft GPS sıçrama filtresi; istatistik çubuğundan gün detayı; not ikonu; ayarlarda dil/aralık açılır listeleri; Daha fazla’da Yardım.</string>
+    <string name="build_note">Sürüm 1.1.3 — Gün detayında daha büyük harita; haritalar 1 kademe yakın; Atlamalar düğmesi her zaman görünür; Yardım özet + detay.</string>
 </resources>

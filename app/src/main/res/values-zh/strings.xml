@@ -85,8 +85,9 @@
     <string name="up_to_date">您使用的已是最新版本。</string>
 
     <string name="jumps_button">跳变点 (%1$d) — 点击删除</string>
+    <string name="jumps_button_none">无跳变点</string>
     <string name="jumps_title">GPS 跳变点 (%1$d)</string>
-    <string name="jumps_none">这一天没有跳变点。</string>
+    <string name="jumps_none">这一天没有可删除的 GPS 跳变点。（硬瞬移会列在这里；软尖峰会自动丢弃。）</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">删除该跳变点？</string>
     <string name="jump_delete_message">%1$s 处的点（跳变 %2$s）将从记录中移除。距离将重新计算。</string>
@@ -175,5 +176,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.2 — 软 GPS 尖峰过滤；从统计条打开日详情；笔记图标；语言/间隔下拉；“更多”中的帮助。</string>
+    <string name="build_note">版本 1.1.3 — 更大的日详情地图；地图靠近一级；跳变按钮始终可见；帮助摘要+详情。</string>
 </resources>

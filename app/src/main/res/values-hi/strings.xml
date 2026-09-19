@@ -85,8 +85,9 @@
     <string name="up_to_date">आप नवीनतम संस्करण पर हैं।</string>
 
     <string name="jumps_button">जंप (%1$d) — हटाने के लिए टैप करें</string>
+    <string name="jumps_button_none">कोई जंप नहीं</string>
     <string name="jumps_title">GPS जंप (%1$d)</string>
-    <string name="jumps_none">इस दिन कोई जंप नहीं है।</string>
+    <string name="jumps_none">इस दिन हटाने के लिए कोई GPS जंप नहीं। (कठोर टेलीपोर्ट यहाँ सूचीबद्ध होते हैं; नरम स्पाइक स्वतः हट जाते हैं।)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">जंप हटाएँ?</string>
     <string name="jump_delete_message">%1$s पर स्थित बिंदु (%2$s जंप) रिकॉर्ड से हटा दिया जाएगा। दूरी फिर से गणना की जाएगी।</string>
@@ -175,5 +176,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.2 — नरम GPS स्पाइक फ़िल्टर; आँकड़ा पट्टियों से दिन विवरण; नोट आइकन; भाषा/अंतराल ड्रॉपडाउन; अधिक में सहायता।</string>
+    <string name="build_note">संस्करण 1.1.3 — बड़ा दिन-विवरण मानचित्र; मानचित्र एक ज़ूम पास; जंप बटन हमेशा दिखे; सहायता सार+विवरण।</string>
 </resources>
