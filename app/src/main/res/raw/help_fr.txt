@@ -28,7 +28,9 @@ Les cartes du jour affichent la distance, le dernier point, le nombre de points,
 
 5) SAUTS GPS
 
-Le GPS peut parfois enregistrer un point erroné et invraisemblable lorsque le signal est faible (par exemple en se « téléportant » à quelques kilomètres pendant un instant). Ces points apparaissent en orange sur la carte et sont listés sous le bouton « Sauts », où vous pouvez les supprimer un par un - la distance est recalculée automatiquement et le reste de votre fichier d'enregistrement n'est pas affecté.
+Le GPS peut parfois enregistrer un point erroné et invraisemblable lorsque le signal est faible (par exemple en se « téléportant » à quelques kilomètres pendant un instant). L'app filtre en deux étapes : les téléports extrêmes ne sont pas écrits ; un point suspect de moyenne portée est retenu jusqu'à l'échantillon suivant — s'il revient près du pin précédent, le pic est abandonné. Les sauts restants apparaissent en orange et sont listés sous « Sauts ».
+
+Touchez une barre journalière dans Statistiques (ou un jour dans Trajets) pour ouvrir le détail ; Retour ramène à cet onglet.
 
 6) EXPORT GPX
 

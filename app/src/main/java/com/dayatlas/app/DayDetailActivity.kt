@@ -30,17 +30,15 @@ import java.time.format.DateTimeFormatter
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 
 /**
- * Full-detail view for a single past day, opened by tapping a row in the
- * Routes list — a bigger map plus the same note/photos/jumps a rider gets
- * on the Daily tab, without routing through Daily's own live-tracking chrome
- * (today's start/stop button, daily-mode banner) which isn't relevant to a
- * day that's already over.
+ * Full-detail view for a single past day (Routes list or Statistics bar).
+ * [EXTRA_RETURN_SOURCE] remembers which MainActivity tab to restore on back.
  */
 class DayDetailActivity : DayAtlasActivity() {
     private lateinit var binding: ActivityDayDetailBinding
     private lateinit var dateIso: String
     private lateinit var date: LocalDate
     private lateinit var statsAdapter: DayStatsAdapter
+    private var returnSource: String? = null
     private val store by lazy { DayStore(this) }
     private val photoStore by lazy { PhotoStore(this) }
 
@@ -66,21 +64,21 @@ class DayDetailActivity : DayAtlasActivity() {
             finish()
             return
         }
+        returnSource = intent.getStringExtra(EXTRA_RETURN_SOURCE)
         binding = ActivityDayDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.routeMap.setTileSource(TileSourceFactory.MAPNIK)
         binding.routeMap.setMultiTouchControls(true)
         binding.routeMap.isTilesScaledToDpi = true
-        // Avoid a pure-white "hole" while tiles / first camera fit settle.
         binding.routeMap.setBackgroundColor(0xFFE8EEF4.toInt())
 
         binding.toolbar.title = DayTitle.format(date)
-        binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.toolbar.setNavigationOnClickListener { navigateBack() }
         binding.exportButton.setOnClickListener {
             GpxExportDialog.show(this, store, date)
         }
-        binding.noteRow.setOnClickListener {
+        binding.dayNoteButton.setOnClickListener {
             DayNoteDialog.show(this, store, dateIso) { refresh() }
         }
         binding.jumpsButton.setOnClickListener {
@@ -101,6 +99,27 @@ class DayDetailActivity : DayAtlasActivity() {
         statsAdapter.attachTo(binding.dayStats)
 
         refresh()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        navigateBack()
+    }
+
+    private fun navigateBack() {
+        val tab = when (returnSource) {
+            RETURN_STATS -> R.id.nav_stats
+            RETURN_ROUTES -> R.id.nav_routes
+            else -> null
+        }
+        if (tab != null) {
+            startActivity(
+                Intent(this, MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    .putExtra(MainActivity.EXTRA_OPEN_TAB, tab),
+            )
+        }
+        finish()
     }
 
     override fun onResume() {
@@ -153,16 +172,10 @@ class DayDetailActivity : DayAtlasActivity() {
             binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
         }
 
-        val note = record?.note
-        if (note.isNullOrEmpty()) {
-            binding.noteText.text = getString(R.string.day_note_hint)
-            binding.noteIcon.imageTintList =
-                ContextCompat.getColorStateList(this, R.color.md_theme_on_surface)
-        } else {
-            binding.noteText.text = note
-            binding.noteIcon.imageTintList =
-                ContextCompat.getColorStateList(this, R.color.status_on)
-        }
+        binding.dayNoteButton.imageTintList = ContextCompat.getColorStateList(
+            this,
+            if (record?.note.isNullOrEmpty()) R.color.md_theme_on_surface else R.color.status_on,
+        )
 
         applyDayPhotos(record?.photos.orEmpty())
 
@@ -204,8 +217,17 @@ class DayDetailActivity : DayAtlasActivity() {
     companion object {
         private val TIME_FMT = DateTimeFormatter.ofPattern("HH:mm")
         private const val EXTRA_DATE_ISO = "date_iso"
+        const val EXTRA_RETURN_SOURCE = "return_source"
+        const val RETURN_STATS = "stats"
+        const val RETURN_ROUTES = "routes"
 
-        fun intent(context: Context, dateIso: String): Intent =
-            Intent(context, DayDetailActivity::class.java).putExtra(EXTRA_DATE_ISO, dateIso)
+        fun intent(
+            context: Context,
+            dateIso: String,
+            returnSource: String? = null,
+        ): Intent =
+            Intent(context, DayDetailActivity::class.java)
+                .putExtra(EXTRA_DATE_ISO, dateIso)
+                .putExtra(EXTRA_RETURN_SOURCE, returnSource)
     }
 }

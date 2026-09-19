@@ -136,6 +136,9 @@
     <string name="nav_stats">आँकड़े</string>
     <string name="nav_routes">मार्ग</string>
     <string name="nav_more">अधिक</string>
+    <string name="more_intro">सेटिंग्स, सहायता और संस्करण जानकारी यहाँ हैं।</string>
+    <string name="more_settings_hint">भाषा, नमूना अंतराल, अनुमतियाँ, बैकअप और अपडेट।</string>
+    <string name="more_help_hint">रिकॉर्डिंग, अनुमतियाँ, छलाँगें, बैकअप और अक्सर पूछे जाने वाले प्रश्न।</string>
     <string name="tab_placeholder_stats">जल्द आ रहा है: चुनी गई अवधि के लिए कुल दूरी, सक्रिय दिन, गति और गति-सारांश।</string>
     <string name="tab_placeholder_routes">जल्द आ रहा है: सहेजे गए दिनों की सूची, मानचित्र पर खोलना और GPX निर्यात।</string>
 
@@ -172,5 +175,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.1 — रुकने पर भी GPS माप जाँच संख्या में जुड़ते हैं (मानचित्र पर पिन नहीं जुड़ते)।</string>
+    <string name="build_note">संस्करण 1.1.2 — नरम GPS स्पाइक फ़िल्टर; आँकड़ा पट्टियों से दिन विवरण; नोट आइकन; भाषा/अंतराल ड्रॉपडाउन; अधिक में सहायता।</string>
 </resources>

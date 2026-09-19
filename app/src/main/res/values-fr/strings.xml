@@ -136,6 +136,9 @@
     <string name="nav_stats">Statistiques</string>
     <string name="nav_routes">Trajets</string>
     <string name="nav_more">Plus</string>
+    <string name="more_intro">Réglages, aide et informations de version se trouvent ici.</string>
+    <string name="more_settings_hint">Langue, intervalle d’échantillonnage, permissions, sauvegarde et mises à jour.</string>
+    <string name="more_help_hint">Enregistrement, permissions, sauts, sauvegarde et FAQ.</string>
     <string name="tab_placeholder_stats">Bientôt disponible : distance totale, jours actifs, vitesse et résumé des déplacements pour une plage choisie.</string>
     <string name="tab_placeholder_routes">Bientôt disponible : liste des jours enregistrés, ouverture sur la carte et export GPX.</string>
 
@@ -172,5 +175,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.1 — Les mesures GPS à l’arrêt comptent aussi dans le total de contrôles (sans empiler les pins).</string>
+    <string name="build_note">Version 1.1.2 — Filtre doux des pics GPS ; détail du jour depuis les barres ; icône note ; listes langue/intervalle ; Aide sous Plus.</string>
 </resources>

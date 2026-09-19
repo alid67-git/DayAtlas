@@ -77,6 +77,39 @@ class GeoTest {
     }
 }
 
+class SpikeConfirmTest {
+    private val home = TrackPoint(0L, 41.0, 29.0, null)
+    // ~200 m east — soft departure (not a JumpFilter teleport).
+    private val spike = TrackPoint(60_000L, 41.0, 29.0024, null)
+    private val homeAgain = TrackPoint(120_000L, 41.0, 29.0001, null)
+    private val further = TrackPoint(120_000L, 41.0, 29.0048, null)
+
+    @Test
+    fun firstFarFixIsHeld() {
+        val out = SpikeConfirm.decide(home, pending = null, candidate = spike)
+        assertTrue(out is SpikeConfirm.Outcome.Hold)
+    }
+
+    @Test
+    fun reboundHomeDropsPendingSpike() {
+        val out = SpikeConfirm.decide(home, pending = spike, candidate = homeAgain)
+        assertTrue(out is SpikeConfirm.Outcome.DropPending)
+    }
+
+    @Test
+    fun continuedDepartureCommitsPending() {
+        val out = SpikeConfirm.decide(home, pending = spike, candidate = further)
+        assertTrue(out is SpikeConfirm.Outcome.CommitPendingThen)
+    }
+
+    @Test
+    fun samePlaceProcessesWithoutHold() {
+        val near = TrackPoint(30_000L, 41.0, 29.0002, null)
+        val out = SpikeConfirm.decide(home, pending = null, candidate = near)
+        assertTrue(out is SpikeConfirm.Outcome.Process)
+    }
+}
+
 class JumpFilterTest {
     @Test
     fun normalWalkIsAccepted() {

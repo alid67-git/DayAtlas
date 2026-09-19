@@ -136,6 +136,9 @@
     <string name="nav_stats">إحصاءات</string>
     <string name="nav_routes">المسارات</string>
     <string name="nav_more">المزيد</string>
+    <string name="more_intro">الإعدادات والمساعدة ومعلومات الإصدار هنا.</string>
+    <string name="more_settings_hint">اللغة وفترة أخذ العينات والأذونات والنسخ الاحتياطي والتحديثات.</string>
+    <string name="more_help_hint">التسجيل والأذونات والقفزات والنسخ الاحتياطي والأسئلة الشائعة.</string>
     <string name="tab_placeholder_stats">قريبًا: إجمالي المسافة، الأيام النشطة، ملخص السرعة والحركة لنطاق زمني تختاره.</string>
     <string name="tab_placeholder_routes">قريبًا: قائمة الأيام المحفوظة، وفتحها على الخريطة، وتصدير GPX.</string>
 
@@ -172,5 +175,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.1 — قياسات GPS أثناء التوقف تُحسب أيضًا في عدد الفحوصات (دون تكديس دبابيس على الخريطة).</string>
+    <string name="build_note">الإصدار 1.1.2 — تصفية ناعمة لقفزات GPS؛ تفاصيل اليوم من أشرطة الإحصاءات؛ أيقونة ملاحظة؛ قوائم منسدلة للغة/الفترة؛ المساعدة ضمن المزيد.</string>
 </resources>

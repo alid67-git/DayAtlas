@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -55,31 +56,8 @@ class SettingsActivity : DayAtlasActivity() {
             TrackingController.setDailyMode(this, checked, prefs)
         }
 
-        setupLanguagePicker()
-
-        when (prefs.intervalSeconds) {
-            30 -> binding.interval30s.isChecked = true
-            60 -> binding.interval1.isChecked = true
-            180 -> binding.interval3.isChecked = true
-            else -> binding.interval5.isChecked = true
-        }
-        binding.intervalGroup.setOnCheckedChangeListener { _, checkedId ->
-            val seconds = when (checkedId) {
-                R.id.interval30s -> 30
-                R.id.interval1 -> 60
-                R.id.interval3 -> 180
-                else -> 300
-            }
-            prefs.intervalSeconds = seconds
-            prefs.resetStationaryBackoff()
-            if (prefs.trackingEnabled || prefs.dailyMode) {
-                TrackingController.start(this, prefs, sampleSoon = false)
-            }
-            binding.gpsRateLabel.text = getString(R.string.gps_check_rate, formatIntervalSeconds(seconds))
-        }
-        binding.gpsRateLabel.text =
-            getString(R.string.gps_check_rate, formatIntervalSeconds(prefs.intervalSeconds))
-
+        setupLanguageDropdown()
+        setupIntervalDropdown()
         setupDayStatsCheckboxes()
 
         binding.locationSettings.setOnClickListener {
@@ -188,31 +166,26 @@ class SettingsActivity : DayAtlasActivity() {
         }
     }
 
-    private fun setupLanguagePicker() {
-        when (prefs.appLanguage) {
-            AppLocale.TR -> binding.languageTr.isChecked = true
-            AppLocale.EN -> binding.languageEn.isChecked = true
-            AppLocale.DE -> binding.languageDe.isChecked = true
-            AppLocale.ZH -> binding.languageZh.isChecked = true
-            AppLocale.HI -> binding.languageHi.isChecked = true
-            AppLocale.ES -> binding.languageEs.isChecked = true
-            AppLocale.FR -> binding.languageFr.isChecked = true
-            AppLocale.AR -> binding.languageAr.isChecked = true
-            else -> binding.languageSystem.isChecked = true
-        }
-        binding.languageGroup.setOnCheckedChangeListener { _, checkedId ->
-            val tag = when (checkedId) {
-                R.id.languageTr -> AppLocale.TR
-                R.id.languageEn -> AppLocale.EN
-                R.id.languageDe -> AppLocale.DE
-                R.id.languageZh -> AppLocale.ZH
-                R.id.languageHi -> AppLocale.HI
-                R.id.languageEs -> AppLocale.ES
-                R.id.languageFr -> AppLocale.FR
-                R.id.languageAr -> AppLocale.AR
-                else -> AppLocale.SYSTEM
-            }
-            if (tag == prefs.appLanguage) return@setOnCheckedChangeListener
+    private fun setupLanguageDropdown() {
+        val options = listOf(
+            AppLocale.SYSTEM to getString(R.string.language_system),
+            AppLocale.TR to getString(R.string.language_tr),
+            AppLocale.EN to getString(R.string.language_en),
+            AppLocale.DE to getString(R.string.language_de),
+            AppLocale.ZH to getString(R.string.language_zh),
+            AppLocale.HI to getString(R.string.language_hi),
+            AppLocale.ES to getString(R.string.language_es),
+            AppLocale.FR to getString(R.string.language_fr),
+            AppLocale.AR to getString(R.string.language_ar),
+        )
+        val labels = options.map { it.second }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, labels)
+        binding.languageDropdown.setAdapter(adapter)
+        val current = options.firstOrNull { it.first == prefs.appLanguage } ?: options.first()
+        binding.languageDropdown.setText(current.second, false)
+        binding.languageDropdown.setOnItemClickListener { _, _, position, _ ->
+            val tag = options[position].first
+            if (tag == prefs.appLanguage) return@setOnItemClickListener
             prefs.appLanguage = tag
             AppLocale.apply(tag)
             // Recreate so every string/label refreshes in the new locale.
@@ -220,11 +193,33 @@ class SettingsActivity : DayAtlasActivity() {
         }
     }
 
-    private fun formatIntervalSeconds(seconds: Int): String = when (seconds) {
-        30 -> getString(R.string.interval_30s)
-        60 -> getString(R.string.interval_1)
-        180 -> getString(R.string.interval_3)
-        else -> getString(R.string.interval_5)
+    private fun setupIntervalDropdown() {
+        val options = listOf(
+            30 to getString(R.string.interval_30s),
+            60 to getString(R.string.interval_1),
+            180 to getString(R.string.interval_3),
+            300 to getString(R.string.interval_5),
+        )
+        val labels = options.map { it.second }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, labels)
+        binding.intervalDropdown.setAdapter(adapter)
+        val seconds = when (prefs.intervalSeconds) {
+            30, 60, 180 -> prefs.intervalSeconds
+            else -> 300
+        }
+        val current = options.first { it.first == seconds }
+        binding.intervalDropdown.setText(current.second, false)
+        binding.gpsRateLabel.text = getString(R.string.gps_check_rate, current.second)
+        binding.intervalDropdown.setOnItemClickListener { _, _, position, _ ->
+            val chosen = options[position].first
+            prefs.intervalSeconds = chosen
+            prefs.resetStationaryBackoff()
+            if (prefs.trackingEnabled || prefs.dailyMode) {
+                TrackingController.start(this, prefs, sampleSoon = false)
+            }
+            binding.gpsRateLabel.text =
+                getString(R.string.gps_check_rate, options[position].second)
+        }
     }
 
     private fun setupDayStatsCheckboxes() {

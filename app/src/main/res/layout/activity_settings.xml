@@ -59,66 +59,20 @@
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textColor="@color/md_theme_outline" />
 
-            <RadioGroup
-                android:id="@+id/languageGroup"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/languageDropdownLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
 
-                <RadioButton
-                    android:id="@+id/languageSystem"
+                <AutoCompleteTextView
+                    android:id="@+id/languageDropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/language_system" />
-
-                <RadioButton
-                    android:id="@+id/languageTr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language_tr" />
-
-                <RadioButton
-                    android:id="@+id/languageEn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language_en" />
-
-                <RadioButton
-                    android:id="@+id/languageDe"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language_de" />
-
-                <RadioButton
-                    android:id="@+id/languageZh"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language_zh" />
-
-                <RadioButton
-                    android:id="@+id/languageHi"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language_hi" />
-
-                <RadioButton
-                    android:id="@+id/languageEs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language_es" />
-
-                <RadioButton
-                    android:id="@+id/languageFr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language_fr" />
-
-                <RadioButton
-                    android:id="@+id/languageAr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language_ar" />
-            </RadioGroup>
+                    android:inputType="none"
+                    android:importantForAutofill="no" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -134,36 +88,20 @@
                 android:text="@string/settings_interval_hint"
                 android:textAppearance="?attr/textAppearanceBodySmall" />
 
-            <RadioGroup
-                android:id="@+id/intervalGroup"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/intervalDropdownLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
 
-                <RadioButton
-                    android:id="@+id/interval30s"
+                <AutoCompleteTextView
+                    android:id="@+id/intervalDropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/interval_30s" />
-
-                <RadioButton
-                    android:id="@+id/interval1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/interval_1" />
-
-                <RadioButton
-                    android:id="@+id/interval3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/interval_3" />
-
-                <RadioButton
-                    android:id="@+id/interval5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/interval_5" />
-            </RadioGroup>
+                    android:inputType="none"
+                    android:importantForAutofill="no" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="match_parent"

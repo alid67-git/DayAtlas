@@ -72,24 +72,85 @@ class DayStore(context: Context) {
             .atZone(zoneId)
             .toLocalDate()
         val iso = DayTitle.iso(localDate)
-        val existing = loadUnlocked(iso) ?: DayRecord.empty(iso, DayTitle.format(localDate))
+        if (pendingDateIso != null && pendingDateIso != iso) {
+            pendingPoint = null
+            pendingDateIso = null
+        }
+        var existing = loadUnlocked(iso) ?: DayRecord.empty(iso, DayTitle.format(localDate))
         val point = TrackPoint(
             timeMillis = timeMillis,
             lat = location.latitude,
             lon = location.longitude,
             accuracyMeters = if (location.hasAccuracy()) location.accuracy else null,
         )
+        val pending = pendingPoint.takeIf { pendingDateIso == iso }
+        val lastCommitted = existing.points.lastOrNull()
+
+        // Resolve a held soft-departure before judging the new fix against disk.
+        if (pending != null && lastCommitted != null) {
+            when (
+                val decision = SpikeConfirm.decide(
+                    lastCommitted = lastCommitted,
+                    pending = pending,
+                    candidate = point,
+                )
+            ) {
+                is SpikeConfirm.Outcome.DropPending -> {
+                    pendingPoint = null
+                    pendingDateIso = null
+                    if (!JumpFilter.shouldAccept(existing.points, decision.candidate)) {
+                        return@withLock AppendResult(existing, geometryChanged = false, wrote = false)
+                    }
+                    return@withLock commitCandidate(existing, decision.candidate)
+                }
+                is SpikeConfirm.Outcome.CommitPendingThen -> {
+                    pendingPoint = null
+                    pendingDateIso = null
+                    existing = commitGeometry(existing, decision.pending)
+                    if (!JumpFilter.shouldAccept(existing.points, decision.candidate)) {
+                        return@withLock AppendResult(existing, geometryChanged = true, wrote = true)
+                    }
+                    return@withLock commitCandidate(existing, decision.candidate)
+                }
+                else -> Unit // Hold/Process not expected while pending != null
+            }
+        }
+
         if (!JumpFilter.shouldAccept(existing.points, point)) {
-            // GPS teleport — keep the day file unchanged.
             return@withLock AppendResult(existing, geometryChanged = false, wrote = false)
         }
+
+        when (
+            val decision = SpikeConfirm.decide(
+                lastCommitted = existing.points.lastOrNull(),
+                pending = null,
+                candidate = point,
+            )
+        ) {
+            is SpikeConfirm.Outcome.Hold -> {
+                pendingPoint = decision.pending
+                pendingDateIso = iso
+                val updated = existing.copy(gpsCheckCount = existing.checkCount + 1)
+                persistUnlocked(updated)
+                return@withLock AppendResult(updated, geometryChanged = false, wrote = true)
+            }
+            is SpikeConfirm.Outcome.Process -> {
+                return@withLock commitCandidate(existing, decision.candidate)
+            }
+            else -> {
+                // Pending already resolved above.
+                return@withLock commitCandidate(existing, point)
+            }
+        }
+    }
+
+    /** Same-place refresh or append a new pin; always bumps [DayRecord.gpsCheckCount]. */
+    private fun commitCandidate(existing: DayRecord, point: TrackPoint): AppendResult {
         val nextChecks = existing.checkCount + 1
         val last = existing.points.lastOrNull()
         if (last != null) {
             val drift = Geo.haversineMeters(last.lat, last.lon, point.lat, point.lon)
             if (drift < Geo.SAME_PLACE_RADIUS_M) {
-                // Same place — refresh the pin clock, do not stack another map
-                // vertex, but still count this as a successful GPS check.
                 val refreshed = last.copy(
                     timeMillis = point.timeMillis,
                     accuracyMeters = point.accuracyMeters ?: last.accuracyMeters,
@@ -101,17 +162,25 @@ class DayStore(context: Context) {
                     gpsCheckCount = nextChecks,
                 )
                 persistUnlocked(updated)
-                return@withLock AppendResult(updated, geometryChanged = false, wrote = true)
+                return AppendResult(updated, geometryChanged = false, wrote = true)
             }
         }
+        return AppendResult(commitGeometry(existing, point, nextChecks), geometryChanged = true, wrote = true)
+    }
+
+    private fun commitGeometry(
+        existing: DayRecord,
+        point: TrackPoint,
+        gpsCheckCount: Int = existing.gpsCheckCount,
+    ): DayRecord {
         val points = existing.points + point
         val updated = existing.copy(
             points = points,
             distanceMeters = Geo.pathLengthMeters(points),
-            gpsCheckCount = nextChecks,
+            gpsCheckCount = gpsCheckCount.coerceAtLeast(points.size),
         )
         persistUnlocked(updated)
-        AppendResult(updated, geometryChanged = true, wrote = true)
+        return updated
     }
 
     /**
@@ -231,7 +300,22 @@ class DayStore(context: Context) {
         private val lock = ReentrantLock()
         private var memoryToday: DayRecord? = null
 
+        /**
+         * Soft-departure candidate waiting for the next fix (A→B→A′ spike filter).
+         * Not written to the day file until confirmed.
+         */
+        private var pendingPoint: TrackPoint? = null
+        private var pendingDateIso: String? = null
+
         /** Matches the editor UI's own EditText/TextInputLayout counter cap. */
         const val NOTE_MAX_LENGTH = 500
+
+        /** Test / process reset — clears in-memory pending spike state. */
+        fun clearPendingSpikeForTests() {
+            lock.withLock {
+                pendingPoint = null
+                pendingDateIso = null
+            }
+        }
     }
 }

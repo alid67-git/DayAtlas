@@ -136,6 +136,9 @@
     <string name="nav_stats">Statistics</string>
     <string name="nav_routes">Routes</string>
     <string name="nav_more">More</string>
+    <string name="more_intro">Settings, help, and version info live here.</string>
+    <string name="more_settings_hint">Language, sample interval, permissions, backup, and updates.</string>
+    <string name="more_help_hint">Recording, permissions, jumps, backup, and FAQs.</string>
     <string name="tab_placeholder_stats">Coming soon: total distance, active days, speed and movement summary for a chosen range.</string>
     <string name="tab_placeholder_routes">Coming soon: list of saved days, open on map, and GPX export.</string>
 
@@ -172,7 +175,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.1 — Stationary GPS fixes also count toward the check total (still no stacked map pins).</string>
+    <string name="build_note">Version 1.1.2 — Soft GPS spike filter; open a day from stats bars; note icon; language/interval dropdowns; Help under More.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>
