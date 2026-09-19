@@ -172,7 +172,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">To help isolate a reported background/sampling-interval issue, 1.1.1\'s movement-detection fix is also reverted; location-recording logic is back to 1.1.0\'s.</string>
+    <string name="build_note">Diagnostic build: the sampling interval no longer coarsens while stationary, to test whether the background alarm actually fires at the chosen interval. Battery use may rise; not permanent.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

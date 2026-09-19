@@ -29,15 +29,16 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        // Further rollback at the user's request: on top of the 1.2.0
-        // revert, 1.1.1's MovementConfirmation fix is undone too, to test
-        // whether a reported background-tracking/interval problem is tied
-        // to that logic. Tracking code is back to 1.1.0's; 1.2.0's Day
-        // Detail screen (unrelated UI) is kept. versionCode keeps climbing
-        // regardless (Android won't install a lower one over what's
-        // already on the phone).
-        versionCode = 57
-        versionName = "1.1.0"
+        // Diagnostic build: StationaryBackoff's interval coarsening is
+        // disabled (see COARSENING_ENABLED) so sampling stays at the user's
+        // chosen interval even while stationary - this isolates whether the
+        // background alarm itself checks in reliably, independent of
+        // interval choice, for a reported background-tracking problem.
+        // "-diag1" in versionName flags this as a temporary test build, not
+        // a real release; versionCode keeps climbing regardless (Android
+        // won't install a lower one over what's already on the phone).
+        versionCode = 58
+        versionName = "1.1.0-diag1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /
