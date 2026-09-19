@@ -20,6 +20,7 @@ object DayJson {
             .put("date", record.date)
             .put("title", record.title)
             .put("distanceMeters", record.distanceMeters)
+            .put("gpsCheckCount", record.checkCount)
         if (!record.note.isNullOrEmpty()) {
             root.put("note", record.note)
         }
@@ -71,6 +72,11 @@ object DayJson {
         } else {
             Geo.pathLengthMeters(points)
         }
+        val gpsCheckCount = if (root.has("gpsCheckCount")) {
+            root.getInt("gpsCheckCount").coerceAtLeast(points.size)
+        } else {
+            points.size
+        }
         return DayRecord(
             date = date,
             title = title,
@@ -78,6 +84,7 @@ object DayJson {
             distanceMeters = distance,
             note = note,
             photos = photos,
+            gpsCheckCount = gpsCheckCount,
         )
     }
 

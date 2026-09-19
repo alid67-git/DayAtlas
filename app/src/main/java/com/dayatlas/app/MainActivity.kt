@@ -381,14 +381,14 @@ class MainActivity : DayAtlasActivity() {
                 getString(
                     R.string.routes_day_meta,
                     DayTitle.formatDistance(record.distanceMeters),
-                    record.points.size,
+                    record.checkCount,
                     DayTitle.formatDuration(speed.activeMillis),
                 )
             } else {
                 getString(
                     R.string.routes_day_meta_short,
                     DayTitle.formatDistance(record.distanceMeters),
-                    record.points.size,
+                    record.checkCount,
                 )
             }
             RouteDayRow(
@@ -624,7 +624,7 @@ class MainActivity : DayAtlasActivity() {
                 .toLocalTime()
                 .format(TIME_FMT)
         } ?: emDash
-        binding.mapPointCount.text = points.size.toString()
+        binding.mapPointCount.text = (record?.checkCount ?: points.size).toString()
         // Tint the note icon like the "go to today" one when this day
         // already has a note, so there's a hint without opening the dialog.
         binding.dayNoteButton.imageTintList = ContextCompat.getColorStateList(
@@ -849,7 +849,7 @@ class MainActivity : DayAtlasActivity() {
                         .format(TIME_FMT)
                 } ?: emDash
                 ),
-            DayStatKind.POINT_COUNT to points.size.toString(),
+            DayStatKind.POINT_COUNT to (record?.checkCount ?: points.size).toString(),
             DayStatKind.GPS_INTERVAL to formatGpsInterval(intervalSeconds),
             DayStatKind.MAX_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.maxSpeedKmh),
             DayStatKind.AVG_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.avgSpeedKmh),

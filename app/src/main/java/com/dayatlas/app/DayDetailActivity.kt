@@ -135,7 +135,7 @@ class DayDetailActivity : DayAtlasActivity() {
                             .format(TIME_FMT)
                     } ?: emDash
                     ),
-                DayStatKind.POINT_COUNT to points.size.toString(),
+                DayStatKind.POINT_COUNT to (record?.checkCount ?: points.size).toString(),
                 DayStatKind.MAX_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.maxSpeedKmh),
                 DayStatKind.AVG_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.avgSpeedKmh),
                 DayStatKind.ACTIVE_DURATION to if (points.size < 2) {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 — 2026-09-19
+
+- **Dururken GPS kontrol sayısı artsın:** Aynı yerde yeni harita pini
+  eklenmez (spaghetti yok), ama her başarılı GPS ölçümü “GPS kontrol
+  sayısı”na yazılır. Eski gün dosyaları nokta sayısından geriye uyumlu.
+
 ## 1.1.0-diag2 (düzeltme) — 2026-09-19
 
 - **"Güncelleme yok" hatası HÂLÂ vardı — asıl sebep bulundu:** Bir önceki

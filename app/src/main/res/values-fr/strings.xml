@@ -38,7 +38,7 @@
     <string name="interval_5_short">5 min</string>
     <string name="interval_seconds_short">%1$d s</string>
     <string name="last_point">Dernier point</string>
-    <string name="point_count">Nombre de points</string>
+    <string name="point_count">Controles GPS</string>
     <string name="em_dash">—</string>
     <string name="start">Démarrer</string>
     <string name="stop">Arrêter</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">La vérification de mise à jour fonctionne vraiment maintenant - le correctif précédent gardait le même nom de version, donc il annonçait toujours aucune mise à jour ; le nom de cette version a vraiment changé.</string>
+    <string name="build_note">Version 1.1.1 — Les mesures GPS à l’arrêt comptent aussi dans le total de contrôles (sans empiler les pins).</string>
 </resources>

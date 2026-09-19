@@ -20,13 +20,25 @@ data class DayRecord(
      * [PhotoStore.MAX_PHOTOS_PER_DAY]; order is add order.
      */
     val photos: List<String> = emptyList(),
+    /**
+     * How many successful GPS acquisitions were recorded today, including
+     * stationary same-place refreshes that do not add a new map pin.
+     * Always ≥ [points].size; older day files without this field fall back
+     * to point count when loaded.
+     */
+    val gpsCheckCount: Int = 0,
 ) {
+    /** Value shown as "GPS kontrol / nokta sayısı" in the UI. */
+    val checkCount: Int
+        get() = maxOf(gpsCheckCount, points.size)
+
     companion object {
         fun empty(dateIso: String, title: String) = DayRecord(
             date = dateIso,
             title = title,
             points = emptyList(),
             distanceMeters = 0.0,
+            gpsCheckCount = 0,
         )
     }
 }
