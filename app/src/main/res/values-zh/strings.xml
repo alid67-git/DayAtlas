@@ -136,6 +136,9 @@
     <string name="nav_stats">统计</string>
     <string name="nav_routes">路线</string>
     <string name="nav_more">更多</string>
+    <string name="more_intro">设置、帮助和版本信息在这里。</string>
+    <string name="more_settings_hint">语言、采样间隔、权限、备份和更新。</string>
+    <string name="more_help_hint">录制、权限、跳跃、备份和常见问题。</string>
     <string name="tab_placeholder_stats">即将推出：所选时间范围内的总距离、活跃天数、速度和移动概览。</string>
     <string name="tab_placeholder_routes">即将推出：已保存日期列表、在地图中打开及导出 GPX。</string>
 
@@ -172,5 +175,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.1 — 静止时的 GPS 测量也会计入检查次数（地图上不会堆叠图钉）。</string>
+    <string name="build_note">版本 1.1.2 — 软 GPS 尖峰过滤；从统计条打开日详情；笔记图标；语言/间隔下拉；“更多”中的帮助。</string>
 </resources>

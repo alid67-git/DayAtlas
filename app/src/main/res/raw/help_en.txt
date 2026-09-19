@@ -28,7 +28,11 @@ Today's tiles show distance, last point, point count, active GPS sample rate, ma
 
 5) GPS JUMPS
 
-GPS can occasionally record a bad, implausible point when the signal is weak (for example "teleporting" a few kilometers away for one instant). These show up as orange markers on the map and are listed under the "Jumps" button, where you can delete them one by one - the distance is recalculated automatically and your original recording file is untouched otherwise.
+GPS can occasionally record a bad, implausible point when the signal is weak (for example "teleporting" a few kilometers away for one instant). The app uses two filters: hard teleports are never written; a mid-range suspicious fix is held until the next sample — if that sample returns near the previous pin, the held spike is dropped. Remaining jumps still show as orange markers and are listed under the "Jumps" button, where you can delete them one by one - the distance is recalculated automatically and your original recording file is untouched otherwise.
+
+5b) STATS, ROUTES, AND DAY DETAIL
+
+Tap a daily distance bar on the Statistics tab to open that day's detail screen; Back returns you to Statistics. Opening a day from the Routes list does the same and returns you to Routes. Day detail shows the route map, a note icon beside photos, photos, and day stats.
 
 6) GPX EXPORT
 
@@ -46,7 +50,7 @@ The app checks once a day in the background for a newer version; if found, it do
 
 9) LANGUAGE
 
-The app UI can be switched between Turkish, English, German, Chinese, Hindi, Spanish, French, and Arabic from Settings > Language; "System language" automatically follows your phone's language. The language picker on this help page works independently and only affects this screen.
+The app UI can be switched between Turkish, English, German, Chinese, Hindi, Spanish, French, and Arabic from the Settings > Language dropdown; "System language" automatically follows your phone's language. The sample interval is also chosen from a dropdown. The language picker on this help page works independently and only affects this screen.
 
 10) DATA AND PRIVACY
 

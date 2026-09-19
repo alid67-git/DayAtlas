@@ -28,7 +28,9 @@ Die heutigen Kacheln zeigen Distanz, letzten Punkt, Punktanzahl, aktive GPS-Abta
 
 5) GPS-SPRÜNGE
 
-Gelegentlich kann das GPS bei schwachem Signal einen fehlerhaften, unplausiblen Punkt aufzeichnen (z. B. für einen Moment „teleportiert“ ein paar Kilometer entfernt). Solche Punkte werden auf der Karte orange markiert und unter der Schaltfläche „Sprünge“ aufgelistet, wo Sie sie einzeln löschen können - die Distanz wird automatisch neu berechnet, Ihre ursprüngliche Aufzeichnungsdatei bleibt ansonsten unverändert.
+Gelegentlich kann das GPS bei schwachem Signal einen fehlerhaften, unplausiblen Punkt aufzeichnen (z. B. für einen Moment „teleportiert“ ein paar Kilometer entfernt). Die App filtert hart: extreme Teleporter werden nicht geschrieben; ein mittlerer Verdachtspunkt wird bis zur nächsten Messung gehalten — kehrt diese nahe zum vorherigen Pin zurück, wird der Spike verworfen. Verbleibende Sprünge werden auf der Karte orange markiert und unter „Sprünge“ aufgelistet, wo Sie sie einzeln löschen können - die Distanz wird automatisch neu berechnet.
+
+Tippen Sie in Statistik auf eine Tagesleiste (oder in Routen auf einen Tag), um die Tagesdetailansicht zu öffnen; Zurück führt wieder zum jeweiligen Reiter.
 
 6) GPX-EXPORT
 

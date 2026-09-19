@@ -28,7 +28,11 @@ Bugünün kartlarında mesafe, son nokta, nokta sayısı, aktif GPS alma hızı,
 
 5) GPS ATLAMALARI
 
-Bazen GPS sinyali zayıfladığında hatalı, gerçek dışı bir sıçrama noktası kaydedilebilir (örneğin bir anda birkaç kilometre öteye "ışınlanma"). Böyle noktalar haritada turuncu işaretle gösterilir ve "Atlamalar" düğmesinden listelenip tek tek silinebilir; silindiğinde mesafe otomatik olarak yeniden hesaplanır, orijinal kayıt dosyanız bozulmaz.
+Bazen GPS sinyali zayıfladığında hatalı, gerçek dışı bir sıçrama noktası kaydedilebilir (örneğin bir anda birkaç kilometre öteye "ışınlanma"). Uygulama iki katmanlı süzgeç kullanır: çok uzak "sert" teleporterlar hiç yazılmaz; orta mesafeli şüpheli bir nokta bir sonraki ölçüme kadar bekletilir — eğer sonraki ölçüm hemen eski yere dönerse o ara nokta düşürülür (soft spike). Yine de geçmişe kalan atlamalar haritada turuncu işaretle gösterilir ve "Atlamalar" düğmesinden listelenip tek tek silinebilir; silindiğinde mesafe otomatik olarak yeniden hesaplanır, orijinal kayıt dosyanız bozulmaz.
+
+5b) İSTATİSTİKLER, ROTALAR VE GÜN DETAYI
+
+İstatistikler sekmesindeki günlük mesafe çubuklarına dokununca o günün detay ekranı açılır; geri dönünce yine İstatistikler sekmesinde kalırsınız. Rotalar listesinden bir güne dokunmak da aynı detayı açar ve geri dönüş Rotalar sekmesine olur. Detayda rota haritası, not (fotoğrafların yanındaki ikon), fotoğraflar ve gün istatistikleri yer alır.
 
 6) GPX DIŞA AKTARMA
 
@@ -46,7 +50,7 @@ Uygulama arka planda günde bir kez yeni sürüm olup olmadığını kontrol ede
 
 9) DİL
 
-Uygulama arayüzü Ayarlar > Dil bölümünden Türkçe, İngilizce, Almanca, Çince, Hintçe, İspanyolca, Fransızca veya Arapça olarak değiştirilebilir; "Sistem dili" seçeneği telefonunuzun dilini otomatik izler. Bu yardım sayfasındaki dil seçimi ayrı çalışır, sadece bu ekranı etkiler.
+Uygulama arayüzü Ayarlar > Dil açılır listesinden Türkçe, İngilizce, Almanca, Çince, Hintçe, İspanyolca, Fransızca veya Arapça olarak değiştirilebilir; "Sistem dili" seçeneği telefonunuzun dilini otomatik izler. Örnekleme aralığı da aynı şekilde açılır listeden seçilir. Bu yardım sayfasındaki dil seçimi ayrı çalışır, sadece bu ekranı etkiler.
 
 10) VERİ VE GİZLİLİK
 

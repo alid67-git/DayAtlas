@@ -66,7 +66,15 @@ class MainActivity : DayAtlasActivity() {
         persistDayStatsOrder(newOrder)
     }
     private val routesAdapter = RoutesAdapter(
-        onOpen = { date -> startActivity(DayDetailActivity.intent(this, DayTitle.iso(date))) },
+        onOpen = { date ->
+            startActivity(
+                DayDetailActivity.intent(
+                    this,
+                    DayTitle.iso(date),
+                    DayDetailActivity.RETURN_ROUTES,
+                ),
+            )
+        },
         onExport = { date -> GpxExportDialog.show(this, store, date) },
     )
     private var pendingStart = false
@@ -193,6 +201,7 @@ class MainActivity : DayAtlasActivity() {
             true
         }
         binding.bottomNav.selectedItemId = R.id.nav_daily
+        applyOpenTab(intent)
 
         binding.moreSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
@@ -295,6 +304,21 @@ class MainActivity : DayAtlasActivity() {
         // Prefer the midday alarm; only catch up here if noon already passed
         // and today was not checked (e.g. phone was off at 12:00).
         UpdateCheckRunner.maybeCheckAndDownload(this, prefs, requirePastMidday = true)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        applyOpenTab(intent)
+    }
+
+    /** Restore a tab when returning from day detail (stats / routes). */
+    private fun applyOpenTab(intent: Intent?) {
+        if (!::binding.isInitialized) return
+        val tab = intent?.getIntExtra(EXTRA_OPEN_TAB, 0) ?: 0
+        if (tab == 0) return
+        intent?.removeExtra(EXTRA_OPEN_TAB)
+        binding.bottomNav.selectedItemId = tab
     }
 
     override fun onStart() {
@@ -500,6 +524,17 @@ class MainActivity : DayAtlasActivity() {
                 val lp = fill.layoutParams
                 lp.width = ((meters / maxMeters) * trackWidth).toInt().coerceAtLeast(if (meters > 0) 4 else 0)
                 fill.layoutParams = lp
+            }
+            row.isClickable = true
+            row.isFocusable = true
+            row.setOnClickListener {
+                startActivity(
+                    DayDetailActivity.intent(
+                        this,
+                        iso,
+                        DayDetailActivity.RETURN_STATS,
+                    ),
+                )
             }
             container.addView(row)
         }
@@ -894,5 +929,8 @@ class MainActivity : DayAtlasActivity() {
         private const val LIVE_MAP_DEBOUNCE_MS = 400L
         private const val FULL_REFRESH_EVERY_LIVE_UPDATES = 20
         private const val FULL_REFRESH_DELAY_MS = 1_500L
+
+        /** Bottom-nav item id to select when MainActivity is re-shown (e.g. from day detail). */
+        const val EXTRA_OPEN_TAB = "open_tab"
     }
 }

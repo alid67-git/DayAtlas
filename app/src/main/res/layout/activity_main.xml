@@ -762,6 +762,14 @@
                     android:textAppearance="?attr/textAppearanceHeadlineSmall"
                     android:textColor="@color/md_theme_on_surface" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/more_intro"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="@color/md_theme_outline" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/moreSettings"
                     style="@style/Widget.Material3.Button.TonalButton"
@@ -770,13 +778,29 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/settings" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/more_settings_hint"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="@color/md_theme_outline" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/moreHelp"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:text="@string/action_help" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/more_help_hint"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="@color/md_theme_outline" />
 
                 <TextView
                     android:layout_width="match_parent"

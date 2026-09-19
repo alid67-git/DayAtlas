@@ -28,7 +28,9 @@ Las tarjetas de hoy muestran distancia, último punto, número de puntos, frecue
 
 5) SALTOS DE GPS
 
-A veces el GPS puede registrar un punto erróneo e implausible cuando la señal es débil (por ejemplo, "teletransportándose" unos kilómetros durante un instante). Estos puntos aparecen marcados en naranja en el mapa y se listan bajo el botón "Saltos", donde puedes eliminarlos uno por uno; la distancia se recalcula automáticamente y el resto de tu archivo de registro no se ve afectado.
+A veces el GPS puede registrar un punto erróneo e implausible cuando la señal es débil (por ejemplo, "teletransportándose" unos kilómetros durante un instante). La app filtra en dos capas: los teletransportes extremos no se escriben; un punto sospechoso intermedio se retiene hasta la siguiente muestra — si esa vuelve cerca del pin anterior, se descarta el pico. Los saltos que queden aparecen en naranja y se listan en "Saltos", donde puedes eliminarlos uno a uno.
+
+Toca una barra diaria en Estadísticas (o un día en Rutas) para abrir el detalle del día; Atrás vuelve a esa pestaña.
 
 6) EXPORTAR GPX
 

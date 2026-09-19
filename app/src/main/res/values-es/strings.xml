@@ -136,6 +136,9 @@
     <string name="nav_stats">Estadísticas</string>
     <string name="nav_routes">Rutas</string>
     <string name="nav_more">Más</string>
+    <string name="more_intro">Ajustes, ayuda e información de versión están aquí.</string>
+    <string name="more_settings_hint">Idioma, intervalo de muestreo, permisos, copia y actualizaciones.</string>
+    <string name="more_help_hint">Grabación, permisos, saltos, copia de seguridad y preguntas frecuentes.</string>
     <string name="tab_placeholder_stats">Próximamente: distancia total, días activos, velocidad y resumen de movimiento para un intervalo elegido.</string>
     <string name="tab_placeholder_routes">Próximamente: lista de días guardados, abrir en el mapa y exportar GPX.</string>
 
@@ -172,5 +175,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.1 — Las mediciones GPS en parado también suman al total de controles (sin apilar pines).</string>
+    <string name="build_note">Versión 1.1.2 — Filtro suave de picos GPS; detalle del día desde barras; icono de nota; desplegables de idioma/intervalo; Ayuda en Más.</string>
 </resources>

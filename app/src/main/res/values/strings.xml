@@ -136,6 +136,9 @@
     <string name="nav_stats">İstatistikler</string>
     <string name="nav_routes">Rotalar</string>
     <string name="nav_more">Daha fazla</string>
+    <string name="more_intro">Ayarlar, yardım ve sürüm bilgisi burada.</string>
+    <string name="more_settings_hint">Dil, örnekleme aralığı, izinler, yedek ve güncelleme.</string>
+    <string name="more_help_hint">Kayıt, izinler, atlamalar, yedekleme ve sık sorulan sorular.</string>
     <string name="tab_placeholder_stats">Yakında: seçilebilir zaman aralığında toplam mesafe, aktif gün, hız ve hareket özeti.</string>
     <string name="tab_placeholder_routes">Yakında: kayıtlı gün listesi, haritada açma ve GPX dışa aktarma.</string>
 
@@ -182,5 +185,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.1 — Dururken yapılan GPS ölçümleri de kontrol sayısına yazılıyor (haritada üst üste pin yok).</string>
+    <string name="build_note">Sürüm 1.1.2 — Soft GPS sıçrama filtresi; istatistik çubuğundan gün detayı; not ikonu; ayarlarda dil/aralık açılır listeleri; Daha fazla’da Yardım.</string>
 </resources>
