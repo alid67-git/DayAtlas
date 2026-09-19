@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">परीक्षण संस्करण: स्थिर रहने पर भी सैंपलिंग अंतराल अब धीमा नहीं होता, यह जांचने के लिए कि बैकग्राउंड अलार्म वाकई चुने गए अंतराल पर चलता है या नहीं। बैटरी खपत बढ़ सकती है; यह स्थायी नहीं है।</string>
+    <string name="build_note">गलत \"पहले से अद्यतित\" संदेश ठीक किया गया — पिछले परीक्षण संस्करण के \"-diag1\" टैग के कारण अपडेट जांच सही संस्करण संख्या नहीं पढ़ पा रही थी।</string>
 </resources>
