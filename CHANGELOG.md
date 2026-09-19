@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0-diag2 (düzeltme) — 2026-09-19
+
+- **"Güncelleme yok" hatası HÂLÂ vardı — asıl sebep bulundu:** Bir önceki
+  düzeltme, sürüm adının okunmasını (regex'i) düzeltti, ama uygulama
+  yeni sürümün olup olmadığını hâlâ "sürüm adı birebir aynı mı" diye
+  karşılaştırıyor — ve o derleme aynı "1.1.0-diag1" adıyla yayınlanmıştı.
+  Yani artık doğru okunuyordu ama "zaten aynı" diye eşleşip yine
+  güncelleme yok diyordu. Bu derleme adı gerçekten değişiyor
+  ("1.1.0-diag2"), böylece güncelleme kontrolü artık gerçekten farkı
+  görüp güncellemeyi sunacak.
+
 ## 1.1.0-diag1 (düzeltme) — 2026-09-19
 
 - **"Güncelleme yok" hatası düzeltildi:** Uygulamanın güncelleme kontrolü,

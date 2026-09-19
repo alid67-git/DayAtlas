@@ -182,5 +182,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">\"Güncelleme yok\" hatası düzeltildi — önceki teşhis sürümündeki \"-diag1\" etiketi güncelleme kontrolünün sürüm numarasını okumasını engelliyordu.</string>
+    <string name="build_note">Güncelleme kontrolü artık gerçekten çalışıyor — bir önceki düzeltme aynı sürüm adıyla yayınlandığı için hâlâ güncelleme yok diyordu, bu sürümün adı gerçekten değişti.</string>
 </resources>

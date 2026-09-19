@@ -34,15 +34,15 @@ android {
         // chosen interval even while stationary - this isolates whether the
         // background alarm itself checks in reliably, independent of
         // interval choice, for a reported background-tracking problem.
-        // "-diag1" in versionName flags this as a temporary test build, not
-        // a real release; versionCode keeps climbing regardless (Android
-        // won't install a lower one over what's already on the phone).
-        // Still "-diag1": this bump only fixes UpdateChecker's version
-        // regex, which couldn't parse a "-diag1"-suffixed release name at
-        // all and silently reported "already up to date" for everyone -
-        // the diagnostic experiment itself is unchanged.
-        versionCode = 59
-        versionName = "1.1.0-diag1"
+        // versionName must change on every bump, not just versionCode:
+        // UpdateChecker compares version NAMES for equality to decide
+        // "already up to date" (see UpdateChecker.kt), so re-publishing
+        // under the same "1.1.0-diag1" name after only fixing that
+        // checker's regex (previous commit) meant it now parsed the name
+        // correctly but then matched it exactly and reported no update
+        // anyway - "diag2" makes this build's name distinct again.
+        versionCode = 60
+        versionName = "1.1.0-diag2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /

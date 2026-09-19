@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">修复了错误的\"已是最新版本\"提示——上一个诊断版本的\"-diag1\"标签导致更新检查无法正确读取版本号。</string>
+    <string name="build_note">更新检查现在真的能用了——上一次修复沿用了相同的版本名称，所以仍然提示没有更新；这个版本的名称真正改变了。</string>
 </resources>

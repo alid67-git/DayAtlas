@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Correction d\'un faux « déjà à jour » - le suffixe « -diag1 » de la version de diagnostic précédente empêchait la vérification de mise à jour de lire le numéro de version.</string>
+    <string name="build_note">La vérification de mise à jour fonctionne vraiment maintenant - le correctif précédent gardait le même nom de version, donc il annonçait toujours aucune mise à jour ; le nom de cette version a vraiment changé.</string>
 </resources>
