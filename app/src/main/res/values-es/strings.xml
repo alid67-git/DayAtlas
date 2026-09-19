@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión de diagnóstico: el intervalo de muestreo ya no se alarga estando quieto, para probar si la alarma en segundo plano realmente se dispara en el intervalo elegido. El consumo de batería puede subir; no es permanente.</string>
+    <string name="build_note">Se corrigió un falso \"ya está actualizado\" - la etiqueta \"-diag1\" de la versión de diagnóstico anterior impedía leer el número de versión al buscar actualizaciones.</string>
 </resources>

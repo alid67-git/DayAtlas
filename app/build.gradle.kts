@@ -37,7 +37,11 @@ android {
         // "-diag1" in versionName flags this as a temporary test build, not
         // a real release; versionCode keeps climbing regardless (Android
         // won't install a lower one over what's already on the phone).
-        versionCode = 58
+        // Still "-diag1": this bump only fixes UpdateChecker's version
+        // regex, which couldn't parse a "-diag1"-suffixed release name at
+        // all and silently reported "already up to date" for everyone -
+        // the diagnostic experiment itself is unchanged.
+        versionCode = 59
         versionName = "1.1.0-diag1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own

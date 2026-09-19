@@ -17,8 +17,12 @@ private const val APK_ASSET_NAME = "DayAtlas.apk"
 
 // The CI workflow (android.yml) embeds "v<versionName>" into the release
 // name so the app can tell whether that release is newer than itself
-// without a separate version-tagging scheme.
-private val VERSION_IN_NAME: Pattern = Pattern.compile("v[\\d.]+$")
+// without a separate version-tagging scheme. versionName can carry a
+// trailing "-<word>" (e.g. a "-diag1" diagnostic-build tag), so the digits
+// aren't necessarily the last characters - without the optional suffix
+// group here, a tagged release's version couldn't be parsed at all and
+// every check silently reported "already up to date".
+private val VERSION_IN_NAME: Pattern = Pattern.compile("v[\\d.]+(?:-[\\w]+)?$")
 
 /**
  * Checks GitHub's rolling "android-latest" release against [currentVersion]
@@ -51,8 +55,7 @@ object UpdateChecker {
             val body = connection.inputStream.bufferedReader().use { it.readText() }
             val json = JSONObject(body)
             val name = json.optString("name", "")
-            val matcher = VERSION_IN_NAME.matcher(name.trim())
-            val releaseVersion = if (matcher.find()) matcher.group() else null
+            val releaseVersion = parseReleaseVersion(name)
             if (releaseVersion == null || releaseVersion == "v$currentVersion") return null
 
             val assets = json.optJSONArray("assets") ?: return null
@@ -66,5 +69,11 @@ object UpdateChecker {
         } finally {
             connection.disconnect()
         }
+    }
+
+    /** Extracts the trailing "v<versionName>" token from a release name, or null if absent. */
+    internal fun parseReleaseVersion(releaseName: String): String? {
+        val matcher = VERSION_IN_NAME.matcher(releaseName.trim())
+        return if (matcher.find()) matcher.group() else null
     }
 }

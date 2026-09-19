@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">诊断版本：静止时采样间隔不再自动变长，用于测试后台闹钟是否真的按所选间隔触发。可能会增加耗电，非正式版本。</string>
+    <string name="build_note">修复了错误的\"已是最新版本\"提示——上一个诊断版本的\"-diag1\"标签导致更新检查无法正确读取版本号。</string>
 </resources>

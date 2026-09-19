@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0-diag1 (düzeltme) — 2026-09-19
+
+- **"Güncelleme yok" hatası düzeltildi:** Uygulamanın güncelleme kontrolü,
+  GitHub yayın adındaki sürüm numarasını yalnızca rakam/nokta ile bittiği
+  varsayımıyla okuyordu; bir önceki derlemede eklenen "-diag1" soneki bu
+  varsayımı bozup her kontrolde "zaten güncelsiniz" sonucunu veriyordu —
+  aslında yeni bir teşhis derlemesi yayında olsa bile. Artık sürüm
+  numarasının ardından gelen "-diag1" gibi bir etiket de doğru okunuyor.
+
 ## 1.1.0-diag1 (teşhis) — 2026-09-19
 
 - **Hareketsizken bile örnekleme aralığı seyreltilmiyor (geçici):**
