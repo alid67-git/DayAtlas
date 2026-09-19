@@ -69,4 +69,17 @@ class RangeStatsTest {
         assertTrue(summary.maxSpeedKmh > 50.0)
         assertTrue(summary.activeMillis > 0L)
     }
+
+    @Test
+    fun sumsCheckCountWhenGpsChecksExceedPins() {
+        val day = DayRecord(
+            date = "2026-09-01",
+            title = "a",
+            points = listOf(TrackPoint(1_000L, 41.0, 29.0, null)),
+            distanceMeters = 0.0,
+            gpsCheckCount = 15,
+        )
+        val summary = RangeStats.summarize(listOf(day))
+        assertEquals(15, summary.totalPoints)
+    }
 }

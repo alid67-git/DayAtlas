@@ -38,7 +38,7 @@
     <string name="interval_5_short">5 Min</string>
     <string name="interval_seconds_short">%1$d s</string>
     <string name="last_point">Letzter Punkt</string>
-    <string name="point_count">Punktanzahl</string>
+    <string name="point_count">GPS-Kontrollanzahl</string>
     <string name="em_dash">—</string>
     <string name="start">Start</string>
     <string name="stop">Stopp</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Die Update-Prüfung funktioniert jetzt wirklich - die vorherige Korrektur behielt denselben Versionsnamen, also meldete sie weiterhin kein Update; dieser Build hat einen wirklich neuen Namen.</string>
+    <string name="build_note">Version 1.1.1 — Stillstehende GPS-Messungen zählen zur Kontrollanzahl (keine gestapelten Karten-Pins).</string>
 </resources>

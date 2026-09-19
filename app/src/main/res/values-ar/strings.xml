@@ -38,7 +38,7 @@
     <string name="interval_5_short">5 دقائق</string>
     <string name="interval_seconds_short">%1$d ثانية</string>
     <string name="last_point">آخر نقطة</string>
-    <string name="point_count">عدد النقاط</string>
+    <string name="point_count">عدد فحوصات GPS</string>
     <string name="em_dash">—</string>
     <string name="start">بدء</string>
     <string name="stop">إيقاف</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">فحص التحديثات يعمل الآن فعليًا — الإصلاح السابق أبقى نفس اسم الإصدار، فظل يقول لا يوجد تحديث؛ اسم هذا الإصدار تغيّر فعليًا.</string>
+    <string name="build_note">الإصدار 1.1.1 — قياسات GPS أثناء التوقف تُحسب أيضًا في عدد الفحوصات (دون تكديس دبابيس على الخريطة).</string>
 </resources>

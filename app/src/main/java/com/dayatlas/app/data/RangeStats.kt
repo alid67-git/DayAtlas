@@ -46,7 +46,7 @@ object RangeStats {
 
         for (record in records) {
             totalDistance += record.distanceMeters
-            totalPoints += record.points.size
+            totalPoints += record.checkCount
             daily.add(record.date to record.distanceMeters)
             if (record.distanceMeters >= bestDistance) {
                 bestDistance = record.distanceMeters

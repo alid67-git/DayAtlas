@@ -38,7 +38,7 @@
     <string name="interval_5_short">5 dk</string>
     <string name="interval_seconds_short">%1$d sn</string>
     <string name="last_point">Son nokta</string>
-    <string name="point_count">Nokta sayısı</string>
+    <string name="point_count">GPS kontrol sayısı</string>
     <string name="em_dash">—</string>
     <string name="start">Başlat</string>
     <string name="stop">Durdur</string>
@@ -182,5 +182,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Güncelleme kontrolü artık gerçekten çalışıyor — bir önceki düzeltme aynı sürüm adıyla yayınlandığı için hâlâ güncelleme yok diyordu, bu sürümün adı gerçekten değişti.</string>
+    <string name="build_note">Sürüm 1.1.1 — Dururken yapılan GPS ölçümleri de kontrol sayısına yazılıyor (haritada üst üste pin yok).</string>
 </resources>

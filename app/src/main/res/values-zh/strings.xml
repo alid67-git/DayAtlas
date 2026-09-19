@@ -38,7 +38,7 @@
     <string name="interval_5_short">5 分钟</string>
     <string name="interval_seconds_short">%1$d 秒</string>
     <string name="last_point">最后位置</string>
-    <string name="point_count">点数</string>
+    <string name="point_count">GPS 检查次数</string>
     <string name="em_dash">—</string>
     <string name="start">开始</string>
     <string name="stop">停止</string>
@@ -172,5 +172,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">更新检查现在真的能用了——上一次修复沿用了相同的版本名称，所以仍然提示没有更新；这个版本的名称真正改变了。</string>
+    <string name="build_note">版本 1.1.1 — 静止时的 GPS 测量也会计入检查次数（地图上不会堆叠图钉）。</string>
 </resources>

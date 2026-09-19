@@ -37,3 +37,4 @@ keystore.properties
 
 # Logs
 *.log
+local.properties

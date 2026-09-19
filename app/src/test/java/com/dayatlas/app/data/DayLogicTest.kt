@@ -6,6 +6,58 @@ import org.junit.Test
 import java.time.LocalDate
 import java.util.Locale
 
+class DayRecordCheckCountTest {
+    @Test
+    fun checkCountFallsBackToPointCount() {
+        val record = DayRecord(
+            date = "2026-09-19",
+            title = "t",
+            points = listOf(TrackPoint(1L, 41.0, 29.0, null)),
+            distanceMeters = 0.0,
+            gpsCheckCount = 0,
+        )
+        assertEquals(1, record.checkCount)
+    }
+
+    @Test
+    fun checkCountPrefersStoredGpsChecks() {
+        val record = DayRecord(
+            date = "2026-09-19",
+            title = "t",
+            points = listOf(TrackPoint(1L, 41.0, 29.0, null)),
+            distanceMeters = 0.0,
+            gpsCheckCount = 12,
+        )
+        assertEquals(12, record.checkCount)
+    }
+
+    @Test
+    fun jsonRoundTripKeepsGpsCheckCount() {
+        val original = DayRecord(
+            date = "2026-09-19",
+            title = "t",
+            points = listOf(
+                TrackPoint(1_000L, 41.0, 29.0, null),
+                TrackPoint(2_000L, 41.001, 29.0, null),
+            ),
+            distanceMeters = 100.0,
+            gpsCheckCount = 9,
+        )
+        val restored = DayJson.fromJson(DayJson.toJson(original))
+        assertEquals(9, restored.gpsCheckCount)
+        assertEquals(9, restored.checkCount)
+        assertEquals(2, restored.points.size)
+    }
+
+    @Test
+    fun jsonWithoutFieldUsesPointCount() {
+        val raw = """{"version":1,"date":"2026-09-19","title":"t","distanceMeters":0,"points":[{"t":1,"lat":41.0,"lon":29.0}]}"""
+        val restored = DayJson.fromJson(raw)
+        assertEquals(1, restored.gpsCheckCount)
+        assertEquals(1, restored.checkCount)
+    }
+}
+
 class GeoTest {
     @Test
     fun nearbyPointsHaveExpectedDistance() {

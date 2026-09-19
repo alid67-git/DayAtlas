@@ -85,7 +85,7 @@ class SampleService : Service() {
                             Intents.pointSaved(
                                 this,
                                 dateIso = result.record.date,
-                                pointCount = result.record.points.size,
+                                pointCount = result.record.checkCount,
                                 distanceMeters = result.record.distanceMeters,
                                 timeMillis = last.timeMillis,
                                 lat = last.lat,
