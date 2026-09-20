@@ -87,6 +87,7 @@
     <string name="jumps_button">Sauts (%1$d) — appuyez pour supprimer</string>
     <string name="jumps_button_none">Aucun saut</string>
     <string name="jumps_title">Sauts GPS (%1$d)</string>
+    <string name="jumps_title_short">Sauts</string>
     <string name="jumps_none">Aucun saut GPS à supprimer ce jour-là. (Les téléports durs sont listés ici ; les pics doux sont abandonnés automatiquement.)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">Supprimer ce saut ?</string>
@@ -127,8 +128,7 @@
     <string name="drive_restore_busy">Sauvegarde/restauration déjà en cours…</string>
 
     <string name="settings_day_stats">Statistiques journalières de la carte</string>
-    <string name="settings_day_stats_hint">Quelles cartes du jour sur l’écran d’accueil ? Max. 6. Appui long + glisser pour réordonner.</string>
-    <string name="settings_day_stats_max">6 cartes maximum.</string>
+    <string name="settings_day_stats_hint">Quelles cartes du jour sur l’écran d’accueil ? 7 cartes en 2+2+3. Appui long + glisser pour réordonner.</string>
 
     <string name="gps_check_rate">Fréquence de vérification GPS : %1$s</string>
     <string name="app_footer_credit">Développé par : Ali Dinçer</string>
@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.5 — Préc./suiv. restaurés sur Quotidien ; thème teal/vert.</string>
+    <string name="build_note">Version 1.1.6 — Stats 2+2+3 fixes (plus de choix de cartes) ; icône sauts ; photo à côté de la note.</string>
 </resources>

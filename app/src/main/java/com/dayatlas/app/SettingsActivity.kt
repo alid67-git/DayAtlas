@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.CheckBox
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -18,7 +17,6 @@ import com.dayatlas.app.databinding.ActivitySettingsBinding
 import com.dayatlas.app.location.PermissionHelper
 import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
-import com.dayatlas.app.route.DayStatKind
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
 
@@ -58,7 +56,6 @@ class SettingsActivity : DayAtlasActivity() {
 
         setupLanguageDropdown()
         setupIntervalDropdown()
-        setupDayStatsCheckboxes()
 
         binding.locationSettings.setOnClickListener {
             startActivity(
@@ -220,47 +217,6 @@ class SettingsActivity : DayAtlasActivity() {
             binding.gpsRateLabel.text =
                 getString(R.string.gps_check_rate, options[position].second)
         }
-    }
-
-    private fun setupDayStatsCheckboxes() {
-        val checkboxes = mapOf(
-            DayStatKind.DISTANCE to binding.statCheckDistance,
-            DayStatKind.LAST_POINT to binding.statCheckLastPoint,
-            DayStatKind.POINT_COUNT to binding.statCheckPointCount,
-            DayStatKind.GPS_INTERVAL to binding.statCheckGpsInterval,
-            DayStatKind.MAX_SPEED to binding.statCheckMaxSpeed,
-            DayStatKind.AVG_SPEED to binding.statCheckAvgSpeed,
-            DayStatKind.ACTIVE_DURATION to binding.statCheckActiveDuration,
-        )
-        val hidden = prefs.dayStatsHidden.toMutableSet()
-        // Cap visible tiles at 6 (grid fits 2 rows × 3). Hide extras if needed.
-        val visibleKeys = DayStatKind.DEFAULT_ORDER.map { it.key }.filter { it !in hidden }
-        if (visibleKeys.size > MAX_VISIBLE_DAY_STATS) {
-            visibleKeys.drop(MAX_VISIBLE_DAY_STATS).forEach { hidden.add(it) }
-            prefs.dayStatsHidden = hidden
-        }
-        checkboxes.forEach { (kind, checkBox: CheckBox) ->
-            checkBox.isChecked = kind.key !in hidden
-            checkBox.setOnCheckedChangeListener { box, checked ->
-                val current = prefs.dayStatsHidden.toMutableSet()
-                if (checked) {
-                    val visible = DayStatKind.entries.count { it.key !in current }
-                    if (visible >= MAX_VISIBLE_DAY_STATS) {
-                        box.isChecked = false
-                        Toast.makeText(this, R.string.settings_day_stats_max, Toast.LENGTH_SHORT).show()
-                        return@setOnCheckedChangeListener
-                    }
-                    current.remove(kind.key)
-                } else {
-                    current.add(kind.key)
-                }
-                prefs.dayStatsHidden = current
-            }
-        }
-    }
-
-    companion object {
-        private const val MAX_VISIBLE_DAY_STATS = 6
     }
 
     private fun refreshDriveUi() {

@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -81,6 +80,7 @@ class MainActivity : DayAtlasActivity() {
     private var askedBatteryThisSession = false
     private var askedExactThisSession = false
     private var mapDate: LocalDate = DayTitle.localToday()
+    private var mapPhotos: List<String> = emptyList()
     private var statsRange: StatsRange = StatsRange.LAST_7
     private val uiHandler = Handler(Looper.getMainLooper())
     private val io = Executors.newSingleThreadExecutor()
@@ -166,13 +166,7 @@ class MainActivity : DayAtlasActivity() {
         binding.routeMap.setBackgroundColor(0xFFE8EEF4.toInt())
 
         binding.todayStats.adapter = dayStatsAdapter
-        val statsSpan =
-            if (resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
-                6 // one row in landscape → more room for the map
-            } else {
-                3
-            }
-        dayStatsAdapter.attachTo(binding.todayStats, spanCount = statsSpan)
+        dayStatsAdapter.attachTo(binding.todayStats, spanCount = DayStatsAdapter.GRID_SPAN)
         // Reserve the grid's real row count (hence height) before the very
         // first layout pass with placeholder values — the actual numbers
         // come from the async refresh() below. Without this, the very first
@@ -233,7 +227,7 @@ class MainActivity : DayAtlasActivity() {
             refreshMap()
         }
 
-        binding.jumpsButton.setOnClickListener {
+        binding.mapJumpsButton.setOnClickListener {
             JumpCleanupDialog.show(
                 this,
                 store,
@@ -249,20 +243,13 @@ class MainActivity : DayAtlasActivity() {
             ) { refresh() }
         }
 
-        binding.addPhotoButton.setOnClickListener {
-            pickPhotoLauncher.launch("image/*")
-        }
-        val photoViews = listOf(binding.dayPhoto1, binding.dayPhoto2, binding.dayPhoto3)
-        photoViews.forEach { view ->
-            view.setOnClickListener {
-                val name = view.tag as? String ?: return@setOnClickListener
-                PhotoViewerDialog.show(
-                    this,
-                    store,
-                    photoStore,
-                    DayTitle.iso(mapDate),
-                    name,
-                ) { refresh() }
+        binding.mapPhotosButton.setOnClickListener { onMapPhotosTap() }
+        binding.mapPhotosButton.setOnLongClickListener {
+            if (mapPhotos.size < PhotoStore.MAX_PHOTOS_PER_DAY) {
+                pickPhotoLauncher.launch("image/*")
+                true
+            } else {
+                false
             }
         }
 
@@ -607,7 +594,6 @@ class MainActivity : DayAtlasActivity() {
         val generation = refreshGeneration.incrementAndGet()
         val dailyMode = prefs.dailyMode
         val trackingEnabled = prefs.trackingEnabled
-        val hidden = prefs.dayStatsHidden
         val orderRaw = prefs.dayStatsOrderRaw
         val intervalSeconds = prefs.effectiveIntervalSeconds
         val dailyVisible = binding.paneDaily.visibility == View.VISIBLE
@@ -624,7 +610,7 @@ class MainActivity : DayAtlasActivity() {
             val todaySpeed = SpeedStats.compute(record.points)
             uiHandler.post {
                 if (isDestroyed || generation != refreshGeneration.get()) return@post
-                applyTodayChrome(record, dailyMode, trackingEnabled, hidden, orderRaw, intervalSeconds, todaySpeed)
+                applyTodayChrome(record, dailyMode, trackingEnabled, orderRaw, intervalSeconds, todaySpeed)
                 if (!dailyVisible) return@post
                 if (rebuildMap) {
                     applyMapPane(mapDateSnapshot, mapRecord, mapPoints, jumps, fitCamera = true)
@@ -664,41 +650,38 @@ class MainActivity : DayAtlasActivity() {
             this,
             if (record?.note.isNullOrEmpty()) R.color.md_theme_on_surface else R.color.status_on,
         )
-        if (jumps.isEmpty()) {
-            binding.jumpsButton.text = getString(R.string.jumps_button_none)
-        } else {
-            binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
-        }
-        binding.jumpsButton.visibility = View.VISIBLE
+        binding.mapJumpsButton.visibility = if (jumps.isEmpty()) View.GONE else View.VISIBLE
         applyDayPhotos(DayTitle.iso(date), record?.photos.orEmpty())
     }
 
-    private fun applyDayPhotos(dateIso: String, photos: List<String>) {
-        val slots = listOf(binding.dayPhoto1, binding.dayPhoto2, binding.dayPhoto3)
-        slots.forEachIndexed { i, view ->
-            val name = photos.getOrNull(i)
-            if (name == null) {
-                view.visibility = View.GONE
-                view.tag = null
-                view.setImageDrawable(null)
-                return@forEachIndexed
+    private fun onMapPhotosTap() {
+        val dateIso = DayTitle.iso(mapDate)
+        when {
+            mapPhotos.isEmpty() -> pickPhotoLauncher.launch("image/*")
+            else -> {
+                val name = mapPhotos.first()
+                PhotoViewerDialog.show(this, store, photoStore, dateIso, name) { refresh() }
             }
-            view.visibility = View.VISIBLE
-            view.tag = name
-            val thumb = photoStore.thumbFile(dateIso, name)
-            view.setImageBitmap(
-                if (thumb.exists()) BitmapFactory.decodeFile(thumb.absolutePath) else null,
-            )
         }
-        binding.addPhotoButton.visibility =
-            if (photos.size >= PhotoStore.MAX_PHOTOS_PER_DAY) View.GONE else View.VISIBLE
+    }
+
+    private fun applyDayPhotos(dateIso: String, photos: List<String>) {
+        mapPhotos = photos
+        val hasPhotos = photos.isNotEmpty()
+        binding.mapPhotosButton.alpha = if (hasPhotos) 1f else 0.45f
+        binding.mapPhotosButton.imageTintList = ContextCompat.getColorStateList(
+            this,
+            if (hasPhotos) R.color.status_on else R.color.md_theme_on_surface,
+        )
+        binding.mapPhotosButton.contentDescription = getString(
+            if (hasPhotos) R.string.day_photo_thumbnail else R.string.day_photo_add,
+        )
     }
 
     private fun applyTodayChrome(
         record: DayRecord,
         dailyMode: Boolean,
         trackingEnabled: Boolean,
-        hidden: Set<String>,
         orderRaw: String?,
         intervalSeconds: Int,
         todaySpeed: SpeedStats.Stats,
@@ -733,8 +716,7 @@ class MainActivity : DayAtlasActivity() {
         val todayValues = dayStatValues(record, record.points, todaySpeed, intervalSeconds)
         val order = DayStatKind.parseOrder(orderRaw)
         dayStatsAdapter.submit(
-            order.filter { it.key !in hidden }
-                .map { it to (todayValues[it] ?: getString(R.string.em_dash)) },
+            order.map { it to (todayValues[it] ?: getString(R.string.em_dash)) },
         )
     }
 
@@ -898,9 +880,8 @@ class MainActivity : DayAtlasActivity() {
      * see the call site in [onCreate] for why this must run before layout. */
     private fun submitStatsSkeleton() {
         val emDash = getString(R.string.em_dash)
-        val hidden = prefs.dayStatsHidden
         val order = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
-        dayStatsAdapter.submit(order.filter { it.key !in hidden }.map { it to emDash })
+        dayStatsAdapter.submit(order.map { it to emDash })
     }
 
     private fun formatGpsInterval(seconds: Int): String = when (seconds) {
@@ -911,15 +892,9 @@ class MainActivity : DayAtlasActivity() {
         else -> getString(R.string.interval_seconds_short, seconds)
     }
 
-    /**
-     * Persist the full visible order from the grid; hidden kinds keep their
-     * previous relative order and are appended after.
-     */
+    /** Persist drag-reorder of the always-visible 2+2+3 day-stat grid. */
     private fun persistDayStatsOrder(newVisible: List<DayStatKind>) {
-        val hidden = prefs.dayStatsHidden
-        val oldOrder = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
-        val hiddenOrdered = oldOrder.filter { it.key in hidden }
-        prefs.dayStatsOrderRaw = DayStatKind.joinOrder(newVisible + hiddenOrdered)
+        prefs.dayStatsOrderRaw = DayStatKind.joinOrder(newVisible)
     }
 
     companion object {
