@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.8 — 2026-09-20
+
+- **Kademeli GPS aralığı geri açıldı:** Dururken örnekleme yine
+  30 sn → 1 → 3 → 5 dk adımlarıyla seyrelir. Teşhis sürümünde kapatılmıştı;
+  bu yüzden “Aktif GPS alma hızı” 30 sn’de kalıp binlerce kontrol
+  birikebiliyordu. (Aktif süre yalnızca gerçek hareketi sayar — kısa
+  gezi ≈ birkaç dakika normaldir.)
+
 ## 1.1.7 — 2026-09-20
 
 - **Günlük istatistik kutuları:** Her kart soft renkli arka plan + eşleşen
