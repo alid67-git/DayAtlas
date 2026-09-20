@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.12 — 2026-09-20
+
+- **Yenilikler metni güncellendi:** Açılış diyaloğu hâlâ 1.1.6 notunu
+  gösteriyordu; tüm dillerde 1.1.7–1.1.11 özeti yazıldı.
+
 ## 1.1.11 — 2026-09-20
 
 - **Kademeli GPS yine ilerlesin:** Uygulama her açıldığında backoff
