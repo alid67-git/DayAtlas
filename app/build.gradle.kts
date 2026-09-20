@@ -29,20 +29,11 @@ android {
         applicationId = "com.dayatlas.app"
         minSdk = 26
         targetSdk = 36
-        // Diagnostic build: StationaryBackoff's interval coarsening is
-        // disabled (see COARSENING_ENABLED) so sampling stays at the user's
-        // chosen interval even while stationary - this isolates whether the
-        // background alarm itself checks in reliably, independent of
-        // interval choice, for a reported background-tracking problem.
         // versionName must change on every bump, not just versionCode:
         // UpdateChecker compares version NAMES for equality to decide
-        // "already up to date" (see UpdateChecker.kt), so re-publishing
-        // under the same "1.1.0-diag1" name after only fixing that
-        // checker's regex (previous commit) meant it now parsed the name
-        // correctly but then matched it exactly and reported no update
-        // anyway - "diag2" makes this build's name distinct again.
-        versionCode = 67
-        versionName = "1.1.7"
+        // "already up to date".
+        versionCode = 68
+        versionName = "1.1.8"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /

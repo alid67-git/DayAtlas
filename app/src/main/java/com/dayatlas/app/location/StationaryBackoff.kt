@@ -22,17 +22,12 @@ object StationaryBackoff {
     const val MOVEMENT_STREAK_TO_RESET = 2
 
     /**
-     * Diagnostic override (2026-09-19): [recordSample] keeps sampling at the
-     * user's chosen interval even while stationary instead of backing off,
-     * so we can confirm whether the background alarm itself checks in
-     * reliably regardless of movement - a reported background-tracking
-     * problem persisted even after reverting the movement-confirmation
-     * logic, so the next thing to rule out is the coarsening itself masking
-     * how often the alarm actually fires. The coarsening math below is
-     * untouched and still covered by its own tests; flip this back to true
-     * once the background issue is understood.
+     * When true (default), [recordSample] steps the effective interval
+     * coarser while you sit still (30 s → 1 → 3 → 5 min). Kept as a flag
+     * so a future diagnostic build can temporarily freeze the interval
+     * without deleting the backoff math or its tests.
      */
-    const val COARSENING_ENABLED = false
+    const val COARSENING_ENABLED = true
 
     data class State(
         val effectiveIntervalSeconds: Int,
