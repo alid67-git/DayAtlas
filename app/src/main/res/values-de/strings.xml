@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.6 — Statistik 2+2+3; Sprünge-Karten-Icon; Foto neben Notiz; größere Karte.</string>
+    <string name="build_note">Version 1.1.6 — Feste 2+2+3-Statistik (keine Kartenwahl); Sprünge-Icon; Foto neben Notiz.</string>
 </resources>

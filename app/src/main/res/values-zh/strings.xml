@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.6 — 统计 2+2+3；地图跳变图标；照片在笔记旁；更大地图。</string>
+    <string name="build_note">版本 1.1.6 — 固定 2+2+3 统计（无卡片选择）；跳变图标；照片在笔记旁。</string>
 </resources>

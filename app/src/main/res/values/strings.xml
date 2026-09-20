@@ -187,5 +187,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.6 — İstatistik 2+2+3; atlama harita ikonu; foto kalemin yanında; daha büyük harita.</string>
+    <string name="build_note">Sürüm 1.1.6 — İstatistik 2+2+3 (hepsi sabit); atlama harita ikonu; foto kalemin yanında; kutu seçimi kaldırıldı.</string>
 </resources>

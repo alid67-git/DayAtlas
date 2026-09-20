@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.6 — आँकड़े 2+2+3; मानचित्र जंप आइकन; नोट के पास फ़ोटो; बड़ा मानचित्र।</string>
+    <string name="build_note">संस्करण 1.1.6 — स्थिर 2+2+3 आँकड़े (कार्ड चयन नहीं); जंप आइकन; नोट के पास फ़ोटो।</string>
 </resources>

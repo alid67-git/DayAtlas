@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.6 — Stats 2+2+3 ; icône sauts ; photo à côté de la note ; carte plus grande.</string>
+    <string name="build_note">Version 1.1.6 — Stats 2+2+3 fixes (plus de choix de cartes) ; icône sauts ; photo à côté de la note.</string>
 </resources>

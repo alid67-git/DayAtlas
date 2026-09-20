@@ -594,7 +594,6 @@ class MainActivity : DayAtlasActivity() {
         val generation = refreshGeneration.incrementAndGet()
         val dailyMode = prefs.dailyMode
         val trackingEnabled = prefs.trackingEnabled
-        val hidden = prefs.dayStatsHidden
         val orderRaw = prefs.dayStatsOrderRaw
         val intervalSeconds = prefs.effectiveIntervalSeconds
         val dailyVisible = binding.paneDaily.visibility == View.VISIBLE
@@ -611,7 +610,7 @@ class MainActivity : DayAtlasActivity() {
             val todaySpeed = SpeedStats.compute(record.points)
             uiHandler.post {
                 if (isDestroyed || generation != refreshGeneration.get()) return@post
-                applyTodayChrome(record, dailyMode, trackingEnabled, hidden, orderRaw, intervalSeconds, todaySpeed)
+                applyTodayChrome(record, dailyMode, trackingEnabled, orderRaw, intervalSeconds, todaySpeed)
                 if (!dailyVisible) return@post
                 if (rebuildMap) {
                     applyMapPane(mapDateSnapshot, mapRecord, mapPoints, jumps, fitCamera = true)
@@ -683,7 +682,6 @@ class MainActivity : DayAtlasActivity() {
         record: DayRecord,
         dailyMode: Boolean,
         trackingEnabled: Boolean,
-        hidden: Set<String>,
         orderRaw: String?,
         intervalSeconds: Int,
         todaySpeed: SpeedStats.Stats,
@@ -718,8 +716,7 @@ class MainActivity : DayAtlasActivity() {
         val todayValues = dayStatValues(record, record.points, todaySpeed, intervalSeconds)
         val order = DayStatKind.parseOrder(orderRaw)
         dayStatsAdapter.submit(
-            order.filter { it.key !in hidden }
-                .map { it to (todayValues[it] ?: getString(R.string.em_dash)) },
+            order.map { it to (todayValues[it] ?: getString(R.string.em_dash)) },
         )
     }
 
@@ -883,9 +880,8 @@ class MainActivity : DayAtlasActivity() {
      * see the call site in [onCreate] for why this must run before layout. */
     private fun submitStatsSkeleton() {
         val emDash = getString(R.string.em_dash)
-        val hidden = prefs.dayStatsHidden
         val order = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
-        dayStatsAdapter.submit(order.filter { it.key !in hidden }.map { it to emDash })
+        dayStatsAdapter.submit(order.map { it to emDash })
     }
 
     private fun formatGpsInterval(seconds: Int): String = when (seconds) {
@@ -896,15 +892,9 @@ class MainActivity : DayAtlasActivity() {
         else -> getString(R.string.interval_seconds_short, seconds)
     }
 
-    /**
-     * Persist the full visible order from the grid; hidden kinds keep their
-     * previous relative order and are appended after.
-     */
+    /** Persist drag-reorder of the always-visible 2+2+3 day-stat grid. */
     private fun persistDayStatsOrder(newVisible: List<DayStatKind>) {
-        val hidden = prefs.dayStatsHidden
-        val oldOrder = DayStatKind.parseOrder(prefs.dayStatsOrderRaw)
-        val hiddenOrdered = oldOrder.filter { it.key in hidden }
-        prefs.dayStatsOrderRaw = DayStatKind.joinOrder(newVisible + hiddenOrdered)
+        prefs.dayStatsOrderRaw = DayStatKind.joinOrder(newVisible)
     }
 
     companion object {
