@@ -215,7 +215,22 @@ class MainActivity : DayAtlasActivity() {
         binding.routesList.layoutManager = LinearLayoutManager(this)
         binding.routesList.adapter = routesAdapter
         binding.routesExportRange.setOnClickListener {
-            GpxExportDialog.show(this, store, DayTitle.localToday())
+            GpxExportDialog.show(this, store, mapDate)
+        }
+
+        binding.previousDay.setOnClickListener {
+            mapDate = mapDate.minusDays(1)
+            refreshMap()
+        }
+        binding.nextDay.setOnClickListener {
+            if (mapDate < DayTitle.localToday()) {
+                mapDate = mapDate.plusDays(1)
+                refreshMap()
+            }
+        }
+        binding.goToday.setOnClickListener {
+            mapDate = DayTitle.localToday()
+            refreshMap()
         }
 
         binding.jumpsButton.setOnClickListener {
@@ -587,8 +602,7 @@ class MainActivity : DayAtlasActivity() {
 
     private fun refresh(rebuildMap: Boolean = true) {
         val today = DayTitle.localToday()
-        // Daily tab is today-only (no day-nav chevrons on the map).
-        mapDate = today
+        if (mapDate.isAfter(today)) mapDate = today
         val mapDateSnapshot = mapDate
         val generation = refreshGeneration.incrementAndGet()
         val dailyMode = prefs.dailyMode
@@ -627,9 +641,12 @@ class MainActivity : DayAtlasActivity() {
         points: List<TrackPoint>,
         jumps: List<JumpFilter.Jump>,
     ) {
+        val today = DayTitle.localToday()
         binding.mapDayTitle.text = DayTitle.format(date)
-        // Daily tab is today-only — past-day strip stays gone.
-        binding.mapDayStats.visibility = View.GONE
+        binding.nextDay.isEnabled = date < today
+        binding.goToday.visibility = if (date == today) View.GONE else View.VISIBLE
+        // Bugün zaten üstteki kartlarda özet var — aynı şeridi gizleyip haritaya yer aç.
+        binding.mapDayStats.visibility = if (date == today) View.GONE else View.VISIBLE
         val emDash = getString(R.string.em_dash)
         binding.mapDistance.text = if (points.isEmpty()) {
             emDash
@@ -643,7 +660,6 @@ class MainActivity : DayAtlasActivity() {
                 .format(TIME_FMT)
         } ?: emDash
         binding.mapPointCount.text = (record?.checkCount ?: points.size).toString()
-        // Tint the note icon when this day already has a note.
         binding.dayNoteButton.imageTintList = ContextCompat.getColorStateList(
             this,
             if (record?.note.isNullOrEmpty()) R.color.md_theme_on_surface else R.color.status_on,

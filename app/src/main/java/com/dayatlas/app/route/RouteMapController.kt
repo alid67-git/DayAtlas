@@ -71,7 +71,7 @@ object RouteMapController {
         val geoPoints = points.map { GeoPoint(it.lat, it.lon) }
         val poly = Polyline().apply {
             setPoints(geoPoints)
-            outlinePaint.color = Color.parseColor("#1E5AA8")
+            outlinePaint.color = Color.parseColor("#0F766E")
             outlinePaint.strokeWidth = 8f
         }
         map.overlays.add(poly)

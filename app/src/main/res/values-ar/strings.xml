@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.4 — تصغير؛ أسهم التفاصيل؛ إزالة أسهم اليومي؛ مسافة التوقف؛ حد أقصى 6 بطاقات.</string>
+    <string name="build_note">الإصدار 1.1.5 — استعادة السابق/التالي في اليومي؛ سمة تركواز/أخضر.</string>
 </resources>

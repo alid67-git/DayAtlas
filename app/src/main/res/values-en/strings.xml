@@ -177,7 +177,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.4 — Zoom out; day-detail day arrows; remove Daily map day arrows; fix stationary distance; max 6 day-stat cards.</string>
+    <string name="build_note">Version 1.1.5 — Day prev/next restored on Daily; teal/green theme.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>
