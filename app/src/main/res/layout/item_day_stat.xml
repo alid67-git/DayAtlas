@@ -3,30 +3,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
+    android:gravity="center"
     android:background="@drawable/bg_dash_card"
-    android:paddingHorizontal="12dp"
+    android:paddingHorizontal="10dp"
     android:paddingVertical="10dp"
     android:layout_marginHorizontal="4dp"
     android:layout_marginVertical="3dp"
     android:elevation="1dp"
     android:minHeight="60dp">
 
-    <TextView
-        android:id="@+id/statLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceLabelSmall"
-        android:textColor="@color/md_theme_outline"
-        tools:text="Bugünkü mesafe" />
+    <ImageView
+        android:id="@+id/statIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        tools:src="@drawable/ic_stat_distance"
+        tools:tint="@color/stat_distance_icon" />
 
-    <TextView
-        android:id="@+id/statValue"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
-        android:textColor="@color/md_theme_on_surface"
-        android:textStyle="bold"
-        tools:text="115,5 km" />
+        android:orientation="vertical"
+        android:gravity="start">
+
+        <TextView
+            android:id="@+id/statLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            android:textColor="@color/md_theme_outline"
+            tools:text="Bugünkü mesafe" />
+
+        <TextView
+            android:id="@+id/statValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@color/md_theme_on_surface"
+            android:textStyle="bold"
+            tools:text="115,5 km" />
+    </LinearLayout>
 </LinearLayout>

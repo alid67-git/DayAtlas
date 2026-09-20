@@ -41,8 +41,8 @@ android {
         // checker's regex (previous commit) meant it now parsed the name
         // correctly but then matched it exactly and reported no update
         // anyway - "diag2" makes this build's name distinct again.
-        versionCode = 66
-        versionName = "1.1.6"
+        versionCode = 67
+        versionName = "1.1.7"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /

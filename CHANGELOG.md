@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.7 — 2026-09-20
+
+- **Günlük istatistik kutuları:** Her kart soft renkli arka plan + eşleşen
+  ikon; metin ve ikon kutunun içinde ortalanır (2+2+3 düzeni).
+
 ## 1.1.1 — 2026-09-19
 
 - **Dururken GPS kontrol sayısı artsın:** Aynı yerde yeni harita pini
