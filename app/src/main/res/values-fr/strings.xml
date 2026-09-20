@@ -127,7 +127,8 @@
     <string name="drive_restore_busy">Sauvegarde/restauration déjà en cours…</string>
 
     <string name="settings_day_stats">Statistiques journalières de la carte</string>
-    <string name="settings_day_stats_hint">Quelles cartes s\'affichent dans l\'onglet Journalier ? Vous pouvez aussi les réorganiser par appui long et glisser.</string>
+    <string name="settings_day_stats_hint">Quelles cartes du jour sur l’écran d’accueil ? Max. 6. Appui long + glisser pour réordonner.</string>
+    <string name="settings_day_stats_max">6 cartes maximum.</string>
 
     <string name="gps_check_rate">Fréquence de vérification GPS : %1$s</string>
     <string name="app_footer_credit">Développé par : Ali Dinçer</string>
@@ -176,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.3 — Carte détail plus grande ; cartes un cran plus proches ; bouton Sauts toujours visible ; Aide résumé + détail.</string>
+    <string name="build_note">Version 1.1.4 — Zoom arrière ; flèches détail ; retirer flèches Quotidien ; distance à l’arrêt ; max 6 cartes.</string>
 </resources>

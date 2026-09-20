@@ -127,7 +127,8 @@
     <string name="drive_restore_busy">Backup/restore already running…</string>
 
     <string name="settings_day_stats">Map day statistics</string>
-    <string name="settings_day_stats_hint">Which cards show on the Daily tab? You can also long-press and drag to reorder them.</string>
+    <string name="settings_day_stats_hint">Which day cards show on the home screen? Max 6. Long-press and drag to reorder.</string>
+    <string name="settings_day_stats_max">You can select at most 6 cards.</string>
 
     <string name="gps_check_rate">GPS check rate: %1$s</string>
     <string name="app_footer_credit">Developed by: Ali Dinçer</string>
@@ -176,7 +177,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.3 — Larger day-detail map; maps one zoom level closer; Jumps button always visible; Help summary + detail.</string>
+    <string name="build_note">Version 1.1.4 — Zoom out; day-detail day arrows; remove Daily map day arrows; fix stationary distance; max 6 day-stat cards.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

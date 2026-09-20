@@ -127,7 +127,8 @@
     <string name="drive_restore_busy">Yedekleme/geri yükleme zaten çalışıyor…</string>
 
     <string name="settings_day_stats">Harita gün istatistikleri</string>
-    <string name="settings_day_stats_hint">Ana ekrandaki gün kartlarında hangileri görünsün? Kartlar ayrıca uzun basıp sürükleyerek sıralanabilir.</string>
+    <string name="settings_day_stats_hint">Ana ekrandaki gün kartlarında hangileri görünsün? En fazla 6 kart. Kartlar uzun basıp sürükleyerek sıralanabilir.</string>
+    <string name="settings_day_stats_max">En fazla 6 kart seçilebilir.</string>
 
     <string name="gps_check_rate">GPS kontrol hızı: %1$s</string>
     <string name="app_footer_credit">Geliştiren: Ali Dinçer</string>
@@ -186,5 +187,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.3 — Gün detayında daha büyük harita; haritalar 1 kademe yakın; Atlamalar düğmesi her zaman görünür; Yardım özet + detay.</string>
+    <string name="build_note">Sürüm 1.1.4 — Zoom out; gün detay okları; Günlük harita okları kaldırıldı; dururken sahte mesafe düzeltildi; en fazla 6 istatistik kartı.</string>
 </resources>

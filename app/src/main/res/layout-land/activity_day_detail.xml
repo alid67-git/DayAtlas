@@ -65,6 +65,30 @@
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textColor="@color/md_theme_on_surface"
                 android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/previousDay"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_map_nav_chip"
+                android:contentDescription="@string/route_previous_day"
+                android:elevation="6dp"
+                android:src="@drawable/ic_chevron_left"
+                app:tint="@color/md_theme_on_surface" />
+
+            <ImageButton
+                android:id="@+id/nextDay"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_map_nav_chip"
+                android:contentDescription="@string/route_next_day"
+                android:elevation="6dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="@color/md_theme_on_surface" />
         </FrameLayout>
 
         <androidx.core.widget.NestedScrollView

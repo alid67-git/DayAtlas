@@ -5,11 +5,22 @@ package com.dayatlas.app.data
  * (distance, speed, active time). Home courtyard jitter is filtered out.
  */
 object TrackMotion {
-    /** Same noise floor as [com.dayatlas.app.location.StationaryBackoff.TOLERANCE_METERS], raised for stats. */
-    const val MIN_SEGMENT_METERS = 40.0
+    /**
+     * Ignore segments shorter than the same-place pin radius so a new pin
+     * that barely left the courtyard bubble never inflates distance alone.
+     */
+    const val MIN_SEGMENT_METERS = Geo.SAME_PLACE_RADIUS_M
+
+    /**
+     * Short hops that are too fast for a walk are almost always GPS cloud
+     * bounce (e.g. 85 m in 30 s ≈ 10 km/h). Real walking over the same
+     * distance is slower (~5 km/h over a minute).
+     */
+    const val GPS_HOP_MAX_METERS = 150.0
+    const val GPS_HOP_MIN_SPEED_KMH = 8.0
 
     /** Walking floor — below this, treat as stationary jitter. */
-    const val STATIONARY_SPEED_KMH = 5.0
+    const val STATIONARY_SPEED_KMH = 3.0
 
     const val MAX_REALISTIC_SPEED_KMH = 160.0
 
@@ -29,6 +40,8 @@ object TrackMotion {
         if (JumpFilter.isJump(prev, cur)) return null
         val speedKmh = (distM / (dtMs / 1000.0)) * 3.6
         if (speedKmh < STATIONARY_SPEED_KMH || speedKmh > MAX_REALISTIC_SPEED_KMH) return null
+        // Courtyard GPS: new pins just outside same-place, sampled tightly.
+        if (distM < GPS_HOP_MAX_METERS && speedKmh >= GPS_HOP_MIN_SPEED_KMH) return null
         return Segment(distM, speedKmh, dtMs)
     }
 }

@@ -127,7 +127,8 @@
     <string name="drive_restore_busy">Sicherung/Wiederherstellung läuft bereits…</string>
 
     <string name="settings_day_stats">Karten-Tagesstatistik</string>
-    <string name="settings_day_stats_hint">Welche Karten erscheinen im Tages-Tab? Per Langdruck und Ziehen können Sie die Reihenfolge ändern.</string>
+    <string name="settings_day_stats_hint">Welche Tageskarten auf dem Startbildschirm? Max. 6. Lang drücken und ziehen zum Sortieren.</string>
+    <string name="settings_day_stats_max">Höchstens 6 Karten auswählbar.</string>
 
     <string name="gps_check_rate">GPS-Prüfrate: %1$s</string>
     <string name="app_footer_credit">Entwickelt von: Ali Dinçer</string>
@@ -176,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.3 — Größere Tagesdetail-Karte; Karten eine Zoomstufe näher; Sprünge-Taste immer sichtbar; Hilfe Übersicht + Detail.</string>
+    <string name="build_note">Version 1.1.4 — Rauszoomen; Tagesdetail-Pfeile; Daily-Kartenpfeile weg; Stillstandsdistanz; max. 6 Statistik-Karten.</string>
 </resources>

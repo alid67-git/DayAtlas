@@ -67,13 +67,14 @@ class GeoTest {
 
     @Test
     fun pathLengthSumsSegments() {
+        // ~150 m each in 60 s ≈ 9 km/h — real motion past the GPS-hop band.
         val points = listOf(
             TrackPoint(0L, 41.0, 29.0, null),
-            TrackPoint(60_000L, 41.0, 29.001, null),
-            TrackPoint(120_000L, 41.0, 29.002, null),
+            TrackPoint(60_000L, 41.0, 29.0018, null),
+            TrackPoint(120_000L, 41.0, 29.0036, null),
         )
         val len = Geo.pathLengthMeters(points)
-        assertTrue(len in 140.0..220.0)
+        assertTrue("expected ~300m, was $len", len in 250.0..350.0)
     }
 }
 
@@ -201,6 +202,21 @@ class SpeedStatsTest {
         val stats = SpeedStats.compute(points)
         assertEquals(0L, stats.activeMillis)
         assertEquals(0.0, stats.maxSpeedKmh, 1e-9)
+        assertTrue(Geo.pathLengthMeters(points) < 1.0)
+    }
+
+    @Test
+    fun samePlacePinWanderDoesNotInflateDistance() {
+        // New pins every ~85 m (just outside same-place collapse) at 30 s —
+        // courtyard GPS cloud with a tight sample interval. Must not sum.
+        val points = listOf(
+            TrackPoint(0L, 41.0, 29.0, null),
+            TrackPoint(30_000L, 41.0, 29.001, null),
+            TrackPoint(60_000L, 41.0, 29.0, null),
+            TrackPoint(90_000L, 41.0, 29.001, null),
+            TrackPoint(120_000L, 41.0, 29.0, null),
+            TrackPoint(150_000L, 41.0, 29.001, null),
+        )
         assertTrue(Geo.pathLengthMeters(points) < 1.0)
     }
 
