@@ -1,13 +1,11 @@
 package com.dayatlas.app.location
 
 import android.content.Context
-import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.hardware.TriggerEvent
 import android.hardware.TriggerEventListener
 import android.util.Log
-import androidx.core.content.ContextCompat
 import com.dayatlas.app.prefs.AppPrefs
 
 /**
@@ -48,9 +46,11 @@ object MotionWakeTrigger {
             // so a burst of activity keeps getting caught, not just its
             // first moment.
             register(context)
-            if (!TrackingController.shouldSample(context, AppPrefs(context))) return
-            val service = Intent(context, SampleService::class.java)
-            ContextCompat.startForegroundService(context, service)
+            val prefs = AppPrefs(context)
+            if (!TrackingController.shouldSample(context, prefs)) return
+            // Out-of-schedule check: do not push the regular alarm back —
+            // only start the service (with FGS-failure retry).
+            SampleStarter.startService(context, prefs)
         }
     }
 
