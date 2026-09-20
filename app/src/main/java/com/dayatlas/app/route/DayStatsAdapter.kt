@@ -2,6 +2,7 @@ package com.dayatlas.app.route
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -15,8 +16,9 @@ import kotlin.math.ceil
  * four tiles span 3, three span 2). Other counts keep even rows. Long-press
  * drags to reorder within the visible set.
  *
- * Height is capped at [R.integer.day_stat_max_visible_rows] so the map below
- * keeps room; with the 2-2-3 layout that cap is 3 rows.
+ * Each tile uses a soft tinted background and a centered accent icon for
+ * its [DayStatKind]. Height is capped at [R.integer.day_stat_max_visible_rows]
+ * so the map below keeps room; with the 2-2-3 layout that cap is 3 rows.
  */
 class DayStatsAdapter(
     private val onReordered: (List<DayStatKind>) -> Unit,
@@ -78,9 +80,14 @@ class DayStatsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val (kind, value) = items[position]
+        val ctx = holder.binding.root.context
         holder.binding.statLabel.setText(kind.labelRes)
         holder.binding.statValue.text = value
-        holder.binding.root.setBackgroundResource(R.drawable.bg_dash_card)
+        holder.binding.root.setBackgroundResource(kind.cardBackgroundRes)
+        holder.binding.statIcon.setImageResource(kind.iconRes)
+        holder.binding.statIcon.setColorFilter(
+            ContextCompat.getColor(ctx, kind.iconTintRes),
+        )
     }
 
     override fun getItemCount(): Int = items.size

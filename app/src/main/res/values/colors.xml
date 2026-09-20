@@ -19,6 +19,19 @@
     <color name="divider_subtle">#330F766E</color>
     <color name="card_stroke">#1A0F766E</color>
     <color name="speed_max_bg">#FDECEA</color>
-    <color name="speed_active_bg">#E0F7F4</color>
-    <color name="speed_avg_bg">#CCFBF1</color>
+    <color name="speed_active_bg">#FFF8E1</color>
+    <color name="speed_avg_bg">#E3F2FD</color>
+
+    <!-- Day-stat tile accents (soft fill + icon tint per kind). -->
+    <color name="stat_distance_bg">#E8F5E9</color>
+    <color name="stat_distance_icon">#2E7D32</color>
+    <color name="stat_last_point_bg">#E3F2FD</color>
+    <color name="stat_last_point_icon">#1976D2</color>
+    <color name="stat_point_count_bg">#EDE7F6</color>
+    <color name="stat_point_count_icon">#5E35B1</color>
+    <color name="stat_gps_bg">#E8EAF6</color>
+    <color name="stat_gps_icon">#3949AB</color>
+    <color name="stat_max_speed_icon">#C62828</color>
+    <color name="stat_active_icon">#F9A825</color>
+    <color name="stat_avg_speed_icon">#1976D2</color>
 </resources>
