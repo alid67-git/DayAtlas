@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.4 — 缩小；日详情箭头；去掉每日页箭头；静止距离；最多 6 张统计卡。</string>
+    <string name="build_note">版本 1.1.5 — 每日页恢复前/后一天；青绿主题。</string>
 </resources>

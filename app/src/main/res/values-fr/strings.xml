@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.4 — Zoom arrière ; flèches détail ; retirer flèches Quotidien ; distance à l’arrêt ; max 6 cartes.</string>
+    <string name="build_note">Version 1.1.5 — Préc./suiv. restaurés sur Quotidien ; thème teal/vert.</string>
 </resources>

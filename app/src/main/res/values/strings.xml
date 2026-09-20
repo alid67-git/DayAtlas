@@ -187,5 +187,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.4 — Zoom out; gün detay okları; Günlük harita okları kaldırıldı; dururken sahte mesafe düzeltildi; en fazla 6 istatistik kartı.</string>
+    <string name="build_note">Sürüm 1.1.5 — Ana sayfada gün ileri/geri geri geldi; teal/yeşil tema.</string>
 </resources>
