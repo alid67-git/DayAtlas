@@ -186,5 +186,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.3 — Gün detayında daha büyük harita; haritalar 1 kademe yakın; Atlamalar düğmesi her zaman görünür; Yardım özet + detay.</string>
+    <string name="build_note">Sürüm 1.1.4 — Haritalar 1 kademe uzak (zoom out); gün detayında sağ/sol gün okları.</string>
 </resources>

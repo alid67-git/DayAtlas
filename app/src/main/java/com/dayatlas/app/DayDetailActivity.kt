@@ -78,6 +78,8 @@ class DayDetailActivity : DayAtlasActivity() {
         binding.exportButton.setOnClickListener {
             GpxExportDialog.show(this, store, date)
         }
+        binding.previousDay.setOnClickListener { shiftDay(-1) }
+        binding.nextDay.setOnClickListener { shiftDay(1) }
         binding.dayNoteButton.setOnClickListener {
             DayNoteDialog.show(this, store, dateIso) { refresh() }
         }
@@ -98,6 +100,18 @@ class DayDetailActivity : DayAtlasActivity() {
         binding.dayStats.adapter = statsAdapter
         statsAdapter.attachTo(binding.dayStats)
 
+        refresh()
+    }
+
+    /** Left/right map chevrons — calendar day, same as the Daily tab. */
+    private fun shiftDay(delta: Int) {
+        val today = DayTitle.localToday()
+        val target = date.plusDays(delta.toLong())
+        if (target.isAfter(today)) return
+        date = target
+        dateIso = DayTitle.iso(date)
+        intent.putExtra(EXTRA_DATE_ISO, dateIso)
+        binding.toolbar.title = DayTitle.format(date)
         refresh()
     }
 
@@ -136,6 +150,10 @@ class DayDetailActivity : DayAtlasActivity() {
         val record = store.load(dateIso)
         val points = record?.points.orEmpty()
         val jumps = JumpFilter.findJumps(points)
+
+        val today = DayTitle.localToday()
+        binding.nextDay.visibility = if (date.isBefore(today)) View.VISIBLE else View.GONE
+        binding.previousDay.visibility = View.VISIBLE
 
         val emDash = getString(R.string.em_dash)
         val speed = SpeedStats.compute(points)

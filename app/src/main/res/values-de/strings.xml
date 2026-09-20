@@ -176,5 +176,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.3 — Größere Tagesdetail-Karte; Karten eine Zoomstufe näher; Sprünge-Taste immer sichtbar; Hilfe Übersicht + Detail.</string>
+    <string name="build_note">Version 1.1.4 — Karten eine Zoomstufe weiter weg; Vor/Zurück-Pfeile auf der Tagesdetail-Karte.</string>
 </resources>
