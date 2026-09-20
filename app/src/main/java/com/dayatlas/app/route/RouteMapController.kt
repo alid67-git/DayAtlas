@@ -238,23 +238,24 @@ object RouteMapController {
         val box = boundingBoxOf(geoPoints)
         val degenerate = box.latitudeSpan < 1e-6 && box.longitudeSpan < 1e-6
         if (degenerate) {
-            // One step closer than before (16 -> 17) - a fresh/empty day
-            // with just the current location was opening noticeably
-            // farther out than felt right for a single point.
-            map.controller.setZoom(17.0)
+            // Single-point day: street-level, one step closer than before.
+            map.controller.setZoom(18.0)
             map.controller.setCenter(geoPoints.last())
         } else if (focus != null && jumps.size == 1) {
-            map.controller.setZoom(13.0)
+            map.controller.setZoom(14.0)
             map.controller.setCenter(focus)
         } else {
             val border = safeZoomBorder(map.width, map.height)
             map.zoomToBoundingBox(box, animateZoom, border)
             val zoom = map.zoomLevelDouble
             if (!zoom.isFinite() || zoom < MIN_ZOOM) {
-                map.controller.setZoom(12.0)
+                map.controller.setZoom(13.0)
                 map.controller.setCenter(box.centerWithDateLine)
-            } else if (zoom > MAX_ZOOM) {
-                map.controller.setZoom(MAX_ZOOM)
+            } else {
+                // One zoom level tighter than a bare bounding-box fit —
+                // tracks used to open a notch too far out.
+                val tighter = (zoom + 1.0).coerceIn(MIN_ZOOM, MAX_ZOOM)
+                map.controller.setZoom(tighter)
                 map.controller.setCenter(box.centerWithDateLine)
             }
         }

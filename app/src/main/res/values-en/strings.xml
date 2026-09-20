@@ -85,8 +85,9 @@
     <string name="up_to_date">You are on the latest version.</string>
 
     <string name="jumps_button">Jumps (%1$d) — tap to delete</string>
+    <string name="jumps_button_none">No jumps</string>
     <string name="jumps_title">GPS jumps (%1$d)</string>
-    <string name="jumps_none">No jumps on this day.</string>
+    <string name="jumps_none">No GPS jumps to delete on this day. (Hard teleports are listed here; soft spikes are dropped automatically.)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">Delete jump?</string>
     <string name="jump_delete_message">The point at %1$s (%2$s jump) will be removed from the record. Distance is recalculated.</string>
@@ -175,7 +176,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.2 — Soft GPS spike filter; open a day from stats bars; note icon; language/interval dropdowns; Help under More.</string>
+    <string name="build_note">Version 1.1.3 — Larger day-detail map; maps one zoom level closer; Jumps button always visible; Help summary + detail.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

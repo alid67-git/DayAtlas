@@ -85,8 +85,9 @@
     <string name="up_to_date">Sie haben die neueste Version.</string>
 
     <string name="jumps_button">Sprünge (%1$d) — tippen zum Löschen</string>
+    <string name="jumps_button_none">Keine Sprünge</string>
     <string name="jumps_title">GPS-Sprünge (%1$d)</string>
-    <string name="jumps_none">Keine Sprünge an diesem Tag.</string>
+    <string name="jumps_none">Keine GPS-Sprünge zum Löschen an diesem Tag. (Harte Teleporter werden hier gelistet; weiche Spikes werden automatisch verworfen.)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">Sprung löschen?</string>
     <string name="jump_delete_message">Der Punkt um %1$s (%2$s Sprung) wird aus der Aufzeichnung entfernt. Die Distanz wird neu berechnet.</string>
@@ -175,5 +176,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.2 — Sanfter GPS-Spike-Filter; Tagesdetail aus Statistikleisten; Notiz-Symbol; Sprach-/Intervall-Dropdowns; Hilfe unter Mehr.</string>
+    <string name="build_note">Version 1.1.3 — Größere Tagesdetail-Karte; Karten eine Zoomstufe näher; Sprünge-Taste immer sichtbar; Hilfe Übersicht + Detail.</string>
 </resources>

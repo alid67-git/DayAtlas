@@ -667,11 +667,11 @@ class MainActivity : DayAtlasActivity() {
             if (record?.note.isNullOrEmpty()) R.color.md_theme_on_surface else R.color.status_on,
         )
         if (jumps.isEmpty()) {
-            binding.jumpsButton.visibility = View.GONE
+            binding.jumpsButton.text = getString(R.string.jumps_button_none)
         } else {
-            binding.jumpsButton.visibility = View.VISIBLE
             binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
         }
+        binding.jumpsButton.visibility = View.VISIBLE
         applyDayPhotos(DayTitle.iso(date), record?.photos.orEmpty())
     }
 

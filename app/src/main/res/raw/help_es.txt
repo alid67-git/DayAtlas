@@ -32,6 +32,8 @@ A veces el GPS puede registrar un punto erróneo e implausible cuando la señal 
 
 Toca una barra diaria en Estadísticas (o un día en Rutas) para abrir el detalle del día; Atrás vuelve a esa pestaña.
 
+El botón «Saltos» está siempre justo debajo del mapa (pestaña Diario y detalle del día). Si no hay, dice «Sin saltos».
+
 6) EXPORTAR GPX
 
 Desde la pestaña Rutas, comparte un solo día (la flecha de exportar en su fila) o un intervalo de fechas mediante "GPX del intervalo" como un único archivo GPX. GPX es un formato de ruta estándar que leen la mayoría de las apps de mapas y deportivas: impórtalo en Google Earth, Strava, Komoot y apps similares, o compártelo por correo o Drive.

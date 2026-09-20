@@ -32,6 +32,8 @@ Le GPS peut parfois enregistrer un point erroné et invraisemblable lorsque le s
 
 Touchez une barre journalière dans Statistiques (ou un jour dans Trajets) pour ouvrir le détail ; Retour ramène à cet onglet.
 
+Le bouton « Sauts » est toujours juste sous la carte (onglet Quotidien et détail du jour). S’il n’y en a pas : « Aucun saut ».
+
 6) EXPORT GPX
 
 Depuis l'onglet Trajets, partagez un seul jour (la flèche d'export sur sa ligne) ou une plage de dates via « GPX de la plage » sous forme d'un seul fichier GPX. Le GPX est un format de trajet standard lisible par la plupart des applications de cartographie et de sport - importez-le dans Google Earth, Strava, Komoot et applications similaires, ou partagez-le par e-mail ou via Drive.

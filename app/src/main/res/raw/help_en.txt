@@ -1,79 +1,96 @@
 DayAtlas Help
 
-DayAtlas records your location in the background throughout the day, keeping a daily route and distance history. All data is stored only on your phone; nothing is sent to any server automatically. You can optionally back it up to Google Drive (or any other folder on your device).
+SUMMARY
+• Location is logged in the background; data stays on the phone (optional Drive backup).
+• With Daily mode on you do not tap Start — recording continues automatically.
+• Map: bottom of the Daily tab; most of the screen on full day detail.
+• The Jumps button is always under the map (“No jumps” when the day is clean).
+• Tap a Statistics bar or a Routes row to open day detail.
+• Help: More → Help. Language and sample interval are dropdowns in Settings.
 
 QUICK START
 
-On first launch you'll be asked for location permission. Choose "Allow all the time" so the app can keep working in the background (screen off). Then just turn on Daily Mode in Settings — the app starts recording for you automatically, nothing else to do.
+1. Grant location “Allow all the time” (needed with the screen off).
+2. Turn on Daily mode in Settings — recording starts on its own.
+3. Allow notifications and, if offered, battery exemption; on OEM phones also enable autostart.
 
 1) RECORDING MODES
 
-Daily mode (recommended, and on by default): once turned on in Settings, recording starts/continues automatically whenever the app or phone starts - no confirmation prompt. The Start/Stop button and hint text don't even show up on the home screen in this mode, because there's nothing for you to tap. Turn daily mode off in Settings to stop it.
+Daily mode (recommended): recording resumes whenever the app or phone starts; Start/Stop is hidden. Turn Daily mode off to stop.
 
-Manual mode: with daily mode off, use the Start/Stop button on the home screen to control recording yourself - handy when you only want to record a specific trip.
+Manual mode: with Daily mode off, use Start/Stop yourself (handy for a single trip).
 
-2) SAMPLING INTERVAL
+2) SAMPLE INTERVAL
 
-Choose 30 seconds, 1, 3 or 5 minutes between points in Settings; 1 minute is recommended for most uses. After 3 consecutive readings in roughly the same spot (~80 m), the interval automatically coarsens one step (e.g. 1 min -> 3 min); it returns to your chosen interval after confirmed movement (2 fixes in a row outside). Home GPS jitter does not speed sampling back up. This exists so the app doesn't waste battery while you're sitting still (asleep at night, for example); it snaps back to full precision the moment you actually move, with nothing for you to change.
+Choose 30 s / 1 / 3 / 5 min from the Settings dropdown; 1 min suits most use. Three samples in the same place (~80 m) coarsen the interval one step; real outdoor motion (two consecutive moves) restores your choice. Indoor GPS jitter does not tighten the interval again — that protects overnight battery.
 
 3) PERMISSIONS AND BATTERY
 
-Background operation needs three things: location permission set to "Allow all the time", notification permission, and ideally an exemption from battery optimization. The buttons in Settings open the relevant system screens directly, so you don't have to hunt through phone settings yourself. On some manufacturers (Xiaomi, Huawei, Oppo, Samsung, and similar), Android's standard permissions aren't enough - you also need to enable "autostart"; a button to that screen appears in Settings if your device is recognized. If these permissions aren't granted correctly, recording can silently stop after a reboot or a long period without use.
+You need: location “all the time”, notifications, and preferably battery exemption. Settings buttons open the matching system screens. Xiaomi / Huawei / Oppo / Samsung may also need autostart; a dedicated button appears when known. Without these, recording can stop quietly after reboot or long idle.
 
 4) MAP AND DAY STATS
 
-The bottom of the home screen shows the selected day's route on a simple map. Use the arrow buttons on the bar floating over the map to move to the previous/next day, or "go to today" to jump back; when a past day is selected, that day's distance, last point and point count also appear over the map.
+Daily tab: selected day’s route at the bottom; arrows change day, “today” jumps back. Past days show distance / last point / count over the map.
 
-Today's tiles show distance, last point, point count, active GPS sample rate, max speed, average speed and active driving time. Long-press and drag a tile to reorder it, and choose which tiles are shown from the "Map day stats" section in Settings. On narrower screens the tiles automatically compress to a single row so the map always keeps enough room.
+Today’s tiles: distance, last point, GPS check count, interval, speeds, active time. Long-press to reorder; Settings → “Map day stats” chooses which tiles show.
 
-5) GPS JUMPS
+Day detail (full screen): opened from Statistics or Routes. The map uses most of the screen (even wider on the left in landscape); under it sit Jumps, the note icon, photos, and stats.
 
-GPS can occasionally record a bad, implausible point when the signal is weak (for example "teleporting" a few kilometers away for one instant). The app uses two filters: hard teleports are never written; a mid-range suspicious fix is held until the next sample — if that sample returns near the previous pin, the held spike is dropped. Remaining jumps still show as orange markers and are listed under the "Jumps" button, where you can delete them one by one - the distance is recalculated automatically and your original recording file is untouched otherwise.
+5) GPS JUMPS — WHERE IS THE BUTTON?
 
-5b) STATS, ROUTES, AND DAY DETAIL
+Where: directly under the map on the Daily tab and on day detail. Always visible.
+• If jumps exist: “Jumps (N) — tap to delete”
+• If none: “No jumps” (tap shows a short explanation)
 
-Tap a daily distance bar on the Statistics tab to open that day's detail screen; Back returns you to Statistics. Opening a day from the Routes list does the same and returns you to Routes. Day detail shows the route map, a note icon beside photos, photos, and day stats.
+What it does: weak GPS can write an implausible point. Two layers:
+1) Hard teleports (~30 km / extreme speed) are never written.
+2) Mid-range suspects are held one sample; if the next fix returns home, the soft spike is dropped.
+Remaining jumps are orange on the map and deletable from the button; distance recalculates.
 
-6) GPX EXPORT
+6) STATS AND ROUTES
 
-From the Routes tab, share a single day (the export arrow on its row) or a date range via "Range GPX" as a single GPX file. GPX is a standard route format readable by most mapping and sports apps - import it into Google Earth, Strava, Komoot and similar apps, or share it by email or Drive.
+Statistics: tap a daily distance bar → day detail; Back → Statistics.
+Routes: tap a day → same detail; Back → Routes. Row export arrow = one-day GPX; “Range GPX” for a date span.
 
-7) GOOGLE DRIVE BACKUP AND RESTORE
+7) GPX EXPORT
 
-Pick a folder in Settings (ideally an empty folder you created in Drive) to enable daily automatic backup. Each day is backed up exactly once, as its own GPX file - it is never re-uploaded after that, manually or automatically, which is what keeps a single day from being backed up over and over.
+Standard route file — Google Earth, Strava, Komoot, etc. Share one day or a range from Routes.
 
-When moving to a new phone, or after reinstalling the app: pick the same backup folder again and tap "Restore from backup" - every day file in that folder is copied back onto the phone, with nothing lost.
+8) GOOGLE DRIVE BACKUP
 
-8) UPDATES
+Pick a folder in Settings (empty Drive folder ideal), enable daily backup. Each day uploads once as GPX. On a new phone: same folder + “Restore from backup”.
 
-The app checks once a day in the background for a newer version; if found, it downloads it and shows a notification to install. You can also check manually from Settings ("Check for updates"). Installing may require the "install unknown apps" permission - this is Android's standard safeguard whenever an app is distributed outside the Play Store.
+9) UPDATES
 
-9) LANGUAGE
+Daily background check; downloads and notifies to install. Settings → “Check for updates”. Sideload installs may need “unknown sources”.
 
-The app UI can be switched between Turkish, English, German, Chinese, Hindi, Spanish, French, and Arabic from the Settings > Language dropdown; "System language" automatically follows your phone's language. The sample interval is also chosen from a dropdown. The language picker on this help page works independently and only affects this screen.
+10) LANGUAGE
 
-10) DATA AND PRIVACY
+Settings → Language dropdown (TR/EN/DE/ZH/HI/ES/FR/AR or system). Chips on this Help page only change this screen.
 
-Your location data lives only on your phone, in the app's own storage (files/days/). There is no advertising, analytics, or tracking library of any kind; nothing is sent to a server. The only network traffic is fetching map tile images from OpenStreetMap for whichever area is on screen - those requests don't include your location history. Google Drive backup is entirely optional; no file leaves your device unless you turn it on.
+11) DATA AND PRIVACY
 
-11) KNOWN LIMITATIONS
+Data lives under files/days/ on the phone only. No ads or analytics. Network use is OpenStreetMap tiles for the visible area. With Drive backup off, nothing leaves the device.
 
-On some manufacturer skins (notably Samsung One UI), the app may occasionally leave a card in the recent-apps / task switcher while running in the background. This is an OEM display quirk and does not affect recording.
+12) KNOWN LIMITATIONS
 
-On some very old devices, or ones with aggressive battery management, the manufacturer can periodically kill background apps even after autostart and battery exemption are granted; opening the app once a day is a good way to guarantee continuous recording on such devices.
+Some OEMs (Samsung One UI) may show a recents card while backgrounded — recording is unaffected. On aggressive battery devices, open the app once a day to keep logging reliable.
 
-FREQUENTLY ASKED QUESTIONS
+FAQ
 
-Does recording stop if I close the app?
-No. With daily mode on, recording continues in the background even with the app's screen closed - as long as the permissions above are granted correctly.
+Does closing the app stop recording?
+No — with Daily mode and correct permissions it continues in the background.
 
-Does my data go to the internet?
-No, unless you explicitly turn on Google Drive backup, your data stays only on your phone.
+Why did I not see Jumps / why does it say “No jumps”?
+The button is under the map. If there is no hard jump left to delete it shows “No jumps”; soft spikes may already have been dropped automatically.
 
-How do I move my old records to a new phone?
-Take a Drive backup on the old phone (Settings > Google Drive backup), then on the new phone pick the same folder and tap "Restore from backup".
+Do my data go to the internet?
+Not unless you turn on Drive backup.
 
-A bad GPS point threw off my distance - what do I do?
-Find and delete it from the "Jumps" button on the map; distance is recalculated automatically.
+How do I move history to a new phone?
+Backup on the old phone → same folder on the new one → restore.
 
-Developed by: Ali Dinçer
+A bad GPS point ruined distance?
+Delete it from Jumps under the map; distance recalculates.
+
+Developer: Ali Dinçer

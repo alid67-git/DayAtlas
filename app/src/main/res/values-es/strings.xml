@@ -85,8 +85,9 @@
     <string name="up_to_date">Tienes la última versión.</string>
 
     <string name="jumps_button">Saltos (%1$d) — toca para eliminar</string>
+    <string name="jumps_button_none">Sin saltos</string>
     <string name="jumps_title">Saltos de GPS (%1$d)</string>
-    <string name="jumps_none">No hay saltos este día.</string>
+    <string name="jumps_none">No hay saltos GPS que eliminar este día. (Los teletransportes duros se listan aquí; los picos suaves se descartan solos.)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">¿Eliminar salto?</string>
     <string name="jump_delete_message">El punto de las %1$s (salto de %2$s) se eliminará del registro. La distancia se recalculará.</string>
@@ -175,5 +176,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.2 — Filtro suave de picos GPS; detalle del día desde barras; icono de nota; desplegables de idioma/intervalo; Ayuda en Más.</string>
+    <string name="build_note">Versión 1.1.3 — Mapa de detalle más grande; mapas un nivel más cerca; botón Saltos siempre visible; Ayuda resumen + detalle.</string>
 </resources>
