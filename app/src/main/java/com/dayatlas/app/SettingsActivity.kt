@@ -232,35 +232,15 @@ class SettingsActivity : DayAtlasActivity() {
             DayStatKind.AVG_SPEED to binding.statCheckAvgSpeed,
             DayStatKind.ACTIVE_DURATION to binding.statCheckActiveDuration,
         )
-        val hidden = prefs.dayStatsHidden.toMutableSet()
-        // Cap visible tiles at 6 (grid fits 2 rows × 3). Hide extras if needed.
-        val visibleKeys = DayStatKind.DEFAULT_ORDER.map { it.key }.filter { it !in hidden }
-        if (visibleKeys.size > MAX_VISIBLE_DAY_STATS) {
-            visibleKeys.drop(MAX_VISIBLE_DAY_STATS).forEach { hidden.add(it) }
-            prefs.dayStatsHidden = hidden
-        }
+        val hidden = prefs.dayStatsHidden
         checkboxes.forEach { (kind, checkBox: CheckBox) ->
             checkBox.isChecked = kind.key !in hidden
-            checkBox.setOnCheckedChangeListener { box, checked ->
+            checkBox.setOnCheckedChangeListener { _, checked ->
                 val current = prefs.dayStatsHidden.toMutableSet()
-                if (checked) {
-                    val visible = DayStatKind.entries.count { it.key !in current }
-                    if (visible >= MAX_VISIBLE_DAY_STATS) {
-                        box.isChecked = false
-                        Toast.makeText(this, R.string.settings_day_stats_max, Toast.LENGTH_SHORT).show()
-                        return@setOnCheckedChangeListener
-                    }
-                    current.remove(kind.key)
-                } else {
-                    current.add(kind.key)
-                }
+                if (checked) current.remove(kind.key) else current.add(kind.key)
                 prefs.dayStatsHidden = current
             }
         }
-    }
-
-    companion object {
-        private const val MAX_VISIBLE_DAY_STATS = 6
     }
 
     private fun refreshDriveUi() {

@@ -87,6 +87,7 @@
     <string name="jumps_button">Sprünge (%1$d) — tippen zum Löschen</string>
     <string name="jumps_button_none">Keine Sprünge</string>
     <string name="jumps_title">GPS-Sprünge (%1$d)</string>
+    <string name="jumps_title_short">Sprünge</string>
     <string name="jumps_none">Keine GPS-Sprünge zum Löschen an diesem Tag. (Harte Teleporter werden hier gelistet; weiche Spikes werden automatisch verworfen.)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">Sprung löschen?</string>
@@ -127,8 +128,7 @@
     <string name="drive_restore_busy">Sicherung/Wiederherstellung läuft bereits…</string>
 
     <string name="settings_day_stats">Karten-Tagesstatistik</string>
-    <string name="settings_day_stats_hint">Welche Tageskarten auf dem Startbildschirm? Max. 6. Lang drücken und ziehen zum Sortieren.</string>
-    <string name="settings_day_stats_max">Höchstens 6 Karten auswählbar.</string>
+    <string name="settings_day_stats_hint">Welche Tageskarten auf dem Startbildschirm? 7 Karten im 2+2+3-Layout. Lang drücken und ziehen zum Sortieren.</string>
 
     <string name="gps_check_rate">GPS-Prüfrate: %1$s</string>
     <string name="app_footer_credit">Entwickelt von: Ali Dinçer</string>
@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.5 — Vor/Zurück auf Daily wieder da; Teal/Grün-Thema.</string>
+    <string name="build_note">Version 1.1.6 — Statistik 2+2+3; Sprünge-Karten-Icon; Foto neben Notiz; größere Karte.</string>
 </resources>

@@ -87,6 +87,7 @@
     <string name="jumps_button">القفزات (%1$d) — اضغط للحذف</string>
     <string name="jumps_button_none">لا قفزات</string>
     <string name="jumps_title">قفزات GPS (%1$d)</string>
+    <string name="jumps_title_short">القفزات</string>
     <string name="jumps_none">لا توجد قفزات GPS لحذفها في هذا اليوم. (تُدرج الانتقالات القاسية هنا؛ وتُستبعد القفزات الناعمة تلقائيًا.)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">هل تريد حذف هذه القفزة؟</string>
@@ -127,8 +128,7 @@
     <string name="drive_restore_busy">النسخ الاحتياطي أو الاستعادة قيد التشغيل بالفعل…</string>
 
     <string name="settings_day_stats">إحصاءات الخريطة اليومية</string>
-    <string name="settings_day_stats_hint">أي بطاقات اليوم على الشاشة الرئيسية؟ بحد أقصى 6. اضغط مطولًا واسحب للترتيب.</string>
-    <string name="settings_day_stats_max">يمكن اختيار 6 بطاقات كحد أقصى.</string>
+    <string name="settings_day_stats_hint">أي بطاقات اليوم على الشاشة الرئيسية؟ 7 بطاقات بتخطيط 2+2+3. اضغط مطولًا واسحب للترتيب.</string>
 
     <string name="gps_check_rate">معدل فحص GPS: %1$s</string>
     <string name="app_footer_credit">طوَّره: Ali Dinçer</string>
@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.5 — استعادة السابق/التالي في اليومي؛ سمة تركواز/أخضر.</string>
+    <string name="build_note">الإصدار 1.1.6 — إحصاءات 2+2+3؛ أيقونة قفزات؛ صورة بجانب الملاحظة؛ خريطة أكبر.</string>
 </resources>

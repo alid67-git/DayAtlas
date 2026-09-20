@@ -2,7 +2,6 @@ package com.dayatlas.app
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -20,6 +19,7 @@ import com.dayatlas.app.data.PhotoViewerDialog
 import com.dayatlas.app.data.SpeedStats
 import com.dayatlas.app.databinding.ActivityDayDetailBinding
 import com.dayatlas.app.export.GpxExportDialog
+import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.route.DayStatKind
 import com.dayatlas.app.route.DayStatsAdapter
 import com.dayatlas.app.route.RouteMapController
@@ -39,8 +39,10 @@ class DayDetailActivity : DayAtlasActivity() {
     private lateinit var date: LocalDate
     private lateinit var statsAdapter: DayStatsAdapter
     private var returnSource: String? = null
+    private var dayPhotos: List<String> = emptyList()
     private val store by lazy { DayStore(this) }
     private val photoStore by lazy { PhotoStore(this) }
+    private val prefs by lazy { AppPrefs(this) }
 
     private val pickPhotoLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent(),
@@ -83,24 +85,36 @@ class DayDetailActivity : DayAtlasActivity() {
         binding.dayNoteButton.setOnClickListener {
             DayNoteDialog.show(this, store, dateIso) { refresh() }
         }
-        binding.jumpsButton.setOnClickListener {
+        binding.mapJumpsButton.setOnClickListener {
             JumpCleanupDialog.show(this, store, dateIso) { refresh() }
         }
-        binding.addPhotoButton.setOnClickListener {
-            pickPhotoLauncher.launch("image/*")
-        }
-        val photoViews = listOf(binding.dayPhoto1, binding.dayPhoto2, binding.dayPhoto3)
-        photoViews.forEach { view ->
-            view.setOnClickListener {
-                val name = view.tag as? String ?: return@setOnClickListener
-                PhotoViewerDialog.show(this, store, photoStore, dateIso, name) { refresh() }
+        binding.mapPhotosButton.setOnClickListener { onPhotosTap() }
+        binding.mapPhotosButton.setOnLongClickListener {
+            if (dayPhotos.size < PhotoStore.MAX_PHOTOS_PER_DAY) {
+                pickPhotoLauncher.launch("image/*")
+                true
+            } else {
+                false
             }
         }
         statsAdapter = DayStatsAdapter(onReordered = {})
         binding.dayStats.adapter = statsAdapter
-        statsAdapter.attachTo(binding.dayStats)
+        statsAdapter.attachTo(binding.dayStats, spanCount = DayStatsAdapter.GRID_SPAN)
 
         refresh()
+    }
+
+    private fun onPhotosTap() {
+        when {
+            dayPhotos.isEmpty() -> pickPhotoLauncher.launch("image/*")
+            else -> PhotoViewerDialog.show(
+                this,
+                store,
+                photoStore,
+                dateIso,
+                dayPhotos.first(),
+            ) { refresh() }
+        }
     }
 
     /** Left/right map chevrons — calendar day, same as the Daily tab. */
@@ -173,6 +187,7 @@ class DayDetailActivity : DayAtlasActivity() {
                     } ?: emDash
                     ),
                 DayStatKind.POINT_COUNT to (record?.checkCount ?: points.size).toString(),
+                DayStatKind.GPS_INTERVAL to formatGpsInterval(prefs.effectiveIntervalSeconds),
                 DayStatKind.MAX_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.maxSpeedKmh),
                 DayStatKind.AVG_SPEED to if (points.size < 2) emDash else DayTitle.formatSpeed(speed.avgSpeedKmh),
                 DayStatKind.ACTIVE_DURATION to if (points.size < 2) {
@@ -183,13 +198,7 @@ class DayDetailActivity : DayAtlasActivity() {
             ),
         )
 
-        if (jumps.isEmpty()) {
-            binding.jumpsButton.text = getString(R.string.jumps_button_none)
-        } else {
-            binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
-        }
-        binding.jumpsButton.visibility = View.VISIBLE
-
+        binding.mapJumpsButton.visibility = if (jumps.isEmpty()) View.GONE else View.VISIBLE
 
         binding.dayNoteButton.imageTintList = ContextCompat.getColorStateList(
             this,
@@ -212,25 +221,25 @@ class DayDetailActivity : DayAtlasActivity() {
         )
     }
 
+    private fun formatGpsInterval(seconds: Int): String = when (seconds) {
+        30 -> getString(R.string.interval_30s_short)
+        60 -> getString(R.string.interval_1_short)
+        180 -> getString(R.string.interval_3_short)
+        300 -> getString(R.string.interval_5_short)
+        else -> getString(R.string.interval_seconds_short, seconds)
+    }
+
     private fun applyDayPhotos(photos: List<String>) {
-        val slots = listOf(binding.dayPhoto1, binding.dayPhoto2, binding.dayPhoto3)
-        slots.forEachIndexed { i, view ->
-            val name = photos.getOrNull(i)
-            if (name == null) {
-                view.visibility = View.GONE
-                view.tag = null
-                view.setImageDrawable(null)
-                return@forEachIndexed
-            }
-            view.visibility = View.VISIBLE
-            view.tag = name
-            val thumb = photoStore.thumbFile(dateIso, name)
-            view.setImageBitmap(
-                if (thumb.exists()) BitmapFactory.decodeFile(thumb.absolutePath) else null,
-            )
-        }
-        binding.addPhotoButton.visibility =
-            if (photos.size >= PhotoStore.MAX_PHOTOS_PER_DAY) View.GONE else View.VISIBLE
+        dayPhotos = photos
+        val hasPhotos = photos.isNotEmpty()
+        binding.mapPhotosButton.alpha = if (hasPhotos) 1f else 0.45f
+        binding.mapPhotosButton.imageTintList = ContextCompat.getColorStateList(
+            this,
+            if (hasPhotos) R.color.status_on else R.color.md_theme_on_surface,
+        )
+        binding.mapPhotosButton.contentDescription = getString(
+            if (hasPhotos) R.string.day_photo_thumbnail else R.string.day_photo_add,
+        )
     }
 
     companion object {

@@ -87,6 +87,7 @@
     <string name="jumps_button">जंप (%1$d) — हटाने के लिए टैप करें</string>
     <string name="jumps_button_none">कोई जंप नहीं</string>
     <string name="jumps_title">GPS जंप (%1$d)</string>
+    <string name="jumps_title_short">जंप</string>
     <string name="jumps_none">इस दिन हटाने के लिए कोई GPS जंप नहीं। (कठोर टेलीपोर्ट यहाँ सूचीबद्ध होते हैं; नरम स्पाइक स्वतः हट जाते हैं।)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">जंप हटाएँ?</string>
@@ -127,8 +128,7 @@
     <string name="drive_restore_busy">बैकअप/पुनर्स्थापन पहले से चल रहा है…</string>
 
     <string name="settings_day_stats">मानचित्र दैनिक आँकड़े</string>
-    <string name="settings_day_stats_hint">होम स्क्रीन पर कौन-से दिन कार्ड? अधिकतम 6। क्रम बदलने के लिए देर दबाकर खींचें।</string>
-    <string name="settings_day_stats_max">अधिकतम 6 कार्ड चुन सकते हैं।</string>
+    <string name="settings_day_stats_hint">होम स्क्रीन पर कौन-से दिन कार्ड? 7 कार्ड 2+2+3 लेआउट में। क्रम बदलने के लिए देर दबाकर खींचें।</string>
 
     <string name="gps_check_rate">GPS जाँच दर: %1$s</string>
     <string name="app_footer_credit">विकसित: Ali Dinçer</string>
@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.5 — दैनिक पर आगे/पीछे वापस; टील/हरा थीम।</string>
+    <string name="build_note">संस्करण 1.1.6 — आँकड़े 2+2+3; मानचित्र जंप आइकन; नोट के पास फ़ोटो; बड़ा मानचित्र।</string>
 </resources>

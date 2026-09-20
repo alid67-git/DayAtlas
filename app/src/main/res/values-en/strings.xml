@@ -87,6 +87,7 @@
     <string name="jumps_button">Jumps (%1$d) — tap to delete</string>
     <string name="jumps_button_none">No jumps</string>
     <string name="jumps_title">GPS jumps (%1$d)</string>
+    <string name="jumps_title_short">Jumps</string>
     <string name="jumps_none">No GPS jumps to delete on this day. (Hard teleports are listed here; soft spikes are dropped automatically.)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">Delete jump?</string>
@@ -127,8 +128,7 @@
     <string name="drive_restore_busy">Backup/restore already running…</string>
 
     <string name="settings_day_stats">Map day statistics</string>
-    <string name="settings_day_stats_hint">Which day cards show on the home screen? Max 6. Long-press and drag to reorder.</string>
-    <string name="settings_day_stats_max">You can select at most 6 cards.</string>
+    <string name="settings_day_stats_hint">Which day cards show on the home screen? 7 cards use a 2+2+3 layout. Long-press and drag to reorder.</string>
 
     <string name="gps_check_rate">GPS check rate: %1$s</string>
     <string name="app_footer_credit">Developed by: Ali Dinçer</string>
@@ -177,7 +177,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.5 — Day prev/next restored on Daily; teal/green theme.</string>
+    <string name="build_note">Version 1.1.6 — Stats 2+2+3; jumps map icon; photo beside note; larger map.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

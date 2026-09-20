@@ -85,6 +85,20 @@
             android:elevation="6dp"
             android:src="@drawable/ic_chevron_right"
             app:tint="@color/md_theme_on_surface" />
+
+        <ImageButton
+            android:id="@+id/mapJumpsButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_map_nav_chip"
+            android:contentDescription="@string/jumps_title_short"
+            android:elevation="6dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_marker_jump"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </FrameLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -99,17 +113,6 @@
             android:orientation="vertical"
             android:paddingBottom="16dp">
 
-            <!-- Always visible so “where is Atlamalar?” is answerable. -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/jumpsButton"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/jumps_button_none"
-                tools:text="Atlamalar (1) — dokunup sil" />
-
             <LinearLayout
                 android:id="@+id/dayPhotosRow"
                 android:layout_width="wrap_content"
@@ -121,54 +124,24 @@
 
                 <ImageButton
                     android:id="@+id/dayNoteButton"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/bg_dash_card"
                     android:contentDescription="@string/day_note_button"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     android:src="@drawable/ic_note"
                     app:tint="@color/md_theme_on_surface" />
 
-                <ImageView
-                    android:id="@+id/dayPhoto1"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_dash_card"
-                    android:contentDescription="@string/day_photo_thumbnail"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/dayPhoto2"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_dash_card"
-                    android:contentDescription="@string/day_photo_thumbnail"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/dayPhoto3"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_dash_card"
-                    android:contentDescription="@string/day_photo_thumbnail"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone" />
-
                 <ImageButton
-                    android:id="@+id/addPhotoButton"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:id="@+id/mapPhotosButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/bg_dash_card"
                     android:contentDescription="@string/day_photo_add"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     android:src="@drawable/ic_add_photo"
+                    android:alpha="0.45"
                     app:tint="@color/md_theme_on_surface" />
             </LinearLayout>
 
@@ -180,7 +153,7 @@
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
                 android:overScrollMode="never"
-                tools:itemCount="6"
+                tools:itemCount="7"
                 tools:listitem="@layout/item_day_stat" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

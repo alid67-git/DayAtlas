@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -81,6 +80,7 @@ class MainActivity : DayAtlasActivity() {
     private var askedBatteryThisSession = false
     private var askedExactThisSession = false
     private var mapDate: LocalDate = DayTitle.localToday()
+    private var mapPhotos: List<String> = emptyList()
     private var statsRange: StatsRange = StatsRange.LAST_7
     private val uiHandler = Handler(Looper.getMainLooper())
     private val io = Executors.newSingleThreadExecutor()
@@ -166,13 +166,7 @@ class MainActivity : DayAtlasActivity() {
         binding.routeMap.setBackgroundColor(0xFFE8EEF4.toInt())
 
         binding.todayStats.adapter = dayStatsAdapter
-        val statsSpan =
-            if (resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
-                6 // one row in landscape → more room for the map
-            } else {
-                3
-            }
-        dayStatsAdapter.attachTo(binding.todayStats, spanCount = statsSpan)
+        dayStatsAdapter.attachTo(binding.todayStats, spanCount = DayStatsAdapter.GRID_SPAN)
         // Reserve the grid's real row count (hence height) before the very
         // first layout pass with placeholder values — the actual numbers
         // come from the async refresh() below. Without this, the very first
@@ -233,7 +227,7 @@ class MainActivity : DayAtlasActivity() {
             refreshMap()
         }
 
-        binding.jumpsButton.setOnClickListener {
+        binding.mapJumpsButton.setOnClickListener {
             JumpCleanupDialog.show(
                 this,
                 store,
@@ -249,20 +243,13 @@ class MainActivity : DayAtlasActivity() {
             ) { refresh() }
         }
 
-        binding.addPhotoButton.setOnClickListener {
-            pickPhotoLauncher.launch("image/*")
-        }
-        val photoViews = listOf(binding.dayPhoto1, binding.dayPhoto2, binding.dayPhoto3)
-        photoViews.forEach { view ->
-            view.setOnClickListener {
-                val name = view.tag as? String ?: return@setOnClickListener
-                PhotoViewerDialog.show(
-                    this,
-                    store,
-                    photoStore,
-                    DayTitle.iso(mapDate),
-                    name,
-                ) { refresh() }
+        binding.mapPhotosButton.setOnClickListener { onMapPhotosTap() }
+        binding.mapPhotosButton.setOnLongClickListener {
+            if (mapPhotos.size < PhotoStore.MAX_PHOTOS_PER_DAY) {
+                pickPhotoLauncher.launch("image/*")
+                true
+            } else {
+                false
             }
         }
 
@@ -664,34 +651,32 @@ class MainActivity : DayAtlasActivity() {
             this,
             if (record?.note.isNullOrEmpty()) R.color.md_theme_on_surface else R.color.status_on,
         )
-        if (jumps.isEmpty()) {
-            binding.jumpsButton.text = getString(R.string.jumps_button_none)
-        } else {
-            binding.jumpsButton.text = getString(R.string.jumps_button, jumps.size)
-        }
-        binding.jumpsButton.visibility = View.VISIBLE
+        binding.mapJumpsButton.visibility = if (jumps.isEmpty()) View.GONE else View.VISIBLE
         applyDayPhotos(DayTitle.iso(date), record?.photos.orEmpty())
     }
 
-    private fun applyDayPhotos(dateIso: String, photos: List<String>) {
-        val slots = listOf(binding.dayPhoto1, binding.dayPhoto2, binding.dayPhoto3)
-        slots.forEachIndexed { i, view ->
-            val name = photos.getOrNull(i)
-            if (name == null) {
-                view.visibility = View.GONE
-                view.tag = null
-                view.setImageDrawable(null)
-                return@forEachIndexed
+    private fun onMapPhotosTap() {
+        val dateIso = DayTitle.iso(mapDate)
+        when {
+            mapPhotos.isEmpty() -> pickPhotoLauncher.launch("image/*")
+            else -> {
+                val name = mapPhotos.first()
+                PhotoViewerDialog.show(this, store, photoStore, dateIso, name) { refresh() }
             }
-            view.visibility = View.VISIBLE
-            view.tag = name
-            val thumb = photoStore.thumbFile(dateIso, name)
-            view.setImageBitmap(
-                if (thumb.exists()) BitmapFactory.decodeFile(thumb.absolutePath) else null,
-            )
         }
-        binding.addPhotoButton.visibility =
-            if (photos.size >= PhotoStore.MAX_PHOTOS_PER_DAY) View.GONE else View.VISIBLE
+    }
+
+    private fun applyDayPhotos(dateIso: String, photos: List<String>) {
+        mapPhotos = photos
+        val hasPhotos = photos.isNotEmpty()
+        binding.mapPhotosButton.alpha = if (hasPhotos) 1f else 0.45f
+        binding.mapPhotosButton.imageTintList = ContextCompat.getColorStateList(
+            this,
+            if (hasPhotos) R.color.status_on else R.color.md_theme_on_surface,
+        )
+        binding.mapPhotosButton.contentDescription = getString(
+            if (hasPhotos) R.string.day_photo_thumbnail else R.string.day_photo_add,
+        )
     }
 
     private fun applyTodayChrome(

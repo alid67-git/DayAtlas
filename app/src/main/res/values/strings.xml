@@ -87,6 +87,7 @@
     <string name="jumps_button">Atlamalar (%1$d) — dokunup sil</string>
     <string name="jumps_button_none">Atlamalar yok</string>
     <string name="jumps_title">GPS atlamaları (%1$d)</string>
+    <string name="jumps_title_short">Atlamalar</string>
     <string name="jumps_none">Bu günde silinecek GPS atlaması yok. (Sert sıçramalar burada listelenir; soft spike’lar otomatik düşer.)</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">Atlamayı sil?</string>
@@ -127,8 +128,7 @@
     <string name="drive_restore_busy">Yedekleme/geri yükleme zaten çalışıyor…</string>
 
     <string name="settings_day_stats">Harita gün istatistikleri</string>
-    <string name="settings_day_stats_hint">Ana ekrandaki gün kartlarında hangileri görünsün? En fazla 6 kart. Kartlar uzun basıp sürükleyerek sıralanabilir.</string>
-    <string name="settings_day_stats_max">En fazla 6 kart seçilebilir.</string>
+    <string name="settings_day_stats_hint">Ana ekrandaki gün kartlarında hangileri görünsün? 7 kart 2+2+3 düzeninde. Kartlar uzun basıp sürükleyerek sıralanabilir.</string>
 
     <string name="gps_check_rate">GPS kontrol hızı: %1$s</string>
     <string name="app_footer_credit">Geliştiren: Ali Dinçer</string>
@@ -187,5 +187,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.5 — Ana sayfada gün ileri/geri geri geldi; teal/yeşil tema.</string>
+    <string name="build_note">Sürüm 1.1.6 — İstatistik 2+2+3; atlama harita ikonu; foto kalemin yanında; daha büyük harita.</string>
 </resources>

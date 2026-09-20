@@ -87,6 +87,7 @@
     <string name="jumps_button">跳变点 (%1$d) — 点击删除</string>
     <string name="jumps_button_none">无跳变点</string>
     <string name="jumps_title">GPS 跳变点 (%1$d)</string>
+    <string name="jumps_title_short">跳变</string>
     <string name="jumps_none">这一天没有可删除的 GPS 跳变点。（硬瞬移会列在这里；软尖峰会自动丢弃。）</string>
     <string name="jump_row">%1$s · %2$s · %3$s</string>
     <string name="jump_delete_title">删除该跳变点？</string>
@@ -127,8 +128,7 @@
     <string name="drive_restore_busy">备份/恢复正在进行中…</string>
 
     <string name="settings_day_stats">地图每日统计</string>
-    <string name="settings_day_stats_hint">主屏幕显示哪些日卡片？最多 6 个。长按拖动可排序。</string>
-    <string name="settings_day_stats_max">最多可选 6 张卡片。</string>
+    <string name="settings_day_stats_hint">主屏幕显示哪些日卡片？7 张为 2+2+3 布局。长按拖动可排序。</string>
 
     <string name="gps_check_rate">GPS 检查频率：%1$s</string>
     <string name="app_footer_credit">开发者：Ali Dinçer</string>
@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.5 — 每日页恢复前/后一天；青绿主题。</string>
+    <string name="build_note">版本 1.1.6 — 统计 2+2+3；地图跳变图标；照片在笔记旁；更大地图。</string>
 </resources>
