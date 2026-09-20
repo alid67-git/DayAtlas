@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.9 — 2026-09-20
+
+- **GPS alarm zinciri güçlendirildi:** Her örneklemeden *önce* bir sonraki
+  alarm kuruluyor; süreç GPS beklerken öldürülse bile takip karanlıkta
+  kalmıyor. Ön plan servisi başlamazsa 30 sn sonra yeniden deneniyor;
+  GPS fix gelmezse daha kısa aralıkla tekrar bakılıyor. (Arka planda
+  seyrek tetiklenme şikayetine yönelik.)
+
 ## 1.1.8 — 2026-09-20
 
 - **Kademeli GPS aralığı geri açıldı:** Dururken örnekleme yine

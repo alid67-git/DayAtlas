@@ -3,7 +3,6 @@ package com.dayatlas.app.location
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.content.ContextCompat
 import com.dayatlas.app.prefs.AppPrefs
 
 class SampleReceiver : BroadcastReceiver() {
@@ -18,7 +17,8 @@ class SampleReceiver : BroadcastReceiver() {
             }
             return
         }
-        val service = Intent(context, SampleService::class.java)
-        ContextCompat.startForegroundService(context, service)
+        // Schedule the *next* tick before starting work. If the process is
+        // killed during the GPS wait, AlarmManager still has a wakeup.
+        SampleStarter.armThenStart(context, prefs)
     }
 }

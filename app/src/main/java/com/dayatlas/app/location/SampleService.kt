@@ -30,6 +30,8 @@ class SampleService : Service() {
     private val main = Handler(Looper.getMainLooper())
     private val busy = AtomicBoolean(false)
     private var wakeLock: PowerManager.WakeLock? = null
+    /** True after we accept a sample tick until [finish] clears it. */
+    private var sampleInFlight = false
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -44,13 +46,14 @@ class SampleService : Service() {
             finish(reschedule = false)
             return START_NOT_STICKY
         }
+        sampleInFlight = true
 
         // Backup: if midday alarm was killed, a sample tick can still check
         // once per calendar day after noon.
         val pending = AtomicInteger(1)
-        fun stepDone() {
+        fun stepDone(rescheduleDelayMs: Long? = null) {
             if (pending.decrementAndGet() == 0) {
-                finish(reschedule = true)
+                finish(reschedule = true, delayMs = rescheduleDelayMs)
             }
         }
 
@@ -69,6 +72,7 @@ class SampleService : Service() {
         // Location callback may arrive on the sampler executor; keep all disk
         // work off the main thread so an open Daily UI cannot ANR.
         LocationSampler.request(lm, io) { location ->
+            var nullFix = false
             if (location != null) {
                 StationaryBackoff.recordSample(
                     prefs,
@@ -95,13 +99,23 @@ class SampleService : Service() {
                         )
                     }
                 }
+            } else {
+                nullFix = true
             }
-            main.post { stepDone() }
+            main.post {
+                stepDone(
+                    rescheduleDelayMs = if (nullFix) {
+                        SampleStarter.nextDelayAfterNullFix(AppPrefs(applicationContext))
+                    } else {
+                        null
+                    },
+                )
+            }
         }
         return START_NOT_STICKY
     }
 
-    private fun finish(reschedule: Boolean) {
+    private fun finish(reschedule: Boolean, delayMs: Long? = null) {
         // Once per local day: copy days/* into the user-picked Drive/folder tree.
         // Prefs check is light; heavy I/O is already async inside maybeRunDaily.
         DriveFolderBackup.maybeRunDaily(this)
@@ -110,7 +124,7 @@ class SampleService : Service() {
             SampleScheduler.scheduleNext(
                 this,
                 prefs,
-                delayMs = prefs.effectiveIntervalMillis,
+                delayMs = delayMs ?: prefs.effectiveIntervalMillis,
             )
             // Belt-and-suspenders re-arm: MotionWakeTrigger already re-arms
             // itself right when it fires, but this catches the case where
@@ -118,6 +132,7 @@ class SampleService : Service() {
             // recreated) without waiting for the next actual motion.
             MotionWakeTrigger.register(this)
         }
+        sampleInFlight = false
         releaseWakeLock()
         stopForeground(STOP_FOREGROUND_REMOVE)
         busy.set(false)
@@ -166,6 +181,15 @@ class SampleService : Service() {
     }
 
     override fun onDestroy() {
+        // Process/OEM kill mid-sample: receiver already armed a next tick, but
+        // reinforce with a short retry so tracking does not go dark.
+        if (sampleInFlight) {
+            val prefs = AppPrefs(this)
+            if (prefs.trackingEnabled || prefs.dailyMode) {
+                SampleScheduler.scheduleNext(this, prefs, delayMs = SampleStarter.FGS_RETRY_MS)
+            }
+            sampleInFlight = false
+        }
         releaseWakeLock()
         super.onDestroy()
     }
