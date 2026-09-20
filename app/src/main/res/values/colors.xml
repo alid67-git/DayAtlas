@@ -6,6 +6,7 @@
     <color name="md_theme_primary_container">#CCFBF1</color>
     <color name="md_theme_on_primary_container">#134E4A</color>
     <color name="md_theme_secondary">#14B8A6</color>
+    <color name="md_theme_secondary_container">#CCFBF1</color>
     <color name="md_theme_accent">#C62828</color>
     <color name="md_theme_surface">#F0FDFA</color>
     <color name="md_theme_on_surface">#1A1F29</color>

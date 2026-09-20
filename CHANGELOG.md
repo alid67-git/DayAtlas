@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.10 — 2026-09-20
+
+- **Karanlık mod istatistik kartları:** Soft pastel arka planlar gece
+  temasında da koyu tonlara düşüyor; değer metni artık okunaklı.
+  Alt menü seçim göstergesi mor yerine teal markaya uyuyor.
+
 ## 1.1.9 — 2026-09-20
 
 - **GPS alarm zinciri güçlendirildi:** Her örneklemeden *önce* bir sonraki
