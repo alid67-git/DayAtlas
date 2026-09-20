@@ -111,6 +111,23 @@ class StationaryBackoffTest {
     }
 
     @Test
+    fun intermittentSpikeDoesNotBlockCoarsening() {
+        var state = StationaryBackoff.reset(30)
+        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        // Two inside → streak 2.
+        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        assertEquals(2, state.stationaryStreak)
+        // One far spike (~1 km) — keep streak, do not return to base.
+        state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
+        assertEquals(30, state.effectiveIntervalSeconds)
+        assertEquals(2, state.stationaryStreak)
+        // Next inside completes STREAK_TO_STEP → 60 s.
+        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        assertEquals(60, state.effectiveIntervalSeconds)
+    }
+
+    @Test
     fun nextCoarserLadder() {
         assertEquals(60, StationaryBackoff.nextCoarser(30, allowed))
         assertEquals(180, StationaryBackoff.nextCoarser(60, allowed))

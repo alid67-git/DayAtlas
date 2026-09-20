@@ -110,11 +110,12 @@ object StationaryBackoff {
         if (distance > TOLERANCE_METERS) {
             val moveStreak = state.movingStreak + 1
             if (moveStreak < MOVEMENT_STREAK_TO_RESET) {
-                // Likely GPS spike while still sitting — keep coarse interval
-                // and the original anchor.
+                // Likely GPS spike while still sitting — keep coarse interval,
+                // the original anchor, and stationary-streak progress so one
+                // courtyard bounce cannot forever block 30→60→180→300.
                 return State(
                     effectiveIntervalSeconds = effective,
-                    stationaryStreak = 0,
+                    stationaryStreak = state.stationaryStreak,
                     lastLat = prevLat,
                     lastLon = prevLon,
                     movingStreak = moveStreak,

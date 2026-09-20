@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.11 — 2026-09-20
+
+- **Kademeli GPS yine ilerlesin:** Uygulama her açıldığında backoff
+  sıfırlanıyordu (hep 30 sn’de kalıyordu). Artık yalnızca takip gerçekten
+  kapalıyken→açılınca sıfırlanır. Tek bir ev GPS sıçraması da durağan
+  sayacını silmiyor — 30 sn → 1 → 3 → 5 dk basamakları takılmadan çıkar.
+
 ## 1.1.10 — 2026-09-20
 
 - **Karanlık mod istatistik kartları:** Soft pastel arka planlar gece

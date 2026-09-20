@@ -14,9 +14,22 @@ object TrackingController {
         }
     }
 
-    fun start(context: Context, prefs: AppPrefs = AppPrefs(context), sampleSoon: Boolean = true) {
+    /**
+     * @param resetBackoff When null (default), backoff resets only if tracking
+     * was previously off. Pass true/false to force. Daily-mode app opens must
+     * not wipe a mid-ladder effective interval.
+     */
+    fun start(
+        context: Context,
+        prefs: AppPrefs = AppPrefs(context),
+        sampleSoon: Boolean = true,
+        resetBackoff: Boolean? = null,
+    ) {
+        val wasOff = !prefs.trackingEnabled
         prefs.trackingEnabled = true
-        prefs.resetStationaryBackoff()
+        if (resetBackoff ?: wasOff) {
+            prefs.resetStationaryBackoff()
+        }
         if (sampleSoon) {
             SampleScheduler.scheduleNext(context, prefs, delayMs = 3_000L)
         } else {
