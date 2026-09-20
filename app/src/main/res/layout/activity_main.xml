@@ -158,18 +158,9 @@
                         android:background="@color/history_bar"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="4dp"
+                        android:paddingHorizontal="8dp"
                         android:paddingTop="2dp"
                         android:paddingBottom="2dp">
-
-                        <ImageButton
-                            android:id="@+id/previousDay"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/route_previous_day"
-                            android:src="@drawable/ic_chevron_left"
-                            app:tint="@color/md_theme_on_surface" />
 
                         <TextView
                             android:id="@+id/mapDayTitle"
@@ -189,29 +180,9 @@
                             android:contentDescription="@string/day_note_button"
                             android:src="@drawable/ic_note"
                             app:tint="@color/md_theme_on_surface" />
-
-                        <ImageButton
-                            android:id="@+id/goToday"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/route_go_today"
-                            android:src="@drawable/ic_today"
-                            android:visibility="gone"
-                            app:tint="@color/status_on"
-                            tools:visibility="visible" />
-
-                        <ImageButton
-                            android:id="@+id/nextDay"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/route_next_day"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/md_theme_on_surface" />
                     </LinearLayout>
 
-                    <!-- Geçmiş gün seçilince: Mesafe / Son nokta / Nokta (bugün üst kartlarda). -->
+                    <!-- Kept for binding compatibility; Daily tab always shows today. -->
                     <LinearLayout
                         android:id="@+id/mapDayStats"
                         android:layout_width="match_parent"
@@ -223,8 +194,7 @@
                         android:orientation="horizontal"
                         android:paddingHorizontal="4dp"
                         android:paddingVertical="10dp"
-                        android:visibility="gone"
-                        tools:visibility="visible">
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="0dp"

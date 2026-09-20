@@ -67,11 +67,9 @@ object DayJson {
                 ),
             )
         }
-        val distance = if (root.has("distanceMeters")) {
-            root.getDouble("distanceMeters")
-        } else {
-            Geo.pathLengthMeters(points)
-        }
+        // Always recompute from points so older inflated distances (pre-filter
+        // rules / home GPS wander) heal on the next load.
+        val distance = Geo.pathLengthMeters(points)
         val gpsCheckCount = if (root.has("gpsCheckCount")) {
             root.getInt("gpsCheckCount").coerceAtLeast(points.size)
         } else {

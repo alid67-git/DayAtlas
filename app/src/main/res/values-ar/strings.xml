@@ -127,7 +127,8 @@
     <string name="drive_restore_busy">النسخ الاحتياطي أو الاستعادة قيد التشغيل بالفعل…</string>
 
     <string name="settings_day_stats">إحصاءات الخريطة اليومية</string>
-    <string name="settings_day_stats_hint">ما البطاقات التي تظهر في تبويب «يومي»؟ يمكنك أيضًا الضغط مطولًا وسحبها لإعادة ترتيبها.</string>
+    <string name="settings_day_stats_hint">أي بطاقات اليوم على الشاشة الرئيسية؟ بحد أقصى 6. اضغط مطولًا واسحب للترتيب.</string>
+    <string name="settings_day_stats_max">يمكن اختيار 6 بطاقات كحد أقصى.</string>
 
     <string name="gps_check_rate">معدل فحص GPS: %1$s</string>
     <string name="app_footer_credit">طوَّره: Ali Dinçer</string>
@@ -176,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.4 — الخرائط أبعد بمستوى؛ أسهم اليوم السابق/التالي على تفاصيل اليوم.</string>
+    <string name="build_note">الإصدار 1.1.4 — تصغير؛ أسهم التفاصيل؛ إزالة أسهم اليومي؛ مسافة التوقف؛ حد أقصى 6 بطاقات.</string>
 </resources>

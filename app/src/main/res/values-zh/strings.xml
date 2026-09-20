@@ -127,7 +127,8 @@
     <string name="drive_restore_busy">备份/恢复正在进行中…</string>
 
     <string name="settings_day_stats">地图每日统计</string>
-    <string name="settings_day_stats_hint">"每日"标签页中显示哪些卡片？您也可以长按并拖动来调整顺序。</string>
+    <string name="settings_day_stats_hint">主屏幕显示哪些日卡片？最多 6 个。长按拖动可排序。</string>
+    <string name="settings_day_stats_max">最多可选 6 张卡片。</string>
 
     <string name="gps_check_rate">GPS 检查频率：%1$s</string>
     <string name="app_footer_credit">开发者：Ali Dinçer</string>
@@ -176,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.4 — 地图缩小一级；日详情地图上的前/后一天箭头。</string>
+    <string name="build_note">版本 1.1.4 — 缩小；日详情箭头；去掉每日页箭头；静止距离；最多 6 张统计卡。</string>
 </resources>

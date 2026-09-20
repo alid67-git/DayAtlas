@@ -127,7 +127,8 @@
     <string name="drive_restore_busy">Ya hay una copia/restauración en curso…</string>
 
     <string name="settings_day_stats">Estadísticas diarias del mapa</string>
-    <string name="settings_day_stats_hint">¿Qué tarjetas se muestran en la pestaña Diario? También puedes mantener pulsado y arrastrar para reordenarlas.</string>
+    <string name="settings_day_stats_hint">¿Qué tarjetas del día en la pantalla principal? Máx. 6. Mantén pulsado y arrastra para ordenar.</string>
+    <string name="settings_day_stats_max">Como máximo 6 tarjetas.</string>
 
     <string name="gps_check_rate">Frecuencia de comprobación GPS: %1$s</string>
     <string name="app_footer_credit">Desarrollado por: Ali Dinçer</string>
@@ -176,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.4 — Mapas un nivel más lejos; flechas día ant./sig. en el detalle.</string>
+    <string name="build_note">Versión 1.1.4 — Zoom out; flechas en detalle; quitar flechas del Diario; distancia en parado; máx. 6 tarjetas.</string>
 </resources>
