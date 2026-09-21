@@ -137,10 +137,13 @@ class StationaryBackoffTest {
 
     @Test
     fun nextCoarserLadder() {
+        assertEquals(20, StationaryBackoff.nextCoarser(10, allowed))
+        assertEquals(30, StationaryBackoff.nextCoarser(20, allowed))
         assertEquals(60, StationaryBackoff.nextCoarser(30, allowed))
         assertEquals(180, StationaryBackoff.nextCoarser(60, allowed))
         assertEquals(300, StationaryBackoff.nextCoarser(180, allowed))
         assertNull(StationaryBackoff.nextCoarser(300, allowed))
+        assertEquals(60, StationaryBackoff.coarseCapFor(10))
         assertEquals(60, StationaryBackoff.coarseCapFor(30))
         assertEquals(180, StationaryBackoff.coarseCapFor(180))
     }

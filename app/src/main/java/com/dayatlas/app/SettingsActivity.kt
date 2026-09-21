@@ -192,6 +192,8 @@ class SettingsActivity : DayAtlasActivity() {
 
     private fun setupIntervalDropdown() {
         val options = listOf(
+            10 to getString(R.string.interval_10s),
+            20 to getString(R.string.interval_20s),
             30 to getString(R.string.interval_30s),
             60 to getString(R.string.interval_1),
             180 to getString(R.string.interval_3),
@@ -200,9 +202,8 @@ class SettingsActivity : DayAtlasActivity() {
         val labels = options.map { it.second }
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, labels)
         binding.intervalDropdown.setAdapter(adapter)
-        val seconds = when (prefs.intervalSeconds) {
-            30, 60, 180 -> prefs.intervalSeconds
-            else -> 300
+        val seconds = prefs.intervalSeconds.let { sec ->
+            if (sec in options.map { it.first }) sec else AppPrefs.DEFAULT_INTERVAL_SECONDS
         }
         val current = options.first { it.first == seconds }
         binding.intervalDropdown.setText(current.second, false)

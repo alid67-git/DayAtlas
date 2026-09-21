@@ -32,6 +32,8 @@
     <string name="stat_avg_speed">متوسط السرعة</string>
     <string name="stat_active_duration">مدة النشاط</string>
     <string name="stat_gps_interval">معدل أخذ عينات GPS الحالي</string>
+    <string name="interval_10s_short">10 ثوانٍ</string>
+    <string name="interval_20s_short">20 ثانية</string>
     <string name="interval_30s_short">30 ثانية</string>
     <string name="interval_1_short">دقيقة واحدة</string>
     <string name="interval_3_short">3 دقائق</string>
@@ -48,8 +50,10 @@
     <string name="settings_daily_mode_summary">عند التفعيل، يبدأ تسجيل اليوم أو يستمر دون طلب تأكيد في كل مرة يُفتح فيها التطبيق أو الهاتف.</string>
     <string name="settings_interval">فاصل أخذ العينات</string>
     <string name="settings_interval_hint">بعد 3 قراءات متتالية في نفس المكان تقريبًا (~80 مترًا)، يزداد الفاصل الزمني درجة واحدة (30 ثانية ← 1 ← 3 ← 5 دقائق)؛ وعند حدوث حركة فعلية (قراءتان متتاليتان خارج ذلك النطاق) يعود إلى الفاصل الذي اخترته — لا يؤدي اهتزاز GPS البسيط في المنزل إلى تسريع أخذ العينات مجددًا.</string>
-    <string name="interval_30s">30 ثانية (0.5 دقيقة)</string>
-    <string name="interval_1">دقيقة واحدة (موصى به)</string>
+    <string name="interval_10s">10 ثوانٍ</string>
+    <string name="interval_20s">20 ثانية</string>
+    <string name="interval_30s">30 ثانية (موصى به)</string>
+    <string name="interval_1">دقيقة واحدة</string>
     <string name="interval_3">3 دقائق</string>
     <string name="interval_5">5 دقائق</string>
     <string name="settings_permissions">الأذونات والبطارية</string>
@@ -177,5 +181,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.14 — GPS متدرّج: 30 ث → حد أقصى 1 د (بدون 3/5 د)؛ يتسارع فور الحركة؛ ألوان الوضع الداكن.</string>
+    <string name="build_note">الإصدار 1.1.15 — فواصل 10/20 ث؛ GPS بحد أقصى دقيقة.</string>
 </resources>

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.15 — 2026-09-21
+
+- **Ayarlar:** Örnekleme aralığına **10 sn** ve **20 sn** eklendi
+  (10 / 20 / 30 / 1 / 3 / 5 dk). Dururken adaptive tavan hâlâ 1 dk.
+
 ## 1.1.14 — 2026-09-21
 
 - **Kademeli GPS: 30 sn → en fazla 1 dk:** Dururken aralık artık 3/5 dk’ya

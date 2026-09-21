@@ -243,7 +243,7 @@ class AppPrefs(context: Context) {
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
         const val DEFAULT_INTERVAL_SECONDS = 30
-        val ALLOWED_INTERVAL_SECONDS = intArrayOf(30, 60, 180, 300)
+        val ALLOWED_INTERVAL_SECONDS = intArrayOf(10, 20, 30, 60, 180, 300)
 
         private const val PREFS = "dayatlas_prefs"
         private const val DAILY_MODE = "daily_mode"

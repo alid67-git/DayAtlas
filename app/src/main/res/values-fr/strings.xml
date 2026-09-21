@@ -32,6 +32,8 @@
     <string name="stat_avg_speed">Vitesse moy.</string>
     <string name="stat_active_duration">Temps actif</string>
     <string name="stat_gps_interval">Fréquence d\'échantillonnage GPS active</string>
+    <string name="interval_10s_short">10 s</string>
+    <string name="interval_20s_short">20 s</string>
     <string name="interval_30s_short">30 s</string>
     <string name="interval_1_short">1 min</string>
     <string name="interval_3_short">3 min</string>
@@ -48,8 +50,10 @@
     <string name="settings_daily_mode_summary">Lorsqu\'il est activé, l\'enregistrement du jour démarre ou continue sans demander confirmation à chaque ouverture de l\'application ou du téléphone.</string>
     <string name="settings_interval">Intervalle d\'échantillonnage</string>
     <string name="settings_interval_hint">Après 3 mesures au même endroit (~80 m), l\'intervalle passe au palier suivant (30 s → 1 → 3 → 5 min). Un vrai déplacement (2 mesures consécutives hors de cette zone) rétablit l\'intervalle choisi — les fluctuations du GPS à domicile ne raccourcissent pas l\'intervalle.</string>
-    <string name="interval_30s">30 secondes (0,5 min)</string>
-    <string name="interval_1">1 minute (recommandé)</string>
+    <string name="interval_10s">10 secondes</string>
+    <string name="interval_20s">20 secondes</string>
+    <string name="interval_30s">30 secondes (recommandé)</string>
+    <string name="interval_1">1 minute</string>
     <string name="interval_3">3 minutes</string>
     <string name="interval_5">5 minutes</string>
     <string name="settings_permissions">Autorisations et batterie</string>
@@ -177,5 +181,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.14 — GPS progressif : 30 s → max 1 min (plus 3/5 min) ; densifie dès le départ ; couleurs mode sombre.</string>
+    <string name="build_note">Version 1.1.15 — 10/20 s intervals; gradual GPS max 1 min.</string>
 </resources>
