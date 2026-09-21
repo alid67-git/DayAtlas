@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.14 — 2026-09-21
+
+- **Kademeli GPS: 30 sn → en fazla 1 dk:** Dururken aralık artık 3/5 dk’ya
+  çıkmıyor (en kötü uyanma ~1 dk). Varsayılan örnekleme 30 sn. Ayarlarda
+  3/5 dk seçiliyse o taban korunur.
+
 ## 1.1.13 — 2026-09-21
 
 - **Hareket başlayınca GPS hemen sıklaşır:** Significant-motion algılanınca

@@ -69,14 +69,21 @@ class AppPrefs(context: Context) {
             val raw = prefs.getInt(EFFECTIVE_INTERVAL_SECONDS, base)
             val clamped =
                 if (raw in ALLOWED_INTERVAL_SECONDS) raw else base
-            return clamped.coerceAtLeast(base)
+            // Drop legacy 3/5 min adaptive values when the user base is finer
+            // (stationary backoff now caps at 1 minute).
+            val coarseCap = base.coerceAtLeast(60)
+            return clamped.coerceAtLeast(base).coerceAtMost(coarseCap)
         }
         set(value) {
             val base = intervalSeconds
             val clamped =
                 if (value in ALLOWED_INTERVAL_SECONDS) value else base
+            val coarseCap = base.coerceAtLeast(60)
             prefs.edit()
-                .putInt(EFFECTIVE_INTERVAL_SECONDS, clamped.coerceAtLeast(base))
+                .putInt(
+                    EFFECTIVE_INTERVAL_SECONDS,
+                    clamped.coerceAtLeast(base).coerceAtMost(coarseCap),
+                )
                 .apply()
         }
 
@@ -235,7 +242,7 @@ class AppPrefs(context: Context) {
 
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
-        const val DEFAULT_INTERVAL_SECONDS = 60
+        const val DEFAULT_INTERVAL_SECONDS = 30
         val ALLOWED_INTERVAL_SECONDS = intArrayOf(30, 60, 180, 300)
 
         private const val PREFS = "dayatlas_prefs"

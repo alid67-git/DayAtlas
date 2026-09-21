@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.13 — يتسارع GPS فور بدء الحركة (بلا انتظار 5 دقائق)؛ GPS متدرّج (30 ث→1→3→5 د) لا يُعاد عند فتح التطبيق؛ ألوان البطاقات في الوضع الداكن؛ سلسلة إنذار GPS أقوى؛ بلاطات إحصاء ملوّنة وموسّطة.</string>
+    <string name="build_note">الإصدار 1.1.14 — GPS متدرّج: 30 ث → حد أقصى 1 د (بدون 3/5 د)؛ يتسارع فور الحركة؛ ألوان الوضع الداكن.</string>
 </resources>

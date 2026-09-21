@@ -6,7 +6,8 @@ import com.dayatlas.app.prefs.AppPrefs
 /**
  * After [STREAK_TO_STEP] consecutive fixes within [TOLERANCE_METERS] of a fixed
  * anchor, step the effective sampling interval one notch coarser (never finer
- * than the user's settings base).
+ * than the user's settings base, never coarser than [MAX_BACKOFF_INTERVAL_SECONDS]
+ * unless the user base itself is already coarser).
  *
  * Home GPS often wanders tens of meters while you sit still. Comparing each
  * fix to the previous fix (and resetting on any >25 m hop) made the interval
@@ -24,8 +25,16 @@ object StationaryBackoff {
     const val MOVEMENT_STREAK_TO_RESET = 2
 
     /**
+     * Ceiling for adaptive coarsening when the user base is finer than this
+     * (typical: 30 s → 60 s). Worst-case wake while sitting is ~1 minute,
+     * not 3–5. If the user picked 3/5 min in Settings, that base already
+     * wins via [coerceAtLeast] on the base.
+     */
+    const val MAX_BACKOFF_INTERVAL_SECONDS = 60
+
+    /**
      * When true (default), [recordSample] steps the effective interval
-     * coarser while you sit still (30 s → 1 → 3 → 5 min). Kept as a flag
+     * coarser while you sit still (e.g. 30 s → 1 min). Kept as a flag
      * so a future diagnostic build can temporarily freeze the interval
      * without deleting the backoff math or its tests.
      */
@@ -127,13 +136,15 @@ object StationaryBackoff {
         val distance = Geo.haversineMeters(prevLat, prevLon, lat, lon)
         var effective = clampToAllowed(state.effectiveIntervalSeconds, allowed)
         if (effective < base) effective = base
+        val coarseCap = coarseCapFor(base)
+        if (effective > coarseCap) effective = coarseCap
 
         if (distance > TOLERANCE_METERS) {
             val moveStreak = state.movingStreak + 1
             if (moveStreak < MOVEMENT_STREAK_TO_RESET) {
                 // Tentative departure: tip to user base immediately so the
-                // *next* alarm is not stuck at 3–5 min, but keep the anchor
-                // until a second off-circle fix confirms real movement.
+                // *next* alarm is not stuck at the coarse end, but keep the
+                // anchor until a second off-circle fix confirms real movement.
                 return State(
                     effectiveIntervalSeconds = base,
                     stationaryStreak = 0,
@@ -163,8 +174,9 @@ object StationaryBackoff {
             )
         }
 
-        val next = if (coarseningEnabled) nextCoarser(effective, allowed) else null
-        return if (next != null) {
+        val nextRaw = if (coarseningEnabled) nextCoarser(effective, allowed) else null
+        val next = nextRaw?.coerceAtMost(coarseCap)
+        return if (next != null && next > effective) {
             State(
                 effectiveIntervalSeconds = next.coerceAtLeast(base),
                 stationaryStreak = 0,
@@ -188,6 +200,10 @@ object StationaryBackoff {
         if (idx >= 0) return allowed.getOrNull(idx + 1)
         return allowed.firstOrNull { it > currentSeconds }
     }
+
+    /** Adaptive ceiling: never coarser than 1 min unless user base already is. */
+    fun coarseCapFor(userBaseSeconds: Int): Int =
+        userBaseSeconds.coerceAtLeast(MAX_BACKOFF_INTERVAL_SECONDS)
 
     private fun clampToAllowed(
         seconds: Int,

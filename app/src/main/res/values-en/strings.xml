@@ -177,7 +177,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.13 — GPS speeds up as soon as you start moving (no 5-min wait); gradual GPS (30 s→1→3→5 min) no longer resets on app open; dark-mode card colors; stronger GPS alarm chain; centered tinted stat tiles.</string>
+    <string name="build_note">Version 1.1.14 — Gradual GPS: 30 s → max 1 min (no 3/5 min); speeds up as soon as you move; dark-mode card colors.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>
