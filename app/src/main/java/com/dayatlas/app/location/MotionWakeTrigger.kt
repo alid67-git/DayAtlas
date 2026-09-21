@@ -11,33 +11,30 @@ import com.dayatlas.app.prefs.AppPrefs
 /**
  * Shortens the "just started moving after sitting still" latency that
  * [StationaryBackoff]'s pure timer otherwise has. Once the effective
- * interval has coarsened (say, to 5 min), the *next* GPS check only
- * happens after that whole interval elapses, and StationaryBackoff then
- * needs [StationaryBackoff.MOVEMENT_STREAK_TO_RESET] consecutive off-anchor
- * fixes before speeding back up again — so real movement right after a
- * coarse tick could go unnoticed for up to two of that long interval's
- * worth of time before recording resumes at full resolution.
+ * interval has coarsened (say, to 5 min), waiting for the next alarm alone
+ * can leave real movement unnoticed for minutes.
  *
  * `TYPE_SIGNIFICANT_MOTION` is a purpose-built, very-low-power hardware
- * trigger for exactly "has the device moved" — Android's own docs describe
- * well under one firing per minute as the expected rate, so it already
- * filters out the kind of small jostling (picked up, pocket shift) that a
- * hand-rolled raw-accelerometer threshold would need its own debounce
- * logic to ignore. It fires once, must be re-armed after every firing, and
- * — like the `*AllowWhileIdle` `AlarmManager` calls already used elsewhere
- * in this app — is allowed to wake the device out of Doze.
+ * trigger for exactly "has the device moved". It fires once, must be
+ * re-armed after every firing, and — like the `*AllowWhileIdle`
+ * `AlarmManager` calls already used elsewhere — may wake the device out
+ * of Doze.
  *
- * When it fires, this kicks an out-of-schedule GPS sample immediately
- * instead of waiting for the next scheduled tick. The sensor is only ever
- * a hint to check *sooner*: [StationaryBackoff]'s own tolerance circle,
- * evaluated on that sample's real fix, still decides whether this was
- * genuine movement or a false alarm — a false alarm just costs one extra
- * GPS check, the coarse interval continues unchanged. Devices without this
- * sensor (all methods below become no-ops) fall back to the timer alone,
- * exactly as before this existed.
+ * When it fires while the interval is coarsened, we:
+ * 1. Tip [StationaryBackoff] back to the user base rate (keep the anchor),
+ * 2. Re-arm the next alarm in a few seconds (not 5 minutes),
+ * 3. Kick an out-of-schedule GPS sample immediately.
+ *
+ * The GPS fix still decides lasting movement vs a false jostle; a false
+ * alarm only costs a short fine-grained burst before coarsening climbs
+ * again. Devices without this sensor fall back to the timer + first
+ * off-circle tip in [StationaryBackoff.onSample].
  */
 object MotionWakeTrigger {
     private const val TAG = "MotionWakeTrigger"
+
+    /** How soon to schedule the follow-up sample after a motion hint. */
+    const val FOLLOW_UP_DELAY_MS = 3_000L
 
     private val listener = object : TriggerEventListener() {
         override fun onTrigger(event: TriggerEvent?) {
@@ -48,8 +45,8 @@ object MotionWakeTrigger {
             register(context)
             val prefs = AppPrefs(context)
             if (!TrackingController.shouldSample(context, prefs)) return
-            // Out-of-schedule check: do not push the regular alarm back —
-            // only start the service (with FGS-failure retry).
+            StationaryBackoff.speedUpForSuspectedMotion(prefs)
+            SampleScheduler.scheduleNext(context, prefs, delayMs = FOLLOW_UP_DELAY_MS)
             SampleStarter.startService(context, prefs)
         }
     }

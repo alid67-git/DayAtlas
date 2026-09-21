@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.13 — 2026-09-21
+
+- **Hareket başlayınca GPS hemen sıklaşır:** Significant-motion algılanınca
+  (veya ilk çember-dışı GPS fix’te) aralık kullanıcı tabanına düşer ve birkaç
+  saniye içinde yeni örnek alınır — 5 dk kaba aralıkta dakikalarca bekleme
+  kalkar. Dururken kademeli seyreltme aynı kalır.
+
 ## 1.1.11 — 2026-09-20
 
 - **Kademeli GPS yine ilerlesin:** Uygulama her açıldığında backoff

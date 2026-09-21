@@ -187,5 +187,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.6 — İstatistik 2+2+3 (hepsi sabit); atlama harita ikonu; foto kalemin yanında; kutu seçimi kaldırıldı.</string>
+    <string name="build_note">Sürüm 1.1.13 — Hareket başlayınca GPS hemen sıklaşır (5 dk bekleme yok); kademeli seyreltme dururken aynı; karanlık mod kart renkleri; GPS alarm zinciri.</string>
 </resources>

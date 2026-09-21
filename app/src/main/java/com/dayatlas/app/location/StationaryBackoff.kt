@@ -12,7 +12,9 @@ import com.dayatlas.app.prefs.AppPrefs
  * fix to the previous fix (and resetting on any >25 m hop) made the interval
  * speed back up. Instead we keep the **anchor** fixed while you stay inside
  * the tolerance circle, and only treat real departure after
- * [MOVEMENT_STREAK_TO_RESET] consecutive fixes outside that circle.
+ * [MOVEMENT_STREAK_TO_RESET] consecutive fixes outside that circle. The first
+ * off-circle fix still tips the effective interval back to the user base so
+ * the next alarm is fine-grained even before confirmation.
  */
 object StationaryBackoff {
     /** Radius around the sit-still anchor; typical indoor/yard GPS wander. */
@@ -66,6 +68,25 @@ object StationaryBackoff {
         write(prefs, next)
     }
 
+    /**
+     * Significant-motion (or similar) hint: drop back to the user base
+     * interval without clearing the sit-still anchor. The next GPS fix still
+     * decides whether this was real movement; a false alarm only costs a
+     * short burst of fine-grained samples before coarsening climbs again.
+     */
+    fun speedUpForSuspectedMotion(prefs: AppPrefs) {
+        val base = prefs.intervalSeconds
+        val state = read(prefs)
+        if (state.effectiveIntervalSeconds <= base) return
+        write(
+            prefs,
+            state.copy(
+                effectiveIntervalSeconds = base,
+                stationaryStreak = 0,
+            ),
+        )
+    }
+
     fun reset(userBaseSeconds: Int): State {
         val base = clampToAllowed(userBaseSeconds)
         return State(
@@ -110,12 +131,12 @@ object StationaryBackoff {
         if (distance > TOLERANCE_METERS) {
             val moveStreak = state.movingStreak + 1
             if (moveStreak < MOVEMENT_STREAK_TO_RESET) {
-                // Likely GPS spike while still sitting — keep coarse interval,
-                // the original anchor, and stationary-streak progress so one
-                // courtyard bounce cannot forever block 30→60→180→300.
+                // Tentative departure: tip to user base immediately so the
+                // *next* alarm is not stuck at 3–5 min, but keep the anchor
+                // until a second off-circle fix confirms real movement.
                 return State(
-                    effectiveIntervalSeconds = effective,
-                    stationaryStreak = state.stationaryStreak,
+                    effectiveIntervalSeconds = base,
+                    stationaryStreak = 0,
                     lastLat = prevLat,
                     lastLon = prevLon,
                     movingStreak = moveStreak,

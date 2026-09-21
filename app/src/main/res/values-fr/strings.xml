@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.6 — Stats 2+2+3 fixes (plus de choix de cartes) ; icône sauts ; photo à côté de la note.</string>
+    <string name="build_note">Version 1.1.13 — Le GPS densifie dès le départ (plus d\'attente de 5 min) ; ralentissement progressif à l\'arrêt ; couleurs dark mode ; chaîne d\'alarme GPS renforcée.</string>
 </resources>

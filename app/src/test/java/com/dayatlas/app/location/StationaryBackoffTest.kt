@@ -70,27 +70,30 @@ class StationaryBackoffTest {
             state = StationaryBackoff.onSample(41.0, 29.0, 180, state, allowed)
         }
         assertEquals(300, state.effectiveIntervalSeconds)
-        // Two consecutive far fixes confirm movement → back to user base 180.
+        // First far fix tips to user base immediately (keep waiting for confirm).
         state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
-        assertEquals(300, state.effectiveIntervalSeconds)
+        assertEquals(180, state.effectiveIntervalSeconds)
+        // Second confirms departure — still at base 180.
         state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
         assertEquals(180, state.effectiveIntervalSeconds)
     }
 
     @Test
-    fun movementResetsToUserBaseAfterConfirmedStreak() {
+    fun movementTipsToUserBaseOnFirstOffCircle() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        repeat(3) {
+        repeat(9) {
             state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         }
-        assertEquals(60, state.effectiveIntervalSeconds)
-        // ~1 km away — first spike alone must not speed the interval back up.
-        state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
-        assertEquals(60, state.effectiveIntervalSeconds)
+        assertEquals(300, state.effectiveIntervalSeconds)
+        // ~1 km away — tip to base right away so the next alarm is fine-grained.
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
         assertEquals(30, state.effectiveIntervalSeconds)
-        assertEquals(0, state.stationaryStreak)
+        assertEquals(1, state.movingStreak)
+        // Second confirms; stay at base with new anchor.
+        state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
+        assertEquals(30, state.effectiveIntervalSeconds)
+        assertEquals(0, state.movingStreak)
     }
 
     @Test
@@ -111,19 +114,19 @@ class StationaryBackoffTest {
     }
 
     @Test
-    fun intermittentSpikeDoesNotBlockCoarsening() {
+    fun coarseningResumesAfterFalseDepartureTip() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        // Two inside → streak 2.
-        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        assertEquals(2, state.stationaryStreak)
-        // One far spike (~1 km) — keep streak, do not return to base.
+        repeat(9) {
+            state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        }
+        assertEquals(300, state.effectiveIntervalSeconds)
+        // Far tip → base, then back inside the anchor → climb again.
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
         assertEquals(30, state.effectiveIntervalSeconds)
-        assertEquals(2, state.stationaryStreak)
-        // Next inside completes STREAK_TO_STEP → 60 s.
-        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        repeat(3) {
+            state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        }
         assertEquals(60, state.effectiveIntervalSeconds)
     }
 
