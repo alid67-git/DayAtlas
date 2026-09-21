@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.13 — GPS wird beim Losgehen sofort dichter (kein 5-Min-Warten); stufenweise Verlangsamung im Stillstand; Dark-Mode-Kartenfarben; stabilere GPS-Alarmkette.</string>
+    <string name="build_note">Version 1.1.13 — GPS wird beim Losgehen sofort dichter (kein 5-Min-Warten); stufenweises GPS (30 s→1→3→5 Min) setzt beim App-Start nicht mehr zurück; Dark-Mode-Kartenfarben; stabilere GPS-Alarmkette; zentrierte farbige Statistik-Kacheln.</string>
 </resources>
