@@ -177,5 +177,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.6 — 固定 2+2+3 统计（无卡片选择）；跳变图标；照片在笔记旁。</string>
+    <string name="build_note">版本 1.1.12 — 渐进 GPS（30 秒→1→3→5 分钟）打开应用不再重置；深色模式卡片颜色；更稳的 GPS 闹钟链；居中彩色统计卡片。</string>
 </resources>
