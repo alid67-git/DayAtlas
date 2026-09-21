@@ -39,8 +39,6 @@ class StationaryBackoffTest {
 
     @Test
     fun coarseningDisabledKeepsUserBaseWhileStationary() {
-        // Diagnostic override: recordSample runs with coarseningEnabled=false
-        // so the real alarm cadence can be observed independent of backoff.
         var state = StationaryBackoff.reset(60)
         state = StationaryBackoff.onSample(41.0, 29.0, 60, state, allowed, coarseningEnabled = false)
         repeat(12) {
@@ -50,30 +48,42 @@ class StationaryBackoffTest {
     }
 
     @Test
-    fun stepsContinueTowardMaxThenStay() {
+    fun stepsStopAtOneMinuteCap() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        // Drive enough stationary samples to climb 30→60→180→300.
+        // Enough samples to have formerly climbed to 3–5 min.
         repeat(12) {
             state = StationaryBackoff.onSample(41.00001, 29.00001, 30, state, allowed)
         }
-        assertEquals(300, state.effectiveIntervalSeconds)
+        assertEquals(60, state.effectiveIntervalSeconds)
         val stayed = StationaryBackoff.onSample(41.00001, 29.00001, 30, state, allowed)
-        assertEquals(300, stayed.effectiveIntervalSeconds)
+        assertEquals(60, stayed.effectiveIntervalSeconds)
     }
 
     @Test
-    fun neverFinerThanUserBase() {
+    fun legacyCoarseEffectiveIsClampedDown() {
+        // Prefs from an older build may still hold 300 s while base is 30.
+        var state = StationaryBackoff.State(
+            effectiveIntervalSeconds = 300,
+            stationaryStreak = 0,
+            lastLat = 41.0,
+            lastLon = 29.0,
+        )
+        state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
+        assertEquals(60, state.effectiveIntervalSeconds)
+    }
+
+    @Test
+    fun userBaseCoarserThanCapIsRespected() {
         var state = StationaryBackoff.reset(180)
         state = StationaryBackoff.onSample(41.0, 29.0, 180, state, allowed)
         repeat(6) {
             state = StationaryBackoff.onSample(41.0, 29.0, 180, state, allowed)
         }
-        assertEquals(300, state.effectiveIntervalSeconds)
-        // First far fix tips to user base immediately (keep waiting for confirm).
+        // Cap is max(base, 60) = 180 — no climb past the user's own base.
+        assertEquals(180, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
         assertEquals(180, state.effectiveIntervalSeconds)
-        // Second confirms departure — still at base 180.
         state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
         assertEquals(180, state.effectiveIntervalSeconds)
     }
@@ -82,15 +92,13 @@ class StationaryBackoffTest {
     fun movementTipsToUserBaseOnFirstOffCircle() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        repeat(9) {
+        repeat(6) {
             state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         }
-        assertEquals(300, state.effectiveIntervalSeconds)
-        // ~1 km away — tip to base right away so the next alarm is fine-grained.
+        assertEquals(60, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
         assertEquals(30, state.effectiveIntervalSeconds)
         assertEquals(1, state.movingStreak)
-        // Second confirms; stay at base with new anchor.
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
         assertEquals(30, state.effectiveIntervalSeconds)
         assertEquals(0, state.movingStreak)
@@ -100,16 +108,14 @@ class StationaryBackoffTest {
     fun singleHomeGpsSpikeDoesNotSpeedUpInterval() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        repeat(9) {
+        repeat(6) {
             state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         }
-        assertEquals(300, state.effectiveIntervalSeconds)
-        // ~50 m courtyard bounce (was enough to reset with the old 25 m rule).
+        assertEquals(60, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.0, 29.0006, 30, state, allowed)
-        assertEquals(300, state.effectiveIntervalSeconds)
-        // Still inside 80 m of the fixed anchor — keep coarsening, not speeding up.
+        assertEquals(60, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.0, 29.0008, 30, state, allowed)
-        assertEquals(300, state.effectiveIntervalSeconds)
+        assertEquals(60, state.effectiveIntervalSeconds)
         assertEquals(0, state.movingStreak)
     }
 
@@ -117,11 +123,10 @@ class StationaryBackoffTest {
     fun coarseningResumesAfterFalseDepartureTip() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        repeat(9) {
+        repeat(6) {
             state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         }
-        assertEquals(300, state.effectiveIntervalSeconds)
-        // Far tip → base, then back inside the anchor → climb again.
+        assertEquals(60, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
         assertEquals(30, state.effectiveIntervalSeconds)
         repeat(3) {
@@ -132,9 +137,14 @@ class StationaryBackoffTest {
 
     @Test
     fun nextCoarserLadder() {
+        assertEquals(20, StationaryBackoff.nextCoarser(10, allowed))
+        assertEquals(30, StationaryBackoff.nextCoarser(20, allowed))
         assertEquals(60, StationaryBackoff.nextCoarser(30, allowed))
         assertEquals(180, StationaryBackoff.nextCoarser(60, allowed))
         assertEquals(300, StationaryBackoff.nextCoarser(180, allowed))
         assertNull(StationaryBackoff.nextCoarser(300, allowed))
+        assertEquals(60, StationaryBackoff.coarseCapFor(10))
+        assertEquals(60, StationaryBackoff.coarseCapFor(30))
+        assertEquals(180, StationaryBackoff.coarseCapFor(180))
     }
 }

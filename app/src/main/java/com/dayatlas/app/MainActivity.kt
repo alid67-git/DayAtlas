@@ -885,6 +885,8 @@ class MainActivity : DayAtlasActivity() {
     }
 
     private fun formatGpsInterval(seconds: Int): String = when (seconds) {
+        10 -> getString(R.string.interval_10s_short)
+        20 -> getString(R.string.interval_20s_short)
         30 -> getString(R.string.interval_30s_short)
         60 -> getString(R.string.interval_1_short)
         180 -> getString(R.string.interval_3_short)

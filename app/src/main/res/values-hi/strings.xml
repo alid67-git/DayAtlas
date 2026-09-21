@@ -32,6 +32,8 @@
     <string name="stat_avg_speed">औसत गति</string>
     <string name="stat_active_duration">सक्रिय समय</string>
     <string name="stat_gps_interval">सक्रिय GPS नमूना दर</string>
+    <string name="interval_10s_short">10 सेकंड</string>
+    <string name="interval_20s_short">20 सेकंड</string>
     <string name="interval_30s_short">30 सेकंड</string>
     <string name="interval_1_short">1 मिनट</string>
     <string name="interval_3_short">3 मिनट</string>
@@ -48,8 +50,10 @@
     <string name="settings_daily_mode_summary">चालू होने पर, ऐप या फ़ोन खुलते ही आज की रिकॉर्डिंग बिना पूछे शुरू या जारी रहती है।</string>
     <string name="settings_interval">नमूना अंतराल</string>
     <string name="settings_interval_hint">एक ही स्थान पर (~80 मीटर के भीतर) लगातार 3 रीडिंग के बाद, अंतराल स्वतः एक स्तर बढ़ जाता है (30 सेकंड → 1 → 3 → 5 मिनट); वास्तविक गति (उस क्षेत्र से बाहर लगातार 2 रीडिंग) होने पर आपके चुने अंतराल पर वापस आ जाता है — घर पर GPS की हल्की उतार-चढ़ाव अंतराल को फिर से तेज़ नहीं करती।</string>
-    <string name="interval_30s">30 सेकंड (0.5 मिनट)</string>
-    <string name="interval_1">1 मिनट (अनुशंसित)</string>
+    <string name="interval_10s">10 सेकंड</string>
+    <string name="interval_20s">20 सेकंड</string>
+    <string name="interval_30s">30 सेकंड (अनुशंसित)</string>
+    <string name="interval_1">1 मिनट</string>
     <string name="interval_3">3 मिनट</string>
     <string name="interval_5">5 मिनट</string>
     <string name="settings_permissions">अनुमतियाँ और बैटरी</string>
@@ -177,5 +181,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.13 — चलना शुरू होते ही GPS तेज़ (5 मि इंतज़ार नहीं); क्रमिक GPS (30 से→1→3→5 मि) ऐप खोलने पर रीसेट नहीं; डार्क मोड कार्ड रंग; मज़बूत GPS अलार्म श्रृंखला; रंगीन केन्द्रित आँकड़ा टाइलें।</string>
+    <string name="build_note">संस्करण 1.1.15 — 10/20 से अंतराल; क्रमिक GPS अधिकतम 1 मि.</string>
 </resources>
