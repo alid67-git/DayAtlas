@@ -187,5 +187,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.12 — Kademeli GPS (30 sn→1→3→5 dk) uygulama açılınca sıfırlanmıyor; karanlık mod kart renkleri; GPS alarm zinciri güçlendirildi; renkli ortalanmış istatistik kutuları.</string>
+    <string name="build_note">Sürüm 1.1.13 — Hareket başlayınca GPS hemen sıklaşır (5 dk bekleme yok); kademeli GPS (30 sn→1→3→5 dk) uygulama açılınca sıfırlanmıyor; karanlık mod kart renkleri; GPS alarm zinciri güçlendirildi; renkli ortalanmış istatistik kutuları.</string>
 </resources>
