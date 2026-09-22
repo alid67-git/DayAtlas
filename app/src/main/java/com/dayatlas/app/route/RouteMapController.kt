@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.dayatlas.app.R
+import com.dayatlas.app.data.DwellStops
 import com.dayatlas.app.data.JumpFilter
 import com.dayatlas.app.data.TrackPoint
 import org.osmdroid.util.BoundingBox
@@ -55,6 +56,8 @@ object RouteMapController {
         dateIso: String? = null,
         jumps: List<JumpFilter.Jump> = JumpFilter.findJumps(points),
         onJumpTap: ((JumpFilter.Jump) -> Unit)? = null,
+        dwellStops: List<DwellStops.Stop> = emptyList(),
+        onDwellTap: ((DwellStops.Stop) -> Unit)? = null,
         /** Live GPS updates should not animate zoom (causes blank flashes / ANR). */
         animateZoom: Boolean = false,
         fitCamera: Boolean = true,
@@ -95,6 +98,24 @@ object RouteMapController {
                     if (onJumpTap != null) {
                         setOnMarkerClickListener { _, _ ->
                             onJumpTap(jump)
+                            true
+                        }
+                    }
+                },
+            )
+        }
+
+        dwellStops.forEach { stop ->
+            val gp = GeoPoint(stop.lat, stop.lon)
+            map.overlays.add(
+                Marker(map).apply {
+                    position = gp
+                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                    icon = ContextCompat.getDrawable(context, R.drawable.ic_marker_dwell)
+                    setInfoWindow(null)
+                    if (onDwellTap != null) {
+                        setOnMarkerClickListener { _, _ ->
+                            onDwellTap(stop)
                             true
                         }
                     }

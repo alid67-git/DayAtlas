@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat
 import com.dayatlas.app.data.DayNoteDialog
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
+import com.dayatlas.app.data.DwellStopDialog
+import com.dayatlas.app.data.DwellStops
 import com.dayatlas.app.data.Geo
 import com.dayatlas.app.data.JumpCleanupDialog
 import com.dayatlas.app.data.JumpFilter
@@ -164,6 +166,7 @@ class DayDetailActivity : DayAtlasActivity() {
         val record = store.load(dateIso)
         val points = record?.points.orEmpty()
         val jumps = JumpFilter.findJumps(points)
+        val dwells = if (prefs.showDwellStops) DwellStops.find(points) else emptyList()
 
         val today = DayTitle.localToday()
         binding.nextDay.visibility = if (date.isBefore(today)) View.VISIBLE else View.GONE
@@ -214,9 +217,13 @@ class DayDetailActivity : DayAtlasActivity() {
             emptyState = binding.emptyState,
             dateIso = dateIso,
             jumps = jumps,
+            dwellStops = dwells,
             fitCamera = true,
             onJumpTap = { jump ->
                 JumpCleanupDialog.confirmDelete(this, store, dateIso, jump) { refresh() }
+            },
+            onDwellTap = { stop ->
+                DwellStopDialog.show(this, store, dateIso, stop) { refresh() }
             },
         )
     }

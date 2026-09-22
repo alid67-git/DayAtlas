@@ -27,6 +27,13 @@ object DayJson {
         if (record.photos.isNotEmpty()) {
             root.put("photos", JSONArray(record.photos))
         }
+        if (record.dwellNotes.isNotEmpty()) {
+            val notes = JSONObject()
+            record.dwellNotes.forEach { (key, value) ->
+                notes.put(key.toString(), value)
+            }
+            root.put("dwellNotes", notes)
+        }
         val points = JSONArray()
         record.points.forEach { p ->
             val o = JSONObject()
@@ -53,6 +60,18 @@ object DayJson {
             (0 until photosArr.length()).map { photosArr.getString(it) }
         } else {
             emptyList()
+        }
+        val dwellNotesObj = root.optJSONObject("dwellNotes")
+        val dwellNotes = if (dwellNotesObj != null) {
+            buildMap {
+                dwellNotesObj.keys().forEach { key ->
+                    val millis = key.toLongOrNull() ?: return@forEach
+                    val text = dwellNotesObj.optString(key, "").trim()
+                    if (text.isNotEmpty()) put(millis, text)
+                }
+            }
+        } else {
+            emptyMap()
         }
         val arr = root.optJSONArray("points") ?: JSONArray()
         val points = ArrayList<TrackPoint>(arr.length())
@@ -83,6 +102,7 @@ object DayJson {
             note = note,
             photos = photos,
             gpsCheckCount = gpsCheckCount,
+            dwellNotes = dwellNotes,
         )
     }
 
@@ -106,7 +126,10 @@ object DayJson {
      */
     fun toGpx(records: List<DayRecord>, exportName: String? = null): String {
         val withPoints = records.filter {
-            it.points.isNotEmpty() || !it.note.isNullOrEmpty() || it.photos.isNotEmpty()
+            it.points.isNotEmpty() ||
+                !it.note.isNullOrEmpty() ||
+                it.photos.isNotEmpty() ||
+                it.dwellNotes.isNotEmpty()
         }
         val sb = StringBuilder()
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")

@@ -27,6 +27,11 @@ data class DayRecord(
      * to point count when loaded.
      */
     val gpsCheckCount: Int = 0,
+    /**
+     * Optional notes on ≥15 min dwell stops, keyed by the stop's first-point
+     * epoch millis ([DwellStops.Stop.noteKey]). Empty for older day files.
+     */
+    val dwellNotes: Map<Long, String> = emptyMap(),
 ) {
     /** Value shown as "GPS kontrol / nokta sayısı" in the UI. */
     val checkCount: Int

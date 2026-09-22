@@ -196,7 +196,10 @@ class DayStore(context: Context) {
             // A note or photos keep the day file alive even with zero
             // points left - otherwise deleting the last point would
             // silently take them with it.
-            if (existing.note.isNullOrEmpty() && existing.photos.isEmpty()) {
+            if (existing.note.isNullOrEmpty() &&
+                existing.photos.isEmpty() &&
+                existing.dwellNotes.isEmpty()
+            ) {
                 jsonFile(dateIso).delete()
                 gpxFile(dateIso).delete()
                 if (memoryToday?.date == dateIso) memoryToday = null
@@ -226,16 +229,37 @@ class DayStore(context: Context) {
         val existing = loadUnlocked(dateIso)
             ?: DayRecord.empty(dateIso, DayTitle.format(LocalDate.parse(dateIso)))
         val updated = existing.copy(note = trimmed)
-        if (updated.points.isEmpty() && trimmed == null && updated.photos.isEmpty()) {
+        if (isEmptyShell(updated)) {
             jsonFile(dateIso).delete()
             gpxFile(dateIso).delete()
             if (memoryToday?.date == dateIso) memoryToday = null
             return@withLock updated
         }
-        persistUnlocked(
-            updated,
-            writeGpx = updated.points.isNotEmpty() || trimmed != null || updated.photos.isNotEmpty(),
-        )
+        persistUnlocked(updated, writeGpx = shouldWriteGpx(updated))
+        updated
+    }
+
+    /**
+     * Sets or clears the optional note for one dwell stop ([DwellStops.Stop.noteKey]).
+     */
+    fun setDwellNote(dateIso: String, noteKey: Long, note: String?): DayRecord = lock.withLock {
+        val trimmed = note?.trim()?.take(NOTE_MAX_LENGTH)?.ifEmpty { null }
+        val existing = loadUnlocked(dateIso)
+            ?: DayRecord.empty(dateIso, DayTitle.format(LocalDate.parse(dateIso)))
+        val notes = existing.dwellNotes.toMutableMap()
+        if (trimmed == null) {
+            notes.remove(noteKey)
+        } else {
+            notes[noteKey] = trimmed
+        }
+        val updated = existing.copy(dwellNotes = notes)
+        if (isEmptyShell(updated)) {
+            jsonFile(dateIso).delete()
+            gpxFile(dateIso).delete()
+            if (memoryToday?.date == dateIso) memoryToday = null
+            return@withLock updated
+        }
+        persistUnlocked(updated, writeGpx = shouldWriteGpx(updated))
         updated
     }
 
@@ -244,18 +268,27 @@ class DayStore(context: Context) {
         val existing = loadUnlocked(dateIso)
             ?: DayRecord.empty(dateIso, DayTitle.format(LocalDate.parse(dateIso)))
         val updated = existing.copy(photos = photos)
-        if (updated.points.isEmpty() && updated.note.isNullOrEmpty() && photos.isEmpty()) {
+        if (isEmptyShell(updated)) {
             jsonFile(dateIso).delete()
             gpxFile(dateIso).delete()
             if (memoryToday?.date == dateIso) memoryToday = null
             return@withLock updated
         }
-        persistUnlocked(
-            updated,
-            writeGpx = updated.points.isNotEmpty() || !updated.note.isNullOrEmpty() || updated.photos.isNotEmpty(),
-        )
+        persistUnlocked(updated, writeGpx = shouldWriteGpx(updated))
         updated
     }
+
+    private fun isEmptyShell(record: DayRecord): Boolean =
+        record.points.isEmpty() &&
+            record.note.isNullOrEmpty() &&
+            record.photos.isEmpty() &&
+            record.dwellNotes.isEmpty()
+
+    private fun shouldWriteGpx(record: DayRecord): Boolean =
+        record.points.isNotEmpty() ||
+            !record.note.isNullOrEmpty() ||
+            record.photos.isNotEmpty() ||
+            record.dwellNotes.isNotEmpty()
 
     private fun loadUnlocked(dateIso: String): DayRecord? {
         memoryToday?.takeIf { it.date == dateIso }?.let { return it }

@@ -21,6 +21,8 @@ import com.dayatlas.app.data.DayNoteDialog
 import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
+import com.dayatlas.app.data.DwellStopDialog
+import com.dayatlas.app.data.DwellStops
 import com.dayatlas.app.data.Geo
 import com.dayatlas.app.data.JumpCleanupDialog
 import com.dayatlas.app.data.JumpFilter
@@ -607,13 +609,14 @@ class MainActivity : DayAtlasActivity() {
             }
             val mapPoints = mapRecord?.points.orEmpty()
             val jumps = JumpFilter.findJumps(mapPoints)
+            val dwells = if (prefs.showDwellStops) DwellStops.find(mapPoints) else emptyList()
             val todaySpeed = SpeedStats.compute(record.points)
             uiHandler.post {
                 if (isDestroyed || generation != refreshGeneration.get()) return@post
                 applyTodayChrome(record, dailyMode, trackingEnabled, orderRaw, intervalSeconds, todaySpeed)
                 if (!dailyVisible) return@post
                 if (rebuildMap) {
-                    applyMapPane(mapDateSnapshot, mapRecord, mapPoints, jumps, fitCamera = true)
+                    applyMapPane(mapDateSnapshot, mapRecord, mapPoints, jumps, dwells, fitCamera = true)
                 } else {
                     applyMapLabels(mapDateSnapshot, mapRecord, mapPoints, jumps)
                 }
@@ -807,9 +810,10 @@ class MainActivity : DayAtlasActivity() {
             val record = store.load(dateIso)
             val points = record?.points.orEmpty()
             val jumps = JumpFilter.findJumps(points)
+            val dwells = if (prefs.showDwellStops) DwellStops.find(points) else emptyList()
             uiHandler.post {
                 if (isDestroyed || generation != refreshGeneration.get()) return@post
-                applyMapPane(mapDateSnapshot, record, points, jumps, fitCamera = true)
+                applyMapPane(mapDateSnapshot, record, points, jumps, dwells, fitCamera = true)
             }
         }
     }
@@ -819,6 +823,7 @@ class MainActivity : DayAtlasActivity() {
         record: DayRecord?,
         points: List<TrackPoint>,
         jumps: List<JumpFilter.Jump>,
+        dwellStops: List<DwellStops.Stop>,
         fitCamera: Boolean,
     ) {
         applyMapLabels(date, record, points, jumps)
@@ -831,6 +836,7 @@ class MainActivity : DayAtlasActivity() {
             emptyState = binding.emptyState,
             dateIso = dateIso,
             jumps = jumps,
+            dwellStops = dwellStops,
             fitCamera = fitCamera,
             onJumpTap = { jump ->
                 JumpCleanupDialog.confirmDelete(
@@ -839,6 +845,11 @@ class MainActivity : DayAtlasActivity() {
                     dateIso,
                     jump,
                 ) { refresh(rebuildMap = true) }
+            },
+            onDwellTap = { stop ->
+                DwellStopDialog.show(this, store, dateIso, stop) {
+                    refresh(rebuildMap = false)
+                }
             },
         )
     }

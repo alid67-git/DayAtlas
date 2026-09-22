@@ -50,6 +50,11 @@
     <string name="settings_daily_mode_summary">Wenn aktiv, startet oder setzt die heutige Aufnahme ohne Nachfrage fort, sobald die App oder das Telefon geöffnet wird.</string>
     <string name="settings_interval">Abtastintervall</string>
     <string name="settings_interval_hint">Nach 3 Messungen am gleichen Ort (~80 m) wird das Intervall gestuft (30 s → 1 → 3 → 5 Min). Echte Bewegung (2 Messungen hintereinander außerhalb) stellt Ihr Intervall wieder her — Heim-GPS-Rauschen beschleunigt die Abtastung nicht erneut.</string>
+    <string name="settings_dwell_stops">15 Min+ Haltspunkte</string>
+    <string name="settings_dwell_stops_summary">Wenn aktiv, erscheinen Orte mit mehr als 15 Minuten Aufenthalt als Kartenpunkt. Tippen zeigt Dauer und optionale Notiz.</string>
+    <string name="dwell_stop_title">Halt</string>
+    <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
+    <string name="dwell_stop_note_hint">Notiz zu diesem Halt (optional, max. 500 Zeichen)</string>
     <string name="interval_10s">10 Sekunden</string>
     <string name="interval_20s">20 Sekunden</string>
     <string name="interval_30s">30 Sekunden (empfohlen)</string>
@@ -181,5 +186,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.15 — 10/20 s intervals; gradual GPS max 1 min.</string>
+    <string name="build_note">Version 1.1.16 — Optionale 15-Min+-Haltspunkte (Einstellungen); Tippen für Dauer und Notiz.</string>
 </resources>

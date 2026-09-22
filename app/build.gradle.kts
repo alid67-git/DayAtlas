@@ -32,8 +32,8 @@ android {
         // versionName must change on every bump, not just versionCode:
         // UpdateChecker compares version NAMES for equality to decide
         // "already up to date".
-        versionCode = 75
-        versionName = "1.1.15"
+        versionCode = 76
+        versionName = "1.1.16"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Play policy forbids apps updating themselves outside Play's own
         // mechanism, so the GitHub-release self-updater (see UpdateChecker /
