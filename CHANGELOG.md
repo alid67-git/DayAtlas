@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.16 — 2026-09-22
+
+- **15 dk+ duruş noktaları (opsiyonel):** Ayarlardan açılınca haritada
+  15 dakikadan uzun kaldığınız yerlere mavi nokta konur; dokununca süre
+  ve isteğe bağlı not.
+
 ## 1.1.15 — 2026-09-21
 
 - **Ayarlar:** Örnekleme aralığına **10 sn** ve **20 sn** eklendi

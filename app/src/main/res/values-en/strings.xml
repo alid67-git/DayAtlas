@@ -50,6 +50,11 @@
     <string name="settings_daily_mode_summary">When on, today\'s recording starts or continues without asking whenever the app or phone opens.</string>
     <string name="settings_interval">Sampling interval</string>
     <string name="settings_interval_hint">After 3 readings in the same place (~80 m), the interval steps up (e.g. 30 s → 1 min; max 1 min). Real movement returns to your chosen interval — home GPS jitter does not speed sampling back up.</string>
+    <string name="settings_dwell_stops">15 min+ stop markers</string>
+    <string name="settings_dwell_stops_summary">When on, places you stayed longer than 15 minutes get a map pin. Tap for duration and an optional note.</string>
+    <string name="dwell_stop_title">Stop</string>
+    <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
+    <string name="dwell_stop_note_hint">Note for this stop (optional, up to 500 characters)</string>
     <string name="interval_10s">10 seconds</string>
     <string name="interval_20s">20 seconds</string>
     <string name="interval_30s">30 seconds (recommended)</string>
@@ -181,7 +186,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.15 — Settings add 10/20 s intervals; gradual GPS caps at 1 min; speeds up when you move.</string>
+    <string name="build_note">Version 1.1.16 — Optional 15 min+ stop markers (Settings); tap for duration and note.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

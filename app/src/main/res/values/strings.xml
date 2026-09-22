@@ -50,6 +50,11 @@
     <string name="settings_daily_mode_summary">Açıkken uygulama veya telefon açılınca bugünün kaydı onay sormadan başlar / devam eder.</string>
     <string name="settings_interval">Örnekleme aralığı</string>
     <string name="settings_interval_hint">Aynı yerde (~80 m) art arda 3 ölçüm olunca aralık bir üst kademeye seyreltilir (ör. 30 sn → 1 dk; en fazla 1 dk). Gerçek hareket olunca seçtiğiniz aralığa döner — ev GPS titreşimi hızı yeniden sıkılaştırmaz.</string>
+    <string name="settings_dwell_stops">15 dk+ duruş noktaları</string>
+    <string name="settings_dwell_stops_summary">Açıkken haritada 15 dakikadan uzun kaldığınız yerlere nokta konur. Dokununca süre ve isteğe bağlı not görünür.</string>
+    <string name="dwell_stop_title">Duruş</string>
+    <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
+    <string name="dwell_stop_note_hint">Bu duruş için not (isteğe bağlı, en fazla 500 karakter)</string>
     <string name="interval_10s">10 saniye</string>
     <string name="interval_20s">20 saniye</string>
     <string name="interval_30s">30 saniye (önerilen)</string>
@@ -191,5 +196,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.15 — Ayarlarda 10/20 sn aralık; kademeli GPS en fazla 1 dk; hareket edince hemen sıklaşır.</string>
+    <string name="build_note">Sürüm 1.1.16 — İsteğe bağlı 15 dk+ duruş noktaları (Ayarlar); dokununca süre ve not.</string>
 </resources>

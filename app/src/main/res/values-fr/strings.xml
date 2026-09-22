@@ -50,6 +50,11 @@
     <string name="settings_daily_mode_summary">Lorsqu\'il est activé, l\'enregistrement du jour démarre ou continue sans demander confirmation à chaque ouverture de l\'application ou du téléphone.</string>
     <string name="settings_interval">Intervalle d\'échantillonnage</string>
     <string name="settings_interval_hint">Après 3 mesures au même endroit (~80 m), l\'intervalle passe au palier suivant (30 s → 1 → 3 → 5 min). Un vrai déplacement (2 mesures consécutives hors de cette zone) rétablit l\'intervalle choisi — les fluctuations du GPS à domicile ne raccourcissent pas l\'intervalle.</string>
+    <string name="settings_dwell_stops">Arrêts 15 min+</string>
+    <string name="settings_dwell_stops_summary">Si activé, les lieux où vous êtes resté plus de 15 minutes apparaissent sur la carte. Touchez pour la durée et une note optionnelle.</string>
+    <string name="dwell_stop_title">Arrêt</string>
+    <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
+    <string name="dwell_stop_note_hint">Note pour cet arrêt (optionnel, 500 caractères max)</string>
     <string name="interval_10s">10 secondes</string>
     <string name="interval_20s">20 secondes</string>
     <string name="interval_30s">30 secondes (recommandé)</string>
@@ -181,5 +186,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.15 — 10/20 s intervals; gradual GPS max 1 min.</string>
+    <string name="build_note">Version 1.1.16 — Points d\'arrêt 15 min+ optionnels (Réglages) ; toucher pour durée et note.</string>
 </resources>

@@ -50,6 +50,11 @@
     <string name="settings_daily_mode_summary">Si está activado, la grabación de hoy se inicia o continúa sin preguntar cada vez que se abre la app o el teléfono.</string>
     <string name="settings_interval">Intervalo de muestreo</string>
     <string name="settings_interval_hint">Tras 3 lecturas en el mismo lugar (~80 m), el intervalo aumenta un nivel (30 s → 1 → 3 → 5 min). Con movimiento real (2 lecturas seguidas fuera de esa zona) vuelve al intervalo elegido — las vibraciones del GPS en casa no aceleran el muestreo de nuevo.</string>
+    <string name="settings_dwell_stops">Paradas de 15 min+</string>
+    <string name="settings_dwell_stops_summary">Si está activo, los sitios donde estuvo más de 15 minutos aparecen en el mapa. Toque para ver duración y una nota opcional.</string>
+    <string name="dwell_stop_title">Parada</string>
+    <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
+    <string name="dwell_stop_note_hint">Nota de esta parada (opcional, hasta 500 caracteres)</string>
     <string name="interval_10s">10 segundos</string>
     <string name="interval_20s">20 segundos</string>
     <string name="interval_30s">30 segundos (recomendado)</string>
@@ -181,5 +186,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.15 — intervalos 10/20 s; GPS gradual máx. 1 min.</string>
+    <string name="build_note">Versión 1.1.16 — Marcadores opcionales de paradas 15 min+ (Ajustes); toque para duración y nota.</string>
 </resources>

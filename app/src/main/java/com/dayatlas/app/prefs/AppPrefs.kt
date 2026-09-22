@@ -240,6 +240,14 @@ class AppPrefs(context: Context) {
         get() = prefs.getLong(PROMO_UNLOCK_EXPIRES_AT, 0L)
         set(value) = prefs.edit().putLong(PROMO_UNLOCK_EXPIRES_AT, value).apply()
 
+    /**
+     * When true, the day map draws markers for places stayed ≥15 minutes
+     * ([com.dayatlas.app.data.DwellStops]). Off by default — opt-in in Settings.
+     */
+    var showDwellStops: Boolean
+        get() = prefs.getBoolean(SHOW_DWELL_STOPS, false)
+        set(value) = prefs.edit().putBoolean(SHOW_DWELL_STOPS, value).apply()
+
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
         const val DEFAULT_INTERVAL_SECONDS = 30
@@ -271,5 +279,6 @@ class AppPrefs(context: Context) {
         private const val SUBSCRIPTION_ACTIVE = "subscription_active"
         private const val SUBSCRIPTION_LAST_VERIFIED = "subscription_last_verified_millis"
         private const val PROMO_UNLOCK_EXPIRES_AT = "promo_unlock_expires_at_millis"
+        private const val SHOW_DWELL_STOPS = "show_dwell_stops"
     }
 }

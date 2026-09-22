@@ -57,6 +57,11 @@ class SettingsActivity : DayAtlasActivity() {
         setupLanguageDropdown()
         setupIntervalDropdown()
 
+        binding.showDwellStops.isChecked = prefs.showDwellStops
+        binding.showDwellStops.setOnCheckedChangeListener { _, checked ->
+            prefs.showDwellStops = checked
+        }
+
         binding.locationSettings.setOnClickListener {
             startActivity(
                 Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
