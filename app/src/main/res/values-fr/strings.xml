@@ -113,6 +113,8 @@
 
     <string name="day_photo_thumbnail">Photo du jour</string>
     <string name="day_photo_add">Ajouter une photo</string>
+    <string name="day_photo_camera">Appareil photo</string>
+    <string name="day_photo_gallery">Choisir dans la galerie</string>
     <string name="day_photo_add_failed">Impossible d\'ajouter la photo.</string>
     <string name="day_photo_delete">Supprimer</string>
 
@@ -186,5 +188,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.16 — Points d\'arrêt 15 min+ optionnels (Réglages) ; toucher pour durée et note.</string>
+    <string name="build_note">Version 1.1.17 — Ajouter des photos via l\'appareil photo ou la galerie.</string>
 </resources>

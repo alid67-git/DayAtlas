@@ -113,6 +113,8 @@
 
     <string name="day_photo_thumbnail">当天照片</string>
     <string name="day_photo_add">添加照片</string>
+    <string name="day_photo_camera">相机</string>
+    <string name="day_photo_gallery">从相册选择</string>
     <string name="day_photo_add_failed">无法添加照片。</string>
     <string name="day_photo_delete">删除</string>
 
@@ -186,5 +188,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.16 — 可选 15 分钟以上停留标记（设置）；点按查看时长与备注。</string>
+    <string name="build_note">版本 1.1.17 — 可通过相机或相册添加照片。</string>
 </resources>

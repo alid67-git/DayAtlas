@@ -113,6 +113,8 @@
 
     <string name="day_photo_thumbnail">Gün fotoğrafı</string>
     <string name="day_photo_add">Fotoğraf ekle</string>
+    <string name="day_photo_camera">Kamera</string>
+    <string name="day_photo_gallery">Galeriden seç</string>
     <string name="day_photo_add_failed">Fotoğraf eklenemedi.</string>
     <string name="day_photo_delete">Sil</string>
 
@@ -196,5 +198,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.16 — İsteğe bağlı 15 dk+ duruş noktaları (Ayarlar); dokununca süre ve not.</string>
+    <string name="build_note">Sürüm 1.1.17 — Fotoğraf eklerken kamera veya galeri seçilebilir.</string>
 </resources>

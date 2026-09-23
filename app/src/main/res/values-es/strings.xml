@@ -113,6 +113,8 @@
 
     <string name="day_photo_thumbnail">Foto del día</string>
     <string name="day_photo_add">Añadir foto</string>
+    <string name="day_photo_camera">Cámara</string>
+    <string name="day_photo_gallery">Elegir de la galería</string>
     <string name="day_photo_add_failed">No se pudo añadir la foto.</string>
     <string name="day_photo_delete">Eliminar</string>
 
@@ -186,5 +188,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.16 — Marcadores opcionales de paradas 15 min+ (Ajustes); toque para duración y nota.</string>
+    <string name="build_note">Versión 1.1.17 — Añadir fotos con cámara o galería.</string>
 </resources>

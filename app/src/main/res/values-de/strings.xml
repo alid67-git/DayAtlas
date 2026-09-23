@@ -113,6 +113,8 @@
 
     <string name="day_photo_thumbnail">Tagesfoto</string>
     <string name="day_photo_add">Foto hinzufügen</string>
+    <string name="day_photo_camera">Kamera</string>
+    <string name="day_photo_gallery">Aus Galerie wählen</string>
     <string name="day_photo_add_failed">Foto konnte nicht hinzugefügt werden.</string>
     <string name="day_photo_delete">Löschen</string>
 
@@ -186,5 +188,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.16 — Optionale 15-Min+-Haltspunkte (Einstellungen); Tippen für Dauer und Notiz.</string>
+    <string name="build_note">Version 1.1.17 — Fotos per Kamera oder Galerie hinzufügen.</string>
 </resources>

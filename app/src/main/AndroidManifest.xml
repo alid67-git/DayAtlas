@@ -20,6 +20,17 @@
     <uses-feature
         android:name="android.hardware.location.gps"
         android:required="false" />
+    <!-- Optional — day photos can also be picked from the gallery. -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!-- Android 11+ package visibility: detect a camera app for TakePicture. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
 
     <application
         android:name=".DayAtlasApp"

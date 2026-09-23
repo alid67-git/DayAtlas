@@ -113,6 +113,8 @@
 
     <string name="day_photo_thumbnail">दिन की फ़ोटो</string>
     <string name="day_photo_add">फ़ोटो जोड़ें</string>
+    <string name="day_photo_camera">कैमरा</string>
+    <string name="day_photo_gallery">गैलरी से चुनें</string>
     <string name="day_photo_add_failed">फ़ोटो नहीं जोड़ी जा सकी।</string>
     <string name="day_photo_delete">हटाएँ</string>
 
@@ -186,5 +188,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.16 — वैकल्पिक 15 मि+ रुकने के बिंदु (सेटिंग्स); अवधि और नोट के लिए टैप।</string>
+    <string name="build_note">संस्करण 1.1.17 — कैमरा या गैलरी से फ़ोटो जोड़ें।</string>
 </resources>
