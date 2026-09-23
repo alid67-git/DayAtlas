@@ -113,6 +113,8 @@
 
     <string name="day_photo_thumbnail">Day photo</string>
     <string name="day_photo_add">Add photo</string>
+    <string name="day_photo_camera">Camera</string>
+    <string name="day_photo_gallery">Choose from gallery</string>
     <string name="day_photo_add_failed">Could not add the photo.</string>
     <string name="day_photo_delete">Delete</string>
 
@@ -186,7 +188,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.16 — Optional 15 min+ stop markers (Settings); tap for duration and note.</string>
+    <string name="build_note">Version 1.1.17 — Add photos from camera or gallery.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

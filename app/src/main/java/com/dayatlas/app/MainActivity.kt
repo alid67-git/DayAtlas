@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dayatlas.app.data.DayNoteDialog
+import com.dayatlas.app.data.DayPhotoAdd
 import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
@@ -123,12 +124,26 @@ class MainActivity : DayAtlasActivity() {
         ActivityResultContracts.GetContent(),
     ) { uri ->
         if (uri == null) return@registerForActivityResult
-        val dateIso = DayTitle.iso(mapDate)
-        photoStore.addPhotoAsync(dateIso, uri, store) { ok ->
-            if (!ok) {
-                Toast.makeText(this, R.string.day_photo_add_failed, Toast.LENGTH_SHORT).show()
+        ingestPhoto(uri)
+    }
+
+    private var pendingCameraCapture: DayPhotoAdd.CaptureTarget? = null
+
+    private val takePhotoLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicture(),
+    ) { success ->
+        val capture = pendingCameraCapture
+        pendingCameraCapture = null
+        if (success && capture != null) {
+            photoStore.addPhotoAsync(DayTitle.iso(mapDate), capture.uri, store) { ok ->
+                capture.file.delete()
+                if (!ok) {
+                    Toast.makeText(this, R.string.day_photo_add_failed, Toast.LENGTH_SHORT).show()
+                }
+                refresh()
             }
-            refresh()
+        } else {
+            capture?.file?.delete()
         }
     }
 
@@ -248,7 +263,7 @@ class MainActivity : DayAtlasActivity() {
         binding.mapPhotosButton.setOnClickListener { onMapPhotosTap() }
         binding.mapPhotosButton.setOnLongClickListener {
             if (mapPhotos.size < PhotoStore.MAX_PHOTOS_PER_DAY) {
-                pickPhotoLauncher.launch("image/*")
+                promptAddPhoto()
                 true
             } else {
                 false
@@ -660,11 +675,32 @@ class MainActivity : DayAtlasActivity() {
     private fun onMapPhotosTap() {
         val dateIso = DayTitle.iso(mapDate)
         when {
-            mapPhotos.isEmpty() -> pickPhotoLauncher.launch("image/*")
+            mapPhotos.isEmpty() -> promptAddPhoto()
             else -> {
                 val name = mapPhotos.first()
                 PhotoViewerDialog.show(this, store, photoStore, dateIso, name) { refresh() }
             }
+        }
+    }
+
+    private fun promptAddPhoto() {
+        DayPhotoAdd.showSourceChooser(
+            activity = this,
+            onCamera = {
+                val capture = DayPhotoAdd.createCaptureTarget(this)
+                pendingCameraCapture = capture
+                takePhotoLauncher.launch(capture.uri)
+            },
+            onGallery = { pickPhotoLauncher.launch("image/*") },
+        )
+    }
+
+    private fun ingestPhoto(uri: Uri) {
+        photoStore.addPhotoAsync(DayTitle.iso(mapDate), uri, store) { ok ->
+            if (!ok) {
+                Toast.makeText(this, R.string.day_photo_add_failed, Toast.LENGTH_SHORT).show()
+            }
+            refresh()
         }
     }
 
