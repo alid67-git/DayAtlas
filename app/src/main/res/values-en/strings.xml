@@ -55,6 +55,9 @@
     <string name="dwell_stop_title">Stop</string>
     <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
     <string name="dwell_stop_hint">Optionally add a note or photo. If you dismiss without saving, the pin stays gray.</string>
+    <string name="point_note_title">Point</string>
+    <string name="point_note_summary">%1$s</string>
+    <string name="point_note_hint">Optionally add a note or photo for this point. Tap near the route.</string>
     <string name="dwell_stop_note_hint">Note for this stop (optional, up to 500 characters)</string>
     <string name="dwell_stop_photo">Stop photo</string>
     <string name="dwell_stop_photo_add">Add photo</string>
@@ -203,7 +206,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.19 — Owner-only usage stats; 15 min+ stops + camera/gallery.</string>
+    <string name="build_note">Version 1.1.20 — Tap any point on the route to add a note or photo.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

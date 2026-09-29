@@ -55,6 +55,9 @@
     <string name="dwell_stop_title">Halt</string>
     <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
     <string name="dwell_stop_hint">Optional Notiz oder Foto. Ohne Speichern bleibt der Punkt grau.</string>
+    <string name="point_note_title">Punkt</string>
+    <string name="point_note_summary">%1$s</string>
+    <string name="point_note_hint">Optional Notiz oder Foto für diesen Punkt. Tippen Sie nahe der Route.</string>
     <string name="dwell_stop_photo">Halt-Foto</string>
     <string name="dwell_stop_photo_add">Foto hinzufügen</string>
     <string name="dwell_stop_photo_change">Foto ändern</string>
@@ -196,5 +199,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.19 — Anonymer Nutzungszähler (Einstellungen); 15-Min+-Halte + Kamera.</string>
+    <string name="build_note">Version 1.1.20 — Tippen Sie auf einen Routenpunkt, um Notiz oder Foto hinzuzufügen.</string>
 </resources>

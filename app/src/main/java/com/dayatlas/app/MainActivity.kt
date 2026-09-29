@@ -22,16 +22,17 @@ import com.dayatlas.app.data.DayPhotoAdd
 import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
-import com.dayatlas.app.data.DwellStopDialog
 import com.dayatlas.app.data.DwellStops
 import com.dayatlas.app.data.Geo
 import com.dayatlas.app.data.JumpCleanupDialog
 import com.dayatlas.app.data.JumpFilter
 import com.dayatlas.app.data.PhotoStore
 import com.dayatlas.app.data.PhotoViewerDialog
+import com.dayatlas.app.data.PointNoteDialog
 import com.dayatlas.app.data.RangeStats
 import com.dayatlas.app.data.SpeedStats
 import com.dayatlas.app.data.TrackPoint
+import com.dayatlas.app.data.TrackPointLookup
 import com.dayatlas.app.billing.PromoCode
 import com.dayatlas.app.billing.SubscriptionManager
 import com.dayatlas.app.databinding.ActivityMainBinding
@@ -910,7 +911,7 @@ class MainActivity : DayAtlasActivity() {
                 ) { refresh(rebuildMap = true) }
             },
             onDwellTap = { stop ->
-                DwellStopDialog.show(
+                PointNoteDialog.showForDwell(
                     activity = this,
                     store = store,
                     photoStore = photoStore,
@@ -920,7 +921,43 @@ class MainActivity : DayAtlasActivity() {
                     onChanged = { refresh(rebuildMap = true) },
                 )
             },
+            onTrackPointTap = { point ->
+                openPointOrDwellNote(dateIso, points, dwellStops, point)
+            },
         )
+    }
+
+    private fun openPointOrDwellNote(
+        dateIso: String,
+        points: List<TrackPoint>,
+        dwellStops: List<DwellStops.Stop>,
+        point: TrackPoint,
+    ) {
+        val index = points.indexOfFirst {
+            it.timeMillis == point.timeMillis && it.lat == point.lat && it.lon == point.lon
+        }
+        val dwell = if (index >= 0) TrackPointLookup.dwellCovering(dwellStops, index) else null
+        if (dwell != null) {
+            PointNoteDialog.showForDwell(
+                activity = this,
+                store = store,
+                photoStore = photoStore,
+                dateIso = dateIso,
+                stop = dwell,
+                onAddPhoto = { promptAddPhoto(dwellKey = dwell.noteKey) },
+                onChanged = { refresh(rebuildMap = true) },
+            )
+        } else {
+            PointNoteDialog.showForPoint(
+                activity = this,
+                store = store,
+                photoStore = photoStore,
+                dateIso = dateIso,
+                point = point,
+                onAddPhoto = { promptAddPhoto(dwellKey = point.timeMillis) },
+                onChanged = { refresh(rebuildMap = true) },
+            )
+        }
     }
 
     private fun dayStatValues(

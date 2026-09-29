@@ -55,6 +55,9 @@
     <string name="dwell_stop_title">Arrêt</string>
     <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
     <string name="dwell_stop_hint">Note ou photo optionnelle. Sans enregistrement, le point reste gris.</string>
+    <string name="point_note_title">Point</string>
+    <string name="point_note_summary">%1$s</string>
+    <string name="point_note_hint">Ajoutez une note ou une photo pour ce point. Touchez près de l\'itinéraire.</string>
     <string name="dwell_stop_photo">Photo de l\'arrêt</string>
     <string name="dwell_stop_photo_add">Ajouter une photo</string>
     <string name="dwell_stop_photo_change">Changer la photo</string>
@@ -196,5 +199,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.19 — Compteur d\'usage anonyme (Réglages) ; arrêts 15 min+ + appareil photo.</string>
+    <string name="build_note">Version 1.1.20 — Touchez un point de l\'itinéraire pour ajouter une note ou une photo.</string>
 </resources>

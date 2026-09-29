@@ -55,6 +55,9 @@
     <string name="dwell_stop_title">Parada</string>
     <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
     <string name="dwell_stop_hint">Añada nota o foto opcional. Sin guardar, el punto sigue gris.</string>
+    <string name="point_note_title">Punto</string>
+    <string name="point_note_summary">%1$s</string>
+    <string name="point_note_hint">Añada una nota o foto opcional para este punto. Toque cerca de la ruta.</string>
     <string name="dwell_stop_photo">Foto de la parada</string>
     <string name="dwell_stop_photo_add">Añadir foto</string>
     <string name="dwell_stop_photo_change">Cambiar foto</string>
@@ -196,5 +199,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.19 — Contador de uso anónimo (Ajustes); paradas 15 min+ + cámara.</string>
+    <string name="build_note">Versión 1.1.20 — Toque cualquier punto de la ruta para añadir nota o foto.</string>
 </resources>

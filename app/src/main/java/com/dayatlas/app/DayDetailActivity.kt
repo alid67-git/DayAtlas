@@ -12,14 +12,16 @@ import com.dayatlas.app.data.DayNoteDialog
 import com.dayatlas.app.data.DayPhotoAdd
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
-import com.dayatlas.app.data.DwellStopDialog
 import com.dayatlas.app.data.DwellStops
 import com.dayatlas.app.data.Geo
 import com.dayatlas.app.data.JumpCleanupDialog
 import com.dayatlas.app.data.JumpFilter
 import com.dayatlas.app.data.PhotoStore
 import com.dayatlas.app.data.PhotoViewerDialog
+import com.dayatlas.app.data.PointNoteDialog
 import com.dayatlas.app.data.SpeedStats
+import com.dayatlas.app.data.TrackPoint
+import com.dayatlas.app.data.TrackPointLookup
 import com.dayatlas.app.databinding.ActivityDayDetailBinding
 import com.dayatlas.app.export.GpxExportDialog
 import com.dayatlas.app.prefs.AppPrefs
@@ -285,7 +287,7 @@ class DayDetailActivity : DayAtlasActivity() {
                 JumpCleanupDialog.confirmDelete(this, store, dateIso, jump) { refresh() }
             },
             onDwellTap = { stop ->
-                DwellStopDialog.show(
+                PointNoteDialog.showForDwell(
                     activity = this,
                     store = store,
                     photoStore = photoStore,
@@ -295,7 +297,42 @@ class DayDetailActivity : DayAtlasActivity() {
                     onChanged = { refresh() },
                 )
             },
+            onTrackPointTap = { point ->
+                openPointOrDwellNote(points, dwells, point)
+            },
         )
+    }
+
+    private fun openPointOrDwellNote(
+        points: List<TrackPoint>,
+        dwellStops: List<DwellStops.Stop>,
+        point: TrackPoint,
+    ) {
+        val index = points.indexOfFirst {
+            it.timeMillis == point.timeMillis && it.lat == point.lat && it.lon == point.lon
+        }
+        val dwell = if (index >= 0) TrackPointLookup.dwellCovering(dwellStops, index) else null
+        if (dwell != null) {
+            PointNoteDialog.showForDwell(
+                activity = this,
+                store = store,
+                photoStore = photoStore,
+                dateIso = dateIso,
+                stop = dwell,
+                onAddPhoto = { promptAddPhoto(dwellKey = dwell.noteKey) },
+                onChanged = { refresh() },
+            )
+        } else {
+            PointNoteDialog.showForPoint(
+                activity = this,
+                store = store,
+                photoStore = photoStore,
+                dateIso = dateIso,
+                point = point,
+                onAddPhoto = { promptAddPhoto(dwellKey = point.timeMillis) },
+                onChanged = { refresh() },
+            )
+        }
     }
 
     private fun formatGpsInterval(seconds: Int): String = when (seconds) {

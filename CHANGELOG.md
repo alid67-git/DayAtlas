@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.20 — 2026-09-29
+
+- **Nokta notu / foto:** Haritada rotaya (veya yakınına) dokununca o GPS
+  noktasına not ve fotoğraf eklenebilir; eklenenler teal işaretle görünür.
+
 ## 1.1.19 — 2026-09-29
 
 - **Kullanım sayısı (yalnızca sahip):** Anonim kurulum / bugün-aktif ping
