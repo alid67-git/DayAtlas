@@ -266,6 +266,14 @@ class AppPrefs(context: Context) {
         get() = prefs.getString(LAST_USAGE_PING_DAY, null)
         set(value) = prefs.edit().putString(LAST_USAGE_PING_DAY, value).apply()
 
+    /**
+     * Owner-only: when true, Settings shows anonymous usage counts.
+     * Unlocked via [com.dayatlas.app.usage.OwnerStatsGate], not Google login.
+     */
+    var ownerStatsUnlocked: Boolean
+        get() = prefs.getBoolean(OWNER_STATS_UNLOCKED, false)
+        set(value) = prefs.edit().putBoolean(OWNER_STATS_UNLOCKED, value).apply()
+
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
         const val DEFAULT_INTERVAL_SECONDS = 30
@@ -301,5 +309,6 @@ class AppPrefs(context: Context) {
         private const val INSTALL_ID = "install_id"
         private const val USAGE_INSTALL_COUNTED = "usage_install_counted"
         private const val LAST_USAGE_PING_DAY = "last_usage_ping_day"
+        private const val OWNER_STATS_UNLOCKED = "owner_stats_unlocked"
     }
 }

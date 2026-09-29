@@ -2,8 +2,9 @@
 
 ## 1.1.19 — 2026-09-29
 
-- **Kullanım sayısı:** Ayarlar’da anonim “kurulum” ve “bugün aktif”
-  sayaçları (konum/kimlik yok). Güncelleme için main’e merge + yeni APK.
+- **Kullanım sayısı (yalnızca sahip):** Anonim kurulum / bugün-aktif ping
+  herkeste çalışır; sayıları Ayarlar’da görmek için sürüm satırına 7 kez
+  dokunup sahip kodunu girmek gerekir. Google hesabı yok.
 
 ## 1.1.18 — 2026-09-29
 

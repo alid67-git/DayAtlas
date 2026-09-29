@@ -96,7 +96,14 @@
     <string name="current_version">Version %1$s</string>
     <string name="settings_usage_loading">Loading usage counts…</string>
     <string name="settings_usage_stats">Installs: %1$s · Active today: %2$s</string>
-    <string name="settings_usage_hint">Anonymous counter (no location or identity sent). Approximate installs and how many opened the app today.</string>
+    <string name="settings_usage_hint">Owner-only. Anonymous counter — no location or identity sent.</string>
+    <string name="owner_stats_title">Owner stats</string>
+    <string name="owner_stats_prompt">Enter the owner code to show usage counts on this phone.</string>
+    <string name="owner_stats_code_hint">Owner code</string>
+    <string name="owner_stats_unlocked">Stats unlocked.</string>
+    <string name="owner_stats_invalid">Invalid code.</string>
+    <string name="owner_stats_already_unlocked">Stats are already unlocked on this phone.</string>
+    <string name="owner_stats_lock">Hide</string>
     <string name="check_for_updates">Check for updates</string>
     <string name="checking_for_updates">Checking…</string>
     <string name="up_to_date">You are on the latest version.</string>
@@ -196,7 +203,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.19 — Anonymous usage counter (Settings); 15 min+ stops + camera/gallery.</string>
+    <string name="build_note">Version 1.1.19 — Owner-only usage stats; 15 min+ stops + camera/gallery.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

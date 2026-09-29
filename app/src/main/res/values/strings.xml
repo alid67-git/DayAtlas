@@ -96,7 +96,14 @@
     <string name="current_version">Sürüm %1$s</string>
     <string name="settings_usage_loading">Kullanım sayıları yükleniyor…</string>
     <string name="settings_usage_stats">Kurulum: %1$s · Bugün aktif: %2$s</string>
-    <string name="settings_usage_hint">Anonim sayaç (konum veya kimlik gönderilmez). Yaklaşık kaç kişinin yüklediğini / bugün açtığını gösterir.</string>
+    <string name="settings_usage_hint">Yalnızca sahibi görür. Anonim sayaç — konum veya kimlik gönderilmez.</string>
+    <string name="owner_stats_title">Sahip sayaçları</string>
+    <string name="owner_stats_prompt">Kullanım sayılarını bu telefonda göstermek için sahip kodunu girin.</string>
+    <string name="owner_stats_code_hint">Sahip kodu</string>
+    <string name="owner_stats_unlocked">Sayaçlar açıldı.</string>
+    <string name="owner_stats_invalid">Kod geçersiz.</string>
+    <string name="owner_stats_already_unlocked">Sayaçlar bu telefonda açık.</string>
+    <string name="owner_stats_lock">Gizle</string>
     <string name="check_for_updates">Güncellemeleri kontrol et</string>
     <string name="checking_for_updates">Kontrol ediliyor…</string>
     <string name="up_to_date">En güncel sürümdesiniz.</string>
@@ -206,5 +213,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.19 — Anonim kullanım sayacı (Ayarlar); 15 dk+ duruş + kamera/galeri.</string>
+    <string name="build_note">Sürüm 1.1.19 — Sahip kullanım sayacı; 15 dk+ duruş + kamera/galeri.</string>
 </resources>

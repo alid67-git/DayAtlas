@@ -249,22 +249,31 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="@color/md_theme_outline" />
 
-            <TextView
-                android:id="@+id/usageStatsLabel"
+            <LinearLayout
+                android:id="@+id/usageStatsBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="@color/md_theme_outline"
-                tools:text="Kurulum: 12 · Bugün aktif: 3" />
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/settings_usage_hint"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="@color/md_theme_outline" />
+                <TextView
+                    android:id="@+id/usageStatsLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="@color/md_theme_outline"
+                    tools:text="Kurulum: 12 · Bugün aktif: 3" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/settings_usage_hint"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="@color/md_theme_outline" />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/checkUpdates"
