@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dayatlas.app.data.DayNoteDialog
+import com.dayatlas.app.data.DayPhotoAdd
 import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
@@ -119,16 +120,31 @@ class MainActivity : DayAtlasActivity() {
         ActivityResultContracts.RequestPermission(),
     ) { continuePermissionChain() }
 
+    /** Non-null while attaching a photo to a dwell stop instead of the day strip. */
+    private var pendingDwellPhotoKey: Long? = null
+
     private val pickPhotoLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent(),
     ) { uri ->
-        if (uri == null) return@registerForActivityResult
-        val dateIso = DayTitle.iso(mapDate)
-        photoStore.addPhotoAsync(dateIso, uri, store) { ok ->
-            if (!ok) {
-                Toast.makeText(this, R.string.day_photo_add_failed, Toast.LENGTH_SHORT).show()
-            }
-            refresh()
+        if (uri == null) {
+            pendingDwellPhotoKey = null
+            return@registerForActivityResult
+        }
+        ingestPhoto(uri)
+    }
+
+    private var pendingCameraCapture: DayPhotoAdd.CaptureTarget? = null
+
+    private val takePhotoLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicture(),
+    ) { success ->
+        val capture = pendingCameraCapture
+        pendingCameraCapture = null
+        if (success && capture != null) {
+            ingestPhoto(capture.uri) { capture.file.delete() }
+        } else {
+            capture?.file?.delete()
+            pendingDwellPhotoKey = null
         }
     }
 
@@ -248,7 +264,7 @@ class MainActivity : DayAtlasActivity() {
         binding.mapPhotosButton.setOnClickListener { onMapPhotosTap() }
         binding.mapPhotosButton.setOnLongClickListener {
             if (mapPhotos.size < PhotoStore.MAX_PHOTOS_PER_DAY) {
-                pickPhotoLauncher.launch("image/*")
+                promptAddPhoto()
                 true
             } else {
                 false
@@ -643,7 +659,7 @@ class MainActivity : DayAtlasActivity() {
             DayTitle.formatDistance(record?.distanceMeters ?: Geo.pathLengthMeters(points))
         }
         binding.mapLastPoint.text = points.lastOrNull()?.let { point ->
-            Instant.ofEpochMilli(point.timeMillis)
+            Instant.ofEpochMilli(point.lastTimeMillis)
                 .atZone(ZoneId.systemDefault())
                 .toLocalTime()
                 .format(TIME_FMT)
@@ -660,10 +676,52 @@ class MainActivity : DayAtlasActivity() {
     private fun onMapPhotosTap() {
         val dateIso = DayTitle.iso(mapDate)
         when {
-            mapPhotos.isEmpty() -> pickPhotoLauncher.launch("image/*")
+            mapPhotos.isEmpty() -> promptAddPhoto()
             else -> {
                 val name = mapPhotos.first()
                 PhotoViewerDialog.show(this, store, photoStore, dateIso, name) { refresh() }
+            }
+        }
+    }
+
+    private fun promptAddPhoto(dwellKey: Long? = null) {
+        pendingDwellPhotoKey = dwellKey
+        DayPhotoAdd.showSourceChooser(
+            activity = this,
+            onCamera = {
+                val capture = DayPhotoAdd.createCaptureTarget(this)
+                pendingCameraCapture = capture
+                takePhotoLauncher.launch(capture.uri)
+            },
+            onGallery = { pickPhotoLauncher.launch("image/*") },
+        )
+    }
+
+    private fun ingestPhoto(uri: Uri, after: (() -> Unit)? = null) {
+        val dateIso = DayTitle.iso(mapDate)
+        val dwellKey = pendingDwellPhotoKey
+        pendingDwellPhotoKey = null
+        if (dwellKey != null) {
+            photoStore.importPhotoFileAsync(dateIso, uri) { name ->
+                after?.invoke()
+                if (name == null) {
+                    Toast.makeText(this, R.string.day_photo_add_failed, Toast.LENGTH_SHORT).show()
+                } else {
+                    val previous = store.load(dateIso)?.dwellPhotos?.get(dwellKey)
+                    if (previous != null && previous != name) {
+                        photoStore.deletePhotoFiles(dateIso, previous)
+                    }
+                    store.setDwellPhoto(dateIso, dwellKey, name)
+                }
+                refresh(rebuildMap = true)
+            }
+        } else {
+            photoStore.addPhotoAsync(dateIso, uri, store) { ok ->
+                after?.invoke()
+                if (!ok) {
+                    Toast.makeText(this, R.string.day_photo_add_failed, Toast.LENGTH_SHORT).show()
+                }
+                refresh()
             }
         }
     }
@@ -829,6 +887,10 @@ class MainActivity : DayAtlasActivity() {
         applyMapLabels(date, record, points, jumps)
         val dateIso = DayTitle.iso(date)
 
+        val activeDwellKeys = buildSet {
+            record?.dwellNotes?.keys?.let { addAll(it) }
+            record?.dwellPhotos?.keys?.let { addAll(it) }
+        }
         RouteMapController.show(
             map = binding.routeMap,
             context = this,
@@ -837,6 +899,7 @@ class MainActivity : DayAtlasActivity() {
             dateIso = dateIso,
             jumps = jumps,
             dwellStops = dwellStops,
+            activeDwellKeys = activeDwellKeys,
             fitCamera = fitCamera,
             onJumpTap = { jump ->
                 JumpCleanupDialog.confirmDelete(
@@ -847,9 +910,15 @@ class MainActivity : DayAtlasActivity() {
                 ) { refresh(rebuildMap = true) }
             },
             onDwellTap = { stop ->
-                DwellStopDialog.show(this, store, dateIso, stop) {
-                    refresh(rebuildMap = false)
-                }
+                DwellStopDialog.show(
+                    activity = this,
+                    store = store,
+                    photoStore = photoStore,
+                    dateIso = dateIso,
+                    stop = stop,
+                    onAddPhoto = { promptAddPhoto(dwellKey = stop.noteKey) },
+                    onChanged = { refresh(rebuildMap = true) },
+                )
             },
         )
     }
@@ -869,7 +938,7 @@ class MainActivity : DayAtlasActivity() {
             },
             DayStatKind.LAST_POINT to (
                 points.lastOrNull()?.let { point ->
-                    Instant.ofEpochMilli(point.timeMillis)
+                    Instant.ofEpochMilli(point.lastTimeMillis)
                         .atZone(ZoneId.systemDefault())
                         .toLocalTime()
                         .format(TIME_FMT)

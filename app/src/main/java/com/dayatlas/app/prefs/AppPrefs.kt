@@ -242,10 +242,10 @@ class AppPrefs(context: Context) {
 
     /**
      * When true, the day map draws markers for places stayed ≥15 minutes
-     * ([com.dayatlas.app.data.DwellStops]). Off by default — opt-in in Settings.
+     * ([com.dayatlas.app.data.DwellStops]). On by default.
      */
     var showDwellStops: Boolean
-        get() = prefs.getBoolean(SHOW_DWELL_STOPS, false)
+        get() = prefs.getBoolean(SHOW_DWELL_STOPS, true)
         set(value) = prefs.edit().putBoolean(SHOW_DWELL_STOPS, value).apply()
 
     companion object {

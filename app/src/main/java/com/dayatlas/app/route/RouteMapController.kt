@@ -57,6 +57,8 @@ object RouteMapController {
         jumps: List<JumpFilter.Jump> = JumpFilter.findJumps(points),
         onJumpTap: ((JumpFilter.Jump) -> Unit)? = null,
         dwellStops: List<DwellStops.Stop> = emptyList(),
+        /** Stops the user has annotated (note/photo) — drawn in the active color. */
+        activeDwellKeys: Set<Long> = emptySet(),
         onDwellTap: ((DwellStops.Stop) -> Unit)? = null,
         /** Live GPS updates should not animate zoom (causes blank flashes / ANR). */
         animateZoom: Boolean = false,
@@ -106,12 +108,16 @@ object RouteMapController {
         }
 
         dwellStops.forEach { stop ->
+            val active = stop.noteKey in activeDwellKeys
             val gp = GeoPoint(stop.lat, stop.lon)
             map.overlays.add(
                 Marker(map).apply {
                     position = gp
                     setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-                    icon = ContextCompat.getDrawable(context, R.drawable.ic_marker_dwell)
+                    icon = ContextCompat.getDrawable(
+                        context,
+                        if (active) R.drawable.ic_marker_dwell else R.drawable.ic_marker_dwell_passive,
+                    )
                     setInfoWindow(null)
                     if (onDwellTap != null) {
                         setOnMarkerClickListener { _, _ ->

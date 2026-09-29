@@ -60,9 +60,35 @@ class PhotoStore(context: Context) {
         }
     }
 
-    fun deletePhoto(dateIso: String, name: String, store: DayStore) {
+    /**
+     * Writes a downsized JPEG pair without touching [DayRecord.photos] — used
+     * for per-dwell stop photos. Returns the file name, or null on failure.
+     */
+    fun importPhotoFile(dateIso: String, sourceUri: Uri): String? {
+        val full = decodeSampled(sourceUri, FULL_MAX_DIMENSION) ?: return null
+        val name = "${System.currentTimeMillis()}.jpg"
+        writeJpeg(full, fullFile(dateIso, name), FULL_QUALITY)
+        val thumb = scaledDownTo(full, THUMB_MAX_DIMENSION)
+        writeJpeg(thumb, thumbFile(dateIso, name), THUMB_QUALITY)
+        if (thumb !== full) thumb.recycle()
+        full.recycle()
+        return name
+    }
+
+    fun importPhotoFileAsync(dateIso: String, sourceUri: Uri, onDone: (String?) -> Unit) {
+        io.execute {
+            val name = runCatching { importPhotoFile(dateIso, sourceUri) }.getOrNull()
+            main.post { onDone(name) }
+        }
+    }
+
+    fun deletePhotoFiles(dateIso: String, name: String) {
         fullFile(dateIso, name).delete()
         thumbFile(dateIso, name).delete()
+    }
+
+    fun deletePhoto(dateIso: String, name: String, store: DayStore) {
+        deletePhotoFiles(dateIso, name)
         val remaining = store.load(dateIso)?.photos.orEmpty() - name
         store.setPhotos(dateIso, remaining)
     }

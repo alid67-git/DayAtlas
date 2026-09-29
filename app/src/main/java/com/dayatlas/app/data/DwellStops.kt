@@ -4,9 +4,9 @@ package com.dayatlas.app.data
  * Finds places where the track stayed put for at least [MIN_DWELL_MILLIS].
  *
  * Clustering uses the same ~80 m radius as stationary GPS collapse
- * ([Geo.SAME_PLACE_RADIUS_M]): consecutive points within that radius of the
- * cluster's first fix belong to one stop. Pure logic — unit-tested; drawn
- * on the map only when the user enables it in Settings.
+ * ([Geo.SAME_PLACE_RADIUS_M]). A single collapsed pin still counts when its
+ * [TrackPoint.lastTimeMillis] − [TrackPoint.timeMillis] span is long enough
+ * (DayStore keeps arrival time while refreshing the same place).
  */
 object DwellStops {
     /** 15 minutes — short enough for a coffee stop, long enough to ignore traffic lights. */
@@ -26,9 +26,15 @@ object DwellStops {
         val durationMillis: Long
             get() = (endMillis - startMillis).coerceAtLeast(0L)
 
-        /** Stable key for optional per-stop notes in [DayRecord.dwellNotes]. */
+        /** Stable key for optional per-stop notes/photos in [DayRecord]. */
         val noteKey: Long
             get() = startMillis
+
+        fun isActive(record: DayRecord?): Boolean {
+            if (record == null) return false
+            return !record.dwellNotes[noteKey].isNullOrEmpty() ||
+                !record.dwellPhotos[noteKey].isNullOrEmpty()
+        }
     }
 
     fun find(
@@ -36,7 +42,7 @@ object DwellStops {
         minDwellMillis: Long = MIN_DWELL_MILLIS,
         radiusMeters: Double = Geo.SAME_PLACE_RADIUS_M,
     ): List<Stop> {
-        if (points.size < 2) return emptyList()
+        if (points.isEmpty()) return emptyList()
         val out = ArrayList<Stop>()
         var clusterStart = 0
         var sumLat = points[0].lat
@@ -44,17 +50,19 @@ object DwellStops {
         var count = 1
 
         fun flush(endExclusive: Int) {
-            if (endExclusive - clusterStart < 2) return
+            if (endExclusive <= clusterStart) return
             val first = points[clusterStart]
             val last = points[endExclusive - 1]
-            val duration = last.timeMillis - first.timeMillis
+            val start = first.timeMillis
+            val end = last.lastTimeMillis.coerceAtLeast(last.timeMillis)
+            val duration = end - start
             if (duration < minDwellMillis) return
             out.add(
                 Stop(
                     startIndex = clusterStart,
                     endIndex = endExclusive - 1,
-                    startMillis = first.timeMillis,
-                    endMillis = last.timeMillis,
+                    startMillis = start,
+                    endMillis = end,
                     lat = sumLat / count,
                     lon = sumLon / count,
                 ),

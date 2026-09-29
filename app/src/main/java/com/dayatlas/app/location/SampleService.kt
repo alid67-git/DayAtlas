@@ -91,7 +91,7 @@ class SampleService : Service() {
                                 dateIso = result.record.date,
                                 pointCount = result.record.checkCount,
                                 distanceMeters = result.record.distanceMeters,
-                                timeMillis = last.timeMillis,
+                                timeMillis = last.lastTimeMillis,
                                 lat = last.lat,
                                 lon = last.lon,
                                 geometryChanged = result.geometryChanged,

@@ -4,4 +4,6 @@
     <external-files-path name="apk" path="apk/" />
     <!-- cacheDir/exports - temporary GPX files shared via ACTION_SEND. -->
     <cache-path name="exports" path="exports/" />
+    <!-- cacheDir/camera - TakePicture output for day photo capture. -->
+    <cache-path name="camera" path="camera/" />
 </paths>
