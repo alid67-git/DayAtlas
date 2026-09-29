@@ -242,11 +242,37 @@ class AppPrefs(context: Context) {
 
     /**
      * When true, the day map draws markers for places stayed ≥15 minutes
-     * ([com.dayatlas.app.data.DwellStops]). Off by default — opt-in in Settings.
+     * ([com.dayatlas.app.data.DwellStops]). On by default.
      */
     var showDwellStops: Boolean
-        get() = prefs.getBoolean(SHOW_DWELL_STOPS, false)
+        get() = prefs.getBoolean(SHOW_DWELL_STOPS, true)
         set(value) = prefs.edit().putBoolean(SHOW_DWELL_STOPS, value).apply()
+
+    /**
+     * Anonymous local install id for usage pings — never uploaded; only used
+     * so we know this device already counted itself once.
+     */
+    var installId: String?
+        get() = prefs.getString(INSTALL_ID, null)
+        set(value) = prefs.edit().putString(INSTALL_ID, value).apply()
+
+    /** True after the one-time "installs" counter hit succeeded. */
+    var usageInstallCounted: Boolean
+        get() = prefs.getBoolean(USAGE_INSTALL_COUNTED, false)
+        set(value) = prefs.edit().putBoolean(USAGE_INSTALL_COUNTED, value).apply()
+
+    /** Local day (yyyy-MM-dd) of the last successful daily-active ping. */
+    var lastUsagePingDay: String?
+        get() = prefs.getString(LAST_USAGE_PING_DAY, null)
+        set(value) = prefs.edit().putString(LAST_USAGE_PING_DAY, value).apply()
+
+    /**
+     * Owner-only: when true, Settings shows anonymous usage counts.
+     * Unlocked via [com.dayatlas.app.usage.OwnerStatsGate], not Google login.
+     */
+    var ownerStatsUnlocked: Boolean
+        get() = prefs.getBoolean(OWNER_STATS_UNLOCKED, false)
+        set(value) = prefs.edit().putBoolean(OWNER_STATS_UNLOCKED, value).apply()
 
     companion object {
         /** Default / recommended: 1 minute — denser track than the old 5 min. */
@@ -280,5 +306,9 @@ class AppPrefs(context: Context) {
         private const val SUBSCRIPTION_LAST_VERIFIED = "subscription_last_verified_millis"
         private const val PROMO_UNLOCK_EXPIRES_AT = "promo_unlock_expires_at_millis"
         private const val SHOW_DWELL_STOPS = "show_dwell_stops"
+        private const val INSTALL_ID = "install_id"
+        private const val USAGE_INSTALL_COUNTED = "usage_install_counted"
+        private const val LAST_USAGE_PING_DAY = "last_usage_ping_day"
+        private const val OWNER_STATS_UNLOCKED = "owner_stats_unlocked"
     }
 }

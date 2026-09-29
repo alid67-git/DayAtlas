@@ -82,12 +82,20 @@ permission it needs, are both completely absent from the Google Play
 version of DayAtlas</strong> — the Play version is updated only through the
 Play Store, as required by Play policy.</p>
 
+<h2>Anonymous usage counters (sideload)</h2>
+<p>The GitHub sideload build may increment a public, anonymous counter once
+per install and once per day when the app is opened. This tells the
+developer roughly how many people installed or opened the app. No GPS
+points, notes, photos, account, or device identifier are sent — only a
++1 to a shared count. The in-app display of those numbers is gated behind
+an owner unlock and is not shown to ordinary users.</p>
+
 <h2>What DayAtlas does not do</h2>
 <ul>
   <li>No advertising or ad-tracking SDK</li>
-  <li>No analytics or crash-reporting SDK</li>
+  <li>No crash-reporting SDK</li>
   <li>No account, sign-in, or user profile</li>
-  <li>No selling or sharing of your data with third parties</li>
+  <li>No selling or sharing of your personal data with third parties</li>
   <li>No location or file data collected while tracking is off</li>
 </ul>
 
@@ -100,7 +108,7 @@ Play Store, as required by Play policy.</p>
   <tr><td>Ignore battery optimizations</td><td>Lets the sampling alarm run reliably in Doze mode</td></tr>
   <tr><td>Schedule exact alarms</td><td>Keeps short (30s–5min) sampling intervals accurate</td></tr>
   <tr><td>Boot / package-replaced receiver</td><td>Resumes daily mode after a restart or app update</td></tr>
-  <tr><td>Internet</td><td>Map tiles, optional backup folder, and (sideload only) update checks</td></tr>
+  <tr><td>Internet</td><td>Map tiles, optional backup folder, (sideload only) update checks, and anonymous usage counters</td></tr>
 </table>
 
 <h2>Deleting your data</h2>

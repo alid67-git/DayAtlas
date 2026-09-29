@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.1.19 — 2026-09-29
+
+- **Kullanım sayısı (yalnızca sahip):** Anonim kurulum / bugün-aktif ping
+  herkeste çalışır; sayıları Ayarlar’da görmek için sürüm satırına 7 kez
+  dokunup sahip kodunu girmek gerekir. Google hesabı yok.
+
+## 1.1.18 — 2026-09-29
+
+- **15 dk+ duruşlar gerçekten çalışır:** Aynı yerde GPS birleşince varış
+  zamanı artık korunuyor; haritada gri (pasif) / mavi (not veya foto var)
+  noktalar. Dokununca süre, not ve fotoğraf eklenir. Ayar varsayılanı açık.
+- **Fotoğraf ekleme:** Kamera veya galeri (gün fotoğrafı ve duruş).
+
+## 1.1.17 — 2026-09-23
+
+- **Fotoğraf ekleme:** Kamera veya galeri seçilebilir (önceden yalnızca
+  galeri).
+
 ## 1.1.16 — 2026-09-22
 
 - **15 dk+ duruş noktaları (opsiyonel):** Ayarlardan açılınca haritada

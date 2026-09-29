@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -19,10 +20,14 @@ import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
+import com.dayatlas.app.usage.OwnerStatsGate
+import com.dayatlas.app.usage.UsageReporter
 
 class SettingsActivity : DayAtlasActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var prefs: AppPrefs
+    private var versionTapCount = 0
+    private var versionTapResetAt = 0L
 
     private val pickDriveFolder = registerForActivityResult(
         ActivityResultContracts.OpenDocumentTree(),
@@ -141,6 +146,11 @@ class SettingsActivity : DayAtlasActivity() {
         refreshDriveUi()
 
         binding.versionLabel.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
+        // Usage pings still run for everyone; the numbers stay hidden unless
+        // the owner unlocks them (version label ×7 + secret code).
+        UsageReporter.maybePing(prefs)
+        refreshOwnerUsageUi()
+        binding.versionLabel.setOnClickListener { onVersionLabelTapped() }
         if (BuildConfig.SELF_UPDATE_ENABLED) {
             binding.checkUpdates.setOnClickListener {
                 Toast.makeText(this, R.string.checking_for_updates, Toast.LENGTH_SHORT).show()
@@ -223,6 +233,60 @@ class SettingsActivity : DayAtlasActivity() {
             binding.gpsRateLabel.text =
                 getString(R.string.gps_check_rate, options[position].second)
         }
+    }
+
+    private fun refreshOwnerUsageUi() {
+        if (!OwnerStatsGate.isUnlocked(this)) {
+            binding.usageStatsBlock.visibility = View.GONE
+            return
+        }
+        binding.usageStatsBlock.visibility = View.VISIBLE
+        binding.usageStatsLabel.text = getString(R.string.settings_usage_loading)
+        UsageReporter.fetchStats { stats ->
+            if (isFinishing) return@fetchStats
+            val installs = stats.installs?.toString() ?: getString(R.string.em_dash)
+            val active = stats.activeToday?.toString() ?: getString(R.string.em_dash)
+            binding.usageStatsLabel.text = getString(R.string.settings_usage_stats, installs, active)
+        }
+    }
+
+    private fun onVersionLabelTapped() {
+        val now = System.currentTimeMillis()
+        if (now > versionTapResetAt) versionTapCount = 0
+        versionTapResetAt = now + 2_500L
+        versionTapCount++
+        if (versionTapCount < 7) return
+        versionTapCount = 0
+        if (OwnerStatsGate.isUnlocked(this)) {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.owner_stats_title)
+                .setMessage(R.string.owner_stats_already_unlocked)
+                .setPositiveButton(R.string.ok, null)
+                .setNeutralButton(R.string.owner_stats_lock) { _, _ ->
+                    OwnerStatsGate.lock(this)
+                    refreshOwnerUsageUi()
+                }
+                .show()
+            return
+        }
+        val input = EditText(this).apply {
+            hint = getString(R.string.owner_stats_code_hint)
+            setSingleLine()
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.owner_stats_title)
+            .setMessage(R.string.owner_stats_prompt)
+            .setView(input)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                if (OwnerStatsGate.unlock(this, input.text?.toString().orEmpty())) {
+                    Toast.makeText(this, R.string.owner_stats_unlocked, Toast.LENGTH_SHORT).show()
+                    refreshOwnerUsageUi()
+                } else {
+                    Toast.makeText(this, R.string.owner_stats_invalid, Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton(R.string.export_cancel, null)
+            .show()
     }
 
     private fun refreshDriveUi() {

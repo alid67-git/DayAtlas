@@ -7,6 +7,7 @@ import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.update.UpdateCheckRunner
 import com.dayatlas.app.update.UpdateCheckScheduler
+import com.dayatlas.app.usage.UsageReporter
 import java.io.File
 import org.osmdroid.config.Configuration
 
@@ -23,6 +24,8 @@ class DayAtlasApp : Application() {
         UpdateCheckScheduler.ensureScheduled(this)
         // If midday was missed (phone off at noon), catch up once today.
         UpdateCheckRunner.maybeCheckAndDownload(this, prefs, requirePastMidday = true)
+        // Anonymous install / daily-active ping (no location or identity).
+        UsageReporter.maybePing(prefs)
     }
 
     /**

@@ -34,6 +34,13 @@ object DayJson {
             }
             root.put("dwellNotes", notes)
         }
+        if (record.dwellPhotos.isNotEmpty()) {
+            val photos = JSONObject()
+            record.dwellPhotos.forEach { (key, value) ->
+                photos.put(key.toString(), value)
+            }
+            root.put("dwellPhotos", photos)
+        }
         val points = JSONArray()
         record.points.forEach { p ->
             val o = JSONObject()
@@ -42,6 +49,9 @@ object DayJson {
                 .put("lon", p.lon)
             if (p.accuracyMeters != null) {
                 o.put("acc", p.accuracyMeters.toDouble())
+            }
+            if (p.lastTimeMillis != p.timeMillis) {
+                o.put("lt", p.lastTimeMillis)
             }
             points.put(o)
         }
@@ -73,16 +83,30 @@ object DayJson {
         } else {
             emptyMap()
         }
+        val dwellPhotosObj = root.optJSONObject("dwellPhotos")
+        val dwellPhotos = if (dwellPhotosObj != null) {
+            buildMap {
+                dwellPhotosObj.keys().forEach { key ->
+                    val millis = key.toLongOrNull() ?: return@forEach
+                    val name = dwellPhotosObj.optString(key, "").trim()
+                    if (name.isNotEmpty()) put(millis, name)
+                }
+            }
+        } else {
+            emptyMap()
+        }
         val arr = root.optJSONArray("points") ?: JSONArray()
         val points = ArrayList<TrackPoint>(arr.length())
         for (i in 0 until arr.length()) {
             val o = arr.getJSONObject(i)
+            val t = o.getLong("t")
             points.add(
                 TrackPoint(
-                    timeMillis = o.getLong("t"),
+                    timeMillis = t,
                     lat = o.getDouble("lat"),
                     lon = o.getDouble("lon"),
                     accuracyMeters = if (o.has("acc")) o.getDouble("acc").toFloat() else null,
+                    lastTimeMillis = if (o.has("lt")) o.getLong("lt") else t,
                 ),
             )
         }
@@ -103,6 +127,7 @@ object DayJson {
             photos = photos,
             gpsCheckCount = gpsCheckCount,
             dwellNotes = dwellNotes,
+            dwellPhotos = dwellPhotos,
         )
     }
 
@@ -129,7 +154,8 @@ object DayJson {
             it.points.isNotEmpty() ||
                 !it.note.isNullOrEmpty() ||
                 it.photos.isNotEmpty() ||
-                it.dwellNotes.isNotEmpty()
+                it.dwellNotes.isNotEmpty() ||
+                it.dwellPhotos.isNotEmpty()
         }
         val sb = StringBuilder()
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")

@@ -151,8 +151,10 @@ class DayStore(context: Context) {
         if (last != null) {
             val drift = Geo.haversineMeters(last.lat, last.lon, point.lat, point.lon)
             if (drift < Geo.SAME_PLACE_RADIUS_M) {
+                // Keep arrival [TrackPoint.timeMillis]; only advance last seen
+                // so ≥15 min dwells are still detectable after pin collapse.
                 val refreshed = last.copy(
-                    timeMillis = point.timeMillis,
+                    lastTimeMillis = point.timeMillis.coerceAtLeast(last.lastTimeMillis),
                     accuracyMeters = point.accuracyMeters ?: last.accuracyMeters,
                 )
                 val points = existing.points.dropLast(1) + refreshed
@@ -198,7 +200,8 @@ class DayStore(context: Context) {
             // silently take them with it.
             if (existing.note.isNullOrEmpty() &&
                 existing.photos.isEmpty() &&
-                existing.dwellNotes.isEmpty()
+                existing.dwellNotes.isEmpty() &&
+                existing.dwellPhotos.isEmpty()
             ) {
                 jsonFile(dateIso).delete()
                 gpxFile(dateIso).delete()
@@ -263,6 +266,31 @@ class DayStore(context: Context) {
         updated
     }
 
+    /**
+     * Sets or clears the optional photo for one dwell stop. Pass null to clear
+     * the association (caller deletes the file via [PhotoStore] if needed).
+     */
+    fun setDwellPhoto(dateIso: String, noteKey: Long, photoName: String?): DayRecord = lock.withLock {
+        val existing = loadUnlocked(dateIso)
+            ?: DayRecord.empty(dateIso, DayTitle.format(LocalDate.parse(dateIso)))
+        val photos = existing.dwellPhotos.toMutableMap()
+        val trimmed = photoName?.trim()?.ifEmpty { null }
+        if (trimmed == null) {
+            photos.remove(noteKey)
+        } else {
+            photos[noteKey] = trimmed
+        }
+        val updated = existing.copy(dwellPhotos = photos)
+        if (isEmptyShell(updated)) {
+            jsonFile(dateIso).delete()
+            gpxFile(dateIso).delete()
+            if (memoryToday?.date == dateIso) memoryToday = null
+            return@withLock updated
+        }
+        persistUnlocked(updated, writeGpx = shouldWriteGpx(updated))
+        updated
+    }
+
     /** Replaces this day's photo file-name list (see [PhotoStore]) after an add/delete. */
     fun setPhotos(dateIso: String, photos: List<String>): DayRecord = lock.withLock {
         val existing = loadUnlocked(dateIso)
@@ -282,13 +310,15 @@ class DayStore(context: Context) {
         record.points.isEmpty() &&
             record.note.isNullOrEmpty() &&
             record.photos.isEmpty() &&
-            record.dwellNotes.isEmpty()
+            record.dwellNotes.isEmpty() &&
+            record.dwellPhotos.isEmpty()
 
     private fun shouldWriteGpx(record: DayRecord): Boolean =
         record.points.isNotEmpty() ||
             !record.note.isNullOrEmpty() ||
             record.photos.isNotEmpty() ||
-            record.dwellNotes.isNotEmpty()
+            record.dwellNotes.isNotEmpty() ||
+            record.dwellPhotos.isNotEmpty()
 
     private fun loadUnlocked(dateIso: String): DayRecord? {
         memoryToday?.takeIf { it.date == dateIso }?.let { return it }

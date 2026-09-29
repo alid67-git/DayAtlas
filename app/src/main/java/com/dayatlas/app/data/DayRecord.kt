@@ -1,10 +1,17 @@
 package com.dayatlas.app.data
 
 data class TrackPoint(
+    /** First time this pin was seen (arrival). */
     val timeMillis: Long,
     val lat: Double,
     val lon: Double,
     val accuracyMeters: Float?,
+    /**
+     * Last same-place GPS refresh at this pin. Equals [timeMillis] until the
+     * user sits still and DayStore refreshes the pin without adding a new one.
+     * Used by [DwellStops] so collapsed stays still yield a duration.
+     */
+    val lastTimeMillis: Long = timeMillis,
 )
 
 data class DayRecord(
@@ -32,6 +39,11 @@ data class DayRecord(
      * epoch millis ([DwellStops.Stop.noteKey]). Empty for older day files.
      */
     val dwellNotes: Map<Long, String> = emptyMap(),
+    /**
+     * Optional photo file name per dwell stop (under `filesDir/photos/<date>/`),
+     * keyed like [dwellNotes].
+     */
+    val dwellPhotos: Map<Long, String> = emptyMap(),
 ) {
     /** Value shown as "GPS kontrol / nokta sayısı" in the UI. */
     val checkCount: Int

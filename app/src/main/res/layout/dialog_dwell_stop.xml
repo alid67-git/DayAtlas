@@ -16,6 +16,14 @@
         android:textAppearance="?attr/textAppearanceBodyMedium"
         android:textColor="@color/md_theme_on_surface" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/dwell_stop_hint"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="@color/md_theme_outline" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,4 +42,23 @@
             android:maxLines="6"
             android:maxLength="500" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/dwellPhotoPreview"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginTop="12dp"
+        android:adjustViewBounds="true"
+        android:background="@color/md_theme_card"
+        android:contentDescription="@string/dwell_stop_photo"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dwellPhotoButton"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/dwell_stop_photo_add" />
 </LinearLayout>

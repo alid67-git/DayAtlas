@@ -51,10 +51,15 @@
     <string name="settings_interval">Örnekleme aralığı</string>
     <string name="settings_interval_hint">Aynı yerde (~80 m) art arda 3 ölçüm olunca aralık bir üst kademeye seyreltilir (ör. 30 sn → 1 dk; en fazla 1 dk). Gerçek hareket olunca seçtiğiniz aralığa döner — ev GPS titreşimi hızı yeniden sıkılaştırmaz.</string>
     <string name="settings_dwell_stops">15 dk+ duruş noktaları</string>
-    <string name="settings_dwell_stops_summary">Açıkken haritada 15 dakikadan uzun kaldığınız yerlere nokta konur. Dokununca süre ve isteğe bağlı not görünür.</string>
+    <string name="settings_dwell_stops_summary">Açıkken 15 dakikadan uzun kaldığınız yerler haritada görünür (gri = henüz not/foto yok; mavi = eklendi). Dokunarak süre, not ve fotoğraf ekleyebilirsiniz.</string>
     <string name="dwell_stop_title">Duruş</string>
     <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
+    <string name="dwell_stop_hint">İsteğe bağlı not veya fotoğraf ekleyin. Kaydetmeden kapatırsanız nokta gri kalır.</string>
     <string name="dwell_stop_note_hint">Bu duruş için not (isteğe bağlı, en fazla 500 karakter)</string>
+    <string name="dwell_stop_photo">Duruş fotoğrafı</string>
+    <string name="dwell_stop_photo_add">Fotoğraf ekle</string>
+    <string name="dwell_stop_photo_change">Fotoğrafı değiştir</string>
+    <string name="dwell_stop_clear">Temizle</string>
     <string name="interval_10s">10 saniye</string>
     <string name="interval_20s">20 saniye</string>
     <string name="interval_30s">30 saniye (önerilen)</string>
@@ -89,6 +94,16 @@
     <string name="update_install_permission_needed">DayAtlas\'ın güncelleme kurabilmesi için "Bilinmeyen uygulamalar yükle" iznine ihtiyacı var. Açılan ekrandan izin verin, sonra tekrar deneyin.</string>
     <string name="settings_update">Güncelleme</string>
     <string name="current_version">Sürüm %1$s</string>
+    <string name="settings_usage_loading">Kullanım sayıları yükleniyor…</string>
+    <string name="settings_usage_stats">Kurulum: %1$s · Bugün aktif: %2$s</string>
+    <string name="settings_usage_hint">Yalnızca sahibi görür. Anonim sayaç — konum veya kimlik gönderilmez.</string>
+    <string name="owner_stats_title">Sahip sayaçları</string>
+    <string name="owner_stats_prompt">Kullanım sayılarını bu telefonda göstermek için sahip kodunu girin.</string>
+    <string name="owner_stats_code_hint">Sahip kodu</string>
+    <string name="owner_stats_unlocked">Sayaçlar açıldı.</string>
+    <string name="owner_stats_invalid">Kod geçersiz.</string>
+    <string name="owner_stats_already_unlocked">Sayaçlar bu telefonda açık.</string>
+    <string name="owner_stats_lock">Gizle</string>
     <string name="check_for_updates">Güncellemeleri kontrol et</string>
     <string name="checking_for_updates">Kontrol ediliyor…</string>
     <string name="up_to_date">En güncel sürümdesiniz.</string>
@@ -113,6 +128,8 @@
 
     <string name="day_photo_thumbnail">Gün fotoğrafı</string>
     <string name="day_photo_add">Fotoğraf ekle</string>
+    <string name="day_photo_camera">Kamera</string>
+    <string name="day_photo_gallery">Galeriden seç</string>
     <string name="day_photo_add_failed">Fotoğraf eklenemedi.</string>
     <string name="day_photo_delete">Sil</string>
 
@@ -196,5 +213,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.16 — İsteğe bağlı 15 dk+ duruş noktaları (Ayarlar); dokununca süre ve not.</string>
+    <string name="build_note">Sürüm 1.1.19 — Sahip kullanım sayacı; 15 dk+ duruş + kamera/galeri.</string>
 </resources>
