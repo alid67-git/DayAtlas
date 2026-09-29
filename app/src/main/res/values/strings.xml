@@ -55,6 +55,9 @@
     <string name="dwell_stop_title">Duruş</string>
     <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
     <string name="dwell_stop_hint">İsteğe bağlı not veya fotoğraf ekleyin. Kaydetmeden kapatırsanız nokta gri kalır.</string>
+    <string name="point_note_title">Nokta</string>
+    <string name="point_note_summary">%1$s</string>
+    <string name="point_note_hint">Bu nokta için isteğe bağlı not veya fotoğraf ekleyin. Rotaya yakın dokunun.</string>
     <string name="dwell_stop_note_hint">Bu duruş için not (isteğe bağlı, en fazla 500 karakter)</string>
     <string name="dwell_stop_photo">Duruş fotoğrafı</string>
     <string name="dwell_stop_photo_add">Fotoğraf ekle</string>
@@ -213,5 +216,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.19 — Sahip kullanım sayacı; 15 dk+ duruş + kamera/galeri.</string>
+    <string name="build_note">Sürüm 1.1.20 — Rotadaki herhangi bir noktaya dokunup not/foto ekleyin.</string>
 </resources>

@@ -55,6 +55,9 @@
     <string name="dwell_stop_title">रुकना</string>
     <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
     <string name="dwell_stop_hint">वैकल्पिक नोट या फ़ोटो। बिना सेव किए बिंदु धूसर रहता है।</string>
+    <string name="point_note_title">बिंदु</string>
+    <string name="point_note_summary">%1$s</string>
+    <string name="point_note_hint">इस बिंदु के लिए वैकल्पिक नोट या फ़ोटो जोड़ें। मार्ग के पास टैप करें।</string>
     <string name="dwell_stop_photo">रुकने की फ़ोटो</string>
     <string name="dwell_stop_photo_add">फ़ोटो जोड़ें</string>
     <string name="dwell_stop_photo_change">फ़ोटो बदलें</string>
@@ -196,5 +199,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.19 — अनाम उपयोग काउंटर (सेटिंग्स); 15 मि+ रुकना + कैमरा।</string>
+    <string name="build_note">संस्करण 1.1.20 — नोट या फ़ोटो जोड़ने के लिए मार्ग के किसी भी बिंदु पर टैप करें।</string>
 </resources>

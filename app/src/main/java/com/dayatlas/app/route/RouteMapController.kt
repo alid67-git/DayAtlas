@@ -8,9 +8,12 @@ import com.dayatlas.app.R
 import com.dayatlas.app.data.DwellStops
 import com.dayatlas.app.data.JumpFilter
 import com.dayatlas.app.data.TrackPoint
+import com.dayatlas.app.data.TrackPointLookup
+import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import java.lang.ref.WeakReference
@@ -60,6 +63,8 @@ object RouteMapController {
         /** Stops the user has annotated (note/photo) — drawn in the active color. */
         activeDwellKeys: Set<Long> = emptySet(),
         onDwellTap: ((DwellStops.Stop) -> Unit)? = null,
+        /** Tap near any track point (route or map) to add note/photo. */
+        onTrackPointTap: ((TrackPoint) -> Unit)? = null,
         /** Live GPS updates should not animate zoom (causes blank flashes / ANR). */
         animateZoom: Boolean = false,
         fitCamera: Boolean = true,
@@ -78,6 +83,17 @@ object RouteMapController {
             setPoints(geoPoints)
             outlinePaint.color = Color.parseColor("#0F766E")
             outlinePaint.strokeWidth = 8f
+            if (onTrackPointTap != null) {
+                setOnClickListener { _, _, eventPos ->
+                    val hit = TrackPointLookup.nearest(
+                        points,
+                        eventPos.latitude,
+                        eventPos.longitude,
+                    ) ?: return@setOnClickListener false
+                    onTrackPointTap(hit.point)
+                    true
+                }
+            }
         }
         map.overlays.add(poly)
         map.overlays.add(marker(map, context, geoPoints.first(), R.drawable.ic_marker_start))
@@ -87,6 +103,23 @@ object RouteMapController {
             }
         } else {
             null
+        }
+
+        if (onTrackPointTap != null) {
+            map.overlays.add(
+                MapEventsOverlay(
+                    object : MapEventsReceiver {
+                        override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
+                            val hit = TrackPointLookup.nearest(points, p.latitude, p.longitude)
+                                ?: return false
+                            onTrackPointTap(hit.point)
+                            return true
+                        }
+
+                        override fun longPressHelper(p: GeoPoint): Boolean = false
+                    },
+                ),
+            )
         }
 
         jumps.forEach { jump ->
@@ -107,6 +140,7 @@ object RouteMapController {
             )
         }
 
+        val dwellKeys = dwellStops.map { it.noteKey }.toSet()
         dwellStops.forEach { stop ->
             val active = stop.noteKey in activeDwellKeys
             val gp = GeoPoint(stop.lat, stop.lon)
@@ -127,6 +161,30 @@ object RouteMapController {
                     }
                 },
             )
+        }
+
+        // Annotated points that are not already covered by a dwell marker.
+        if (activeDwellKeys.isNotEmpty()) {
+            val byArrival = points.associateBy { it.timeMillis }
+            activeDwellKeys.forEach { key ->
+                if (key in dwellKeys) return@forEach
+                val point = byArrival[key] ?: return@forEach
+                val gp = GeoPoint(point.lat, point.lon)
+                map.overlays.add(
+                    Marker(map).apply {
+                        position = gp
+                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                        icon = ContextCompat.getDrawable(context, R.drawable.ic_marker_note)
+                        setInfoWindow(null)
+                        if (onTrackPointTap != null) {
+                            setOnMarkerClickListener { _, _ ->
+                                onTrackPointTap(point)
+                                true
+                            }
+                        }
+                    },
+                )
+            }
         }
 
         boundMap = WeakReference(map)

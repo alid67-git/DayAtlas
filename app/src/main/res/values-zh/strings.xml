@@ -55,6 +55,9 @@
     <string name="dwell_stop_title">停留</string>
     <string name="dwell_stop_summary">%1$s – %2$s · %3$s</string>
     <string name="dwell_stop_hint">可添加备注或照片。不保存则保持灰色标记。</string>
+    <string name="point_note_title">地点</string>
+    <string name="point_note_summary">%1$s</string>
+    <string name="point_note_hint">可为该点添加备注或照片。请点击路线附近。</string>
     <string name="dwell_stop_photo">停留照片</string>
     <string name="dwell_stop_photo_add">添加照片</string>
     <string name="dwell_stop_photo_change">更换照片</string>
@@ -196,5 +199,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.19 — 匿名使用计数（设置）；15 分钟停留 + 相机。</string>
+    <string name="build_note">版本 1.1.20 — 点击路线上任意点即可添加备注或照片。</string>
 </resources>
