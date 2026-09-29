@@ -94,6 +94,9 @@
     <string name="update_install_permission_needed">يحتاج DayAtlas إلى إذن «تثبيت التطبيقات غير المعروفة» لتثبيت التحديثات. يُرجى السماح به في الشاشة التالية، ثم المحاولة مرة أخرى.</string>
     <string name="settings_update">التحديث</string>
     <string name="current_version">الإصدار %1$s</string>
+    <string name="settings_usage_loading">جارٍ تحميل أعداد الاستخدام…</string>
+    <string name="settings_usage_stats">التثبيتات: %1$s · النشطون اليوم: %2$s</string>
+    <string name="settings_usage_hint">عداد مجهول (بدون موقع أو هوية). تقدير للتثبيتات ومن فتح التطبيق اليوم.</string>
     <string name="check_for_updates">التحقق من التحديثات</string>
     <string name="checking_for_updates">جارٍ التحقق…</string>
     <string name="up_to_date">أنت تستخدم أحدث إصدار.</string>
@@ -193,5 +196,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.18 — توقفات 15 د+ على الخريطة (رمادي/أزرق)؛ اضغط للملاحظة والصورة.</string>
+    <string name="build_note">الإصدار 1.1.19 — عداد استخدام مجهول (الإعدادات)؛ توقفات 15 د+ والكاميرا.</string>
 </resources>

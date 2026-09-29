@@ -94,6 +94,9 @@
     <string name="update_install_permission_needed">DayAtlas\'ın güncelleme kurabilmesi için "Bilinmeyen uygulamalar yükle" iznine ihtiyacı var. Açılan ekrandan izin verin, sonra tekrar deneyin.</string>
     <string name="settings_update">Güncelleme</string>
     <string name="current_version">Sürüm %1$s</string>
+    <string name="settings_usage_loading">Kullanım sayıları yükleniyor…</string>
+    <string name="settings_usage_stats">Kurulum: %1$s · Bugün aktif: %2$s</string>
+    <string name="settings_usage_hint">Anonim sayaç (konum veya kimlik gönderilmez). Yaklaşık kaç kişinin yüklediğini / bugün açtığını gösterir.</string>
     <string name="check_for_updates">Güncellemeleri kontrol et</string>
     <string name="checking_for_updates">Kontrol ediliyor…</string>
     <string name="up_to_date">En güncel sürümdesiniz.</string>
@@ -203,5 +206,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.18 — 15 dk+ duruşlar haritada (gri/mavi); dokununca not ve foto. Kamera/galeri.</string>
+    <string name="build_note">Sürüm 1.1.19 — Anonim kullanım sayacı (Ayarlar); 15 dk+ duruş + kamera/galeri.</string>
 </resources>

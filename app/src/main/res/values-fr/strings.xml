@@ -94,6 +94,9 @@
     <string name="update_install_permission_needed">DayAtlas a besoin de l\'autorisation « Installer des applications inconnues » pour installer les mises à jour. Accordez-la sur l\'écran suivant, puis réessayez.</string>
     <string name="settings_update">Mise à jour</string>
     <string name="current_version">Version %1$s</string>
+    <string name="settings_usage_loading">Chargement des statistiques…</string>
+    <string name="settings_usage_stats">Installations : %1$s · Actifs aujourd\'hui : %2$s</string>
+    <string name="settings_usage_hint">Compteur anonyme (ni position ni identité). Installations et ouvertures du jour approximatives.</string>
     <string name="check_for_updates">Vérifier les mises à jour</string>
     <string name="checking_for_updates">Vérification…</string>
     <string name="up_to_date">Vous avez la dernière version.</string>
@@ -193,5 +196,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.18 — Arrêts 15 min+ sur la carte (gris/bleu) ; toucher pour note et photo.</string>
+    <string name="build_note">Version 1.1.19 — Compteur d\'usage anonyme (Réglages) ; arrêts 15 min+ + appareil photo.</string>
 </resources>

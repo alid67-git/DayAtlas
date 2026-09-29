@@ -19,6 +19,7 @@ import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
+import com.dayatlas.app.usage.UsageReporter
 
 class SettingsActivity : DayAtlasActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -141,6 +142,14 @@ class SettingsActivity : DayAtlasActivity() {
         refreshDriveUi()
 
         binding.versionLabel.text = getString(R.string.current_version, BuildConfig.VERSION_NAME)
+        binding.usageStatsLabel.text = getString(R.string.settings_usage_loading)
+        UsageReporter.maybePing(prefs)
+        UsageReporter.fetchStats { stats ->
+            if (isFinishing) return@fetchStats
+            val installs = stats.installs?.toString() ?: getString(R.string.em_dash)
+            val active = stats.activeToday?.toString() ?: getString(R.string.em_dash)
+            binding.usageStatsLabel.text = getString(R.string.settings_usage_stats, installs, active)
+        }
         if (BuildConfig.SELF_UPDATE_ENABLED) {
             binding.checkUpdates.setOnClickListener {
                 Toast.makeText(this, R.string.checking_for_updates, Toast.LENGTH_SHORT).show()

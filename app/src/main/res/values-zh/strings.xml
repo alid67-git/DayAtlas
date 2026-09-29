@@ -94,6 +94,9 @@
     <string name="update_install_permission_needed">DayAtlas 需要"安装未知应用"权限才能安装更新。请在下一屏幕中允许，然后重试。</string>
     <string name="settings_update">更新</string>
     <string name="current_version">版本 %1$s</string>
+    <string name="settings_usage_loading">正在加载使用人数…</string>
+    <string name="settings_usage_stats">安装: %1$s · 今日活跃: %2$s</string>
+    <string name="settings_usage_hint">匿名计数（不发送位置或身份）。大致显示安装数与今日打开人数。</string>
     <string name="check_for_updates">检查更新</string>
     <string name="checking_for_updates">检查中…</string>
     <string name="up_to_date">您使用的已是最新版本。</string>
@@ -193,5 +196,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.18 — 地图显示 15 分钟以上停留（灰/蓝）；点按添加备注与照片。</string>
+    <string name="build_note">版本 1.1.19 — 匿名使用计数（设置）；15 分钟停留 + 相机。</string>
 </resources>

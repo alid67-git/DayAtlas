@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.19 — 2026-09-29
+
+- **Kullanım sayısı:** Ayarlar’da anonim “kurulum” ve “bugün aktif”
+  sayaçları (konum/kimlik yok). Güncelleme için main’e merge + yeni APK.
+
 ## 1.1.18 — 2026-09-29
 
 - **15 dk+ duruşlar gerçekten çalışır:** Aynı yerde GPS birleşince varış

@@ -94,6 +94,9 @@
     <string name="update_install_permission_needed">अपडेट इंस्टॉल करने के लिए DayAtlas को “अज्ञात ऐप्स इंस्टॉल करें” अनुमति चाहिए। अगली स्क्रीन पर इसे अनुमति दें, फिर पुनः प्रयास करें।</string>
     <string name="settings_update">अपडेट</string>
     <string name="current_version">संस्करण %1$s</string>
+    <string name="settings_usage_loading">उपयोग संख्या लोड हो रही है…</string>
+    <string name="settings_usage_stats">इंस्टॉल: %1$s · आज सक्रिय: %2$s</string>
+    <string name="settings_usage_hint">अनाम काउंटर (कोई स्थान/पहचान नहीं)। अनुमानित इंस्टॉल और आज खोले गए।</string>
     <string name="check_for_updates">अपडेट जाँचें</string>
     <string name="checking_for_updates">जाँच की जा रही है…</string>
     <string name="up_to_date">आप नवीनतम संस्करण पर हैं।</string>
@@ -193,5 +196,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.18 — मानचित्र पर 15 मि+ रुकना (धूसर/नीला); नोट और फ़ोटो के लिए टैप।</string>
+    <string name="build_note">संस्करण 1.1.19 — अनाम उपयोग काउंटर (सेटिंग्स); 15 मि+ रुकना + कैमरा।</string>
 </resources>
