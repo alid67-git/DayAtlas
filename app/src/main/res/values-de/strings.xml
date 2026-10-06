@@ -141,13 +141,29 @@
     <string name="drive_backup_failed">Sicherung fehlgeschlagen: %1$s</string>
     <string name="drive_backup_busy">Sicherung läuft bereits…</string>
 
-    <string name="drive_restore_now">Aus Sicherung wiederherstellen</string>
-    <string name="drive_restore_confirm_title">Aus Sicherung wiederherstellen?</string>
-    <string name="drive_restore_confirm_message">Tagesaufzeichnungen im gewählten Ordner werden auf dieses Telefon kopiert und lokale Dateien gleichen Namens überschreiben. Fortfahren?</string>
+    <string name="drive_restore_now">Aus Backup wiederherstellen</string>
+    <string name="drive_restore_review">Tag für Tag prüfen</string>
+    <string name="drive_restore_confirm_title">Aus Backup wiederherstellen?</string>
+    <string name="drive_restore_confirm_message">Jeder Tag im Ordner wird mit dem lokalen Eintrag verglichen. Überschreiben bestätigen Sie einzeln. Mehrere Tage in einem Durchgang möglich.</string>
     <string name="drive_restore_ok">Wiederherstellung fertig: %1$d Tag(e)</string>
-    <string name="drive_restore_none">Im Ordner keine wiederherstellbaren Einträge gefunden.</string>
+    <string name="drive_restore_none">Keine wiederherstellbaren Einträge im Ordner.</string>
     <string name="drive_restore_failed">Wiederherstellung fehlgeschlagen: %1$s</string>
     <string name="drive_restore_busy">Sicherung/Wiederherstellung läuft bereits…</string>
+    <string name="restore_gpx_files">GPX-Dateien importieren</string>
+    <string name="restore_gpx_files_hint">Wählen Sie eine oder mehrere Tages-GPX-Dateien aus einer anderen Quelle. Pro Tag: aktuell vs. eingehend.</string>
+    <string name="restore_scanning">Einträge werden geprüft…</string>
+    <string name="restore_none_chosen">Kein Tag wiederhergestellt.</string>
+    <string name="restore_day_new_title">Neuen Tag importieren</string>
+    <string name="restore_day_conflict_title">Diesen Tag überschreiben?</string>
+    <string name="restore_day_new_message">%1$s\n\nEingehend:\n%2$s</string>
+    <string name="restore_day_conflict_message">%1$s\n\nAktuell:\n%2$s\n\nEingehend:\n%3$s</string>
+    <string name="restore_day_stats">%1$s · %2$d Punkte · %3$s</string>
+    <string name="restore_day_note">Notiz: %1$s</string>
+    <string name="restore_day_photos">Fotos: %1$d</string>
+    <string name="restore_day_overwrite">Überschreiben</string>
+    <string name="restore_day_import">Importieren</string>
+    <string name="restore_day_skip">Überspringen</string>
+    <string name="restore_day_cancel_all">Abbrechen</string>
 
     <string name="settings_day_stats">Karten-Tagesstatistik</string>
     <string name="settings_day_stats_hint">Welche Tageskarten auf dem Startbildschirm? 7 Karten im 2+2+3-Layout. Lang drücken und ziehen zum Sortieren.</string>
@@ -183,6 +199,9 @@
     <string name="stats_points_and_best">%1$d Punkte · längster: %2$s (%3$s)</string>
     <string name="stats_points_only">%1$d Punkte</string>
     <string name="stats_daily_breakdown">Tagesdistanz</string>
+    <string name="stats_monthly_breakdown">Monatsdistanz</string>
+    <string name="stats_month_days_heading">%1$s — Tage</string>
+    <string name="stats_month_back">← Zu Monaten</string>
     <string name="stats_empty">Keine Einträge in diesem Zeitraum.</string>
     <string name="stats_range_label">%1$s – %2$s</string>
     <string name="stats_range_label_single">%1$s</string>
@@ -199,5 +218,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.20 — Tippen Sie auf einen Routenpunkt, um Notiz oder Foto hinzuzufügen.</string>
+    <string name="build_note">Version 1.1.21 — Monatsübersicht unter „Alle“; Tagesweise Routen-Wiederherstellung.</string>
 </resources>

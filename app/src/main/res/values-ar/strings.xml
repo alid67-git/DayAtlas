@@ -141,13 +141,29 @@
     <string name="drive_backup_failed">فشل النسخ الاحتياطي: %1$s</string>
     <string name="drive_backup_busy">النسخ الاحتياطي قيد التشغيل بالفعل…</string>
 
-    <string name="drive_restore_now">الاستعادة من نسخة احتياطية</string>
-    <string name="drive_restore_confirm_title">هل تريد الاستعادة من نسخة احتياطية؟</string>
-    <string name="drive_restore_confirm_message">سيتم نسخ سجلات الأيام الموجودة في المجلد المحدد إلى هذا الهاتف، وستُستبدل الملفات المحلية التي تحمل الاسم نفسه. هل تريد المتابعة؟</string>
-    <string name="drive_restore_ok">اكتملت الاستعادة: %1$d يوم/أيام</string>
-    <string name="drive_restore_none">لا توجد سجلات لاستعادتها في هذا المجلد.</string>
+    <string name="drive_restore_now">استعادة من النسخة</string>
+    <string name="drive_restore_review">مراجعة يومًا بيوم</string>
+    <string name="drive_restore_confirm_title">استعادة من النسخة؟</string>
+    <string name="drive_restore_confirm_message">يُقارن كل يوم في المجلد مع السجل المحلي؛ تؤكد الاستبدال يومًا بيوم. يمكن استعادة عدة أيام.</string>
+    <string name="drive_restore_ok">اكتملت الاستعادة: %1$d يومًا</string>
+    <string name="drive_restore_none">لا توجد سجلات للاستعادة في المجلد.</string>
     <string name="drive_restore_failed">فشلت الاستعادة: %1$s</string>
     <string name="drive_restore_busy">النسخ الاحتياطي أو الاستعادة قيد التشغيل بالفعل…</string>
+    <string name="restore_gpx_files">استيراد ملفات GPX</string>
+    <string name="restore_gpx_files_hint">اختر ملف GPX واحدًا أو أكثر من مصدر آخر. يعرض كل يوم الحالي مقابل الوارد.</string>
+    <string name="restore_scanning">جارٍ فحص السجلات…</string>
+    <string name="restore_none_chosen">لم تُستَعَد أي أيام.</string>
+    <string name="restore_day_new_title">استيراد يوم جديد</string>
+    <string name="restore_day_conflict_title">استبدال هذا اليوم؟</string>
+    <string name="restore_day_new_message">%1$s\n\nالوارد:\n%2$s</string>
+    <string name="restore_day_conflict_message">%1$s\n\nالحالي:\n%2$s\n\nالوارد:\n%3$s</string>
+    <string name="restore_day_stats">%1$s · %2$d نقطة · %3$s</string>
+    <string name="restore_day_note">ملاحظة: %1$s</string>
+    <string name="restore_day_photos">صور: %1$d</string>
+    <string name="restore_day_overwrite">استبدال</string>
+    <string name="restore_day_import">استيراد</string>
+    <string name="restore_day_skip">تخطي</string>
+    <string name="restore_day_cancel_all">إلغاء</string>
 
     <string name="settings_day_stats">إحصاءات الخريطة اليومية</string>
     <string name="settings_day_stats_hint">أي بطاقات اليوم على الشاشة الرئيسية؟ 7 بطاقات بتخطيط 2+2+3. اضغط مطولًا واسحب للترتيب.</string>
@@ -183,6 +199,9 @@
     <string name="stats_points_and_best">%1$d نقطة · الأطول: %2$s (%3$s)</string>
     <string name="stats_points_only">%1$d نقطة</string>
     <string name="stats_daily_breakdown">المسافة اليومية</string>
+    <string name="stats_monthly_breakdown">المسافة الشهرية</string>
+    <string name="stats_month_days_heading">%1$s — الأيام</string>
+    <string name="stats_month_back">← العودة للأشهر</string>
     <string name="stats_empty">لا توجد سجلات في هذا النطاق.</string>
     <string name="stats_range_label">%1$s – %2$s</string>
     <string name="stats_range_label_single">%1$s</string>
@@ -199,5 +218,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.20 — المس أي نقطة على المسار لإضافة ملاحظة أو صورة.</string>
+    <string name="build_note">الإصدار 1.1.21 — إجماليات شهرية في «الكل»؛ استعادة المسار يومًا بيوم.</string>
 </resources>

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.21 — 2026-10-06
+
+- **İstatistikler → Tümü:** Ay bazlı toplam mesafe listesi; bir aya
+  dokununca o ayın günleri açılır.
+- **Gün gün rota geri yükleme:** Yedek klasöründen veya birden fazla GPX
+  dosyasından geri yüklerken her gün için mevcut / gelecek kayıt
+  karşılaştırılır; üzerine yaz / atla / iptal.
+
 ## 1.1.20 — 2026-09-29
 
 - **Nokta notu / foto:** Haritada rotaya (veya yakınına) dokununca o GPS

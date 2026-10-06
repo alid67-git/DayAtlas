@@ -142,12 +142,28 @@
     <string name="drive_backup_busy">Sauvegarde déjà en cours…</string>
 
     <string name="drive_restore_now">Restaurer depuis la sauvegarde</string>
+    <string name="drive_restore_review">Examiner jour par jour</string>
     <string name="drive_restore_confirm_title">Restaurer depuis la sauvegarde ?</string>
-    <string name="drive_restore_confirm_message">Les enregistrements de jours du dossier sélectionné seront copiés sur ce téléphone et écraseront les fichiers locaux portant le même nom. Continuer ?</string>
+    <string name="drive_restore_confirm_message">Chaque jour du dossier est comparé à l\'enregistrement local. Vous confirmez l\'écrasement un jour à la fois. Plusieurs jours possibles.</string>
     <string name="drive_restore_ok">Restauration terminée : %1$d jour(s)</string>
-    <string name="drive_restore_none">Aucun enregistrement à restaurer dans ce dossier.</string>
+    <string name="drive_restore_none">Aucun enregistrement à restaurer dans le dossier.</string>
     <string name="drive_restore_failed">Échec de la restauration : %1$s</string>
     <string name="drive_restore_busy">Sauvegarde/restauration déjà en cours…</string>
+    <string name="restore_gpx_files">Importer des fichiers GPX</string>
+    <string name="restore_gpx_files_hint">Choisissez un ou plusieurs GPX d\'une autre source. Chaque jour affiche actuel vs entrant.</string>
+    <string name="restore_scanning">Analyse des enregistrements…</string>
+    <string name="restore_none_chosen">Aucun jour restauré.</string>
+    <string name="restore_day_new_title">Importer un nouveau jour</string>
+    <string name="restore_day_conflict_title">Écraser ce jour ?</string>
+    <string name="restore_day_new_message">%1$s\n\nÀ importer :\n%2$s</string>
+    <string name="restore_day_conflict_message">%1$s\n\nActuel :\n%2$s\n\nÀ importer :\n%3$s</string>
+    <string name="restore_day_stats">%1$s · %2$d points · %3$s</string>
+    <string name="restore_day_note">Note : %1$s</string>
+    <string name="restore_day_photos">Photos : %1$d</string>
+    <string name="restore_day_overwrite">Écraser</string>
+    <string name="restore_day_import">Importer</string>
+    <string name="restore_day_skip">Ignorer</string>
+    <string name="restore_day_cancel_all">Annuler</string>
 
     <string name="settings_day_stats">Statistiques journalières de la carte</string>
     <string name="settings_day_stats_hint">Quelles cartes du jour sur l’écran d’accueil ? 7 cartes en 2+2+3. Appui long + glisser pour réordonner.</string>
@@ -183,6 +199,9 @@
     <string name="stats_points_and_best">%1$d points · le plus long : %2$s (%3$s)</string>
     <string name="stats_points_only">%1$d points</string>
     <string name="stats_daily_breakdown">Distance quotidienne</string>
+    <string name="stats_monthly_breakdown">Distance mensuelle</string>
+    <string name="stats_month_days_heading">%1$s — jours</string>
+    <string name="stats_month_back">← Retour aux mois</string>
     <string name="stats_empty">Aucun enregistrement dans cette plage.</string>
     <string name="stats_range_label">%1$s – %2$s</string>
     <string name="stats_range_label_single">%1$s</string>
@@ -199,5 +218,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.20 — Touchez un point de l\'itinéraire pour ajouter une note ou une photo.</string>
+    <string name="build_note">Version 1.1.21 — Totaux mensuels sous « Tout » ; restauration jour par jour.</string>
 </resources>

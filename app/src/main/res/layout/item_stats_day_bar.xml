@@ -10,11 +10,11 @@
 
     <TextView
         android:id="@+id/barDayLabel"
-        android:layout_width="72dp"
+        android:layout_width="88dp"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceLabelSmall"
         android:textColor="@color/md_theme_outline"
-        tools:text="10 Eyl" />
+        tools:text="Eyl 2026" />
 
     <FrameLayout
         android:layout_width="0dp"

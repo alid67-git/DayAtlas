@@ -306,6 +306,35 @@ class DayStore(context: Context) {
         updated
     }
 
+    /**
+     * Overwrites a whole day from an imported/restored [DayRecord] (GPX restore).
+     * Regenerates the derived GPX and refreshes the today cache when needed.
+     * When the incoming day already has photos listed, those names are kept;
+     * callers that merge Drive photo files should call [setPhotos] afterward.
+     */
+    fun replaceDay(record: DayRecord): DayRecord = lock.withLock {
+        if (isEmptyShell(record)) {
+            jsonFile(record.date).delete()
+            gpxFile(record.date).delete()
+            if (memoryToday?.date == record.date) memoryToday = null
+            return@withLock record
+        }
+        // Preserve local photos / dwell annotations when the GPX import has none.
+        val existing = loadUnlocked(record.date)
+        val merged = if (existing == null) {
+            record
+        } else {
+            record.copy(
+                photos = record.photos.ifEmpty { existing.photos },
+                dwellNotes = if (record.dwellNotes.isEmpty()) existing.dwellNotes else record.dwellNotes,
+                dwellPhotos = if (record.dwellPhotos.isEmpty()) existing.dwellPhotos else record.dwellPhotos,
+                gpsCheckCount = maxOf(record.gpsCheckCount, record.points.size),
+            )
+        }
+        persistUnlocked(merged, writeGpx = true)
+        merged
+    }
+
     private fun isEmptyShell(record: DayRecord): Boolean =
         record.points.isEmpty() &&
             record.note.isNullOrEmpty() &&

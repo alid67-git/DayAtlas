@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
-import com.dayatlas.app.data.DayJson
 import com.dayatlas.app.data.DayRecord
 import com.dayatlas.app.data.DayStore
 import com.dayatlas.app.data.DayTitle
@@ -109,7 +108,7 @@ object DriveFolderBackup {
     }
 
     /** Manual "Şimdi yedekle": always a full scan, so a jump deleted on an
-     * older day (or a file added by [restoreNow]) gets picked up too. */
+     * older day (or a file added by restore) gets picked up too. */
     fun runNow(
         context: Context,
         onDone: (Result) -> Unit,
@@ -226,15 +225,40 @@ object DriveFolderBackup {
     }
 
     /**
-     * Reads every `.gpx` day file found in the selected Drive folder — the
-     * backup format — and rebuilds the matching local `files/days/<date>.json`
-     * from it, overwriting any local file for that date. For a fresh
-     * install / new phone where local storage is empty, the backup folder
-     * is treated as the source of truth. JSON stays the local live-storage
-     * format either way; only the on-disk backup is GPX.
+     * Scans the backup folder for `.gpx` day files and builds restore
+     * candidates (current vs incoming) for a per-day review UI.
      */
-    fun restoreNow(
+    fun scanRestoreCandidates(
         context: Context,
+        onDone: (List<DayRestore.Candidate>?, String?) -> Unit,
+    ) {
+        val app = context.applicationContext
+        val prefs = AppPrefs(app)
+        if (!running.compareAndSet(false, true)) {
+            main.post { onDone(null, "busy") }
+            return
+        }
+        io.execute {
+            val outcome = runCatching { scanCandidatesLocked(app, prefs) }
+            running.set(false)
+            main.post {
+                outcome.fold(
+                    onSuccess = { onDone(it, null) },
+                    onFailure = { e ->
+                        Log.w(TAG, "scan restore failed", e)
+                        onDone(null, e.message ?: "error")
+                    },
+                )
+            }
+        }
+    }
+
+    /**
+     * Writes approved days and restores matching photos from the Drive folder.
+     */
+    fun applyRestore(
+        context: Context,
+        approved: List<DayRecord>,
         onDone: (RestoreResult) -> Unit,
     ) {
         val app = context.applicationContext
@@ -244,45 +268,47 @@ object DriveFolderBackup {
             return
         }
         io.execute {
-            val result = runCatching { restoreLocked(app, prefs) }
-                .getOrElse { e ->
-                    Log.w(TAG, "restore failed", e)
-                    RestoreResult(false, message = e.message ?: "error")
-                }
+            val result = runCatching {
+                val count = DayRestore.apply(app, approved)
+                restorePhotosForDates(app, prefs, approved.map { it.date }.toSet())
+                RestoreResult(true, restored = count)
+            }.getOrElse { e ->
+                Log.w(TAG, "apply restore failed", e)
+                RestoreResult(false, message = e.message ?: "error")
+            }
             running.set(false)
             main.post { onDone(result) }
         }
     }
 
-    private fun restoreLocked(context: Context, prefs: AppPrefs): RestoreResult {
-        val uriStr = prefs.driveTreeUri
-            ?: return RestoreResult(false, message = "no_folder")
+    private fun scanCandidatesLocked(context: Context, prefs: AppPrefs): List<DayRestore.Candidate> {
+        val uriStr = prefs.driveTreeUri ?: error("no_folder")
         val tree = DocumentFile.fromTreeUri(context, Uri.parse(uriStr))
-            ?: return RestoreResult(false, message = "invalid_folder")
-        if (!tree.canRead()) {
-            return RestoreResult(false, message = "not_readable")
-        }
-
-        val daysDir = File(context.filesDir, "days").also { it.mkdirs() }
-        val allDocs = tree.listFiles().toList()
-        val gpxFiles = allDocs.filter { it.isFile && it.name?.endsWith(".gpx") == true }
-        if (gpxFiles.isEmpty()) {
-            return RestoreResult(true, restored = 0)
-        }
-
-        var count = 0
+            ?: error("invalid_folder")
+        if (!tree.canRead()) error("not_readable")
+        val store = DayStore(context)
+        val gpxFiles = tree.listFiles()
+            .filter { it.isFile && it.name?.endsWith(".gpx", ignoreCase = true) == true }
+        val byDate = linkedMapOf<String, DayRestore.Candidate>()
         for (doc in gpxFiles) {
             val name = doc.name ?: continue
-            val dateIso = name.removeSuffix(".gpx")
-            val bytes = context.contentResolver.openInputStream(doc.uri)?.use { it.readBytes() }
+            val preferred = DayRestore.dateIsoFromFileName(name)
+            val raw = context.contentResolver.openInputStream(doc.uri)
+                ?.use { String(it.readBytes(), Charsets.UTF_8) }
                 ?: continue
-            val record = runCatching { DayJson.fromGpx(dateIso, String(bytes, Charsets.UTF_8)) }
-                .getOrNull() ?: continue
-            DayJson.writeAtomic(File(daysDir, "$dateIso.json"), DayJson.toJson(record))
-            count++
+            val candidate = DayRestore.candidateFromGpxText(store, preferred, raw) ?: continue
+            byDate[candidate.dateIso] = candidate
         }
-        restorePhotos(context, allDocs, daysDir)
-        return RestoreResult(true, restored = count)
+        return byDate.values.sortedBy { it.dateIso }
+    }
+
+    private fun restorePhotosForDates(context: Context, prefs: AppPrefs, dates: Set<String>) {
+        if (dates.isEmpty()) return
+        val uriStr = prefs.driveTreeUri ?: return
+        val tree = DocumentFile.fromTreeUri(context, Uri.parse(uriStr)) ?: return
+        val daysDir = File(context.filesDir, "days").also { it.mkdirs() }
+        val docs = tree.listFiles().toList()
+        restorePhotos(context, docs, daysDir, dates)
     }
 
     private val photoBackupNamePattern = Regex("""^(\d{4}-\d{2}-\d{2})-(.+\.jpe?g)$""", RegexOption.IGNORE_CASE)
@@ -293,14 +319,21 @@ object DriveFolderBackup {
      * list. A day whose photos restore but whose GPX didn't (or doesn't
      * exist, e.g. a photo-only day) still gets a JSON file created here.
      */
-    private fun restorePhotos(context: Context, docs: List<DocumentFile>, daysDir: File) {
+    private fun restorePhotos(
+        context: Context,
+        docs: List<DocumentFile>,
+        daysDir: File,
+        onlyDates: Set<String>? = null,
+    ) {
         val photoStore = PhotoStore(context)
+        val store = DayStore(context)
         val byDate = HashMap<String, MutableList<String>>()
         for (doc in docs) {
             if (!doc.isFile) continue
             val docName = doc.name ?: continue
             val match = photoBackupNamePattern.matchEntire(docName) ?: continue
             val (dateIso, photoName) = match.destructured
+            if (onlyDates != null && dateIso !in onlyDates) continue
             val bytes = context.contentResolver.openInputStream(doc.uri)?.use { it.readBytes() }
                 ?: continue
             photoStore.fullFile(dateIso, photoName).writeBytes(bytes)
@@ -308,16 +341,13 @@ object DriveFolderBackup {
             byDate.getOrPut(dateIso) { mutableListOf() }.add(photoName)
         }
         byDate.forEach { (dateIso, names) ->
-            val jsonFile = File(daysDir, "$dateIso.json")
-            val existing = if (jsonFile.exists()) {
-                runCatching { DayJson.fromJson(jsonFile.readText()) }.getOrNull()
-            } else {
-                null
-            } ?: DayRecord.empty(dateIso, dateIso)
-            val merged = existing.copy(
-                photos = (existing.photos + names).distinct().take(PhotoStore.MAX_PHOTOS_PER_DAY),
+            val existing = store.load(dateIso) ?: DayRecord.empty(dateIso, dateIso)
+            store.setPhotos(
+                dateIso,
+                (existing.photos + names).distinct().take(PhotoStore.MAX_PHOTOS_PER_DAY),
             )
-            DayJson.writeAtomic(jsonFile, DayJson.toJson(merged))
+            // daysDir kept for API symmetry with callers that ensure it exists.
+            daysDir.mkdirs()
         }
     }
 
