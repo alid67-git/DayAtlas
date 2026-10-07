@@ -608,6 +608,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/statsBreakdownTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -615,6 +616,19 @@
                         android:text="@string/stats_daily_breakdown"
                         android:textAppearance="?attr/textAppearanceTitleSmall"
                         android:textColor="@color/md_theme_on_surface" />
+
+                    <TextView
+                        android:id="@+id/statsMonthBack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="4dp"
+                        android:paddingEnd="8dp"
+                        android:text="@string/stats_month_back"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="@color/md_theme_primary"
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:id="@+id/statsDailyBars"

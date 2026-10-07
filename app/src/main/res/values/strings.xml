@@ -149,12 +149,28 @@
     <string name="drive_backup_busy">Yedek zaten çalışıyor…</string>
 
     <string name="drive_restore_now">Yedekten geri yükle</string>
+    <string name="drive_restore_review">Gün gün gözden geçir</string>
     <string name="drive_restore_confirm_title">Yedekten geri yükle?</string>
-    <string name="drive_restore_confirm_message">Seçili klasördeki gün kayıtları bu telefona kopyalanacak ve aynı isimli yerel kayıtların üzerine yazılacak. Devam edilsin mi?</string>
+    <string name="drive_restore_confirm_message">Klasördeki her gün için mevcut kayıt ile yedek karşılaştırılır; üzerine yazmak istediğinizi tek tek onaylarsınız. Birden fazla gün seçebilirsiniz.</string>
     <string name="drive_restore_ok">Geri yükleme tamam: %1$d gün</string>
     <string name="drive_restore_none">Klasörde geri yüklenecek kayıt bulunamadı.</string>
     <string name="drive_restore_failed">Geri yükleme başarısız: %1$s</string>
     <string name="drive_restore_busy">Yedekleme/geri yükleme zaten çalışıyor…</string>
+    <string name="restore_gpx_files">GPX dosyalarından yükle</string>
+    <string name="restore_gpx_files_hint">Başka bir kaynaktan bir veya daha fazla gün GPX dosyası seçin. Her gün için mevcut / gelecek kayıt karşılaştırılır.</string>
+    <string name="restore_scanning">Kayıtlar taranıyor…</string>
+    <string name="restore_none_chosen">Hiçbir gün geri yüklenmedi.</string>
+    <string name="restore_day_new_title">Yeni gün yükle</string>
+    <string name="restore_day_conflict_title">Günün üzerine yazılsın mı?</string>
+    <string name="restore_day_new_message">%1$s\n\nYüklenecek:\n%2$s</string>
+    <string name="restore_day_conflict_message">%1$s\n\nMevcut:\n%2$s\n\nYüklenecek:\n%3$s</string>
+    <string name="restore_day_stats">%1$s · %2$d nokta · %3$s</string>
+    <string name="restore_day_note">Not: %1$s</string>
+    <string name="restore_day_photos">Fotoğraf: %1$d</string>
+    <string name="restore_day_overwrite">Üzerine yaz</string>
+    <string name="restore_day_import">Yükle</string>
+    <string name="restore_day_skip">Atla</string>
+    <string name="restore_day_cancel_all">İptal</string>
 
     <string name="settings_day_stats">Harita gün istatistikleri</string>
     <string name="settings_day_stats_hint">Ana ekrandaki gün kartlarında hangileri görünsün? 7 kart 2+2+3 düzeninde. Kartlar uzun basıp sürükleyerek sıralanabilir.</string>
@@ -190,6 +206,9 @@
     <string name="stats_points_and_best">%1$d nokta · en uzun: %2$s (%3$s)</string>
     <string name="stats_points_only">%1$d nokta</string>
     <string name="stats_daily_breakdown">Günlük mesafe</string>
+    <string name="stats_monthly_breakdown">Aylık mesafe</string>
+    <string name="stats_month_days_heading">%1$s — günler</string>
+    <string name="stats_month_back">← Aylara dön</string>
     <string name="stats_empty">Bu aralıkta kayıt yok.</string>
     <string name="stats_range_label">%1$s – %2$s</string>
     <string name="stats_range_label_single">%1$s</string>
@@ -216,5 +235,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.20 — Rotadaki herhangi bir noktaya dokunup not/foto ekleyin.</string>
+    <string name="build_note">Sürüm 1.1.21 — Tümü aylık özet; gün gün rota geri yükleme.</string>
 </resources>

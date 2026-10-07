@@ -142,12 +142,28 @@
     <string name="drive_backup_busy">备份正在进行中…</string>
 
     <string name="drive_restore_now">从备份恢复</string>
+    <string name="drive_restore_review">逐日确认</string>
     <string name="drive_restore_confirm_title">从备份恢复？</string>
-    <string name="drive_restore_confirm_message">所选文件夹中的每日记录将被复制到此手机，并覆盖同名的本地文件。是否继续？</string>
+    <string name="drive_restore_confirm_message">将逐日比较文件夹与本机记录，并分别确认是否覆盖。可一次恢复多天。</string>
     <string name="drive_restore_ok">恢复完成：%1$d 天</string>
     <string name="drive_restore_none">文件夹中没有可恢复的记录。</string>
     <string name="drive_restore_failed">恢复失败：%1$s</string>
     <string name="drive_restore_busy">备份/恢复正在进行中…</string>
+    <string name="restore_gpx_files">导入 GPX 文件</string>
+    <string name="restore_gpx_files_hint">从其他来源选择一个或多个每日 GPX。每天会显示现有与待导入信息。</string>
+    <string name="restore_scanning">正在扫描记录…</string>
+    <string name="restore_none_chosen">未恢复任何天。</string>
+    <string name="restore_day_new_title">导入新的一天</string>
+    <string name="restore_day_conflict_title">覆盖这一天？</string>
+    <string name="restore_day_new_message">%1$s\n\n待导入：\n%2$s</string>
+    <string name="restore_day_conflict_message">%1$s\n\n现有：\n%2$s\n\n待导入：\n%3$s</string>
+    <string name="restore_day_stats">%1$s · %2$d 点 · %3$s</string>
+    <string name="restore_day_note">备注：%1$s</string>
+    <string name="restore_day_photos">照片：%1$d</string>
+    <string name="restore_day_overwrite">覆盖</string>
+    <string name="restore_day_import">导入</string>
+    <string name="restore_day_skip">跳过</string>
+    <string name="restore_day_cancel_all">取消</string>
 
     <string name="settings_day_stats">地图每日统计</string>
     <string name="settings_day_stats_hint">主屏幕显示哪些日卡片？7 张为 2+2+3 布局。长按拖动可排序。</string>
@@ -183,6 +199,9 @@
     <string name="stats_points_and_best">%1$d 个点 · 最长：%2$s（%3$s）</string>
     <string name="stats_points_only">%1$d 个点</string>
     <string name="stats_daily_breakdown">每日距离</string>
+    <string name="stats_monthly_breakdown">每月距离</string>
+    <string name="stats_month_days_heading">%1$s — 天数</string>
+    <string name="stats_month_back">← 返回月份</string>
     <string name="stats_empty">此范围内没有记录。</string>
     <string name="stats_range_label">%1$s – %2$s</string>
     <string name="stats_range_label_single">%1$s</string>
@@ -199,5 +218,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.20 — 点击路线上任意点即可添加备注或照片。</string>
+    <string name="build_note">版本 1.1.21 — “全部”按月汇总；按日恢复路线。</string>
 </resources>

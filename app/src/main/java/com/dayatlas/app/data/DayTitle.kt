@@ -59,6 +59,10 @@ object DayTitle {
     fun formatShort(date: LocalDate, locale: Locale = Locale.getDefault()): String =
         "${date.dayOfMonth} ${monthShort(date, locale)}"
 
+    /** Month + year for stats "All" rows, e.g. "Eyl 2026" / "Sep 2026". */
+    fun formatMonthYear(date: LocalDate, locale: Locale = Locale.getDefault()): String =
+        "${monthShort(date, locale)} ${date.year}"
+
     fun formatDistance(meters: Double, locale: Locale = Locale.getDefault()): String {
         return if (meters < 1000) {
             "${meters.toInt()} m"

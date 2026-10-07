@@ -1,5 +1,6 @@
 package com.dayatlas.app.data
 
+import java.time.YearMonth
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -81,5 +82,35 @@ class RangeStatsTest {
         )
         val summary = RangeStats.summarize(listOf(day))
         assertEquals(15, summary.totalPoints)
+    }
+
+    @Test
+    fun byMonthGroupsOldestToNewest() {
+        val aug = DayRecord(
+            date = "2026-08-31",
+            title = "a",
+            points = listOf(TrackPoint(1L, 41.0, 29.0, null)),
+            distanceMeters = 1_000.0,
+        )
+        val sep1 = DayRecord(
+            date = "2026-09-01",
+            title = "b",
+            points = listOf(TrackPoint(2L, 41.0, 29.0, null)),
+            distanceMeters = 2_000.0,
+        )
+        val sep2 = DayRecord(
+            date = "2026-09-15",
+            title = "c",
+            points = listOf(TrackPoint(3L, 41.0, 29.0, null)),
+            distanceMeters = 500.0,
+        )
+        val months = RangeStats.byMonth(listOf(sep2, aug, sep1))
+        assertEquals(2, months.size)
+        assertEquals(YearMonth.of(2026, 8), months[0].yearMonth)
+        assertEquals(1_000.0, months[0].totalDistanceMeters, 0.01)
+        assertEquals(1, months[0].dayCount)
+        assertEquals(YearMonth.of(2026, 9), months[1].yearMonth)
+        assertEquals(2_500.0, months[1].totalDistanceMeters, 0.01)
+        assertEquals(2, months[1].dayCount)
     }
 }

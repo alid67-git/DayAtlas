@@ -142,12 +142,28 @@
     <string name="drive_backup_busy">बैकअप पहले से चल रहा है…</string>
 
     <string name="drive_restore_now">बैकअप से पुनर्स्थापित करें</string>
+    <string name="drive_restore_review">दिन-प्रतिदिन जाँचें</string>
     <string name="drive_restore_confirm_title">बैकअप से पुनर्स्थापित करें?</string>
-    <string name="drive_restore_confirm_message">चयनित फ़ोल्डर के दिन-रिकॉर्ड इस फ़ोन पर कॉपी किए जाएँगे और समान नाम की स्थानीय फ़ाइलों को अधिलेखित करेंगे। जारी रखें?</string>
-    <string name="drive_restore_ok">पुनर्स्थापन पूर्ण: %1$d दिन</string>
-    <string name="drive_restore_none">फ़ोल्डर में पुनर्स्थापित करने के लिए कोई रिकॉर्ड नहीं मिला।</string>
-    <string name="drive_restore_failed">पुनर्स्थापन विफल: %1$s</string>
+    <string name="drive_restore_confirm_message">फ़ोल्डर का प्रत्येक दिन स्थानीय रिकॉर्ड से तुलना होता है; अधिलेखन एक-एक करके पुष्टि करें। एक सत्र में कई दिन संभव।</string>
+    <string name="drive_restore_ok">पुनर्स्थापना पूर्ण: %1$d दिन</string>
+    <string name="drive_restore_none">फ़ोल्डर में पुनर्स्थापित करने योग्य रिकॉर्ड नहीं।</string>
+    <string name="drive_restore_failed">पुनर्स्थापना विफल: %1$s</string>
     <string name="drive_restore_busy">बैकअप/पुनर्स्थापन पहले से चल रहा है…</string>
+    <string name="restore_gpx_files">GPX फ़ाइलें आयात करें</string>
+    <string name="restore_gpx_files_hint">अन्य स्रोत से एक या अधिक दिन की GPX चुनें। प्रत्येक दिन वर्तमान बनाम आने वाला दिखाता है।</string>
+    <string name="restore_scanning">रिकॉर्ड जाँचे जा रहे हैं…</string>
+    <string name="restore_none_chosen">कोई दिन पुनर्स्थापित नहीं हुआ।</string>
+    <string name="restore_day_new_title">नया दिन आयात करें</string>
+    <string name="restore_day_conflict_title">यह दिन अधिलेखित करें?</string>
+    <string name="restore_day_new_message">%1$s\n\nआने वाला:\n%2$s</string>
+    <string name="restore_day_conflict_message">%1$s\n\nवर्तमान:\n%2$s\n\nआने वाला:\n%3$s</string>
+    <string name="restore_day_stats">%1$s · %2$d बिंदु · %3$s</string>
+    <string name="restore_day_note">नोट: %1$s</string>
+    <string name="restore_day_photos">फ़ोटो: %1$d</string>
+    <string name="restore_day_overwrite">अधिलेखित करें</string>
+    <string name="restore_day_import">आयात</string>
+    <string name="restore_day_skip">छोड़ें</string>
+    <string name="restore_day_cancel_all">रद्द</string>
 
     <string name="settings_day_stats">मानचित्र दैनिक आँकड़े</string>
     <string name="settings_day_stats_hint">होम स्क्रीन पर कौन-से दिन कार्ड? 7 कार्ड 2+2+3 लेआउट में। क्रम बदलने के लिए देर दबाकर खींचें।</string>
@@ -183,6 +199,9 @@
     <string name="stats_points_and_best">%1$d बिंदु · सबसे लंबा: %2$s (%3$s)</string>
     <string name="stats_points_only">%1$d बिंदु</string>
     <string name="stats_daily_breakdown">दैनिक दूरी</string>
+    <string name="stats_monthly_breakdown">मासिक दूरी</string>
+    <string name="stats_month_days_heading">%1$s — दिन</string>
+    <string name="stats_month_back">← महीनों पर वापस</string>
     <string name="stats_empty">इस सीमा में कोई रिकॉर्ड नहीं है।</string>
     <string name="stats_range_label">%1$s – %2$s</string>
     <string name="stats_range_label_single">%1$s</string>
@@ -199,5 +218,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.20 — नोट या फ़ोटो जोड़ने के लिए मार्ग के किसी भी बिंदु पर टैप करें।</string>
+    <string name="build_note">संस्करण 1.1.21 — “सभी” में मासिक योग; दिन-प्रतिदिन मार्ग पुनर्स्थापना।</string>
 </resources>

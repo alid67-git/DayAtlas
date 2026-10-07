@@ -1,5 +1,7 @@
 package com.dayatlas.app.data
 
+import java.time.YearMonth
+
 /**
  * Aggregates [DayRecord]s over a chosen date range for the Statistics tab.
  * Speed/active time reuse [SpeedStats] per day so overnight gaps between
@@ -29,6 +31,37 @@ object RangeStats {
                 bestDayIso = null,
                 bestDayDistanceMeters = 0.0,
                 dailyDistances = emptyList(),
+            )
+        }
+    }
+
+    data class MonthTotal(
+        val yearMonth: YearMonth,
+        val dayCount: Int,
+        val totalDistanceMeters: Double,
+        val activeMillis: Long,
+    )
+
+    /**
+     * Groups records by calendar month (oldest → newest) for the "All"
+     * stats drill-down: month totals first, then days inside a month.
+     */
+    fun byMonth(records: List<DayRecord>): List<MonthTotal> {
+        if (records.isEmpty()) return emptyList()
+        val grouped = linkedMapOf<YearMonth, MutableList<DayRecord>>()
+        for (record in records.sortedBy { it.date }) {
+            val ym = runCatching {
+                YearMonth.from(java.time.LocalDate.parse(record.date))
+            }.getOrNull() ?: continue
+            grouped.getOrPut(ym) { mutableListOf() }.add(record)
+        }
+        return grouped.map { (ym, days) ->
+            val summary = summarize(days)
+            MonthTotal(
+                yearMonth = ym,
+                dayCount = summary.dayCount,
+                totalDistanceMeters = summary.totalDistanceMeters,
+                activeMillis = summary.activeMillis,
             )
         }
     }

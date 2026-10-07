@@ -149,12 +149,28 @@
     <string name="drive_backup_busy">Backup already running…</string>
 
     <string name="drive_restore_now">Restore from backup</string>
+    <string name="drive_restore_review">Review day by day</string>
     <string name="drive_restore_confirm_title">Restore from backup?</string>
-    <string name="drive_restore_confirm_message">Day records in the selected folder will be copied to this phone and overwrite local files with the same name. Continue?</string>
+    <string name="drive_restore_confirm_message">Each day in the folder is compared with what is already on this phone. You confirm overwrite one day at a time. Multiple days can be restored in one session.</string>
     <string name="drive_restore_ok">Restore done: %1$d day(s)</string>
     <string name="drive_restore_none">No records to restore in the folder.</string>
     <string name="drive_restore_failed">Restore failed: %1$s</string>
     <string name="drive_restore_busy">Backup/restore already running…</string>
+    <string name="restore_gpx_files">Import GPX files</string>
+    <string name="restore_gpx_files_hint">Pick one or more day GPX files from another source. Each day shows current vs incoming before overwrite.</string>
+    <string name="restore_scanning">Scanning records…</string>
+    <string name="restore_none_chosen">No days were restored.</string>
+    <string name="restore_day_new_title">Import new day</string>
+    <string name="restore_day_conflict_title">Overwrite this day?</string>
+    <string name="restore_day_new_message">%1$s\n\nIncoming:\n%2$s</string>
+    <string name="restore_day_conflict_message">%1$s\n\nCurrent:\n%2$s\n\nIncoming:\n%3$s</string>
+    <string name="restore_day_stats">%1$s · %2$d points · %3$s</string>
+    <string name="restore_day_note">Note: %1$s</string>
+    <string name="restore_day_photos">Photos: %1$d</string>
+    <string name="restore_day_overwrite">Overwrite</string>
+    <string name="restore_day_import">Import</string>
+    <string name="restore_day_skip">Skip</string>
+    <string name="restore_day_cancel_all">Cancel</string>
 
     <string name="settings_day_stats">Map day statistics</string>
     <string name="settings_day_stats_hint">Which day cards show on the home screen? 7 cards use a 2+2+3 layout. Long-press and drag to reorder.</string>
@@ -190,6 +206,9 @@
     <string name="stats_points_and_best">%1$d points · longest: %2$s (%3$s)</string>
     <string name="stats_points_only">%1$d points</string>
     <string name="stats_daily_breakdown">Daily distance</string>
+    <string name="stats_monthly_breakdown">Monthly distance</string>
+    <string name="stats_month_days_heading">%1$s — days</string>
+    <string name="stats_month_back">← Back to months</string>
     <string name="stats_empty">No records in this range.</string>
     <string name="stats_range_label">%1$s – %2$s</string>
     <string name="stats_range_label_single">%1$s</string>
@@ -206,7 +225,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.20 — Tap any point on the route to add a note or photo.</string>
+    <string name="build_note">Version 1.1.21 — All-range monthly totals; day-by-day route restore.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

@@ -141,13 +141,29 @@
     <string name="drive_backup_failed">Copia fallida: %1$s</string>
     <string name="drive_backup_busy">La copia ya está en curso…</string>
 
-    <string name="drive_restore_now">Restaurar copia de seguridad</string>
-    <string name="drive_restore_confirm_title">¿Restaurar copia de seguridad?</string>
-    <string name="drive_restore_confirm_message">Los registros de días en la carpeta seleccionada se copiarán a este teléfono y sobrescribirán los archivos locales con el mismo nombre. ¿Continuar?</string>
-    <string name="drive_restore_ok">Restauración completada: %1$d día(s)</string>
-    <string name="drive_restore_none">No se encontraron registros para restaurar en la carpeta.</string>
-    <string name="drive_restore_failed">Restauración fallida: %1$s</string>
+    <string name="drive_restore_now">Restaurar desde la copia</string>
+    <string name="drive_restore_review">Revisar día a día</string>
+    <string name="drive_restore_confirm_title">¿Restaurar desde la copia?</string>
+    <string name="drive_restore_confirm_message">Cada día de la carpeta se compara con el registro local. Confirma sobrescribir uno a uno. Puede restaurar varios días.</string>
+    <string name="drive_restore_ok">Restauración lista: %1$d día(s)</string>
+    <string name="drive_restore_none">No hay registros para restaurar en la carpeta.</string>
+    <string name="drive_restore_failed">Error al restaurar: %1$s</string>
     <string name="drive_restore_busy">Ya hay una copia/restauración en curso…</string>
+    <string name="restore_gpx_files">Importar archivos GPX</string>
+    <string name="restore_gpx_files_hint">Elija uno o más GPX de otra fuente. Cada día muestra actual vs entrante.</string>
+    <string name="restore_scanning">Analizando registros…</string>
+    <string name="restore_none_chosen">No se restauró ningún día.</string>
+    <string name="restore_day_new_title">Importar día nuevo</string>
+    <string name="restore_day_conflict_title">¿Sobrescribir este día?</string>
+    <string name="restore_day_new_message">%1$s\n\nEntrante:\n%2$s</string>
+    <string name="restore_day_conflict_message">%1$s\n\nActual:\n%2$s\n\nEntrante:\n%3$s</string>
+    <string name="restore_day_stats">%1$s · %2$d puntos · %3$s</string>
+    <string name="restore_day_note">Nota: %1$s</string>
+    <string name="restore_day_photos">Fotos: %1$d</string>
+    <string name="restore_day_overwrite">Sobrescribir</string>
+    <string name="restore_day_import">Importar</string>
+    <string name="restore_day_skip">Omitir</string>
+    <string name="restore_day_cancel_all">Cancelar</string>
 
     <string name="settings_day_stats">Estadísticas diarias del mapa</string>
     <string name="settings_day_stats_hint">¿Qué tarjetas del día en la pantalla principal? 7 tarjetas en diseño 2+2+3. Mantén pulsado y arrastra para ordenar.</string>
@@ -183,6 +199,9 @@
     <string name="stats_points_and_best">%1$d puntos · el más largo: %2$s (%3$s)</string>
     <string name="stats_points_only">%1$d puntos</string>
     <string name="stats_daily_breakdown">Distancia diaria</string>
+    <string name="stats_monthly_breakdown">Distancia mensual</string>
+    <string name="stats_month_days_heading">%1$s — días</string>
+    <string name="stats_month_back">← Volver a meses</string>
     <string name="stats_empty">No hay registros en este intervalo.</string>
     <string name="stats_range_label">%1$s – %2$s</string>
     <string name="stats_range_label_single">%1$s</string>
@@ -199,5 +218,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.20 — Toque cualquier punto de la ruta para añadir nota o foto.</string>
+    <string name="build_note">Versión 1.1.21 — Totales mensuales en «Todo»; restauración día a día.</string>
 </resources>

@@ -3,6 +3,8 @@ package com.dayatlas.app
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.view.View
 import android.widget.ArrayAdapter
@@ -10,6 +12,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import com.dayatlas.app.backup.DayRestore
+import com.dayatlas.app.backup.DayRestoreReview
 import com.dayatlas.app.backup.DriveFolderBackup
 import com.dayatlas.app.boot.OemAutostart
 import com.dayatlas.app.data.DayStore
@@ -22,12 +26,15 @@ import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
 import com.dayatlas.app.usage.OwnerStatsGate
 import com.dayatlas.app.usage.UsageReporter
+import java.util.concurrent.Executors
 
 class SettingsActivity : DayAtlasActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var prefs: AppPrefs
     private var versionTapCount = 0
     private var versionTapResetAt = 0L
+    private val restoreIo = Executors.newSingleThreadExecutor()
+    private val restoreMain = Handler(Looper.getMainLooper())
 
     private val pickDriveFolder = registerForActivityResult(
         ActivityResultContracts.OpenDocumentTree(),
@@ -39,6 +46,42 @@ class SettingsActivity : DayAtlasActivity() {
         if (prefs.driveBackupEnabled) {
             DriveFolderBackup.runNow(this) { result ->
                 toastBackupResult(result)
+            }
+        }
+    }
+
+    private val pickGpxFiles = registerForActivityResult(
+        ActivityResultContracts.OpenMultipleDocuments(),
+    ) { uris: List<Uri> ->
+        if (uris.isEmpty()) return@registerForActivityResult
+        RecentsHider.retainForExternalNavigation()
+        Toast.makeText(this, R.string.restore_scanning, Toast.LENGTH_SHORT).show()
+        restoreIo.execute {
+            val candidates = runCatching { DayRestore.candidatesFromUris(this, uris) }
+                .getOrElse { emptyList() }
+            restoreMain.post {
+                if (isFinishing) return@post
+                if (candidates.isEmpty()) {
+                    Toast.makeText(this, R.string.drive_restore_none, Toast.LENGTH_SHORT).show()
+                    return@post
+                }
+                DayRestoreReview.start(this, candidates) { approved ->
+                    if (approved.isEmpty()) {
+                        Toast.makeText(this, R.string.restore_none_chosen, Toast.LENGTH_SHORT).show()
+                        return@start
+                    }
+                    restoreIo.execute {
+                        val count = DayRestore.apply(this, approved)
+                        restoreMain.post {
+                            if (isFinishing) return@post
+                            Toast.makeText(
+                                this,
+                                getString(R.string.drive_restore_ok, count),
+                                Toast.LENGTH_LONG,
+                            ).show()
+                        }
+                    }
+                }
             }
         }
     }
@@ -137,11 +180,37 @@ class SettingsActivity : DayAtlasActivity() {
             AlertDialog.Builder(this)
                 .setTitle(R.string.drive_restore_confirm_title)
                 .setMessage(R.string.drive_restore_confirm_message)
-                .setPositiveButton(R.string.drive_restore_now) { _, _ ->
-                    DriveFolderBackup.restoreNow(this) { toastRestoreResult(it) }
+                .setPositiveButton(R.string.drive_restore_review) { _, _ ->
+                    Toast.makeText(this, R.string.restore_scanning, Toast.LENGTH_SHORT).show()
+                    DriveFolderBackup.scanRestoreCandidates(this) { candidates, error ->
+                        if (isFinishing) return@scanRestoreCandidates
+                        when {
+                            error == "busy" ->
+                                Toast.makeText(this, R.string.drive_restore_busy, Toast.LENGTH_SHORT).show()
+                            error != null ->
+                                Toast.makeText(
+                                    this,
+                                    getString(R.string.drive_restore_failed, error),
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                            candidates.isNullOrEmpty() ->
+                                Toast.makeText(this, R.string.drive_restore_none, Toast.LENGTH_SHORT).show()
+                            else -> DayRestoreReview.start(this, candidates) { approved ->
+                                if (approved.isEmpty()) {
+                                    Toast.makeText(this, R.string.restore_none_chosen, Toast.LENGTH_SHORT).show()
+                                    return@start
+                                }
+                                DriveFolderBackup.applyRestore(this, approved) { toastRestoreResult(it) }
+                            }
+                        }
+                    }
                 }
                 .setNegativeButton(R.string.export_cancel, null)
                 .show()
+        }
+        binding.restoreGpxFiles.setOnClickListener {
+            RecentsHider.retainForExternalNavigation()
+            pickGpxFiles.launch(arrayOf("application/gpx+xml", "application/octet-stream", "*/*"))
         }
         refreshDriveUi()
 

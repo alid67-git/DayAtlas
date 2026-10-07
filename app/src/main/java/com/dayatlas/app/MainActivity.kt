@@ -51,6 +51,7 @@ import com.dayatlas.app.update.UpdateCheckRunner
 import com.dayatlas.app.update.UpdateInstaller
 import java.time.Instant
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -86,6 +87,9 @@ class MainActivity : DayAtlasActivity() {
     private var mapDate: LocalDate = DayTitle.localToday()
     private var mapPhotos: List<String> = emptyList()
     private var statsRange: StatsRange = StatsRange.LAST_7
+    /** When [statsRange] is ALL, null = month list; otherwise days for that month. */
+    private var statsDrillMonth: YearMonth? = null
+    private var statsRecords: List<DayRecord> = emptyList()
     private val uiHandler = Handler(Looper.getMainLooper())
     private val io = Executors.newSingleThreadExecutor()
     private val refreshGeneration = AtomicInteger(0)
@@ -445,7 +449,12 @@ class MainActivity : DayAtlasActivity() {
                 R.id.chipRangeAll -> StatsRange.ALL
                 else -> return@setOnCheckedStateChangeListener
             }
+            statsDrillMonth = null
             refreshStats()
+        }
+        binding.statsMonthBack.setOnClickListener {
+            statsDrillMonth = null
+            renderStatsBreakdown()
         }
     }
 
@@ -454,11 +463,22 @@ class MainActivity : DayAtlasActivity() {
         val dates = store.listDates()
         val bounds = statsRange.bounds(today, dates.firstOrNull())
         if (bounds == null) {
+            statsRecords = emptyList()
+            statsDrillMonth = null
             bindStatsSummary(RangeStats.Summary.EMPTY, rangeLabel = null)
             return
         }
         val (from, to) = bounds
         val records = store.loadRange(from, to)
+        statsRecords = records
+        if (statsRange != StatsRange.ALL) {
+            statsDrillMonth = null
+        } else if (statsDrillMonth != null) {
+            val stillPresent = records.any {
+                runCatching { YearMonth.from(LocalDate.parse(it.date)) }.getOrNull() == statsDrillMonth
+            }
+            if (!stillPresent) statsDrillMonth = null
+        }
         val label = if (from == to) {
             getString(R.string.stats_range_label_single, formatStatsDay(from))
         } else {
@@ -507,17 +527,83 @@ class MainActivity : DayAtlasActivity() {
             )
             else -> getString(R.string.stats_points_only, summary.totalPoints)
         }
-        renderDailyBars(summary)
+        renderStatsBreakdown()
     }
 
-    private fun renderDailyBars(summary: RangeStats.Summary) {
+    private fun renderStatsBreakdown() {
         val container = binding.statsDailyBars
         container.removeAllViews()
-        if (summary.dailyDistances.isEmpty()) return
-        val maxMeters = summary.dailyDistances.maxOf { it.second }.coerceAtLeast(1.0)
-        // Keep the strip readable when "All" spans many months.
-        val rows = summary.dailyDistances.takeLast(60)
+        val showMonths = statsRange == StatsRange.ALL && statsDrillMonth == null
+        val drill = statsDrillMonth
+        binding.statsMonthBack.visibility =
+            if (statsRange == StatsRange.ALL && drill != null) View.VISIBLE else View.GONE
+        binding.statsBreakdownTitle.text = when {
+            showMonths -> getString(R.string.stats_monthly_breakdown)
+            drill != null -> getString(
+                R.string.stats_month_days_heading,
+                DayTitle.formatMonthYear(drill.atDay(1)),
+            )
+            else -> getString(R.string.stats_daily_breakdown)
+        }
+        if (statsRecords.isEmpty()) return
+
+        if (showMonths) {
+            renderMonthBars(RangeStats.byMonth(statsRecords))
+            return
+        }
+
+        val dayRows = if (drill != null) {
+            statsRecords
+                .filter {
+                    runCatching { YearMonth.from(LocalDate.parse(it.date)) }.getOrNull() == drill
+                }
+                .map { it.date to it.distanceMeters }
+        } else {
+            // Shorter ranges: keep the strip readable.
+            RangeStats.summarize(statsRecords).dailyDistances.takeLast(60)
+        }
+        renderDayBars(dayRows)
+    }
+
+    private fun renderMonthBars(months: List<RangeStats.MonthTotal>) {
+        if (months.isEmpty()) return
+        val maxMeters = months.maxOf { it.totalDistanceMeters }.coerceAtLeast(1.0)
         val inflater = LayoutInflater.from(this)
+        val container = binding.statsDailyBars
+        for (month in months) {
+            val row = inflater.inflate(R.layout.item_stats_day_bar, container, false)
+            row.findViewById<TextView>(R.id.barDayLabel).text =
+                DayTitle.formatMonthYear(month.yearMonth.atDay(1))
+            row.findViewById<TextView>(R.id.barDayValue).text =
+                if (month.totalDistanceMeters <= 0) {
+                    getString(R.string.em_dash)
+                } else {
+                    DayTitle.formatDistance(month.totalDistanceMeters)
+                }
+            val fill = row.findViewById<View>(R.id.barFill)
+            val meters = month.totalDistanceMeters
+            fill.post {
+                val trackWidth = (fill.parent as View).width
+                val lp = fill.layoutParams
+                lp.width = ((meters / maxMeters) * trackWidth).toInt()
+                    .coerceAtLeast(if (meters > 0) 4 else 0)
+                fill.layoutParams = lp
+            }
+            row.isClickable = true
+            row.isFocusable = true
+            row.setOnClickListener {
+                statsDrillMonth = month.yearMonth
+                renderStatsBreakdown()
+            }
+            container.addView(row)
+        }
+    }
+
+    private fun renderDayBars(rows: List<Pair<String, Double>>) {
+        if (rows.isEmpty()) return
+        val maxMeters = rows.maxOf { it.second }.coerceAtLeast(1.0)
+        val inflater = LayoutInflater.from(this)
+        val container = binding.statsDailyBars
         for ((iso, meters) in rows) {
             val row = inflater.inflate(R.layout.item_stats_day_bar, container, false)
             row.findViewById<TextView>(R.id.barDayLabel).text =
@@ -528,7 +614,8 @@ class MainActivity : DayAtlasActivity() {
             fill.post {
                 val trackWidth = (fill.parent as View).width
                 val lp = fill.layoutParams
-                lp.width = ((meters / maxMeters) * trackWidth).toInt().coerceAtLeast(if (meters > 0) 4 else 0)
+                lp.width = ((meters / maxMeters) * trackWidth).toInt()
+                    .coerceAtLeast(if (meters > 0) 4 else 0)
                 fill.layoutParams = lp
             }
             row.isClickable = true
