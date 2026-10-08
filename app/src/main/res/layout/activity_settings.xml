@@ -45,6 +45,15 @@
                 android:textColor="@color/md_theme_outline" />
 
             <TextView
+                android:id="@+id/sampleStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="@color/md_theme_outline"
+                tools:text="Son deneme: 7 Eki 23:28\nSon kayıt: 7 Eki 23:28 → 2026-10-07" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"

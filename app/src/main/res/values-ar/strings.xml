@@ -47,6 +47,12 @@
     <string name="manual_hint">الوضع اليومي متوقف. اضغط على «بدء» عندما ترغب في التتبع (نقطة كل 0.5–5 دقائق).</string>
     <string name="need_location">إذن الموقع مطلوب لتسجيل النقاط.</string>
     <string name="settings_daily_mode">الوضع اليومي</string>
+    <string name="sample_status_none">لا توجد محاولة GPS في الخلفية بعد. مع الوضع اليومي يجب أن يظهر هذا دون فتح التطبيق.</string>
+    <string name="sample_status_attempt">آخر محاولة: %1$s</string>
+    <string name="sample_status_attempt_never">آخر محاولة: —</string>
+    <string name="sample_status_success">آخر حفظ: %1$s</string>
+    <string name="sample_status_success_day">آخر حفظ: %1$s → %2$s</string>
+    <string name="sample_status_success_never">آخر حفظ: لا يوجد بعد (محاولة بلا تثبيت)</string>
     <string name="settings_daily_mode_summary">عند التفعيل، يبدأ تسجيل اليوم أو يستمر دون طلب تأكيد في كل مرة يُفتح فيها التطبيق أو الهاتف.</string>
     <string name="settings_interval">فاصل أخذ العينات</string>
     <string name="settings_interval_hint">بعد 3 قراءات متتالية في نفس المكان تقريبًا (~80 مترًا)، يزداد الفاصل الزمني درجة واحدة (30 ثانية ← 1 ← 3 ← 5 دقائق)؛ وعند حدوث حركة فعلية (قراءتان متتاليتان خارج ذلك النطاق) يعود إلى الفاصل الذي اخترته — لا يؤدي اهتزاز GPS البسيط في المنزل إلى تسريع أخذ العينات مجددًا.</string>
@@ -218,5 +224,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.21 — إجماليات شهرية في «الكل»؛ استعادة المسار يومًا بيوم.</string>
+    <string name="build_note">الإصدار 1.1.22 — الأيام حسب ساعة الهاتف؛ آخر محاولة GPS في الإعدادات.</string>
 </resources>

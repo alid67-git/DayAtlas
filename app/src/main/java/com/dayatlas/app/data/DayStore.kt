@@ -3,7 +3,6 @@ package com.dayatlas.app.data
 import android.content.Context
 import android.location.Location
 import java.io.File
-import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.concurrent.locks.ReentrantLock
@@ -66,11 +65,20 @@ class DayStore(context: Context) {
         return out
     }
 
-    fun append(location: Location, zoneId: ZoneId = ZoneId.systemDefault()): AppendResult = lock.withLock {
-        val timeMillis = location.time.takeIf { it > 0L } ?: System.currentTimeMillis()
-        val localDate = Instant.ofEpochMilli(timeMillis)
-            .atZone(zoneId)
-            .toLocalDate()
+    fun append(
+        location: Location,
+        zoneId: ZoneId = ZoneId.systemDefault(),
+        wallTimeMillis: Long = System.currentTimeMillis(),
+    ): AppendResult = lock.withLock {
+        // Day file follows the phone calendar; GPS time alone used to pull
+        // late-evening samples onto the next day when the fix clock was ahead.
+        val bucket = SampleDayBucket.resolve(
+            gpsTimeMillis = location.time,
+            wallTimeMillis = wallTimeMillis,
+            zoneId = zoneId,
+        )
+        val localDate = bucket.localDate
+        val timeMillis = bucket.pointTimeMillis
         val iso = DayTitle.iso(localDate)
         if (pendingDateIso != null && pendingDateIso != iso) {
             pendingPoint = null
