@@ -47,6 +47,8 @@ class SampleService : Service() {
             return START_NOT_STICKY
         }
         sampleInFlight = true
+        // Wall-clock stamp so Settings can prove daily mode woke without the UI.
+        prefs.lastSampleAttemptMillis = System.currentTimeMillis()
 
         // Backup: if midday alarm was killed, a sample tick can still check
         // once per calendar day after noon.
@@ -81,6 +83,9 @@ class SampleService : Service() {
                 )
                 val result = runCatching { DayStore(applicationContext).append(location) }.getOrNull()
                 if (result != null && result.wrote) {
+                    val now = System.currentTimeMillis()
+                    prefs.lastSampleSuccessMillis = now
+                    prefs.lastSampleSuccessDay = result.record.date
                     val last = result.record.points.lastOrNull()
                     if (last != null) {
                         // Extras let the UI update without re-reading disk /

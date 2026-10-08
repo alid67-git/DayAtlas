@@ -47,6 +47,12 @@
     <string name="manual_hint">Daily mode is off. Press Start when you want to track (a point every 10 s–5 min).</string>
     <string name="need_location">Location permission is required to record points.</string>
     <string name="settings_daily_mode">Daily mode</string>
+    <string name="sample_status_none">No background GPS attempt yet. With daily mode on, this should fill even if you never open the app.</string>
+    <string name="sample_status_attempt">Last attempt: %1$s</string>
+    <string name="sample_status_attempt_never">Last attempt: —</string>
+    <string name="sample_status_success">Last save: %1$s</string>
+    <string name="sample_status_success_day">Last save: %1$s → %2$s</string>
+    <string name="sample_status_success_never">Last save: none yet (attempted but no fix written)</string>
     <string name="settings_daily_mode_summary">When on, today\'s recording starts or continues without asking whenever the app or phone opens.</string>
     <string name="settings_interval">Sampling interval</string>
     <string name="settings_interval_hint">After 3 readings in the same place (~80 m), the interval steps up (e.g. 30 s → 1 min; max 1 min). Real movement returns to your chosen interval — home GPS jitter does not speed sampling back up.</string>
@@ -225,7 +231,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.21 — All-range monthly totals; day-by-day route restore.</string>
+    <string name="build_note">Version 1.1.22 — Day files follow phone clock; last GPS attempt in Settings.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

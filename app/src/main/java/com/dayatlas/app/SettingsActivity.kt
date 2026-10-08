@@ -26,6 +26,9 @@ import com.dayatlas.app.update.UpdateChecker
 import com.dayatlas.app.update.UpdateInstaller
 import com.dayatlas.app.usage.OwnerStatsGate
 import com.dayatlas.app.usage.UsageReporter
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.Executors
 
 class SettingsActivity : DayAtlasActivity() {
@@ -35,6 +38,10 @@ class SettingsActivity : DayAtlasActivity() {
     private var versionTapResetAt = 0L
     private val restoreIo = Executors.newSingleThreadExecutor()
     private val restoreMain = Handler(Looper.getMainLooper())
+
+    companion object {
+        private val SAMPLE_TIME_FMT = DateTimeFormatter.ofPattern("HH:mm")
+    }
 
     private val pickDriveFolder = registerForActivityResult(
         ActivityResultContracts.OpenDocumentTree(),
@@ -101,6 +108,7 @@ class SettingsActivity : DayAtlasActivity() {
             }
             TrackingController.setDailyMode(this, checked, prefs)
         }
+        refreshSampleStatus()
 
         setupLanguageDropdown()
         setupIntervalDropdown()
@@ -356,6 +364,45 @@ class SettingsActivity : DayAtlasActivity() {
             }
             .setNegativeButton(R.string.export_cancel, null)
             .show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::prefs.isInitialized) {
+            refreshSampleStatus()
+        }
+    }
+
+    private fun refreshSampleStatus() {
+        val attempt = prefs.lastSampleAttemptMillis
+        val success = prefs.lastSampleSuccessMillis
+        val day = prefs.lastSampleSuccessDay
+        if (attempt <= 0L && success <= 0L) {
+            binding.sampleStatus.text = getString(R.string.sample_status_none)
+            return
+        }
+        val attemptText = if (attempt > 0L) {
+            getString(R.string.sample_status_attempt, formatSampleStamp(attempt))
+        } else {
+            getString(R.string.sample_status_attempt_never)
+        }
+        val successText = when {
+            success <= 0L -> getString(R.string.sample_status_success_never)
+            !day.isNullOrBlank() -> getString(
+                R.string.sample_status_success_day,
+                formatSampleStamp(success),
+                day,
+            )
+            else -> getString(R.string.sample_status_success, formatSampleStamp(success))
+        }
+        binding.sampleStatus.text = "$attemptText\n$successText"
+    }
+
+    private fun formatSampleStamp(epochMillis: Long): String {
+        val zoned = Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault())
+        val date = zoned.toLocalDate()
+        val time = zoned.toLocalTime().format(SAMPLE_TIME_FMT)
+        return "${DayTitle.formatShort(date)} $time"
     }
 
     private fun refreshDriveUi() {

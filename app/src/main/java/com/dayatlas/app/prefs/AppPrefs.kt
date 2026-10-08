@@ -128,6 +128,28 @@ class AppPrefs(context: Context) {
             }
         }
 
+    /**
+     * Wall-clock epoch millis of the last background/foreground GPS sample
+     * attempt ([com.dayatlas.app.location.SampleService] start). 0 = never.
+     * Lets Settings show whether daily mode woke without opening the UI.
+     */
+    var lastSampleAttemptMillis: Long
+        get() = prefs.getLong(LAST_SAMPLE_ATTEMPT, 0L)
+        set(value) = prefs.edit().putLong(LAST_SAMPLE_ATTEMPT, value).apply()
+
+    /**
+     * Wall-clock epoch millis of the last successful write to a day file
+     * from a sample tick. 0 = never wrote.
+     */
+    var lastSampleSuccessMillis: Long
+        get() = prefs.getLong(LAST_SAMPLE_SUCCESS, 0L)
+        set(value) = prefs.edit().putLong(LAST_SAMPLE_SUCCESS, value).apply()
+
+    /** Day ISO (`yyyy-MM-dd`) of [lastSampleSuccessMillis], if any. */
+    var lastSampleSuccessDay: String?
+        get() = prefs.getString(LAST_SAMPLE_SUCCESS_DAY, null)
+        set(value) = prefs.edit().putString(LAST_SAMPLE_SUCCESS_DAY, value).apply()
+
     /** Clear adaptive backoff (e.g. settings interval change or tracking start). */
     fun resetStationaryBackoff() {
         prefs.edit()
@@ -289,6 +311,9 @@ class AppPrefs(context: Context) {
         private const val MOVING_STREAK = "moving_streak"
         private const val LAST_SAMPLE_LAT = "last_sample_lat_bits"
         private const val LAST_SAMPLE_LON = "last_sample_lon_bits"
+        private const val LAST_SAMPLE_ATTEMPT = "last_sample_attempt_millis"
+        private const val LAST_SAMPLE_SUCCESS = "last_sample_success_millis"
+        private const val LAST_SAMPLE_SUCCESS_DAY = "last_sample_success_day"
         private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"
         private const val LAST_UPDATE_CHECK = "last_update_check_millis"
         private const val LAST_UPDATE_CHECK_DAY = "last_update_check_day"

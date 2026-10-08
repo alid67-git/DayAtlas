@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.22 — 2026-10-08
+
+- **Gün dosyası telefon saatine göre:** GPS saati gece yarısını geçmiş
+  olsa bile kayıt, telefonun duvar saatindeki güne yazılır (ABD saati /
+  gece 23:30’un ertesi güne kayması).
+- **Ayarlar → son GPS denemesi / kaydı:** Uygulamayı açmadan günlük modun
+  tetiklenip tetiklenmediğini buradan kontrol edebilirsiniz.
+
 ## 1.1.21 — 2026-10-06
 
 - **İstatistikler → Tümü:** Ay bazlı toplam mesafe listesi; bir aya

@@ -47,6 +47,12 @@
     <string name="manual_hint">Günlük mod kapalı. İzlemek istediğinizde Başlat’a basın (10 sn–5 dk’da bir nokta).</string>
     <string name="need_location">Konum izni olmadan nokta alınamaz.</string>
     <string name="settings_daily_mode">Günlük mod</string>
+    <string name="sample_status_none">Henüz arka planda GPS denemesi yok. Günlük mod açıkken uygulamayı açmadan da burası dolmalı.</string>
+    <string name="sample_status_attempt">Son deneme: %1$s</string>
+    <string name="sample_status_attempt_never">Son deneme: —</string>
+    <string name="sample_status_success">Son kayıt: %1$s</string>
+    <string name="sample_status_success_day">Son kayıt: %1$s → %2$s</string>
+    <string name="sample_status_success_never">Son kayıt: henüz yok (deneme oldu ama konum yazılamadı)</string>
     <string name="settings_daily_mode_summary">Açıkken uygulama veya telefon açılınca bugünün kaydı onay sormadan başlar / devam eder.</string>
     <string name="settings_interval">Örnekleme aralığı</string>
     <string name="settings_interval_hint">Aynı yerde (~80 m) art arda 3 ölçüm olunca aralık bir üst kademeye seyreltilir (ör. 30 sn → 1 dk; en fazla 1 dk). Gerçek hareket olunca seçtiğiniz aralığa döner — ev GPS titreşimi hızı yeniden sıkılaştırmaz.</string>
@@ -235,5 +241,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.21 — Tümü aylık özet; gün gün rota geri yükleme.</string>
+    <string name="build_note">Sürüm 1.1.22 — Günler telefon saatine göre; Ayarlar’da son GPS denemesi.</string>
 </resources>
