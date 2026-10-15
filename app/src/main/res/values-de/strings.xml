@@ -46,6 +46,16 @@
     <string name="stop">Stopp</string>
     <string name="manual_hint">Tagesmodus aus. Tippen Sie auf Start, wenn Sie tracken möchten (alle 0,5–5 Min. ein Punkt).</string>
     <string name="need_location">Ohne Standortberechtigung können keine Punkte erfasst werden.</string>
+    <string name="need_background_location">Für automatische Tagesaufzeichnung Standort auf „Immer zulassen“ setzen (Einstellungen → Standort).</string>
+    <string name="need_exact_alarms">Für zuverlässige Hintergrundaufzeichnung „Alarme &amp; Erinnerungen“ erlauben.</string>
+    <string name="sample_status_blockers">Fehlt: %1$s</string>
+    <string name="sample_blocker_location">Standort</string>
+    <string name="sample_blocker_bg_location">Immer-Standort</string>
+    <string name="sample_blocker_exact_alarm">Genaue Alarme</string>
+    <string name="sample_blocker_battery">Akku-Ausnahme</string>
+    <string name="sample_status_failure">Letzter Fehler: %1$s</string>
+    <string name="sample_failure_tracking_off">Aufnahme aus</string>
+    <string name="sample_failure_fgs">Hintergrunddienst (%1$s)</string>
     <string name="settings_daily_mode">Tagesmodus</string>
     <string name="sample_status_none">Noch kein Hintergrund-GPS-Versuch. Bei aktivem Tagesmodus sollte dies auch ohne App-Öffnen erscheinen.</string>
     <string name="sample_status_attempt">Letzter Versuch: %1$s</string>
@@ -224,5 +234,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.22 — Tagesdateien folgen der Telefonuhr; letzter GPS-Versuch in Einstellungen.</string>
+    <string name="build_note">Version 1.1.23 — Automatische Tagesaufnahme: Immer-Standort + Alarm-Fixes.</string>
 </resources>

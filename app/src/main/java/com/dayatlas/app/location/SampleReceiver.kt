@@ -12,6 +12,11 @@ class SampleReceiver : BroadcastReceiver() {
             prefs.trackingEnabled = true
         }
         if (!TrackingController.shouldSample(context, prefs)) {
+            // Stamp so Settings can show why unattended ticks are skipped
+            // (missing "Allow all the time", etc.) instead of looking idle.
+            prefs.lastSampleAttemptMillis = System.currentTimeMillis()
+            prefs.lastSampleFailure =
+                TrackingController.sampleBlockReason(context, prefs) ?: "blocked"
             if (prefs.trackingEnabled || prefs.dailyMode) {
                 SampleScheduler.scheduleNext(context, prefs)
             }

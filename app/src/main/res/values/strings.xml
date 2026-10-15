@@ -46,6 +46,16 @@
     <string name="stop">Durdur</string>
     <string name="manual_hint">Günlük mod kapalı. İzlemek istediğinizde Başlat’a basın (10 sn–5 dk’da bir nokta).</string>
     <string name="need_location">Konum izni olmadan nokta alınamaz.</string>
+    <string name="need_background_location">Otomatik günlük kayıt için konum iznini “Her zaman izin ver” yapın (Ayarlar → Konum).</string>
+    <string name="need_exact_alarms">Güvenilir arka plan kaydı için “Alarmlar ve hatırlatıcılar” iznini açın.</string>
+    <string name="sample_status_blockers">Eksik: %1$s</string>
+    <string name="sample_blocker_location">Konum</string>
+    <string name="sample_blocker_bg_location">Her zaman konum</string>
+    <string name="sample_blocker_exact_alarm">Tam alarm</string>
+    <string name="sample_blocker_battery">Pil muafiyeti</string>
+    <string name="sample_status_failure">Son hata: %1$s</string>
+    <string name="sample_failure_tracking_off">Kayıt kapalı</string>
+    <string name="sample_failure_fgs">Arka plan servisi (%1$s)</string>
     <string name="settings_daily_mode">Günlük mod</string>
     <string name="sample_status_none">Henüz arka planda GPS denemesi yok. Günlük mod açıkken uygulamayı açmadan da burası dolmalı.</string>
     <string name="sample_status_attempt">Son deneme: %1$s</string>
@@ -241,5 +251,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.22 — Günler telefon saatine göre; Ayarlar’da son GPS denemesi.</string>
+    <string name="build_note">Sürüm 1.1.23 — Otomatik günlük kayıt: her zaman konum + alarm düzeltmeleri.</string>
 </resources>

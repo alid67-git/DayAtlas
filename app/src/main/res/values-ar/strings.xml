@@ -46,6 +46,16 @@
     <string name="stop">إيقاف</string>
     <string name="manual_hint">الوضع اليومي متوقف. اضغط على «بدء» عندما ترغب في التتبع (نقطة كل 0.5–5 دقائق).</string>
     <string name="need_location">إذن الموقع مطلوب لتسجيل النقاط.</string>
+    <string name="need_background_location">للتسجيل اليومي التلقائي، عيّن الموقع على «السماح طوال الوقت».</string>
+    <string name="need_exact_alarms">للتسجيل الموثوق في الخلفية، اسمح بـ «التنبيهات والتذكيرات».</string>
+    <string name="sample_status_blockers">ناقص: %1$s</string>
+    <string name="sample_blocker_location">الموقع</string>
+    <string name="sample_blocker_bg_location">الموقع دائمًا</string>
+    <string name="sample_blocker_exact_alarm">تنبيهات دقيقة</string>
+    <string name="sample_blocker_battery">استثناء البطارية</string>
+    <string name="sample_status_failure">آخر خطأ: %1$s</string>
+    <string name="sample_failure_tracking_off">التسجيل متوقف</string>
+    <string name="sample_failure_fgs">خدمة الخلفية (%1$s)</string>
     <string name="settings_daily_mode">الوضع اليومي</string>
     <string name="sample_status_none">لا توجد محاولة GPS في الخلفية بعد. مع الوضع اليومي يجب أن يظهر هذا دون فتح التطبيق.</string>
     <string name="sample_status_attempt">آخر محاولة: %1$s</string>
@@ -224,5 +234,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.22 — الأيام حسب ساعة الهاتف؛ آخر محاولة GPS في الإعدادات.</string>
+    <string name="build_note">الإصدار 1.1.23 — تسجيل يومي تلقائي: موقع دائم + إصلاح التنبيهات.</string>
 </resources>

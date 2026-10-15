@@ -46,6 +46,16 @@
     <string name="stop">Detener</string>
     <string name="manual_hint">El modo diario está desactivado. Pulsa Iniciar cuando quieras registrar (un punto cada 0,5–5 min).</string>
     <string name="need_location">Se necesita permiso de ubicación para registrar puntos.</string>
+    <string name="need_background_location">Para la grabación diaria automática, ponga la ubicación en «Permitir todo el tiempo».</string>
+    <string name="need_exact_alarms">Para grabación fiable en segundo plano, permita «Alarmas y recordatorios».</string>
+    <string name="sample_status_blockers">Falta: %1$s</string>
+    <string name="sample_blocker_location">Ubicación</string>
+    <string name="sample_blocker_bg_location">Ubicación siempre</string>
+    <string name="sample_blocker_exact_alarm">Alarmas exactas</string>
+    <string name="sample_blocker_battery">Exención de batería</string>
+    <string name="sample_status_failure">Último error: %1$s</string>
+    <string name="sample_failure_tracking_off">Grabación off</string>
+    <string name="sample_failure_fgs">Servicio en segundo plano (%1$s)</string>
     <string name="settings_daily_mode">Modo diario</string>
     <string name="sample_status_none">Aún no hay intento GPS en segundo plano. Con el modo diario, esto debería llenarse sin abrir la app.</string>
     <string name="sample_status_attempt">Último intento: %1$s</string>
@@ -224,5 +234,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.22 — Los días siguen el reloj del teléfono; último intento GPS en Ajustes.</string>
+    <string name="build_note">Versión 1.1.23 — Grabación diaria auto: ubicación siempre + alarmas.</string>
 </resources>

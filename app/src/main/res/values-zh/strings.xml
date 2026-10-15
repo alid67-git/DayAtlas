@@ -46,6 +46,16 @@
     <string name="stop">停止</string>
     <string name="manual_hint">每日模式已关闭。需要记录时请点击"开始"（每 0.5–5 分钟记录一个点）。</string>
     <string name="need_location">需要定位权限才能记录点。</string>
+    <string name="need_background_location">要自动每日记录，请将位置设为“始终允许”。</string>
+    <string name="need_exact_alarms">为可靠后台记录，请允许“闹钟和提醒”。</string>
+    <string name="sample_status_blockers">缺少：%1$s</string>
+    <string name="sample_blocker_location">位置</string>
+    <string name="sample_blocker_bg_location">始终定位</string>
+    <string name="sample_blocker_exact_alarm">精确闹钟</string>
+    <string name="sample_blocker_battery">电池豁免</string>
+    <string name="sample_status_failure">上次错误：%1$s</string>
+    <string name="sample_failure_tracking_off">记录已关闭</string>
+    <string name="sample_failure_fgs">后台服务（%1$s）</string>
     <string name="settings_daily_mode">每日模式</string>
     <string name="sample_status_none">尚无后台 GPS 尝试。开启每日模式后，即使不打开应用也应显示在此。</string>
     <string name="sample_status_attempt">上次尝试：%1$s</string>
@@ -224,5 +234,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.22 — 按手机时钟分日；设置中显示上次 GPS 尝试。</string>
+    <string name="build_note">版本 1.1.23 — 自动每日记录：始终定位 + 闹钟修复。</string>
 </resources>

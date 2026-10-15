@@ -46,6 +46,16 @@
     <string name="stop">Stop</string>
     <string name="manual_hint">Daily mode is off. Press Start when you want to track (a point every 10 s–5 min).</string>
     <string name="need_location">Location permission is required to record points.</string>
+    <string name="need_background_location">For automatic daily recording, set location to “Allow all the time” (Settings → Location).</string>
+    <string name="need_exact_alarms">For reliable background recording, allow “Alarms &amp; reminders”.</string>
+    <string name="sample_status_blockers">Missing: %1$s</string>
+    <string name="sample_blocker_location">Location</string>
+    <string name="sample_blocker_bg_location">Always-on location</string>
+    <string name="sample_blocker_exact_alarm">Exact alarms</string>
+    <string name="sample_blocker_battery">Battery exemption</string>
+    <string name="sample_status_failure">Last error: %1$s</string>
+    <string name="sample_failure_tracking_off">Recording off</string>
+    <string name="sample_failure_fgs">Background service (%1$s)</string>
     <string name="settings_daily_mode">Daily mode</string>
     <string name="sample_status_none">No background GPS attempt yet. With daily mode on, this should fill even if you never open the app.</string>
     <string name="sample_status_attempt">Last attempt: %1$s</string>
@@ -231,7 +241,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.22 — Day files follow phone clock; last GPS attempt in Settings.</string>
+    <string name="build_note">Version 1.1.23 — Daily auto-record: always-on location + alarm fixes.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>

@@ -1,15 +1,23 @@
 package com.dayatlas.app.location
 
 import android.content.Context
+import android.os.Build
 import com.dayatlas.app.prefs.AppPrefs
 
 object TrackingController {
+    /** First sample soon after boot / process start so a day is not empty
+     * while waiting a full adaptive interval. */
+    private const val BOOT_SAMPLE_DELAY_MS = 8_000L
+
     fun onAppStart(context: Context, prefs: AppPrefs = AppPrefs(context)) {
         if (prefs.dailyMode) {
             prefs.trackingEnabled = true
         }
         if (prefs.trackingEnabled) {
-            SampleScheduler.ensureScheduled(context, prefs)
+            // Prefer a near-term tick; ensureScheduled alone used the full
+            // interval and left empty mornings after reboot.
+            SampleScheduler.scheduleNext(context, prefs, delayMs = BOOT_SAMPLE_DELAY_MS)
+            SampleScheduler.scheduleMidnight(context)
             MotionWakeTrigger.register(context)
         }
     }
@@ -56,6 +64,29 @@ object TrackingController {
 
     fun shouldSample(context: Context, prefs: AppPrefs = AppPrefs(context)): Boolean {
         if (!prefs.trackingEnabled && !prefs.dailyMode) return false
-        return PermissionHelper.hasLocation(context)
+        if (!PermissionHelper.hasLocation(context)) return false
+        // Alarm-driven ticks run in the background. On Android 10+ (and
+        // especially 14+ location FGS) while-in-use alone cannot start the
+        // sample service — ACCESS_BACKGROUND_LOCATION is required.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+            !PermissionHelper.hasBackgroundLocation(context) &&
+            !PermissionHelper.isAppForeground(context)
+        ) {
+            return false
+        }
+        return true
+    }
+
+    /** Why an unattended sample would be skipped right now, or null if OK. */
+    fun sampleBlockReason(context: Context, prefs: AppPrefs = AppPrefs(context)): String? {
+        if (!prefs.trackingEnabled && !prefs.dailyMode) return "tracking_off"
+        if (!PermissionHelper.hasLocation(context)) return "no_location"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+            !PermissionHelper.hasBackgroundLocation(context)
+        ) {
+            return "no_bg_location"
+        }
+        if (!PermissionHelper.canScheduleExactAlarms(context)) return "no_exact_alarm"
+        return null
     }
 }

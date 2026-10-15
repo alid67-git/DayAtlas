@@ -150,6 +150,14 @@ class AppPrefs(context: Context) {
         get() = prefs.getString(LAST_SAMPLE_SUCCESS_DAY, null)
         set(value) = prefs.edit().putString(LAST_SAMPLE_SUCCESS_DAY, value).apply()
 
+    /**
+     * Short machine reason for the last failed / skipped sample tick
+     * (`no_bg_location`, `fgs:SecurityException`, …). Cleared on success.
+     */
+    var lastSampleFailure: String?
+        get() = prefs.getString(LAST_SAMPLE_FAILURE, null)
+        set(value) = prefs.edit().putString(LAST_SAMPLE_FAILURE, value).apply()
+
     /** Clear adaptive backoff (e.g. settings interval change or tracking start). */
     fun resetStationaryBackoff() {
         prefs.edit()
@@ -314,6 +322,7 @@ class AppPrefs(context: Context) {
         private const val LAST_SAMPLE_ATTEMPT = "last_sample_attempt_millis"
         private const val LAST_SAMPLE_SUCCESS = "last_sample_success_millis"
         private const val LAST_SAMPLE_SUCCESS_DAY = "last_sample_success_day"
+        private const val LAST_SAMPLE_FAILURE = "last_sample_failure"
         private const val LAST_SEEN_BUILD_NOTE = "last_seen_build_note_version"
         private const val LAST_UPDATE_CHECK = "last_update_check_millis"
         private const val LAST_UPDATE_CHECK_DAY = "last_update_check_day"
