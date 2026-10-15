@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.23 — 2026-10-15
+
+- **Otomatik günlük kayıt düzeltmeleri:** Arka plan örneklemesi için
+  “Her zaman konum” zorunlu; FGS/alarm hataları Ayarlar’da görünür;
+  tam-alarm izni değişince zincir yeniden kurulur; açılışta kısa sürede
+  ilk örnek alınır.
+
 ## 1.1.22 — 2026-10-08
 
 - **Gün dosyası telefon saatine göre:** GPS saati gece yarısını geçmiş

@@ -84,6 +84,7 @@ class MainActivity : DayAtlasActivity() {
     private var pendingStart = false
     private var askedBatteryThisSession = false
     private var askedExactThisSession = false
+    private var askedBackgroundThisSession = false
     private var mapDate: LocalDate = DayTitle.localToday()
     private var mapPhotos: List<String> = emptyList()
     private var statsRange: StatsRange = StatsRange.LAST_7
@@ -119,11 +120,18 @@ class MainActivity : DayAtlasActivity() {
 
     private val backgroundLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
-    ) { continuePermissionChain() }
+    ) { granted ->
+        // Do not re-enter the BG request forever on deny — otherwise the
+        // chain loops and daily mode never reaches start().
+        if (!granted && !PermissionHelper.hasBackgroundLocation(this)) {
+            Toast.makeText(this, R.string.need_background_location, Toast.LENGTH_LONG).show()
+        }
+        continuePermissionChain(skipBackgroundRequest = true)
+    }
 
     private val notificationLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
-    ) { continuePermissionChain() }
+    ) { continuePermissionChain(skipBackgroundRequest = true) }
 
     /** Non-null while attaching a photo to a dwell stop instead of the day strip. */
     private var pendingDwellPhotoKey: Long? = null
@@ -640,7 +648,7 @@ class MainActivity : DayAtlasActivity() {
         continuePermissionChain()
     }
 
-    private fun continuePermissionChain() {
+    private fun continuePermissionChain(skipBackgroundRequest: Boolean = false) {
         if (!PermissionHelper.hasLocation(this)) {
             // Permission UI is not started via startActivity, so mark retain
             // explicitly - otherwise RecentsHider would tear the task down
@@ -650,8 +658,11 @@ class MainActivity : DayAtlasActivity() {
             return
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-            !PermissionHelper.hasBackgroundLocation(this)
+            !PermissionHelper.hasBackgroundLocation(this) &&
+            !skipBackgroundRequest &&
+            !askedBackgroundThisSession
         ) {
+            askedBackgroundThisSession = true
             RecentsHider.retainForExternalNavigation()
             backgroundLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
             return

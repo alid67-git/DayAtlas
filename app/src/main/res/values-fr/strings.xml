@@ -46,6 +46,16 @@
     <string name="stop">Arrêter</string>
     <string name="manual_hint">Le mode journalier est désactivé. Appuyez sur Démarrer pour suivre votre trajet (un point toutes les 0,5 à 5 min).</string>
     <string name="need_location">L\'autorisation de localisation est nécessaire pour enregistrer des points.</string>
+    <string name="need_background_location">Pour l\'enregistrement journalier automatique, définissez la position sur « Autoriser tout le temps ».</string>
+    <string name="need_exact_alarms">Pour un enregistrement fiable en arrière-plan, autorisez « Alarmes et rappels ».</string>
+    <string name="sample_status_blockers">Manquant : %1$s</string>
+    <string name="sample_blocker_location">Position</string>
+    <string name="sample_blocker_bg_location">Position permanente</string>
+    <string name="sample_blocker_exact_alarm">Alarmes exactes</string>
+    <string name="sample_blocker_battery">Exemption batterie</string>
+    <string name="sample_status_failure">Dernière erreur : %1$s</string>
+    <string name="sample_failure_tracking_off">Enregistrement off</string>
+    <string name="sample_failure_fgs">Service arrière-plan (%1$s)</string>
     <string name="settings_daily_mode">Mode journalier</string>
     <string name="sample_status_none">Aucune tentative GPS en arrière-plan. Avec le mode journalier, cela devrait se remplir sans ouvrir l\'application.</string>
     <string name="sample_status_attempt">Dernière tentative : %1$s</string>
@@ -224,5 +234,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.22 — Jours selon l\'horloge du téléphone ; dernière tentative GPS dans Réglages.</string>
+    <string name="build_note">Version 1.1.23 — Enregistrement auto : position permanente + alarmes.</string>
 </resources>

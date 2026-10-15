@@ -36,19 +36,36 @@ class SampleService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startInForeground()
+        val prefsEarly = AppPrefs(this)
+        // Android 14+ location FGS from a background alarm needs
+        // ACCESS_BACKGROUND_LOCATION; without it startForeground throws and
+        // the whole tick dies with no stamp — days stay empty.
+        try {
+            startInForeground()
+        } catch (t: Throwable) {
+            android.util.Log.w(TAG, "startForeground failed", t)
+            prefsEarly.lastSampleAttemptMillis = System.currentTimeMillis()
+            prefsEarly.lastSampleFailure = "fgs:" + t.javaClass.simpleName
+            SampleScheduler.scheduleNext(this, prefsEarly, delayMs = SampleStarter.FGS_RETRY_MS)
+            stopSelf()
+            return START_NOT_STICKY
+        }
         if (!busy.compareAndSet(false, true)) {
             return START_NOT_STICKY
         }
         acquireWakeLock()
-        val prefs = AppPrefs(this)
+        val prefs = prefsEarly
         if (!TrackingController.shouldSample(this, prefs)) {
-            finish(reschedule = false)
+            prefs.lastSampleAttemptMillis = System.currentTimeMillis()
+            prefs.lastSampleFailure =
+                TrackingController.sampleBlockReason(this, prefs) ?: "blocked"
+            finish(reschedule = prefs.trackingEnabled || prefs.dailyMode)
             return START_NOT_STICKY
         }
         sampleInFlight = true
         // Wall-clock stamp so Settings can prove daily mode woke without the UI.
         prefs.lastSampleAttemptMillis = System.currentTimeMillis()
+        prefs.lastSampleFailure = null
 
         // Backup: if midday alarm was killed, a sample tick can still check
         // once per calendar day after noon.
@@ -86,6 +103,7 @@ class SampleService : Service() {
                     val now = System.currentTimeMillis()
                     prefs.lastSampleSuccessMillis = now
                     prefs.lastSampleSuccessDay = result.record.date
+                    prefs.lastSampleFailure = null
                     val last = result.record.points.lastOrNull()
                     if (last != null) {
                         // Extras let the UI update without re-reading disk /
@@ -200,6 +218,7 @@ class SampleService : Service() {
     }
 
     companion object {
+        private const val TAG = "SampleService"
         private const val CHANNEL_ID = "dayatlas_sample"
         private const val NOTIF_ID = 42
     }

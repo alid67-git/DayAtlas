@@ -46,6 +46,16 @@
     <string name="stop">रोकें</string>
     <string name="manual_hint">दैनिक मोड बंद है। ट्रैक करना चाहें तो “शुरू करें” दबाएँ (हर 0.5–5 मिनट में एक बिंदु)।</string>
     <string name="need_location">बिंदु रिकॉर्ड करने के लिए स्थान अनुमति आवश्यक है।</string>
+    <string name="need_background_location">स्वचालित दैनिक रिकॉर्डिंग के लिए स्थान “हमेशा अनुमति दें” पर सेट करें।</string>
+    <string name="need_exact_alarms">विश्वसनीय पृष्ठभूमि रिकॉर्डिंग के लिए “अलार्म और रिमाइंडर” अनुमति दें।</string>
+    <string name="sample_status_blockers">अनुपस्थित: %1$s</string>
+    <string name="sample_blocker_location">स्थान</string>
+    <string name="sample_blocker_bg_location">हमेशा स्थान</string>
+    <string name="sample_blocker_exact_alarm">सटीक अलार्म</string>
+    <string name="sample_blocker_battery">बैटरी छूट</string>
+    <string name="sample_status_failure">अंतिम त्रुटि: %1$s</string>
+    <string name="sample_failure_tracking_off">रिकॉर्डिंग बंद</string>
+    <string name="sample_failure_fgs">पृष्ठभूमि सेवा (%1$s)</string>
     <string name="settings_daily_mode">दैनिक मोड</string>
     <string name="sample_status_none">अभी तक कोई पृष्ठभूमि GPS प्रयास नहीं। दैनिक मोड चालू हो तो ऐप खोले बिना भी यहाँ दिखना चाहिए।</string>
     <string name="sample_status_attempt">अंतिम प्रयास: %1$s</string>
@@ -224,5 +234,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.22 — दिन फ़ोन घड़ी से; सेटिंग्स में अंतिम GPS प्रयास।</string>
+    <string name="build_note">संस्करण 1.1.23 — स्वचालित दैनिक रिकॉर्ड: हमेशा स्थान + अलार्म सुधार।</string>
 </resources>

@@ -36,6 +36,8 @@ object SampleStarter {
             ContextCompat.startForegroundService(app, service)
         } catch (t: Throwable) {
             Log.w(TAG, "startForegroundService failed; retrying via alarm", t)
+            prefs.lastSampleAttemptMillis = System.currentTimeMillis()
+            prefs.lastSampleFailure = "start:" + (t.javaClass.simpleName)
             SampleScheduler.scheduleNext(app, prefs, delayMs = FGS_RETRY_MS)
         }
     }

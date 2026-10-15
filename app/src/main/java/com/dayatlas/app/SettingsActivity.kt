@@ -103,10 +103,21 @@ class SettingsActivity : DayAtlasActivity() {
 
         binding.dailyMode.isChecked = prefs.dailyMode
         binding.dailyMode.setOnCheckedChangeListener { _, checked ->
-            if (checked && !PermissionHelper.hasLocation(this)) {
-                Toast.makeText(this, R.string.need_location, Toast.LENGTH_LONG).show()
+            if (checked) {
+                if (!PermissionHelper.hasLocation(this)) {
+                    binding.dailyMode.isChecked = false
+                    Toast.makeText(this, R.string.need_location, Toast.LENGTH_LONG).show()
+                    return@setOnCheckedChangeListener
+                }
+                if (!PermissionHelper.hasBackgroundLocation(this)) {
+                    Toast.makeText(this, R.string.need_background_location, Toast.LENGTH_LONG).show()
+                }
+                if (!PermissionHelper.canScheduleExactAlarms(this)) {
+                    Toast.makeText(this, R.string.need_exact_alarms, Toast.LENGTH_LONG).show()
+                }
             }
             TrackingController.setDailyMode(this, checked, prefs)
+            refreshSampleStatus()
         }
         refreshSampleStatus()
 
@@ -374,28 +385,63 @@ class SettingsActivity : DayAtlasActivity() {
     }
 
     private fun refreshSampleStatus() {
+        val lines = ArrayList<String>(4)
+        val blockers = buildList {
+            if (!PermissionHelper.hasLocation(this@SettingsActivity)) {
+                add(getString(R.string.sample_blocker_location))
+            } else if (!PermissionHelper.hasBackgroundLocation(this@SettingsActivity)) {
+                add(getString(R.string.sample_blocker_bg_location))
+            }
+            if (!PermissionHelper.canScheduleExactAlarms(this@SettingsActivity)) {
+                add(getString(R.string.sample_blocker_exact_alarm))
+            }
+            if (!PermissionHelper.isIgnoringBatteryOptimizations(this@SettingsActivity)) {
+                add(getString(R.string.sample_blocker_battery))
+            }
+        }
+        if (blockers.isNotEmpty()) {
+            lines.add(getString(R.string.sample_status_blockers, blockers.joinToString(" · ")))
+        }
         val attempt = prefs.lastSampleAttemptMillis
         val success = prefs.lastSampleSuccessMillis
         val day = prefs.lastSampleSuccessDay
-        if (attempt <= 0L && success <= 0L) {
-            binding.sampleStatus.text = getString(R.string.sample_status_none)
-            return
-        }
-        val attemptText = if (attempt > 0L) {
-            getString(R.string.sample_status_attempt, formatSampleStamp(attempt))
+        val failure = prefs.lastSampleFailure
+        if (attempt <= 0L && success <= 0L && blockers.isEmpty()) {
+            lines.add(getString(R.string.sample_status_none))
         } else {
-            getString(R.string.sample_status_attempt_never)
-        }
-        val successText = when {
-            success <= 0L -> getString(R.string.sample_status_success_never)
-            !day.isNullOrBlank() -> getString(
-                R.string.sample_status_success_day,
-                formatSampleStamp(success),
-                day,
+            lines.add(
+                if (attempt > 0L) {
+                    getString(R.string.sample_status_attempt, formatSampleStamp(attempt))
+                } else {
+                    getString(R.string.sample_status_attempt_never)
+                },
             )
-            else -> getString(R.string.sample_status_success, formatSampleStamp(success))
+            lines.add(
+                when {
+                    success <= 0L -> getString(R.string.sample_status_success_never)
+                    !day.isNullOrBlank() -> getString(
+                        R.string.sample_status_success_day,
+                        formatSampleStamp(success),
+                        day,
+                    )
+                    else -> getString(R.string.sample_status_success, formatSampleStamp(success))
+                },
+            )
+            if (!failure.isNullOrBlank()) {
+                lines.add(getString(R.string.sample_status_failure, humanizeSampleFailure(failure)))
+            }
         }
-        binding.sampleStatus.text = "$attemptText\n$successText"
+        binding.sampleStatus.text = lines.joinToString("\n")
+    }
+
+    private fun humanizeSampleFailure(code: String): String = when {
+        code == "no_location" -> getString(R.string.sample_blocker_location)
+        code == "no_bg_location" -> getString(R.string.sample_blocker_bg_location)
+        code == "no_exact_alarm" -> getString(R.string.sample_blocker_exact_alarm)
+        code == "tracking_off" -> getString(R.string.sample_failure_tracking_off)
+        code.startsWith("fgs:") || code.startsWith("start:") ->
+            getString(R.string.sample_failure_fgs, code.substringAfter(':'))
+        else -> code
     }
 
     private fun formatSampleStamp(epochMillis: Long): String {

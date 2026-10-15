@@ -1,6 +1,7 @@
 package com.dayatlas.app.location
 
 import android.Manifest
+import android.app.ActivityManager
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -26,6 +27,21 @@ object PermissionHelper {
             context,
             Manifest.permission.ACCESS_BACKGROUND_LOCATION,
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    /**
+     * True when this process is visible/foreground. Used to decide whether a
+     * while-in-use location grant is enough, or whether background location
+     * is required for an unattended sample tick.
+     */
+    fun isAppForeground(context: Context): Boolean {
+        val am = context.getSystemService(ActivityManager::class.java) ?: return false
+        val pkg = context.packageName
+        val procs = am.runningAppProcesses ?: return false
+        return procs.any {
+            it.processName == pkg &&
+                it.importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+        }
     }
 
     fun hasNotifications(context: Context): Boolean {
