@@ -51,8 +51,9 @@ class RangeStatsTest {
 
     @Test
     fun maxSpeedTakesHighestDay() {
+        // Stay under RouteGaps.MAX_CONTINUOUS (2 km) so the leg still counts.
         val slow = drivingDay("2026-09-01", 41.0, 41.009, durationMs = 100_000L)
-        val fast = drivingDay("2026-09-02", 41.0, 41.018, durationMs = 100_000L)
+        val fast = drivingDay("2026-09-02", 41.0, 41.016, durationMs = 100_000L)
         val summary = RangeStats.summarize(listOf(slow, fast))
         assertTrue(summary.maxSpeedKmh > 50.0)
         assertTrue(summary.activeMillis > 0L)

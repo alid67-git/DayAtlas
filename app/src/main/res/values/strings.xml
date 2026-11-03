@@ -241,5 +241,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.25 — Patlamalar yok sayılarak rota bütünlüğü korunur; JSON silinmez.</string>
+    <string name="build_note">Sürüm 1.1.26 — Sahil patlama üçgenleri çizilmez; mesafe şişmesi kesilir.</string>
 </resources>

@@ -149,6 +149,15 @@ class RouteGapsTest {
     }
 
     @Test
+    fun oneMinuteInlandExplosionBreaksPath() {
+        // Screenshot case: ~2.5 km inland in 60 s ≈ 150 km/h — under the old
+        // 5 km continuous cap, so the map drew a fake triangle corridor.
+        val coast = TrackPoint(0L, 7.88, 98.38, null)
+        val inland = TrackPoint(60_000L, 7.90, 98.38, null)
+        assertTrue(RouteGaps.shouldBreak(coast, inland))
+    }
+
+    @Test
     fun fourPassBounceSplitsIntoDisconnectedPins() {
         val a = TrackPoint(0L, 7.88, 98.38, null)
         val b = TrackPoint(10 * 60_000L, 8.05, 98.38, null)
@@ -218,6 +227,19 @@ class TrackHealTest {
         val b = TrackPoint(30_000L, 7.8836, 98.38, null)
         val c = TrackPoint(60_000L, 7.8872, 98.38, null)
         assertEquals(listOf(a, b, c), TrackHeal.withoutReconnectTeleports(listOf(a, b, c)))
+    }
+
+    @Test
+    fun coastalInlandExplosionTrianglesAreRemoved() {
+        // Coast → inland → coast → inland → coast (1 min samples), like the
+        // Phuket screenshot zigzags. Heal must keep the coastal spine.
+        val c1 = TrackPoint(0L, 7.8800, 98.2800, null)
+        val i1 = TrackPoint(60_000L, 7.9000, 98.2950, null)
+        val c2 = TrackPoint(120_000L, 7.8835, 98.2810, null)
+        val i2 = TrackPoint(180_000L, 7.9050, 98.3000, null)
+        val c3 = TrackPoint(240_000L, 7.8870, 98.2820, null)
+        val healed = TrackHeal.withoutReconnectTeleports(listOf(c1, i1, c2, i2, c3))
+        assertEquals(listOf(c1, c2, c3), healed)
     }
 }
 
@@ -355,7 +377,7 @@ class SpeedStatsTest {
     @Test
     fun airplaneModeCorridorTeleportDoesNotInflateDistanceOrMax() {
         // Phuket-scale: ~19 km N↔S after a 10 min radio outage. Implied speed
-        // is ~114 km/h (under JumpFilter 160), which previously counted as a
+        // is ~114 km/h (under JumpFilter 120), which previously counted as a
         // real driven leg and drew a parallel corridor line on the map.
         val south = TrackPoint(0L, 7.88, 98.38, null)
         val north = TrackPoint(10 * 60_000L, 8.05, 98.38, null)

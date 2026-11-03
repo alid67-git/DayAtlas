@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.26 — 2026-11-03
+
+- **Patlama üçgenleri:** 1 dk örneklemede ~1–2 km içe doğru zıplamalar
+  (ekrandaki sahil→iç→sahil çizgileri) artık hem çizimde hem mesafede
+  yok sayılır. Sürekli hat eşiği 5 km→2 km; ≥800 m ve >90 km/sa hop
+  koparılır. Kayıtta üst hız 120 km/sa.
+
 ## 1.1.25 — 2026-11-03
 
 - **Rota bütünlüğü:** Patlama / uçak-modu zıplama pinleri haritada yok

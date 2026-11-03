@@ -22,7 +22,8 @@ object TrackHeal {
             return if (shouldDrop(points[0], points[1])) listOf(points[0]) else points
         }
         val working = points.toMutableList()
-        while (working.size >= 3) {
+        var guard = working.size
+        while (working.size >= 3 && guard-- > 0) {
             var bestIdx = -1
             var bestScore = 0.0
             for (i in 1 until working.lastIndex) {
@@ -50,22 +51,25 @@ object TrackHeal {
         val dNext = Geo.haversineMeters(candidate.lat, candidate.lon, next.lat, next.lon)
         val dSkip = Geo.haversineMeters(previous.lat, previous.lon, next.lat, next.lon)
         // Not a detour — candidate lies on the prev→next path.
-        if (dPrev + dNext <= dSkip + 50.0) return 0.0
+        if (dPrev + dNext <= dSkip + 40.0) return 0.0
+
+        val detour = dPrev + dNext - dSkip
 
         // Classic spike: both legs long, direct skip stays local (A→B→A′).
         if (dPrev >= RouteGaps.MIN_BREAK_METERS &&
             dNext >= RouteGaps.MIN_BREAK_METERS &&
             dSkip < RouteGaps.MIN_BREAK_METERS
         ) {
-            return dPrev + dNext - dSkip
+            return detour
         }
 
-        // Soft zigzag: via-candidate is a large multiple of the skip.
-        if (dSkip < RouteGaps.MAX_CONTINUOUS_METERS &&
-            dPrev + dNext > dSkip * 2.5 &&
-            (dPrev >= RouteGaps.MIN_BREAK_METERS || dNext >= RouteGaps.MIN_BREAK_METERS)
+        // Coastal / road explosion triangle: skip continues along the real
+        // path while the mid pin shoots inland then returns (screenshot case).
+        if (dSkip < RouteGaps.MAX_CONTINUOUS_METERS * 1.5 &&
+            detour > dSkip * SOFT_DETOUR_RATIO &&
+            maxOf(dPrev, dNext) >= RouteGaps.MIN_BREAK_METERS
         ) {
-            return dPrev + dNext - dSkip
+            return detour
         }
 
         // Hard teleport out and back (or out then continue near start).
@@ -75,9 +79,22 @@ object TrackHeal {
         ) {
             return dPrev + dNext
         }
+
+        // One leg is itself a route-gap break and the skip is much shorter.
+        if (RouteGaps.shouldBreak(previous, candidate) &&
+            dSkip < dPrev * 0.6 &&
+            dNext >= RouteGaps.MIN_BREAK_METERS * 0.5
+        ) {
+            return detour
+        }
         return 0.0
     }
 
+    /**
+     * Trailing / orphan hop — gap reconnect or hard jump only.
+     * Does not use [RouteGaps.BREAK_SPEED_KMH] so a fast final highway
+     * sample is not dropped from the drawn path.
+     */
     fun shouldDrop(previous: TrackPoint, candidate: TrackPoint): Boolean {
         if (JumpFilter.isJump(previous, candidate)) return true
         val distance = Geo.haversineMeters(
@@ -87,10 +104,14 @@ object TrackHeal {
             candidate.lon,
         )
         if (distance < RouteGaps.MIN_BREAK_METERS) return false
+        if (distance >= RouteGaps.MAX_CONTINUOUS_METERS) return true
         val dt = candidate.timeMillis - previous.lastTimeMillis
         return dt > RouteGaps.GAP_MS
     }
 
     /** Minimum detour (meters) before a mid pin counts as a removable spike. */
-    const val MIN_SPIKE_SCORE_M = 1_000.0
+    const val MIN_SPIKE_SCORE_M = 400.0
+
+    /** via-mid must exceed skip by at least this factor to count as soft zigzag. */
+    const val SOFT_DETOUR_RATIO = 1.8
 }
