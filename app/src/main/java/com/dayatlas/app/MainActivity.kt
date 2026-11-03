@@ -706,6 +706,10 @@ class MainActivity : DayAtlasActivity() {
         val dailyVisible = binding.paneDaily.visibility == View.VISIBLE
 
         io.execute {
+            // Strip airplane-mode reconnect zigzags already written to today's
+            // JSON so the map pins / jump list match the gap-aware path draw.
+            val todayIso = DayTitle.iso(today)
+            store.healReconnectTeleports(todayIso)
             val record = store.loadToday()
             val mapRecord = if (mapDateSnapshot == today) {
                 record

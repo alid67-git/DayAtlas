@@ -7,6 +7,9 @@
   koridor çizgisi olarak üst üste çiziyordu (1 gidiş-dönüş → 4 çizgi gibi).
   Artık kopma sonrası hat bölünür, mesafe/hız bu zıplamaları saymaz;
   eski günlerin mesafesi de noktalardan yeniden hesaplanır.
+- **Bugünkü kayıt temizliği:** Uygulama bugünü açınca JSON’daki uçak-modu
+  gidiş-dönüş zıplama pinleri otomatik silinir (yalnızca geri dönen sahte
+  hop’lar; kopma sonrası gerçek yeni küme korunur).
 
 ## 1.1.23 — 2026-11-03
 

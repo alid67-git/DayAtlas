@@ -158,6 +158,54 @@ class RouteGapsTest {
     }
 }
 
+class TrackHealTest {
+    @Test
+    fun fourPassAirplaneBounceDropsFarPins() {
+        val a = TrackPoint(0L, 7.88, 98.38, null)
+        val b = TrackPoint(10 * 60_000L, 8.05, 98.38, null)
+        val a2 = TrackPoint(20 * 60_000L, 7.88, 98.38, null)
+        val b2 = TrackPoint(30 * 60_000L, 8.05, 98.38, null)
+        val healed = TrackHeal.withoutReconnectTeleports(listOf(a, b, a2, b2))
+        assertEquals(listOf(a, a2), healed)
+    }
+
+    @Test
+    fun sustainedPostGapClusterIsKept() {
+        // Radio gap, then keep recording ~19 km north — must not wipe the day.
+        val south = TrackPoint(0L, 7.88, 98.38, null)
+        val n1 = TrackPoint(10 * 60_000L, 8.05, 98.38, null)
+        val n2 = TrackPoint(10 * 60_000L + 30_000L, 8.0536, 98.38, null)
+        val n3 = TrackPoint(10 * 60_000L + 60_000L, 8.0572, 98.38, null)
+        val healed = TrackHeal.withoutReconnectTeleports(listOf(south, n1, n2, n3))
+        assertEquals(listOf(south, n1, n2, n3), healed)
+    }
+
+    @Test
+    fun trailingReconnectAloneIsDropped() {
+        val south = TrackPoint(0L, 7.88, 98.38, null)
+        val north = TrackPoint(10 * 60_000L, 8.05, 98.38, null)
+        val healed = TrackHeal.withoutReconnectTeleports(listOf(south, north))
+        assertEquals(listOf(south), healed)
+    }
+
+    @Test
+    fun hardJumpSpikeIsDroppedEvenWithoutLongGap() {
+        val a = TrackPoint(0L, 41.0, 29.0, null)
+        val b = TrackPoint(60_000L, 42.0, 29.0, null) // ~111 km / 60 s
+        val c = TrackPoint(120_000L, 41.001, 29.0, null)
+        val healed = TrackHeal.withoutReconnectTeleports(listOf(a, b, c))
+        assertEquals(listOf(a, c), healed)
+    }
+
+    @Test
+    fun denseDrivingUnchanged() {
+        val a = TrackPoint(0L, 7.88, 98.38, null)
+        val b = TrackPoint(30_000L, 7.8836, 98.38, null)
+        val c = TrackPoint(60_000L, 7.8872, 98.38, null)
+        assertEquals(listOf(a, b, c), TrackHeal.withoutReconnectTeleports(listOf(a, b, c)))
+    }
+}
+
 class JumpFilterTest {
     @Test
     fun normalWalkIsAccepted() {

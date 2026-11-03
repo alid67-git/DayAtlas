@@ -202,6 +202,23 @@ class DayStore(context: Context) {
     }
 
     /**
+     * Drops airplane / null-GPS reconnect teleports and hard jumps already
+     * stored in [dateIso]. No-op when the day is clean or missing. Rewrites
+     * JSON + GPX only when at least one pin is removed.
+     */
+    fun healReconnectTeleports(dateIso: String): DayRecord? = lock.withLock {
+        val existing = loadUnlocked(dateIso) ?: return@withLock null
+        val healed = TrackHeal.withoutReconnectTeleports(existing.points)
+        if (healed.size == existing.points.size) return@withLock existing
+        val updated = existing.copy(
+            points = healed,
+            distanceMeters = Geo.pathLengthMeters(healed),
+        )
+        persistUnlocked(updated, writeGpx = true)
+        updated
+    }
+
+    /**
      * Removes the point at [index] for [dateIso], recalculates distance, and
      * rewrites JSON + GPX. Returns the updated record, or null if missing /
      * out of range.
