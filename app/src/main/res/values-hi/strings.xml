@@ -224,5 +224,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.25 — विस्फोट पिन अनदेखी; मार्ग साफ, JSON सुरक्षित।</string>
+    <string name="build_note">संस्करण 1.1.26 — तटीय विस्फोट त्रिकोण न मानचित्र पर न दूरी में।</string>
 </resources>

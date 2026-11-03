@@ -9,8 +9,11 @@ package com.dayatlas.app.data
  * new samples and to list existing outliers for manual deletion.
  */
 object JumpFilter {
-    /** ~160 km/h — above typical road use for this daily log. */
-    const val MAX_SPEED_KMH = 160.0
+    /**
+     * Above typical road use for this daily log. Was 160 — Phuket explosion
+     * legs still landed at ~148 km/h and drew as real corridor segments.
+     */
+    const val MAX_SPEED_KMH = 120.0
 
     /** Hard cap for one sample interval (~30 km ≈ 360 km/h over 5 min). */
     const val MAX_SEGMENT_METERS = 30_000.0

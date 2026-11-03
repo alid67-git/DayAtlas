@@ -22,7 +22,8 @@ object TrackMotion {
     /** Walking floor — below this, treat as stationary jitter. */
     const val STATIONARY_SPEED_KMH = 3.0
 
-    const val MAX_REALISTIC_SPEED_KMH = 160.0
+    /** Keep in sync with [JumpFilter.MAX_SPEED_KMH] so stats match accept rules. */
+    const val MAX_REALISTIC_SPEED_KMH = JumpFilter.MAX_SPEED_KMH
 
     /**
      * Gaps longer than this are reconnects after airplane / Doze / signal
