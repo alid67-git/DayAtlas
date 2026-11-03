@@ -241,5 +241,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.24 — Uçak modu sahte rotası + bugünkü zıplama pinleri temizlenir.</string>
+    <string name="build_note">Sürüm 1.1.25 — Patlamalar yok sayılarak rota bütünlüğü korunur; JSON silinmez.</string>
 </resources>

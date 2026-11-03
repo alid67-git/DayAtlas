@@ -224,5 +224,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.24 — Sin rutas fantasma; limpia pines de reconexión de hoy.</string>
+    <string name="build_note">Versión 1.1.25 — Ignora pines de explosión; ruta coherente sin borrar el JSON.</string>
 </resources>

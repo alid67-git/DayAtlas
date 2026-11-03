@@ -170,6 +170,21 @@ class TrackHealTest {
     }
 
     @Test
+    fun realTripKeepsDenseClusterWhenHomeGpsBounces() {
+        // Morning pin at home, long real drive north, one bad home fix, resume north.
+        val home = TrackPoint(0L, 7.88, 98.38, null)
+        val n1 = TrackPoint(10 * 60_000L, 8.05, 98.38, null)
+        val n2 = TrackPoint(10 * 60_000L + 30_000L, 8.0536, 98.38, null)
+        val n3 = TrackPoint(10 * 60_000L + 60_000L, 8.0572, 98.38, null)
+        val homeSpike = TrackPoint(10 * 60_000L + 90_000L, 7.88, 98.38, null)
+        val n4 = TrackPoint(10 * 60_000L + 120_000L, 8.0608, 98.38, null)
+        val healed = TrackHeal.withoutReconnectTeleports(
+            listOf(home, n1, n2, n3, homeSpike, n4),
+        )
+        assertEquals(listOf(home, n1, n2, n3, n4), healed)
+    }
+
+    @Test
     fun sustainedPostGapClusterIsKept() {
         // Radio gap, then keep recording ~19 km north — must not wipe the day.
         val south = TrackPoint(0L, 7.88, 98.38, null)
