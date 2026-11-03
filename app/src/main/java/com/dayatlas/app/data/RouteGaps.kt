@@ -17,14 +17,22 @@ object RouteGaps {
     const val GAP_MS = 5 * 60_000L
 
     /** Ignore tiny reconnects (still inside the same block). */
-    const val MIN_BREAK_METERS = 1_000.0
+    const val MIN_BREAK_METERS = 800.0
 
     /**
-     * A single hop this long is never drawn continuously — even dense
-     * sampling at [JumpFilter.MAX_SPEED_KMH] stays well under this at the
-     * default 30–60 s interval (~1.3–2.7 km).
+     * A single hop this long is never drawn continuously.
+     *
+     * At the common 60 s sample interval, 2.0 km ≈ 120 km/h — above normal
+     * Phuket / city driving and below the old 5 km hole that still drew
+     * inland explosion triangles at ~100–148 km/h.
      */
-    const val MAX_CONTINUOUS_METERS = 5_000.0
+    const val MAX_CONTINUOUS_METERS = 2_000.0
+
+    /**
+     * ≥ [MIN_BREAK_METERS] hops faster than this are drawn as a break even
+     * when under [MAX_CONTINUOUS_METERS] (1 min × 90 km/h ≈ 1.5 km spikes).
+     */
+    const val BREAK_SPEED_KMH = 90.0
 
     fun shouldBreak(previous: TrackPoint, current: TrackPoint): Boolean {
         val distance = Geo.haversineMeters(
@@ -37,6 +45,10 @@ object RouteGaps {
         if (distance >= MAX_CONTINUOUS_METERS) return true
         val dt = current.timeMillis - previous.lastTimeMillis
         if (dt > GAP_MS) return true
+        if (dt > 0L) {
+            val speedKmh = (distance / (dt / 1_000.0)) * 3.6
+            if (speedKmh > BREAK_SPEED_KMH) return true
+        }
         return JumpFilter.isJump(previous, current)
     }
 

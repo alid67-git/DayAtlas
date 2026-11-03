@@ -720,12 +720,19 @@ class MainActivity : DayAtlasActivity() {
             )
             val jumps = JumpFilter.findJumps(mapPoints)
             val dwells = if (prefs.showDwellStops) DwellStops.find(mapPoints) else emptyList()
-            val todaySpeed = SpeedStats.compute(
-                TrackHeal.withoutReconnectTeleports(record.points),
-            )
+            val todayPoints = TrackHeal.withoutReconnectTeleports(record.points)
+            val todaySpeed = SpeedStats.compute(todayPoints)
             uiHandler.post {
                 if (isDestroyed || generation != refreshGeneration.get()) return@post
-                applyTodayChrome(record, dailyMode, trackingEnabled, orderRaw, intervalSeconds, todaySpeed)
+                applyTodayChrome(
+                    record,
+                    todayPoints,
+                    dailyMode,
+                    trackingEnabled,
+                    orderRaw,
+                    intervalSeconds,
+                    todaySpeed,
+                )
                 if (!dailyVisible) return@post
                 if (rebuildMap) {
                     applyMapPane(mapDateSnapshot, mapRecord, mapPoints, jumps, dwells, fitCamera = true)
@@ -839,6 +846,7 @@ class MainActivity : DayAtlasActivity() {
 
     private fun applyTodayChrome(
         record: DayRecord,
+        todayPoints: List<TrackPoint>,
         dailyMode: Boolean,
         trackingEnabled: Boolean,
         orderRaw: String?,
@@ -872,7 +880,7 @@ class MainActivity : DayAtlasActivity() {
             binding.hint.text = getString(R.string.manual_hint)
         }
 
-        val todayValues = dayStatValues(record, record.points, todaySpeed, intervalSeconds)
+        val todayValues = dayStatValues(record, todayPoints, todaySpeed, intervalSeconds)
         val order = DayStatKind.parseOrder(orderRaw)
         dayStatsAdapter.submit(
             order.map { it to (todayValues[it] ?: getString(R.string.em_dash)) },
