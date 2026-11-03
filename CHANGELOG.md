@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.25 — 2026-11-03
+
+- **Rota bütünlüğü:** Patlama / uçak-modu zıplama pinleri haritada yok
+  sayılarak rota yeniden kurulur; JSON’a otomatik silme yazılmaz (önceki
+  otomatik temizlik ilk kümeyi tutup gerçek yolculuğu silebiliyordu).
+  Yoğun gerçek rota + ara sıra ev GPS sıçraması doğru kalır.
+
 ## 1.1.24 — 2026-11-03
 
 - **Uçak modu / GPS kopması — sahte çoklu rota:** Radyo kesilince sonraki
