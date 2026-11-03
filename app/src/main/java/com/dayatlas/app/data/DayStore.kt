@@ -120,7 +120,15 @@ class DayStore(context: Context) {
                     }
                     return@withLock commitCandidate(existing, decision.candidate)
                 }
-                else -> Unit // Hold/Process not expected while pending != null
+                is SpikeConfirm.Outcome.Hold -> {
+                    // Long-gap wander: replace the held soft spike, still no geometry.
+                    pendingPoint = decision.pending
+                    pendingDateIso = iso
+                    val updated = existing.copy(gpsCheckCount = existing.checkCount + 1)
+                    persistUnlocked(updated)
+                    return@withLock AppendResult(updated, geometryChanged = false, wrote = true)
+                }
+                else -> Unit // Process not expected while pending != null
             }
         }
 

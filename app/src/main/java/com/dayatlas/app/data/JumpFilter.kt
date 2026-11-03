@@ -32,7 +32,10 @@ object JumpFilter {
             candidate.lon,
         )
         if (distance >= MAX_SEGMENT_METERS) return true
-        val dt = candidate.timeMillis - previous.timeMillis
+        // Use last refresh time so a long sit (same-place pin) does not look
+        // like a multi-minute hop when the user finally moves — and so a gap
+        // after airplane / null GPS is measured from the last real fix.
+        val dt = candidate.timeMillis - previous.lastTimeMillis
         if (dt <= 0L) return distance > 50.0
         val speedKmh = (distance / (dt / 1_000.0)) * 3.6
         return speedKmh > MAX_SPEED_KMH
@@ -68,7 +71,7 @@ object JumpFilter {
                 continue
             }
             val distance = Geo.haversineMeters(anchor.lat, anchor.lon, cur.lat, cur.lon)
-            val dt = (cur.timeMillis - anchor.timeMillis).coerceAtLeast(1L)
+            val dt = (cur.timeMillis - anchor.lastTimeMillis).coerceAtLeast(1L)
             val speedKmh = (distance / (dt / 1_000.0)) * 3.6
             out.add(
                 Jump(
@@ -76,7 +79,7 @@ object JumpFilter {
                     point = cur,
                     distanceMeters = distance,
                     speedKmh = speedKmh,
-                    deltaMillis = cur.timeMillis - anchor.timeMillis,
+                    deltaMillis = cur.timeMillis - anchor.lastTimeMillis,
                 ),
             )
             // anchorIndex stays put — cur was rejected, so the next point is

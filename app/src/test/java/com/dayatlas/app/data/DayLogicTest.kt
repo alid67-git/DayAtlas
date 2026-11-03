@@ -1,6 +1,7 @@
 package com.dayatlas.app.data
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDate
@@ -108,6 +109,52 @@ class SpikeConfirmTest {
         val near = TrackPoint(30_000L, 41.0, 29.0002, null)
         val out = SpikeConfirm.decide(home, pending = null, candidate = near)
         assertTrue(out is SpikeConfirm.Outcome.Process)
+    }
+
+    @Test
+    fun longGapRequiresConfirmNearPendingNotJustAwayFromHome() {
+        // ~19 km east after a 10 min radio gap — airplane-mode stale cluster.
+        val far = TrackPoint(10 * 60_000L, 41.0, 29.23, null)
+        val elsewhere = TrackPoint(10 * 60_000L + 30_000L, 41.05, 29.23, null)
+        val hold = SpikeConfirm.decide(home, pending = null, candidate = far)
+        assertTrue(hold is SpikeConfirm.Outcome.Hold)
+        val stillHolding = SpikeConfirm.decide(home, pending = far, candidate = elsewhere)
+        assertTrue(
+            "expected Hold while gap pending wanders, was $stillHolding",
+            stillHolding is SpikeConfirm.Outcome.Hold,
+        )
+        val confirmed = TrackPoint(10 * 60_000L + 30_000L, 41.0002, 29.2301, null)
+        val commit = SpikeConfirm.decide(home, pending = far, candidate = confirmed)
+        assertTrue(commit is SpikeConfirm.Outcome.CommitPendingThen)
+    }
+}
+
+class RouteGapsTest {
+    @Test
+    fun denseDrivingDoesNotBreak() {
+        // ~400 m every 30 s ≈ 48 km/h
+        val a = TrackPoint(0L, 7.88, 98.38, null)
+        val b = TrackPoint(30_000L, 7.8836, 98.38, null)
+        assertFalse(RouteGaps.shouldBreak(a, b))
+    }
+
+    @Test
+    fun airplaneReconnectBreaksPath() {
+        // ~19 km after 10 min — JumpFilter speed looks like driving, but the
+        // map must not draw a corridor line across the gap.
+        val south = TrackPoint(0L, 7.88, 98.38, null)
+        val north = TrackPoint(10 * 60_000L, 8.05, 98.38, null)
+        assertTrue(RouteGaps.shouldBreak(south, north))
+        assertEquals(listOf(0, 1), RouteGaps.segmentStarts(listOf(south, north)))
+    }
+
+    @Test
+    fun fourPassBounceSplitsIntoDisconnectedPins() {
+        val a = TrackPoint(0L, 7.88, 98.38, null)
+        val b = TrackPoint(10 * 60_000L, 8.05, 98.38, null)
+        val a2 = TrackPoint(20 * 60_000L, 7.88, 98.38, null)
+        val b2 = TrackPoint(30 * 60_000L, 8.05, 98.38, null)
+        assertEquals(listOf(0, 1, 2, 3), RouteGaps.segmentStarts(listOf(a, b, a2, b2)))
     }
 }
 
@@ -240,6 +287,37 @@ class SpeedStatsTest {
         )
         val stats = SpeedStats.compute(points)
         assertEquals(0L, stats.activeMillis)
+    }
+
+    @Test
+    fun airplaneModeCorridorTeleportDoesNotInflateDistanceOrMax() {
+        // Phuket-scale: ~19 km N↔S after a 10 min radio outage. Implied speed
+        // is ~114 km/h (under JumpFilter 160), which previously counted as a
+        // real driven leg and drew a parallel corridor line on the map.
+        val south = TrackPoint(0L, 7.88, 98.38, null)
+        val north = TrackPoint(10 * 60_000L, 8.05, 98.38, null)
+        val southAgain = TrackPoint(20 * 60_000L, 7.88, 98.38, null)
+        assertTrue(JumpFilter.shouldAccept(listOf(south), north))
+        val points = listOf(south, north, southAgain)
+        val stats = SpeedStats.compute(points)
+        assertEquals(0.0, stats.maxSpeedKmh, 1e-9)
+        assertEquals(0L, stats.activeMillis)
+        assertTrue(Geo.pathLengthMeters(points) < 1.0)
+    }
+
+    @Test
+    fun dtUsesLastRefreshSoStationarySitDoesNotLookLikeAGap() {
+        val parked = TrackPoint(
+            timeMillis = 0L,
+            lat = 41.0,
+            lon = 29.0,
+            accuracyMeters = null,
+            lastTimeMillis = 12 * 60_000L,
+        )
+        // Leave ~200 m away 30 s after the last refresh.
+        val leaving = TrackPoint(12 * 60_000L + 30_000L, 41.0018, 29.0, null)
+        assertFalse(JumpFilter.isJump(parked, leaving))
+        assertFalse(RouteGaps.shouldBreak(parked, leaving))
     }
 }
 

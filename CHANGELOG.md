@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.23 — 2026-11-03
+
+- **Airplane / GPS gap tracks:** After a radio outage the next fix can sit
+  many km away while still looking like “normal” speed. The map no longer
+  draws a continuous corridor line across that hop (splits the polyline),
+  and distance / max speed ignore those reconnect legs. Soft-spike confirm
+  after a long gap also waits until the new place is confirmed nearby —
+  not merely “not back home”.
+- **Live map pin count:** Geometry updates again use real pin count; the
+  GPS-check counter stays separate so live polyline sync cannot drift.
+
 ## 1.1.22 — 2026-10-08
 
 - **Gün dosyası telefon saatine göre:** GPS saati gece yarısını geçmiş

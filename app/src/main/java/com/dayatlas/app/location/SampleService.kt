@@ -94,7 +94,10 @@ class SampleService : Service() {
                             Intents.pointSaved(
                                 this,
                                 dateIso = result.record.date,
-                                pointCount = result.record.checkCount,
+                                // Live map sync needs geometry pin count; the UI
+                                // counter uses checkCount (includes stationary).
+                                pointCount = result.record.points.size,
+                                checkCount = result.record.checkCount,
                                 distanceMeters = result.record.distanceMeters,
                                 timeMillis = last.lastTimeMillis,
                                 lat = last.lat,
