@@ -31,6 +31,7 @@ import com.dayatlas.app.data.PhotoViewerDialog
 import com.dayatlas.app.data.PointNoteDialog
 import com.dayatlas.app.data.RangeStats
 import com.dayatlas.app.data.SpeedStats
+import com.dayatlas.app.data.TrackHeal
 import com.dayatlas.app.data.TrackPoint
 import com.dayatlas.app.data.TrackPointLookup
 import com.dayatlas.app.billing.PromoCode
@@ -706,20 +707,22 @@ class MainActivity : DayAtlasActivity() {
         val dailyVisible = binding.paneDaily.visibility == View.VISIBLE
 
         io.execute {
-            // Strip airplane-mode reconnect zigzags already written to today's
-            // JSON so the map pins / jump list match the gap-aware path draw.
-            val todayIso = DayTitle.iso(today)
-            store.healReconnectTeleports(todayIso)
             val record = store.loadToday()
             val mapRecord = if (mapDateSnapshot == today) {
                 record
             } else {
                 store.load(DayTitle.iso(mapDateSnapshot))
             }
-            val mapPoints = mapRecord?.points.orEmpty()
+            // Rebuild path for drawing only — never rewrite JSON here (that
+            // once preferred the first cluster and erased a real trip).
+            val mapPoints = TrackHeal.withoutReconnectTeleports(
+                mapRecord?.points.orEmpty(),
+            )
             val jumps = JumpFilter.findJumps(mapPoints)
             val dwells = if (prefs.showDwellStops) DwellStops.find(mapPoints) else emptyList()
-            val todaySpeed = SpeedStats.compute(record.points)
+            val todaySpeed = SpeedStats.compute(
+                TrackHeal.withoutReconnectTeleports(record.points),
+            )
             uiHandler.post {
                 if (isDestroyed || generation != refreshGeneration.get()) return@post
                 applyTodayChrome(record, dailyMode, trackingEnabled, orderRaw, intervalSeconds, todaySpeed)
@@ -964,7 +967,7 @@ class MainActivity : DayAtlasActivity() {
         io.execute {
             val dateIso = DayTitle.iso(mapDateSnapshot)
             val record = store.load(dateIso)
-            val points = record?.points.orEmpty()
+            val points = TrackHeal.withoutReconnectTeleports(record?.points.orEmpty())
             val jumps = JumpFilter.findJumps(points)
             val dwells = if (prefs.showDwellStops) DwellStops.find(points) else emptyList()
             uiHandler.post {

@@ -20,6 +20,7 @@ import com.dayatlas.app.data.PhotoStore
 import com.dayatlas.app.data.PhotoViewerDialog
 import com.dayatlas.app.data.PointNoteDialog
 import com.dayatlas.app.data.SpeedStats
+import com.dayatlas.app.data.TrackHeal
 import com.dayatlas.app.data.TrackPoint
 import com.dayatlas.app.data.TrackPointLookup
 import com.dayatlas.app.databinding.ActivityDayDetailBinding
@@ -223,11 +224,8 @@ class DayDetailActivity : DayAtlasActivity() {
 
     private fun refresh() {
         val today = DayTitle.localToday()
-        if (dateIso == DayTitle.iso(today)) {
-            store.healReconnectTeleports(dateIso)
-        }
         val record = store.load(dateIso)
-        val points = record?.points.orEmpty()
+        val points = TrackHeal.withoutReconnectTeleports(record?.points.orEmpty())
         val jumps = JumpFilter.findJumps(points)
         val dwells = if (prefs.showDwellStops) DwellStops.find(points) else emptyList()
 

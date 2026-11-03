@@ -1,56 +1,81 @@
 package com.dayatlas.app.data
 
 /**
- * Strips reconnect teleports and hard GPS jumps from an already-recorded day.
+ * Rebuilds a day's track into a coherent path by dropping explosion / spike
+ * pins (airplane reconnect zigzags, hard GPS teleports) while keeping real
+ * travel.
  *
- * After airplane mode / null GPS, [JumpFilter] may still have accepted a
- * multi-km hop (elapsed time made the speed look normal). Those pins stay in
- * the JSON and draw as fake corridor passes until removed.
- *
- * Soft gap-reconnects (≥ [RouteGaps.MIN_BREAK_METERS] after > [RouteGaps.GAP_MS])
- * are dropped only when the next pin bounces back toward the last kept point
- * (or when the hop is trailing with nothing to confirm a new cluster). A
- * sustained new cluster after a radio gap is kept — [RouteGaps] still breaks
- * the drawn path so no fake corridor appears.
+ * Display-only by default — callers should not persist the result unless the
+ * user explicitly asks to clean the file. Auto-writing stripped pins once
+ * preferred the first cluster and could erase a real post-gap trip.
  */
 object TrackHeal {
     /**
-     * Keeps a point only when it continues smoothly from the last kept pin,
-     * or starts a sustained cluster after a radio gap.
+     * Iteratively removes the strongest geometric spike until the path is
+     * stable, then drops a trailing reconnect orphan. Remaining points stay
+     * in time order so the map can draw one continuous shape (or gap-split
+     * only where a sustained relocation remains).
      */
     fun withoutReconnectTeleports(points: List<TrackPoint>): List<TrackPoint> {
         if (points.size < 2) return points
-        val kept = ArrayList<TrackPoint>(points.size)
-        kept.add(points[0])
-        var i = 1
-        while (i < points.size) {
-            val prev = kept.last()
-            val cur = points[i]
-            if (!shouldDrop(prev, cur)) {
-                kept.add(cur)
-                i++
-                continue
-            }
-            // Potential teleport / reconnect. Look ahead before discarding —
-            // a real post-gap relocation must not wipe the rest of the day.
-            if (i + 1 >= points.size) {
-                // Trailing hop with no confirmation → drop (orphan reconnect).
-                i++
-                continue
-            }
-            val next = points[i + 1]
-            val nextToPrev = Geo.haversineMeters(prev.lat, prev.lon, next.lat, next.lon)
-            val nextToCur = Geo.haversineMeters(cur.lat, cur.lon, next.lat, next.lon)
-            if (nextToPrev < nextToCur) {
-                // Bounce back toward the last kept pin → cur is a spike.
-                i++
-                continue
-            }
-            // New cluster around cur — keep it as the start of the post-gap run.
-            kept.add(cur)
-            i++
+        if (points.size == 2) {
+            return if (shouldDrop(points[0], points[1])) listOf(points[0]) else points
         }
-        return kept
+        val working = points.toMutableList()
+        while (working.size >= 3) {
+            var bestIdx = -1
+            var bestScore = 0.0
+            for (i in 1 until working.lastIndex) {
+                val score = spikeScore(working[i - 1], working[i], working[i + 1])
+                if (score > bestScore) {
+                    bestScore = score
+                    bestIdx = i
+                }
+            }
+            if (bestIdx < 0 || bestScore < MIN_SPIKE_SCORE_M) break
+            working.removeAt(bestIdx)
+        }
+        while (working.size >= 2 && shouldDrop(working[working.lastIndex - 1], working.last())) {
+            working.removeAt(working.lastIndex)
+        }
+        return working
+    }
+
+    /**
+     * How much of a detour [candidate] is versus going straight prev→next.
+     * Zero means keep; larger means a clearer explosion pin.
+     */
+    fun spikeScore(previous: TrackPoint, candidate: TrackPoint, next: TrackPoint): Double {
+        val dPrev = Geo.haversineMeters(previous.lat, previous.lon, candidate.lat, candidate.lon)
+        val dNext = Geo.haversineMeters(candidate.lat, candidate.lon, next.lat, next.lon)
+        val dSkip = Geo.haversineMeters(previous.lat, previous.lon, next.lat, next.lon)
+        // Not a detour — candidate lies on the prev→next path.
+        if (dPrev + dNext <= dSkip + 50.0) return 0.0
+
+        // Classic spike: both legs long, direct skip stays local (A→B→A′).
+        if (dPrev >= RouteGaps.MIN_BREAK_METERS &&
+            dNext >= RouteGaps.MIN_BREAK_METERS &&
+            dSkip < RouteGaps.MIN_BREAK_METERS
+        ) {
+            return dPrev + dNext - dSkip
+        }
+
+        // Soft zigzag: via-candidate is a large multiple of the skip.
+        if (dSkip < RouteGaps.MAX_CONTINUOUS_METERS &&
+            dPrev + dNext > dSkip * 2.5 &&
+            (dPrev >= RouteGaps.MIN_BREAK_METERS || dNext >= RouteGaps.MIN_BREAK_METERS)
+        ) {
+            return dPrev + dNext - dSkip
+        }
+
+        // Hard teleport out and back (or out then continue near start).
+        if (JumpFilter.isJump(previous, candidate) &&
+            dSkip < JumpFilter.MAX_SEGMENT_METERS &&
+            !JumpFilter.isJump(previous, next)
+        ) {
+            return dPrev + dNext
+        }
+        return 0.0
     }
 
     fun shouldDrop(previous: TrackPoint, candidate: TrackPoint): Boolean {
@@ -65,4 +90,7 @@ object TrackHeal {
         val dt = candidate.timeMillis - previous.lastTimeMillis
         return dt > RouteGaps.GAP_MS
     }
+
+    /** Minimum detour (meters) before a mid pin counts as a removable spike. */
+    const val MIN_SPIKE_SCORE_M = 1_000.0
 }
