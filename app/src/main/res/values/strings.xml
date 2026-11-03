@@ -241,5 +241,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.22 — Günler telefon saatine göre; Ayarlar’da son GPS denemesi.</string>
+    <string name="build_note">Sürüm 1.1.24 — Uçak modu sahte rotası + bugünkü zıplama pinleri temizlenir.</string>
 </resources>

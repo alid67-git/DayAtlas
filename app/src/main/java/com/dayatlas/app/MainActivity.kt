@@ -411,17 +411,18 @@ class MainActivity : DayAtlasActivity() {
             val record = store.load(DayTitle.iso(date)) ?: return@mapNotNull null
             if (record.points.isEmpty()) return@mapNotNull null
             val speed = SpeedStats.compute(record.points)
+            val distanceM = Geo.pathLengthMeters(record.points)
             val meta = if (speed.activeMillis > 0) {
                 getString(
                     R.string.routes_day_meta,
-                    DayTitle.formatDistance(record.distanceMeters),
+                    DayTitle.formatDistance(distanceM),
                     record.checkCount,
                     DayTitle.formatDuration(speed.activeMillis),
                 )
             } else {
                 getString(
                     R.string.routes_day_meta_short,
-                    DayTitle.formatDistance(record.distanceMeters),
+                    DayTitle.formatDistance(distanceM),
                     record.checkCount,
                 )
             }
@@ -705,6 +706,10 @@ class MainActivity : DayAtlasActivity() {
         val dailyVisible = binding.paneDaily.visibility == View.VISIBLE
 
         io.execute {
+            // Strip airplane-mode reconnect zigzags already written to today's
+            // JSON so the map pins / jump list match the gap-aware path draw.
+            val todayIso = DayTitle.iso(today)
+            store.healReconnectTeleports(todayIso)
             val record = store.loadToday()
             val mapRecord = if (mapDateSnapshot == today) {
                 record
@@ -744,7 +749,9 @@ class MainActivity : DayAtlasActivity() {
         binding.mapDistance.text = if (points.isEmpty()) {
             emDash
         } else {
-            DayTitle.formatDistance(record?.distanceMeters ?: Geo.pathLengthMeters(points))
+            // Always recompute — stored distanceMeters can still include
+            // pre-1.1.24 airplane reconnect hops.
+            DayTitle.formatDistance(Geo.pathLengthMeters(points))
         }
         binding.mapLastPoint.text = points.lastOrNull()?.let { point ->
             Instant.ofEpochMilli(point.lastTimeMillis)
@@ -875,12 +882,15 @@ class MainActivity : DayAtlasActivity() {
      */
     private fun applyLivePoint(intent: Intent, updateMap: Boolean) {
         val dateIso = intent.getStringExtra(Intents.EXTRA_DATE_ISO) ?: return
-        val pointCount = intent.getIntExtra(Intents.EXTRA_POINT_COUNT, -1)
+        val geometryCount = intent.getIntExtra(Intents.EXTRA_POINT_COUNT, -1)
+        val checkCount = intent.getIntExtra(Intents.EXTRA_CHECK_COUNT, -1).let { stored ->
+            if (stored >= 0) stored else geometryCount
+        }
         val distanceM = intent.getDoubleExtra(Intents.EXTRA_DISTANCE_M, Double.NaN)
         val timeMillis = intent.getLongExtra(Intents.EXTRA_TIME_MILLIS, -1L)
         val lat = intent.getDoubleExtra(Intents.EXTRA_LAT, Double.NaN)
         val lon = intent.getDoubleExtra(Intents.EXTRA_LON, Double.NaN)
-        if (pointCount < 0 || timeMillis < 0L || distanceM.isNaN() || lat.isNaN() || lon.isNaN()) {
+        if (geometryCount < 0 || timeMillis < 0L || distanceM.isNaN() || lat.isNaN() || lon.isNaN()) {
             // Older broadcast without extras — fall back to a full refresh.
             uiHandler.removeCallbacks(debouncedMapRebuild)
             uiHandler.postDelayed(debouncedMapRebuild, LIVE_MAP_DEBOUNCE_MS)
@@ -894,11 +904,11 @@ class MainActivity : DayAtlasActivity() {
                 .atZone(ZoneId.systemDefault())
                 .toLocalTime()
                 .format(TIME_FMT)
-            val distanceText = if (pointCount <= 0) emDash else DayTitle.formatDistance(distanceM)
+            val distanceText = if (checkCount <= 0) emDash else DayTitle.formatDistance(distanceM)
             val intervalText = formatGpsInterval(prefs.effectiveIntervalSeconds)
             // Patch visible today cards without recomputing SpeedStats on main.
             patchTodayStat(DayStatKind.LAST_POINT, timeText)
-            patchTodayStat(DayStatKind.POINT_COUNT, pointCount.toString())
+            patchTodayStat(DayStatKind.POINT_COUNT, checkCount.toString())
             patchTodayStat(DayStatKind.DISTANCE, distanceText)
             patchTodayStat(DayStatKind.GPS_INTERVAL, intervalText)
         }
@@ -911,8 +921,8 @@ class MainActivity : DayAtlasActivity() {
             .atZone(ZoneId.systemDefault())
             .toLocalTime()
             .format(TIME_FMT)
-        binding.mapPointCount.text = pointCount.toString()
-        binding.mapDistance.text = if (pointCount <= 0) emDash else DayTitle.formatDistance(distanceM)
+        binding.mapPointCount.text = checkCount.toString()
+        binding.mapDistance.text = if (checkCount <= 0) emDash else DayTitle.formatDistance(distanceM)
 
         if (!updateMap || binding.paneDaily.visibility != View.VISIBLE) return
 
@@ -922,7 +932,7 @@ class MainActivity : DayAtlasActivity() {
             dateIso = dateIso,
             lat = lat,
             lon = lon,
-            pointCount = pointCount,
+            pointCount = geometryCount,
         )
         if (!ok) {
             // First point of the day / state lost — one full rebuild off main.
@@ -1058,7 +1068,7 @@ class MainActivity : DayAtlasActivity() {
             DayStatKind.DISTANCE to if (points.isEmpty()) {
                 emDash
             } else {
-                DayTitle.formatDistance(record?.distanceMeters ?: Geo.pathLengthMeters(points))
+                DayTitle.formatDistance(Geo.pathLengthMeters(points))
             },
             DayStatKind.LAST_POINT to (
                 points.lastOrNull()?.let { point ->

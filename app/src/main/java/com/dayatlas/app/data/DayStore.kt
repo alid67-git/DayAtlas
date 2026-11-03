@@ -120,7 +120,15 @@ class DayStore(context: Context) {
                     }
                     return@withLock commitCandidate(existing, decision.candidate)
                 }
-                else -> Unit // Hold/Process not expected while pending != null
+                is SpikeConfirm.Outcome.Hold -> {
+                    // Long-gap wander: replace the held soft spike, still no geometry.
+                    pendingPoint = decision.pending
+                    pendingDateIso = iso
+                    val updated = existing.copy(gpsCheckCount = existing.checkCount + 1)
+                    persistUnlocked(updated)
+                    return@withLock AppendResult(updated, geometryChanged = false, wrote = true)
+                }
+                else -> Unit // Process not expected while pending != null
             }
         }
 
@@ -191,6 +199,23 @@ class DayStore(context: Context) {
         )
         persistUnlocked(updated)
         return updated
+    }
+
+    /**
+     * Drops airplane / null-GPS reconnect teleports and hard jumps already
+     * stored in [dateIso]. No-op when the day is clean or missing. Rewrites
+     * JSON + GPX only when at least one pin is removed.
+     */
+    fun healReconnectTeleports(dateIso: String): DayRecord? = lock.withLock {
+        val existing = loadUnlocked(dateIso) ?: return@withLock null
+        val healed = TrackHeal.withoutReconnectTeleports(existing.points)
+        if (healed.size == existing.points.size) return@withLock existing
+        val updated = existing.copy(
+            points = healed,
+            distanceMeters = Geo.pathLengthMeters(healed),
+        )
+        persistUnlocked(updated, writeGpx = true)
+        updated
     }
 
     /**

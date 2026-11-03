@@ -224,5 +224,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.22 — 按手机时钟分日；设置中显示上次 GPS 尝试。</string>
+    <string name="build_note">版本 1.1.24 — 修复假路线，并清理今日错误重连针脚。</string>
 </resources>

@@ -78,11 +78,14 @@ object RangeStats {
         val daily = ArrayList<Pair<String, Double>>(records.size)
 
         for (record in records) {
-            totalDistance += record.distanceMeters
+            // Recompute so pre-fix days inflated by airplane reconnect
+            // hops do not skew totals / bars.
+            val dayDistance = Geo.pathLengthMeters(record.points)
+            totalDistance += dayDistance
             totalPoints += record.checkCount
-            daily.add(record.date to record.distanceMeters)
-            if (record.distanceMeters >= bestDistance) {
-                bestDistance = record.distanceMeters
+            daily.add(record.date to dayDistance)
+            if (dayDistance >= bestDistance) {
+                bestDistance = dayDistance
                 bestIso = record.date
             }
             val speed = SpeedStats.compute(record.points)

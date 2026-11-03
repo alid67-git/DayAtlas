@@ -222,12 +222,15 @@ class DayDetailActivity : DayAtlasActivity() {
     }
 
     private fun refresh() {
+        val today = DayTitle.localToday()
+        if (dateIso == DayTitle.iso(today)) {
+            store.healReconnectTeleports(dateIso)
+        }
         val record = store.load(dateIso)
         val points = record?.points.orEmpty()
         val jumps = JumpFilter.findJumps(points)
         val dwells = if (prefs.showDwellStops) DwellStops.find(points) else emptyList()
 
-        val today = DayTitle.localToday()
         binding.nextDay.visibility = if (date.isBefore(today)) View.VISIBLE else View.GONE
         binding.previousDay.visibility = View.VISIBLE
 
@@ -238,7 +241,7 @@ class DayDetailActivity : DayAtlasActivity() {
                 DayStatKind.DISTANCE to if (points.isEmpty()) {
                     emDash
                 } else {
-                    DayTitle.formatDistance(record?.distanceMeters ?: Geo.pathLengthMeters(points))
+                    DayTitle.formatDistance(Geo.pathLengthMeters(points))
                 },
                 DayStatKind.LAST_POINT to (
                     points.lastOrNull()?.let { point ->

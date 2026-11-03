@@ -24,7 +24,13 @@ object TrackMotion {
 
     const val MAX_REALISTIC_SPEED_KMH = 160.0
 
-    const val MAX_SEGMENT_GAP_MS = 20 * 60_000L
+    /**
+     * Gaps longer than this are reconnects after airplane / Doze / signal
+     * loss — not driven distance. Kept in sync with [RouteGaps.GAP_MS].
+     * (Previously 20 min, which still counted Phuket-scale teleports after a
+     * ~8–15 min radio outage as ~100–160 km/h "driving".)
+     */
+    const val MAX_SEGMENT_GAP_MS = RouteGaps.GAP_MS
 
     data class Segment(
         val distanceMeters: Double,
@@ -33,10 +39,11 @@ object TrackMotion {
     )
 
     fun meaningfulSegment(prev: TrackPoint, cur: TrackPoint): Segment? {
-        val dtMs = cur.timeMillis - prev.timeMillis
+        val dtMs = cur.timeMillis - prev.lastTimeMillis
         if (dtMs <= 0L || dtMs > MAX_SEGMENT_GAP_MS) return null
         val distM = Geo.haversineMeters(prev.lat, prev.lon, cur.lat, cur.lon)
         if (distM < MIN_SEGMENT_METERS) return null
+        if (distM >= RouteGaps.MAX_CONTINUOUS_METERS) return null
         if (JumpFilter.isJump(prev, cur)) return null
         val speedKmh = (distM / (dtMs / 1000.0)) * 3.6
         if (speedKmh < STATIONARY_SPEED_KMH || speedKmh > MAX_REALISTIC_SPEED_KMH) return null

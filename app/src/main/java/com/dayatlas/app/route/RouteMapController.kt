@@ -6,7 +6,9 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.dayatlas.app.R
 import com.dayatlas.app.data.DwellStops
+import com.dayatlas.app.data.Geo
 import com.dayatlas.app.data.JumpFilter
+import com.dayatlas.app.data.RouteGaps
 import com.dayatlas.app.data.TrackPoint
 import com.dayatlas.app.data.TrackPointLookup
 import org.osmdroid.events.MapEventsReceiver
@@ -40,6 +42,8 @@ object RouteMapController {
     private var boundMap: WeakReference<MapView>? = null
     private var shownDateIso: String? = null
     private var trackPoly: Polyline? = null
+    /** Total geometry pins last drawn — not the last segment's vertex count. */
+    private var shownPointCount: Int = 0
     private var endMarker: Marker? = null
 
     private var pendingGeo: List<GeoPoint>? = null
@@ -79,23 +83,35 @@ object RouteMapController {
         }
 
         val geoPoints = points.map { GeoPoint(it.lat, it.lon) }
-        val poly = Polyline().apply {
-            setPoints(geoPoints)
-            outlinePaint.color = Color.parseColor("#0F766E")
-            outlinePaint.strokeWidth = 8f
-            if (onTrackPointTap != null) {
-                setOnClickListener { _, _, eventPos ->
-                    val hit = TrackPointLookup.nearest(
-                        points,
-                        eventPos.latitude,
-                        eventPos.longitude,
-                    ) ?: return@setOnClickListener false
-                    onTrackPointTap(hit.point)
-                    true
+        // One Polyline per contiguous run — gap hops after airplane / null GPS
+        // must not draw fake corridor lines (those look like parallel tracks).
+        val segmentStarts = RouteGaps.segmentStarts(points)
+        var poly: Polyline? = null
+        for (s in segmentStarts.indices) {
+            val from = segmentStarts[s]
+            val toExclusive = segmentStarts.getOrNull(s + 1) ?: points.size
+            if (toExclusive - from < 1) continue
+            val segmentGeo = geoPoints.subList(from, toExclusive)
+            // A lone reconnect pin still needs a vertex so live updates can extend it.
+            val segmentPoly = Polyline().apply {
+                setPoints(ArrayList(segmentGeo))
+                outlinePaint.color = Color.parseColor("#0F766E")
+                outlinePaint.strokeWidth = 8f
+                if (onTrackPointTap != null) {
+                    setOnClickListener { _, _, eventPos ->
+                        val hit = TrackPointLookup.nearest(
+                            points,
+                            eventPos.latitude,
+                            eventPos.longitude,
+                        ) ?: return@setOnClickListener false
+                        onTrackPointTap(hit.point)
+                        true
+                    }
                 }
             }
+            map.overlays.add(segmentPoly)
+            poly = segmentPoly
         }
-        map.overlays.add(poly)
         map.overlays.add(marker(map, context, geoPoints.first(), R.drawable.ic_marker_start))
         val end = if (geoPoints.size > 1) {
             marker(map, context, geoPoints.last(), R.drawable.ic_marker_end).also {
@@ -189,7 +205,8 @@ object RouteMapController {
 
         boundMap = WeakReference(map)
         shownDateIso = dateIso
-        trackPoly = poly
+        trackPoly = poly // last contiguous segment — live ticks extend this only
+        shownPointCount = points.size
         endMarker = end
 
         if (fitCamera) {
@@ -235,19 +252,40 @@ object RouteMapController {
         }
         val geo = GeoPoint(lat, lon)
         val poly = trackPoly!!
+        // [pointCount] is geometry pin count (points.size), not gpsCheckCount.
+        // [trackPoly] may be only the last contiguous segment after a gap break.
         val existing = ArrayList(poly.actualPoints)
+        val last = existing.lastOrNull()
+        if (last != null) {
+            val hopM = Geo.haversineMeters(last.latitude, last.longitude, lat, lon)
+            // Possible airplane/null-GPS reconnect: force a full [show] so the
+            // hop is drawn as a new segment instead of extending this polyline.
+            // Threshold is MAX_CONTINUOUS (not MIN_BREAK) so normal highway
+            // hops at 30–60 s (~1–3 km) still use the cheap live path.
+            if (hopM >= RouteGaps.MAX_CONTINUOUS_METERS) {
+                return false
+            }
+        }
         when {
-            pointCount == existing.size && existing.isNotEmpty() -> {
+            pointCount == shownPointCount && existing.isNotEmpty() -> {
                 existing[existing.lastIndex] = geo
                 poly.setPoints(existing)
+                val fit = ArrayList(pendingGeo.orEmpty())
+                if (fit.isNotEmpty()) {
+                    fit[fit.lastIndex] = geo
+                    pendingGeo = fit
+                }
             }
-            pointCount == existing.size + 1 -> {
+            pointCount == shownPointCount + 1 -> {
                 poly.addPoint(geo)
                 existing.add(geo)
+                shownPointCount = pointCount
+                val fit = ArrayList(pendingGeo.orEmpty())
+                fit.add(geo)
+                pendingGeo = fit
             }
             else -> return false
         }
-        pendingGeo = ArrayList(existing)
         val end = endMarker
         if (end != null) {
             end.position = geo
@@ -272,6 +310,7 @@ object RouteMapController {
         boundMap = null
         shownDateIso = null
         trackPoly = null
+        shownPointCount = 0
         endMarker = null
         pendingGeo = null
         pendingJumps = emptyList()

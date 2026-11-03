@@ -57,7 +57,13 @@ object Intents {
     const val ACTION_POINT_SAVED = "com.dayatlas.app.POINT_SAVED"
     const val EXTRA_GEOMETRY_CHANGED = "geometry_changed"
     const val EXTRA_DATE_ISO = "date_iso"
+    /**
+     * Geometry pin count ([com.dayatlas.app.data.DayRecord.points].size) —
+     * used by live polyline updates. Not [com.dayatlas.app.data.DayRecord.checkCount].
+     */
     const val EXTRA_POINT_COUNT = "point_count"
+    /** Successful GPS acquisitions including same-place refreshes (UI counter). */
+    const val EXTRA_CHECK_COUNT = "check_count"
     const val EXTRA_DISTANCE_M = "distance_m"
     const val EXTRA_TIME_MILLIS = "time_millis"
     const val EXTRA_LAT = "lat"
@@ -72,11 +78,13 @@ object Intents {
         lat: Double,
         lon: Double,
         geometryChanged: Boolean,
+        checkCount: Int = pointCount,
     ): Intent =
         Intent(ACTION_POINT_SAVED)
             .setPackage(context.packageName)
             .putExtra(EXTRA_DATE_ISO, dateIso)
             .putExtra(EXTRA_POINT_COUNT, pointCount)
+            .putExtra(EXTRA_CHECK_COUNT, checkCount)
             .putExtra(EXTRA_DISTANCE_M, distanceMeters)
             .putExtra(EXTRA_TIME_MILLIS, timeMillis)
             .putExtra(EXTRA_LAT, lat)
