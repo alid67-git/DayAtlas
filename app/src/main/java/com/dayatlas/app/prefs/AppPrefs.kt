@@ -69,16 +69,16 @@ class AppPrefs(context: Context) {
             val raw = prefs.getInt(EFFECTIVE_INTERVAL_SECONDS, base)
             val clamped =
                 if (raw in ALLOWED_INTERVAL_SECONDS) raw else base
-            // Drop legacy 3/5 min adaptive values when the user base is finer
-            // (stationary backoff now caps at 1 minute).
-            val coarseCap = base.coerceAtLeast(60)
+            // Keep in sync with StationaryBackoff.MAX_BACKOFF_INTERVAL_SECONDS
+            // (5 min sit-still ceiling; MotionWake tips back on movement).
+            val coarseCap = base.coerceAtLeast(300)
             return clamped.coerceAtLeast(base).coerceAtMost(coarseCap)
         }
         set(value) {
             val base = intervalSeconds
             val clamped =
                 if (value in ALLOWED_INTERVAL_SECONDS) value else base
-            val coarseCap = base.coerceAtLeast(60)
+            val coarseCap = base.coerceAtLeast(300)
             prefs.edit()
                 .putInt(
                     EFFECTIVE_INTERVAL_SECONDS,

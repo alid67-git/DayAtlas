@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.27 — 2026-11-04
+
+- **Otururken GPS kademesi 5 dk’ya çıkar:** Aynı yerde 30 sn → 1 → 3 →
+  5 dk. Significant Motion (veya iki dış ölçüm) gelince seçilen aralığa
+  döner — kalkış gecikmesi sensörle sınırlı kalır.
+
 ## 1.1.26 — 2026-11-03
 
 - **Patlama üçgenleri:** 1 dk örneklemede ~1–2 km içe doğru zıplamalar
