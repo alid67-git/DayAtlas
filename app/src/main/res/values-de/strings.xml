@@ -224,5 +224,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.26 — Küsten-Explosionsdreiecke werden nicht mehr gezeichnet.</string>
+    <string name="build_note">Version 1.1.27 — Zuhause GPS bis 5 Min; Bewegung weckt wieder auf.</string>
 </resources>

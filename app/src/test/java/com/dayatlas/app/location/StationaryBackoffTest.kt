@@ -48,21 +48,30 @@ class StationaryBackoffTest {
     }
 
     @Test
-    fun stepsStopAtOneMinuteCap() {
+    fun climbsThirtyToFiveMinutesThenStops() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        // Enough samples to have formerly climbed to 3–5 min.
-        repeat(12) {
+        // seed + 3 → 60, +3 → 180, +3 → 300
+        repeat(3) {
             state = StationaryBackoff.onSample(41.00001, 29.00001, 30, state, allowed)
         }
         assertEquals(60, state.effectiveIntervalSeconds)
-        val stayed = StationaryBackoff.onSample(41.00001, 29.00001, 30, state, allowed)
-        assertEquals(60, stayed.effectiveIntervalSeconds)
+        repeat(3) {
+            state = StationaryBackoff.onSample(41.00001, 29.00001, 30, state, allowed)
+        }
+        assertEquals(180, state.effectiveIntervalSeconds)
+        repeat(3) {
+            state = StationaryBackoff.onSample(41.00001, 29.00001, 30, state, allowed)
+        }
+        assertEquals(300, state.effectiveIntervalSeconds)
+        repeat(6) {
+            state = StationaryBackoff.onSample(41.00001, 29.00001, 30, state, allowed)
+        }
+        assertEquals(300, state.effectiveIntervalSeconds)
     }
 
     @Test
-    fun legacyCoarseEffectiveIsClampedDown() {
-        // Prefs from an older build may still hold 300 s while base is 30.
+    fun fiveMinuteEffectiveIsKeptWhenWithinCap() {
         var state = StationaryBackoff.State(
             effectiveIntervalSeconds = 300,
             stationaryStreak = 0,
@@ -70,22 +79,32 @@ class StationaryBackoffTest {
             lastLon = 29.0,
         )
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
-        assertEquals(60, state.effectiveIntervalSeconds)
+        assertEquals(300, state.effectiveIntervalSeconds)
     }
 
     @Test
-    fun userBaseCoarserThanCapIsRespected() {
+    fun userBaseCoarserThanFinerStepsIsRespected() {
         var state = StationaryBackoff.reset(180)
         state = StationaryBackoff.onSample(41.0, 29.0, 180, state, allowed)
         repeat(6) {
             state = StationaryBackoff.onSample(41.0, 29.0, 180, state, allowed)
         }
-        // Cap is max(base, 60) = 180 — no climb past the user's own base.
-        assertEquals(180, state.effectiveIntervalSeconds)
+        // Cap is max(base, 300) = 300 — from 180 base can still climb to 300.
+        assertEquals(300, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
         assertEquals(180, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
         assertEquals(180, state.effectiveIntervalSeconds)
+    }
+
+    @Test
+    fun userBaseAtFiveMinutesStaysThere() {
+        var state = StationaryBackoff.reset(300)
+        state = StationaryBackoff.onSample(41.0, 29.0, 300, state, allowed)
+        repeat(9) {
+            state = StationaryBackoff.onSample(41.0, 29.0, 300, state, allowed)
+        }
+        assertEquals(300, state.effectiveIntervalSeconds)
     }
 
     @Test
@@ -95,7 +114,7 @@ class StationaryBackoffTest {
         repeat(6) {
             state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         }
-        assertEquals(60, state.effectiveIntervalSeconds)
+        assertEquals(180, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
         assertEquals(30, state.effectiveIntervalSeconds)
         assertEquals(1, state.movingStreak)
@@ -111,11 +130,11 @@ class StationaryBackoffTest {
         repeat(6) {
             state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         }
-        assertEquals(60, state.effectiveIntervalSeconds)
+        assertEquals(180, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.0, 29.0006, 30, state, allowed)
-        assertEquals(60, state.effectiveIntervalSeconds)
+        assertEquals(180, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.0, 29.0008, 30, state, allowed)
-        assertEquals(60, state.effectiveIntervalSeconds)
+        assertEquals(180, state.effectiveIntervalSeconds)
         assertEquals(0, state.movingStreak)
     }
 
@@ -126,7 +145,7 @@ class StationaryBackoffTest {
         repeat(6) {
             state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         }
-        assertEquals(60, state.effectiveIntervalSeconds)
+        assertEquals(180, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
         assertEquals(30, state.effectiveIntervalSeconds)
         repeat(3) {
@@ -143,8 +162,9 @@ class StationaryBackoffTest {
         assertEquals(180, StationaryBackoff.nextCoarser(60, allowed))
         assertEquals(300, StationaryBackoff.nextCoarser(180, allowed))
         assertNull(StationaryBackoff.nextCoarser(300, allowed))
-        assertEquals(60, StationaryBackoff.coarseCapFor(10))
-        assertEquals(60, StationaryBackoff.coarseCapFor(30))
-        assertEquals(180, StationaryBackoff.coarseCapFor(180))
+        assertEquals(300, StationaryBackoff.coarseCapFor(10))
+        assertEquals(300, StationaryBackoff.coarseCapFor(30))
+        assertEquals(300, StationaryBackoff.coarseCapFor(180))
+        assertEquals(300, StationaryBackoff.coarseCapFor(300))
     }
 }

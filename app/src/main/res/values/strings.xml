@@ -55,7 +55,7 @@
     <string name="sample_status_success_never">Son kayıt: henüz yok (deneme oldu ama konum yazılamadı)</string>
     <string name="settings_daily_mode_summary">Açıkken uygulama veya telefon açılınca bugünün kaydı onay sormadan başlar / devam eder.</string>
     <string name="settings_interval">Örnekleme aralığı</string>
-    <string name="settings_interval_hint">Aynı yerde (~80 m) art arda 3 ölçüm olunca aralık bir üst kademeye seyreltilir (ör. 30 sn → 1 dk; en fazla 1 dk). Gerçek hareket olunca seçtiğiniz aralığa döner — ev GPS titreşimi hızı yeniden sıkılaştırmaz.</string>
+    <string name="settings_interval_hint">Aynı yerde (~80 m) art arda 3 ölçüm olunca aralık kademeli seyreltilir (30 sn → 1 → 3 → 5 dk). Hareket algılanınca (Significant Motion veya art arda 2 dış ölçüm) seçtiğiniz aralığa döner — ev GPS titreşimi hızı yeniden sıkılaştırmaz.</string>
     <string name="settings_dwell_stops">15 dk+ duruş noktaları</string>
     <string name="settings_dwell_stops_summary">Açıkken 15 dakikadan uzun kaldığınız yerler haritada görünür (gri = henüz not/foto yok; mavi = eklendi). Dokunarak süre, not ve fotoğraf ekleyebilirsiniz.</string>
     <string name="dwell_stop_title">Duruş</string>
@@ -241,5 +241,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.26 — Sahil patlama üçgenleri çizilmez; mesafe şişmesi kesilir.</string>
+    <string name="build_note">Sürüm 1.1.27 — Evde GPS 5 dk’ya kadar seyrelir; hareket olunca hemen sıkılaşır.</string>
 </resources>

@@ -26,16 +26,18 @@ object StationaryBackoff {
 
     /**
      * Ceiling for adaptive coarsening when the user base is finer than this
-     * (typical: 30 s → 60 s). Worst-case wake while sitting is ~1 minute,
-     * not 3–5. If the user picked 3/5 min in Settings, that base already
+     * (typical ladder: 30 s → 1 → 3 → 5 min). [MotionWakeTrigger] tips back
+     * to the user base on significant motion so a long sit does not delay
+     * the start of a real trip by a full 5 minutes on devices that expose
+     * that sensor. If the user picked 3/5 min in Settings, that base already
      * wins via [coerceAtLeast] on the base.
      */
-    const val MAX_BACKOFF_INTERVAL_SECONDS = 60
+    const val MAX_BACKOFF_INTERVAL_SECONDS = 300
 
     /**
      * When true (default), [recordSample] steps the effective interval
-     * coarser while you sit still (e.g. 30 s → 1 min). Kept as a flag
-     * so a future diagnostic build can temporarily freeze the interval
+     * coarser while you sit still (e.g. 30 s → 1 → 3 → 5 min). Kept as a
+     * flag so a future diagnostic build can temporarily freeze the interval
      * without deleting the backoff math or its tests.
      */
     const val COARSENING_ENABLED = true
@@ -201,7 +203,7 @@ object StationaryBackoff {
         return allowed.firstOrNull { it > currentSeconds }
     }
 
-    /** Adaptive ceiling: never coarser than 1 min unless user base already is. */
+    /** Adaptive ceiling: never coarser than 5 min unless user base already is. */
     fun coarseCapFor(userBaseSeconds: Int): Int =
         userBaseSeconds.coerceAtLeast(MAX_BACKOFF_INTERVAL_SECONDS)
 
