@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.24 — 2026-11-03
+
+- **Uçak modu / GPS kopması — sahte çoklu rota:** Radyo kesilince sonraki
+  nokta km’ler ötede olsa da hız “normal” görünebiliyordu; harita bunu
+  koridor çizgisi olarak üst üste çiziyordu (1 gidiş-dönüş → 4 çizgi gibi).
+  Artık kopma sonrası hat bölünür, mesafe/hız bu zıplamaları saymaz;
+  eski günlerin mesafesi de noktalardan yeniden hesaplanır.
+
 ## 1.1.23 — 2026-11-03
 
 - **Airplane / GPS gap tracks:** After a radio outage the next fix can sit

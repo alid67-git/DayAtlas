@@ -411,17 +411,18 @@ class MainActivity : DayAtlasActivity() {
             val record = store.load(DayTitle.iso(date)) ?: return@mapNotNull null
             if (record.points.isEmpty()) return@mapNotNull null
             val speed = SpeedStats.compute(record.points)
+            val distanceM = Geo.pathLengthMeters(record.points)
             val meta = if (speed.activeMillis > 0) {
                 getString(
                     R.string.routes_day_meta,
-                    DayTitle.formatDistance(record.distanceMeters),
+                    DayTitle.formatDistance(distanceM),
                     record.checkCount,
                     DayTitle.formatDuration(speed.activeMillis),
                 )
             } else {
                 getString(
                     R.string.routes_day_meta_short,
-                    DayTitle.formatDistance(record.distanceMeters),
+                    DayTitle.formatDistance(distanceM),
                     record.checkCount,
                 )
             }
@@ -744,7 +745,9 @@ class MainActivity : DayAtlasActivity() {
         binding.mapDistance.text = if (points.isEmpty()) {
             emDash
         } else {
-            DayTitle.formatDistance(record?.distanceMeters ?: Geo.pathLengthMeters(points))
+            // Always recompute — stored distanceMeters can still include
+            // pre-1.1.24 airplane reconnect hops.
+            DayTitle.formatDistance(Geo.pathLengthMeters(points))
         }
         binding.mapLastPoint.text = points.lastOrNull()?.let { point ->
             Instant.ofEpochMilli(point.lastTimeMillis)
@@ -1061,7 +1064,7 @@ class MainActivity : DayAtlasActivity() {
             DayStatKind.DISTANCE to if (points.isEmpty()) {
                 emDash
             } else {
-                DayTitle.formatDistance(record?.distanceMeters ?: Geo.pathLengthMeters(points))
+                DayTitle.formatDistance(Geo.pathLengthMeters(points))
             },
             DayStatKind.LAST_POINT to (
                 points.lastOrNull()?.let { point ->

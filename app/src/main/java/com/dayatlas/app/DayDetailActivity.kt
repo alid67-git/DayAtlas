@@ -238,7 +238,7 @@ class DayDetailActivity : DayAtlasActivity() {
                 DayStatKind.DISTANCE to if (points.isEmpty()) {
                     emDash
                 } else {
-                    DayTitle.formatDistance(record?.distanceMeters ?: Geo.pathLengthMeters(points))
+                    DayTitle.formatDistance(Geo.pathLengthMeters(points))
                 },
                 DayStatKind.LAST_POINT to (
                     points.lastOrNull()?.let { point ->
