@@ -7,6 +7,8 @@
     <string name="route_next_day">后一天</string>
     <string name="route_go_today">返回今天</string>
     <string name="route_empty">这一天没有记录。</string>
+    <string name="map_exit_fullscreen">退出地图</string>
+    <string name="map_enter_fullscreen_hint">点按地图全屏查看</string>
     <string name="notif_update_channel">更新</string>
     <string name="notif_update_ready_title">更新已就绪</string>
     <string name="notif_update_ready_text">点击安装版本 %1$s</string>
@@ -224,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.28 — 时长可读；地图钉上移/缩小；精度距离过滤。</string>
+    <string name="build_note">版本 1.1.30 — 点按地图全屏；返回退出。</string>
 </resources>

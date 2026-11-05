@@ -7,6 +7,8 @@
     <string name="route_next_day">Nächster Tag</string>
     <string name="route_go_today">Zurück zu heute</string>
     <string name="route_empty">Keine Aufzeichnung für diesen Tag.</string>
+    <string name="map_exit_fullscreen">Karte schließen</string>
+    <string name="map_enter_fullscreen_hint">Tippen — Vollbild</string>
     <string name="notif_update_channel">Aktualisierung</string>
     <string name="notif_update_ready_title">Update bereit</string>
     <string name="notif_update_ready_text">Tippen, um Version %1$s zu installieren</string>
@@ -224,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.28 — Lesbare Dauer-Karte; Karten-Pins freier; Genauigkeitsfilter.</string>
+    <string name="build_note">Version 1.1.30 — Karte tippen → Vollbild; Zurück beendet.</string>
 </resources>

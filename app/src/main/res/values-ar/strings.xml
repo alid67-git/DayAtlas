@@ -7,6 +7,8 @@
     <string name="route_next_day">اليوم التالي</string>
     <string name="route_go_today">العودة إلى اليوم</string>
     <string name="route_empty">لا يوجد مسار لهذا اليوم.</string>
+    <string name="map_exit_fullscreen">الخروج من الخريطة</string>
+    <string name="map_enter_fullscreen_hint">المس الخريطة لملء الشاشة</string>
     <string name="notif_update_channel">التحديث</string>
     <string name="notif_update_ready_title">التحديث جاهز</string>
     <string name="notif_update_ready_text">اضغط لتثبيت الإصدار %1$s</string>
@@ -224,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.28 — مدة واضحة؛ أيقونات الخريطة أعلى؛ مرشح الدقة.</string>
+    <string name="build_note">الإصدار 1.1.30 — المس الخريطة لملء الشاشة؛ رجوع للخروج.</string>
 </resources>

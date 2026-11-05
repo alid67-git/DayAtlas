@@ -7,6 +7,8 @@
     <string name="route_next_day">अगला दिन</string>
     <string name="route_go_today">आज पर वापस जाएँ</string>
     <string name="route_empty">इस दिन के लिए कोई रिकॉर्ड नहीं है।</string>
+    <string name="map_exit_fullscreen">मानचित्र से बाहर</string>
+    <string name="map_enter_fullscreen_hint">पूर्ण स्क्रीन के लिए मानचित्र पर टैप करें</string>
     <string name="notif_update_channel">अपडेट</string>
     <string name="notif_update_ready_title">अपडेट तैयार है</string>
     <string name="notif_update_ready_text">संस्करण %1$s इंस्टॉल करने के लिए टैप करें</string>
@@ -224,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.28 — अवधि पठनीय; मानचित्र पिन ऊपर; सटीकता फ़िल्टर।</string>
+    <string name="build_note">संस्करण 1.1.30 — मानचित्र टैप → पूर्ण स्क्रीन; वापस से बाहर।</string>
 </resources>

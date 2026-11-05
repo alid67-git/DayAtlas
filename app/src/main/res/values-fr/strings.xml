@@ -7,6 +7,8 @@
     <string name="route_next_day">Jour suivant</string>
     <string name="route_go_today">Revenir à aujourd\'hui</string>
     <string name="route_empty">Aucun trajet pour ce jour.</string>
+    <string name="map_exit_fullscreen">Quitter la carte</string>
+    <string name="map_enter_fullscreen_hint">Toucher la carte — plein écran</string>
     <string name="notif_update_channel">Mise à jour</string>
     <string name="notif_update_ready_title">Mise à jour prête</string>
     <string name="notif_update_ready_text">Appuyez pour installer la version %1$s</string>
@@ -224,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.28 — Durée lisible; pins carte dégagés; filtre de précision.</string>
+    <string name="build_note">Version 1.1.30 — Toucher la carte → plein écran ; Retour quitte.</string>
 </resources>
