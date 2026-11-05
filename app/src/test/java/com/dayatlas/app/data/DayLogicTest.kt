@@ -338,6 +338,16 @@ class SpeedStatsTest {
     }
 
     @Test
+    fun accuracyCircleHopDoesNotInflateDistance() {
+        // ~90 m in 60 s with 50 m reported accuracy: above same-place (80 m)
+        // but inside max(25, 2×50)=100 m noise gate — must not count.
+        val a = TrackPoint(0L, 41.0, 29.0, 50f)
+        val b = TrackPoint(60_000L, 41.0, 29.00081, 50f) // ~90 m
+        assertEquals(100.0, TrackMotion.accuracyNoiseGateMeters(50f), 1e-9)
+        assertTrue(Geo.pathLengthMeters(listOf(a, b)) < 1.0)
+    }
+
+    @Test
     fun samePlacePinWanderDoesNotInflateDistance() {
         // New pins every ~85 m (just outside same-place collapse) at 30 s —
         // courtyard GPS cloud with a tight sample interval. Must not sum.

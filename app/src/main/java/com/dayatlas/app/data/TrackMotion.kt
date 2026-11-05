@@ -46,10 +46,30 @@ object TrackMotion {
         if (distM < MIN_SEGMENT_METERS) return null
         if (distM >= RouteGaps.MAX_CONTINUOUS_METERS) return null
         if (JumpFilter.isJump(prev, cur)) return null
+        // Cheap phones often claim ~8–15 m accuracy while hopping 20–80 m
+        // indoors / under canopy — that inflated Redmi vs Samsung distance.
+        // Treat a hop still inside max(25 m, 2× reported accuracy) as noise.
+        val noiseGate = maxOf(
+            accuracyNoiseGateMeters(prev.accuracyMeters),
+            accuracyNoiseGateMeters(cur.accuracyMeters),
+        )
+        if (noiseGate > 0.0 && distM <= noiseGate) return null
         val speedKmh = (distM / (dtMs / 1000.0)) * 3.6
         if (speedKmh < STATIONARY_SPEED_KMH || speedKmh > MAX_REALISTIC_SPEED_KMH) return null
         // Courtyard GPS: new pins just outside same-place, sampled tightly.
         if (distM < GPS_HOP_MAX_METERS && speedKmh >= GPS_HOP_MIN_SPEED_KMH) return null
         return Segment(distM, speedKmh, dtMs)
     }
+
+    /**
+     * RideAtlas-style accuracy circle. Missing/invalid accuracy → 0 (no gate).
+     */
+    fun accuracyNoiseGateMeters(accuracyMeters: Float?): Double {
+        if (accuracyMeters == null || !accuracyMeters.isFinite() || accuracyMeters <= 0f) {
+            return 0.0
+        }
+        return maxOf(ACCURACY_NOISE_FLOOR_M, 2.0 * accuracyMeters.toDouble())
+    }
+
+    const val ACCURACY_NOISE_FLOOR_M = 25.0
 }

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.28 — 2026-11-05
+
+- **Kart / harita chrome:** 7 kutuda son satır tam genişlik (Aktif süre
+  kesilmez); kart ikonları küçüldü. Harita fit alt boşluğu arttı, başlangıç/
+  bitiş işaretleri küçüldü — gün şeridiyle karışmaz.
+- **Mesafe cihaz farkı:** Raporlanan GPS doğruluğunun 2×’i (en az 25 m)
+  içindeki hop mesafe/hıza yazılmaz (ucuz telefon sapması).
+
 ## 1.1.27 — 2026-11-04
 
 - **Otururken GPS kademesi 5 dk’ya çıkar:** Aynı yerde 30 sn → 1 → 3 →

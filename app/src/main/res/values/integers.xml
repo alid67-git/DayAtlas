@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 2-2-3 day-stat layout needs three rows visible so the map stays
-         below a predictable chrome height. -->
-    <integer name="day_stat_max_visible_rows">3</integer>
+    <!-- 7-card layout is 2+2+2+full → four rows; keep them all visible so
+         the last (often Aktif süre) is not clipped above the map. -->
+    <integer name="day_stat_max_visible_rows">4</integer>
 </resources>

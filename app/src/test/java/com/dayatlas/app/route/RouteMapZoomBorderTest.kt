@@ -6,7 +6,7 @@ import org.junit.Test
 class RouteMapZoomBorderTest {
     @Test
     fun preferredBorderWhenMapIsTallEnough() {
-        assertEquals(160, RouteMapController.safeZoomBorder(1080, 800))
+        assertEquals(200, RouteMapController.safeZoomBorder(1080, 800))
     }
 
     @Test
