@@ -7,6 +7,8 @@
     <string name="route_next_day">Día siguiente</string>
     <string name="route_go_today">Volver a hoy</string>
     <string name="route_empty">No hay registro para este día.</string>
+    <string name="map_exit_fullscreen">Salir del mapa</string>
+    <string name="map_enter_fullscreen_hint">Toca el mapa a pantalla completa</string>
     <string name="notif_update_channel">Actualización</string>
     <string name="notif_update_ready_title">Actualización lista</string>
     <string name="notif_update_ready_text">Toca para instalar la versión %1$s</string>
@@ -224,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.29 — Tarjetas 2-2-3; trío inferior pequeño/centrado, pares arriba mayores.</string>
+    <string name="build_note">Versión 1.1.30 — Toca el mapa a pantalla completa; Atrás sale.</string>
 </resources>

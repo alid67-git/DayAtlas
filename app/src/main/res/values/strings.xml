@@ -7,6 +7,8 @@
     <string name="route_next_day">Sonraki gün</string>
     <string name="route_go_today">Bugüne dön</string>
     <string name="route_empty">Bu gün için kayıt yok.</string>
+    <string name="map_exit_fullscreen">Haritadan çık</string>
+    <string name="map_enter_fullscreen_hint">Haritaya dokun — tam ekran</string>
     <string name="notif_update_channel">Güncelleme</string>
     <string name="notif_update_ready_title">Güncelleme hazır</string>
     <string name="notif_update_ready_text">%1$s sürümünü kurmak için dokunun</string>
@@ -241,5 +243,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.29 — Kartlar 2-2-3; alt üçlü küçük/ortalı, üst çiftler büyük.</string>
+    <string name="build_note">Sürüm 1.1.30 — Haritaya dokun → tam ekran; Geri ile çık.</string>
 </resources>

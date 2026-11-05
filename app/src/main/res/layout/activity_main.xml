@@ -62,6 +62,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/dailyHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -341,6 +342,22 @@
                     android:padding="10dp"
                     android:src="@drawable/ic_marker_jump"
                     android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <!-- Visible only in fullscreen examine mode; system Back also exits. -->
+                <ImageButton
+                    android:id="@+id/mapExitFullscreen"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_map_nav_chip"
+                    android:contentDescription="@string/map_exit_fullscreen"
+                    android:elevation="6dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_chevron_left"
+                    android:visibility="gone"
+                    app:tint="@color/md_theme_on_surface"
                     tools:visibility="visible" />
             </FrameLayout>
         </LinearLayout>

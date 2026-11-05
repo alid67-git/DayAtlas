@@ -75,6 +75,11 @@ object RouteMapController {
         onDwellTap: ((DwellStops.Stop) -> Unit)? = null,
         /** Tap near any track point (route or map) to add note/photo. */
         onTrackPointTap: ((TrackPoint) -> Unit)? = null,
+        /**
+         * Tap on empty map (no track/marker hit). Used by the daily pane to
+         * enter fullscreen examine mode; ignored when null.
+         */
+        onMapTap: (() -> Unit)? = null,
         /** Live GPS updates should not animate zoom (causes blank flashes / ANR). */
         animateZoom: Boolean = false,
         fitCamera: Boolean = true,
@@ -84,6 +89,7 @@ object RouteMapController {
         val hasPoints = points.isNotEmpty()
         emptyState?.visibility = if (hasPoints) View.GONE else View.VISIBLE
         if (!hasPoints) {
+            addMapTapOverlay(map, points = emptyList(), onTrackPointTap = null, onMapTap = onMapTap)
             map.invalidate()
             return
         }
@@ -127,22 +133,7 @@ object RouteMapController {
             null
         }
 
-        if (onTrackPointTap != null) {
-            map.overlays.add(
-                MapEventsOverlay(
-                    object : MapEventsReceiver {
-                        override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
-                            val hit = TrackPointLookup.nearest(points, p.latitude, p.longitude)
-                                ?: return false
-                            onTrackPointTap(hit.point)
-                            return true
-                        }
-
-                        override fun longPressHelper(p: GeoPoint): Boolean = false
-                    },
-                ),
-            )
-        }
+        addMapTapOverlay(map, points, onTrackPointTap, onMapTap)
 
         jumps.forEach { jump ->
             val gp = GeoPoint(jump.point.lat, jump.point.lon)
@@ -424,6 +415,37 @@ object RouteMapController {
             icon = ContextCompat.getDrawable(context, iconRes)
             setInfoWindow(null)
         }
+
+    private fun addMapTapOverlay(
+        map: MapView,
+        points: List<TrackPoint>,
+        onTrackPointTap: ((TrackPoint) -> Unit)?,
+        onMapTap: (() -> Unit)?,
+    ) {
+        if (onTrackPointTap == null && onMapTap == null) return
+        map.overlays.add(
+            MapEventsOverlay(
+                object : MapEventsReceiver {
+                    override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
+                        if (onTrackPointTap != null && points.isNotEmpty()) {
+                            val hit = TrackPointLookup.nearest(points, p.latitude, p.longitude)
+                            if (hit != null) {
+                                onTrackPointTap(hit.point)
+                                return true
+                            }
+                        }
+                        if (onMapTap != null) {
+                            onMapTap()
+                            return true
+                        }
+                        return false
+                    }
+
+                    override fun longPressHelper(p: GeoPoint): Boolean = false
+                },
+            ),
+        )
+    }
 
     private fun boundingBoxOf(points: List<GeoPoint>): BoundingBox {
         var north = points[0].latitude

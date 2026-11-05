@@ -13,6 +13,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -86,6 +87,12 @@ class MainActivity : DayAtlasActivity() {
     private var askedBatteryThisSession = false
     private var askedExactThisSession = false
     private var mapDate: LocalDate = DayTitle.localToday()
+    private var mapFullscreen = false
+    private val mapFullscreenBackCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            setMapFullscreen(false)
+        }
+    }
     private var mapPhotos: List<String> = emptyList()
     private var statsRange: StatsRange = StatsRange.LAST_7
     /** When [statsRange] is ALL, null = month list; otherwise days for that month. */
@@ -188,6 +195,14 @@ class MainActivity : DayAtlasActivity() {
         binding.routeMap.isTilesScaledToDpi = true
         // Avoid a pure-white “hole” while tiles / first camera fit settle.
         binding.routeMap.setBackgroundColor(0xFFE8EEF4.toInt())
+
+        onBackPressedDispatcher.addCallback(this, mapFullscreenBackCallback)
+        binding.mapExitFullscreen.setOnClickListener { setMapFullscreen(false) }
+        // Empty-state label sits above the MapView and would otherwise swallow taps.
+        binding.emptyState.setOnClickListener { setMapFullscreen(true) }
+        if (savedInstanceState?.getBoolean(STATE_MAP_FULLSCREEN) == true) {
+            setMapFullscreen(true, refreshMapAfter = false)
+        }
 
         binding.todayStats.adapter = dayStatsAdapter
         dayStatsAdapter.attachTo(binding.todayStats, spanCount = DayStatsAdapter.GRID_SPAN)
@@ -362,6 +377,11 @@ class MainActivity : DayAtlasActivity() {
         // onStart already refreshes; avoid a second full map rebuild here.
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(STATE_MAP_FULLSCREEN, mapFullscreen)
+    }
+
     override fun onPause() {
         binding.routeMap.onPause()
         super.onPause()
@@ -385,6 +405,9 @@ class MainActivity : DayAtlasActivity() {
     }
 
     private fun showTab(itemId: Int) {
+        if (itemId != R.id.nav_daily && mapFullscreen) {
+            setMapFullscreen(false, refreshMapAfter = false)
+        }
         val daily = itemId == R.id.nav_daily
         binding.paneDaily.visibility = if (daily) View.VISIBLE else View.GONE
         binding.paneStats.visibility = if (itemId == R.id.nav_stats) View.VISIBLE else View.GONE
@@ -405,6 +428,24 @@ class MainActivity : DayAtlasActivity() {
             }
             else -> binding.routeMap.onPause()
         }
+    }
+
+    /**
+     * Expand the daily map to fill the screen (hide chrome) so the track can
+     * be examined with pinch-zoom. System Back / [mapExitFullscreen] restores
+     * the normal day layout.
+     */
+    private fun setMapFullscreen(enabled: Boolean, refreshMapAfter: Boolean = true) {
+        if (mapFullscreen == enabled) return
+        mapFullscreen = enabled
+        mapFullscreenBackCallback.isEnabled = enabled
+        val chrome = if (enabled) View.GONE else View.VISIBLE
+        binding.toolbar.visibility = chrome
+        binding.dailyHeader.visibility = chrome
+        binding.mapOverlay.visibility = chrome
+        binding.bottomNav.visibility = chrome
+        binding.mapExitFullscreen.visibility = if (enabled) View.VISIBLE else View.GONE
+        if (refreshMapAfter) refreshMap()
     }
 
     private fun refreshRoutes() {
@@ -1029,8 +1070,16 @@ class MainActivity : DayAtlasActivity() {
                     onChanged = { refresh(rebuildMap = true) },
                 )
             },
-            onTrackPointTap = { point ->
-                openPointOrDwellNote(dateIso, points, dwellStops, point)
+            // Compact: any map tap expands. Fullscreen: tap near track for notes.
+            onTrackPointTap = if (mapFullscreen) {
+                { point -> openPointOrDwellNote(dateIso, points, dwellStops, point) }
+            } else {
+                null
+            },
+            onMapTap = if (mapFullscreen) {
+                null
+            } else {
+                { setMapFullscreen(true) }
             },
         )
     }
@@ -1129,6 +1178,7 @@ class MainActivity : DayAtlasActivity() {
         private const val LIVE_MAP_DEBOUNCE_MS = 400L
         private const val FULL_REFRESH_EVERY_LIVE_UPDATES = 20
         private const val FULL_REFRESH_DELAY_MS = 1_500L
+        private const val STATE_MAP_FULLSCREEN = "map_fullscreen"
 
         /** Bottom-nav item id to select when MainActivity is re-shown (e.g. from day detail). */
         const val EXTRA_OPEN_TAB = "open_tab"
