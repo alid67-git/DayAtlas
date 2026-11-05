@@ -241,5 +241,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.27 — Evde GPS 5 dk’ya kadar seyrelir; hareket olunca hemen sıkılaşır.</string>
+    <string name="build_note">Sürüm 1.1.28 — Aktif süre okunur; harita ikonları yukarı/küçük; mesafe doğruluk süzgeci.</string>
 </resources>

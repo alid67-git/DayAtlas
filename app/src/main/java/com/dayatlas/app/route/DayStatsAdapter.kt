@@ -139,11 +139,14 @@ class DayStatsAdapter(
         private const val DRAG_ELEVATION_PX = 16f
         const val GRID_SPAN = 6
 
-        /** 7 → 2-2-3; 6 → 2-2-2; 5 → 2-3; 4 → 2-2; 3 → row of 3; etc. */
+        /**
+         * 7 → 2+2+2 then full-width last (avoids a cramped 3-across row that
+         * ellipsizes “1 sa 47 dk”); 6 → 2-2-2; 5 → 2-3; 4 → 2-2; etc.
+         */
         fun spanSizeFor(position: Int, count: Int, gridSpan: Int = GRID_SPAN): Int {
             if (count <= 0 || gridSpan <= 0) return 1
             return when (count) {
-                7 -> if (position < 4) 3 else 2
+                7 -> if (position < 6) 3 else gridSpan
                 6, 4, 2 -> 3
                 5 -> if (position < 2) 3 else 2
                 3 -> 2
@@ -156,7 +159,7 @@ class DayStatsAdapter(
             0 -> 0
             1, 2, 3 -> 1
             4, 5, 6 -> 2
-            7 -> 3
+            7 -> 4
             else -> ceil(count * 2.0 / gridSpan).toInt().coerceAtLeast(1)
         }
     }

@@ -33,11 +33,17 @@ import kotlin.math.abs
  * tall white hole with only a thin tile strip at the bottom.
  */
 object RouteMapController {
-    private const val DEFAULT_ZOOM_BORDER_PX = 160
+    /**
+     * Extra padding around a day’s track so start/end markers stay clear of
+     * the floating day-nav strip at the bottom of the map pane.
+     */
+    private const val DEFAULT_ZOOM_BORDER_PX = 200
     private const val MIN_ZOOM_INNER_PX = 48
     private const val MIN_REFIT_DELTA_PX = 24
     private const val MAX_ZOOM = 18.0
     private const val MIN_ZOOM = 3.0
+    /** Pull back one-and-a-half levels after fit so edge pins aren’t clipped. */
+    private const val FIT_ZOOM_OUT_LEVELS = 1.5
 
     private var boundMap: WeakReference<MapView>? = null
     private var shownDateIso: String? = null
@@ -376,9 +382,10 @@ object RouteMapController {
                 map.controller.setZoom(11.0)
                 map.controller.setCenter(box.centerWithDateLine)
             } else {
-                // One zoom level out from a bare bounding-box fit —
-                // long day tracks were opening too tight (street/district).
-                val wider = (zoom - 1.0).coerceIn(MIN_ZOOM, MAX_ZOOM)
+                // Pull back from a bare bounding-box fit — long day tracks
+                // were opening too tight, and bottom markers sat under the
+                // floating day-nav strip.
+                val wider = (zoom - FIT_ZOOM_OUT_LEVELS).coerceIn(MIN_ZOOM, MAX_ZOOM)
                 map.controller.setZoom(wider)
                 map.controller.setCenter(box.centerWithDateLine)
             }
