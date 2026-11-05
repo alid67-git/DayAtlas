@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.29 — 2026-11-05
+
+- **İstatistik ızgarası:** Yine 2-2-3 (harita büyür). Alt üçlüde yazı küçük
+  ve ortalı; üst çiftlerde büyük. Sürükleyince slot’a göre boyut değişir.
+
 ## 1.1.28 — 2026-11-05
 
 - **Kart / harita chrome:** 7 kutuda son satır tam genişlik (Aktif süre

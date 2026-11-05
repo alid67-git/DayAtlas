@@ -241,5 +241,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.28 — Aktif süre okunur; harita ikonları yukarı/küçük; mesafe doğruluk süzgeci.</string>
+    <string name="build_note">Sürüm 1.1.29 — Kartlar 2-2-3; alt üçlü küçük/ortalı, üst çiftler büyük.</string>
 </resources>
