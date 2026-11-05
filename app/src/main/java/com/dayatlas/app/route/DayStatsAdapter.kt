@@ -1,7 +1,10 @@
 package com.dayatlas.app.route
 
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,9 +19,12 @@ import kotlin.math.ceil
  * four tiles span 3, three span 2). Other counts keep even rows. Long-press
  * drags to reorder within the visible set.
  *
- * Each tile uses a soft tinted background and a centered accent icon for
- * its [DayStatKind]. Height is capped at [R.integer.day_stat_max_visible_rows]
- * so the map below keeps room; with the 2-2-3 layout that cap is 3 rows.
+ * Typography follows the **slot**, not the kind: pair-row tiles (span 3) use
+ * larger type; the bottom trio (span 2) uses smaller, centered type — so a
+ * card dragged into the trio shrinks, and one dragged up grows.
+ *
+ * Height is capped at [R.integer.day_stat_max_visible_rows] so the map below
+ * keeps room; with the 2-2-3 layout that cap is 3 rows.
  */
 class DayStatsAdapter(
     private val onReordered: (List<DayStatKind>) -> Unit,
@@ -88,6 +94,8 @@ class DayStatsAdapter(
         holder.binding.statIcon.setColorFilter(
             ContextCompat.getColor(ctx, kind.iconTintRes),
         )
+        val compact = isCompactSlot(position, items.size)
+        applySlotStyle(holder.binding, compact)
     }
 
     override fun getItemCount(): Int = items.size
@@ -132,6 +140,9 @@ class DayStatsAdapter(
             viewHolder.itemView.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(120).start()
             viewHolder.itemView.elevation = 0f
             onReordered(items.map { it.first })
+            // Spans / pair-vs-trio typography follow position — rebind all.
+            gridLayoutManager?.spanSizeLookup?.invalidateSpanIndexCache()
+            notifyDataSetChanged()
         }
     }
 
@@ -139,14 +150,46 @@ class DayStatsAdapter(
         private const val DRAG_ELEVATION_PX = 16f
         const val GRID_SPAN = 6
 
+        /** Pair-row tiles are span 3; the bottom trio is span 2 (compact). */
+        fun isCompactSlot(position: Int, count: Int, gridSpan: Int = GRID_SPAN): Boolean =
+            spanSizeFor(position, count, gridSpan) < 3
+
+        private fun applySlotStyle(binding: ItemDayStatBinding, compact: Boolean) {
+            val ctx = binding.root.context
+            val textCol = binding.statLabel.parent as LinearLayout
+            val iconLp = binding.statIcon.layoutParams
+            val density = ctx.resources.displayMetrics.density
+            if (compact) {
+                textCol.gravity = Gravity.CENTER_HORIZONTAL
+                binding.statLabel.gravity = Gravity.CENTER
+                binding.statValue.gravity = Gravity.CENTER
+                binding.statLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
+                binding.statValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+                iconLp.width = (14 * density).toInt()
+                iconLp.height = (14 * density).toInt()
+                (binding.statIcon.layoutParams as? ViewGroup.MarginLayoutParams)?.marginEnd =
+                    (4 * density).toInt()
+            } else {
+                textCol.gravity = Gravity.START
+                binding.statLabel.gravity = Gravity.START
+                binding.statValue.gravity = Gravity.START
+                binding.statLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f)
+                binding.statValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                iconLp.width = (16 * density).toInt()
+                iconLp.height = (16 * density).toInt()
+                (binding.statIcon.layoutParams as? ViewGroup.MarginLayoutParams)?.marginEnd =
+                    (6 * density).toInt()
+            }
+            binding.statIcon.layoutParams = iconLp
+        }
+
         /**
-         * 7 → 2+2+2 then full-width last (avoids a cramped 3-across row that
-         * ellipsizes “1 sa 47 dk”); 6 → 2-2-2; 5 → 2-3; 4 → 2-2; etc.
+         * 7 → 2-2-3 (four half-width, then a trio); 6 → 2-2-2; 5 → 2-3; etc.
          */
         fun spanSizeFor(position: Int, count: Int, gridSpan: Int = GRID_SPAN): Int {
             if (count <= 0 || gridSpan <= 0) return 1
             return when (count) {
-                7 -> if (position < 6) 3 else gridSpan
+                7 -> if (position < 4) 3 else 2
                 6, 4, 2 -> 3
                 5 -> if (position < 2) 3 else 2
                 3 -> 2
@@ -159,7 +202,7 @@ class DayStatsAdapter(
             0 -> 0
             1, 2, 3 -> 1
             4, 5, 6 -> 2
-            7 -> 4
+            7 -> 3
             else -> ceil(count * 2.0 / gridSpan).toInt().coerceAtLeast(1)
         }
     }
