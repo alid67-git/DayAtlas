@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.38 — 2026-11-07
+
+- **1.1.37 km yarıya inmesin:** Douglas–Peucker / yumuşatma gerçek yolu da
+  kesiyordu (~350 → ~190, ~73 → ~50). Mesafe yine ~60 sn çapa + salınım
+  iptali; Rotalar’daki pin sayısı düzeltmesi duruyor.
+
 ## 1.1.37 — 2026-11-07
 
 - **Samsung vs diğer (73↔66 / 84↔59):** Yoğun GPS yanal titremesi polyline’ı

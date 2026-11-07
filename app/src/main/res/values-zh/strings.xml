@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.37 — 公里平滑+RDP；路线显示图钉而非检查刷屏。</string>
+    <string name="build_note">版本 1.1.38 — 撤销1.1.37公里砍半；恢复约60秒锚点。</string>
 </resources>
