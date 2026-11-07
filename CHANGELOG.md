@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.32 — 2026-11-07
+## 1.1.33 — 2026-11-07
 
 - **Tam ekran harita:** Üstte seçili günün istatistikleri 2 satır (4+3);
   sağ/sol oklarla önceki/sonraki güne geçiş.
