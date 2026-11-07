@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Dernière sauvegarde : %1$s</string>
-    <string name="build_note">Version 1.1.31 — Pas de +/- carte ; libellés anglais/latin.</string>
+    <string name="build_note">Version 1.1.33 — Plein écran : stats 2 lignes + flèches jour.</string>
 </resources>

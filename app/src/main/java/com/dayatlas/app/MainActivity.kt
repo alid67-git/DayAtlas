@@ -247,19 +247,13 @@ class MainActivity : DayAtlasActivity() {
             GpxExportDialog.show(this, store, mapDate)
         }
 
-        binding.previousDay.setOnClickListener {
-            mapDate = mapDate.minusDays(1)
-            refreshMap()
-        }
-        binding.nextDay.setOnClickListener {
-            if (mapDate < DayTitle.localToday()) {
-                mapDate = mapDate.plusDays(1)
-                refreshMap()
-            }
-        }
+        binding.previousDay.setOnClickListener { shiftMapDay(-1) }
+        binding.nextDay.setOnClickListener { shiftMapDay(1) }
+        binding.fullscreenPrevDay.setOnClickListener { shiftMapDay(-1) }
+        binding.fullscreenNextDay.setOnClickListener { shiftMapDay(1) }
         binding.goToday.setOnClickListener {
             mapDate = DayTitle.localToday()
-            refreshMap()
+            if (mapFullscreen) refresh() else refreshMap()
         }
 
         binding.mapJumpsButton.setOnClickListener {
@@ -427,9 +421,9 @@ class MainActivity : DayAtlasActivity() {
     }
 
     /**
-     * Expand the daily map to fill the screen (hide chrome) so the track can
-     * be examined with pinch-zoom. System Back / [mapExitFullscreen] restores
-     * the normal day layout.
+     * Expand the daily map: hide brand/nav chrome, keep a two-row stats strip
+     * for the selected day, and show side arrows for day browsing. System Back
+     * / [mapExitFullscreen] restores the normal day layout.
      */
     private fun setMapFullscreen(enabled: Boolean, refreshMapAfter: Boolean = true) {
         if (mapFullscreen == enabled) return
@@ -437,11 +431,29 @@ class MainActivity : DayAtlasActivity() {
         mapFullscreenBackCallback.isEnabled = enabled
         val chrome = if (enabled) View.GONE else View.VISIBLE
         binding.toolbar.visibility = chrome
-        binding.dailyHeader.visibility = chrome
+        binding.dailyHeaderChrome.visibility = chrome
         binding.mapOverlay.visibility = chrome
         binding.bottomNav.visibility = chrome
-        binding.mapExitFullscreen.visibility = if (enabled) View.VISIBLE else View.GONE
-        if (refreshMapAfter) refreshMap()
+        val fullscreenChrome = if (enabled) View.VISIBLE else View.GONE
+        binding.mapExitFullscreen.visibility = fullscreenChrome
+        binding.fullscreenPrevDay.visibility = fullscreenChrome
+        binding.fullscreenNextDay.visibility = fullscreenChrome
+        dayStatsAdapter.setTwoRowLayout(enabled)
+        // Tighter top padding when only the stats strip remains above the map.
+        val density = resources.displayMetrics.density
+        val padH = (12 * density).toInt()
+        val padTop = if (enabled) (4 * density).toInt() else (12 * density).toInt()
+        val padBottom = (4 * density).toInt()
+        binding.dailyHeader.setPadding(padH, padTop, padH, padBottom)
+        if (refreshMapAfter) refresh()
+    }
+
+    private fun shiftMapDay(delta: Int) {
+        val today = DayTitle.localToday()
+        val next = mapDate.plusDays(delta.toLong())
+        if (next.isAfter(today)) return
+        mapDate = next
+        if (mapFullscreen) refresh() else refreshMap()
     }
 
     private fun refreshRoutes() {
@@ -759,6 +771,11 @@ class MainActivity : DayAtlasActivity() {
             val dwells = if (prefs.showDwellStops) DwellStops.find(mapPoints) else emptyList()
             val todayPoints = TrackHeal.withoutReconnectTeleports(record.points)
             val todaySpeed = SpeedStats.compute(todayPoints)
+            val mapSpeed = if (mapDateSnapshot == today) {
+                todaySpeed
+            } else {
+                SpeedStats.compute(mapPoints)
+            }
             uiHandler.post {
                 if (isDestroyed || generation != refreshGeneration.get()) return@post
                 applyTodayChrome(
@@ -770,6 +787,10 @@ class MainActivity : DayAtlasActivity() {
                     intervalSeconds,
                     todaySpeed,
                 )
+                // Fullscreen strip shows the selected day (not always today).
+                if (mapFullscreen) {
+                    bindDayStats(mapRecord, mapPoints, mapSpeed, intervalSeconds, orderRaw)
+                }
                 if (!dailyVisible) return@post
                 if (rebuildMap) {
                     applyMapPane(mapDateSnapshot, mapRecord, mapPoints, jumps, dwells, fitCamera = true)
@@ -789,6 +810,7 @@ class MainActivity : DayAtlasActivity() {
         val today = DayTitle.localToday()
         binding.mapDayTitle.text = DayTitle.format(date)
         binding.nextDay.isEnabled = date < today
+        binding.fullscreenNextDay.isEnabled = date < today
         binding.goToday.visibility = if (date == today) View.GONE else View.VISIBLE
         // Bugün zaten üstteki kartlarda özet var — aynı şeridi gizleyip haritaya yer aç.
         binding.mapDayStats.visibility = if (date == today) View.GONE else View.VISIBLE
@@ -917,10 +939,22 @@ class MainActivity : DayAtlasActivity() {
             binding.hint.text = getString(R.string.manual_hint)
         }
 
-        val todayValues = dayStatValues(record, todayPoints, todaySpeed, intervalSeconds)
+        if (!mapFullscreen) {
+            bindDayStats(record, todayPoints, todaySpeed, intervalSeconds, orderRaw)
+        }
+    }
+
+    private fun bindDayStats(
+        record: DayRecord?,
+        points: List<TrackPoint>,
+        speed: SpeedStats.Stats,
+        intervalSeconds: Int,
+        orderRaw: String?,
+    ) {
+        val values = dayStatValues(record, points, speed, intervalSeconds)
         val order = DayStatKind.parseOrder(orderRaw)
         dayStatsAdapter.submit(
-            order.map { it to (todayValues[it] ?: getString(R.string.em_dash)) },
+            order.map { it to (values[it] ?: getString(R.string.em_dash)) },
         )
     }
 
@@ -945,8 +979,10 @@ class MainActivity : DayAtlasActivity() {
             return
         }
 
-        val todayIso = DayTitle.iso(DayTitle.localToday())
-        if (dateIso == todayIso) {
+        val today = DayTitle.localToday()
+        val todayIso = DayTitle.iso(today)
+        // Don't overwrite a past day's fullscreen strip with live today ticks.
+        if (dateIso == todayIso && (!mapFullscreen || mapDate == today)) {
             val emDash = getString(R.string.em_dash)
             val timeText = Instant.ofEpochMilli(timeMillis)
                 .atZone(ZoneId.systemDefault())
