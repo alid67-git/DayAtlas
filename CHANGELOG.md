@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.34 — 2026-11-07
+
+- **Mesafe ≠ aktif filtre:** Günlük km artık polyline geometrisine yakın
+  (atlama / uzun boşluk / yavaş avlu bulutu hariç). Accuracy ve 8–25 km/sa
+  aktivite bandı sadece hız/aktif süre kartlarında — sık örnekleyen
+  telefonda km’nin %10+ düşmesi engellenir.
+
 ## 1.1.32 — 2026-11-07
 
 - **Samsung / Redmi mesafe farkı:** Sık GPS örneklemesinde (&lt;150 m hop)

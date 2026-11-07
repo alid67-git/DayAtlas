@@ -33,14 +33,15 @@ object Geo {
     }
 
     /**
-     * Sum of [TrackMotion]-qualified segment lengths so home GPS jitter does
-     * not inflate daily distance.
+     * Sum of [TrackMotion.pathSegment] lengths — polyline distance with only
+     * teleport / gap / courtyard-cloud cuts. Activity filters stay in
+     * [TrackMotion.meaningfulSegment] for speed cards.
      */
     fun pathLengthMeters(points: List<TrackPoint>): Double {
         if (points.size < 2) return 0.0
         var sum = 0.0
         for (i in 1 until points.size) {
-            val seg = TrackMotion.meaningfulSegment(points[i - 1], points[i]) ?: continue
+            val seg = TrackMotion.pathSegment(points[i - 1], points[i]) ?: continue
             sum += seg.distanceMeters
         }
         return sum

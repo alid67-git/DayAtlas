@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.32 — Samsung/Redmi-Distanz: echte Stadtfahrten bei häufigem GPS.</string>
+    <string name="build_note">Version 1.1.34 — Distanz folgt Geometrie; Tempo/Aktiv getrennt gefiltert.</string>
 </resources>
