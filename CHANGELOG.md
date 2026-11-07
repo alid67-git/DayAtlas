@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.36 — 2026-11-07
+
+- **68 vs 89 km sınıfı:** Virajlı günde sık nokta daha uzun polyline + GPS
+  titremesi biriktiriyordu. Mesafe/aktif süre artık ~60 sn çapaya inceltilip
+  toplanıyor — iki telefon aynı sürüşü yakın kirişlerle ölçer. (Doze’da
+  tamamen kaçan segment hâlâ düşük kalır; o kayıt eksikliği, filtre değil.)
+
 ## 1.1.35 — 2026-11-07
 
 - **Aktif süre = mesafe kuralları:** Hız / aktif süre kartları artık günlük

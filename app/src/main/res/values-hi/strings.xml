@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.35 — सक्रिय समय दूरी जैसा; आँगन नमूना-दर स्थिर।</string>
+    <string name="build_note">संस्करण 1.1.36 — ~60 से एंकर; 68↔89 फ़ोन अंतर कम।</string>
 </resources>

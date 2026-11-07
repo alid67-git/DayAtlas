@@ -243,5 +243,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.35 — Aktif süre mesafeyle aynı; avlu örnekleme-bağımsız.</string>
+    <string name="build_note">Sürüm 1.1.36 — Km ~60 sn çapayla; 68↔89 sınıfı telefon farkı kapanır.</string>
 </resources>
