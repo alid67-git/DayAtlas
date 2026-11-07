@@ -19,6 +19,8 @@
     <color name="history_bar">#E7F6F3</color>
     <color name="divider_subtle">#330F766E</color>
     <color name="card_stroke">#1A0F766E</color>
+    <!-- Always dark: map nav chips are light (#CCFFFFFF) in both themes. -->
+    <color name="map_nav_icon">#1A1F29</color>
     <color name="speed_max_bg">#FDECEA</color>
     <color name="speed_active_bg">#FFF8E1</color>
     <color name="speed_avg_bg">#E3F2FD</color>

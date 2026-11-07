@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.38 — 1.1.37-km-Schnitt rückgängig; wieder ~60-s-Anker.</string>
+    <string name="build_note">Version 1.1.39 — Vollbild-Statistik+Pfeile; Karten-Chevrons sichtbar.</string>
 </resources>

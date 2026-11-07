@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.39 — 2026-11-08
+
+- **Tam ekran harita:** Üstte seçili günün istatistikleri 2 satır (4+3);
+  sağ/sol oklarla önceki/sonraki güne geçiş.
+- **Harita ok ikonları:** Koyu temada sağ/sol chevron’lar beyaz chip üzerinde
+  görünür (sabit koyu tint).
+
 ## 1.1.38 — 2026-11-07
 
 - **1.1.37 km yarıya inmesin:** Douglas–Peucker / yumuşatma gerçek yolu da
@@ -40,10 +47,11 @@
 
 ## 1.1.32 — 2026-11-07
 
-- **Samsung / Redmi mesafe farkı:** Sık GPS örneklemesinde (&lt;150 m hop)
+- **Samsung / Redmi mesafe farkı:** Sık GPS örneklemesinde (<150 m hop)
   gerçek şehir sürüşü mesafe/aktif süreden düşülüyordu; artık yalnızca
   8–25 km/sa avlu bandı elenir. Aşırı kötü accuracy kapısı 100 m ile
   sınırlandı — ucuz telefonda gün mesafesi yarıya inmesin.
+
 
 ## 1.1.31 — 2026-11-06
 
