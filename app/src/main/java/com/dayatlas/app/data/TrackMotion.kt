@@ -3,19 +3,14 @@ package com.dayatlas.app.data
 /**
  * Shared rules for GPS segments.
  *
- * **Distance + active time + avg/max speed** use [pathLegs]: polyline
- * geometry with teleport / long-gap / near-stationary cuts, plus a short
- * back-and-forth damper so courtyard GPS cloud does not sum. Keeping
- * activity on the old stricter [meaningfulSegment] recreated the same
- * phone-to-phone skew on “aktif süre” that we fixed for km.
+ * **Distance + active time + avg/max speed** use [pathLegs]:
+ * 1. Thin to ~[PATH_COMPARE_INTERVAL_MS] anchors (sample-rate fair),
+ * 2. Light lat/lon smooth + Douglas–Peucker (GPS cloud fair),
+ * 3. Drop teleports / long gaps / near-stationary, cancel short A↔B pairs.
  *
- * Absolute “short hop + under 15 km/h” courtyards are intentionally gone —
- * they erased real 15 s city samples under ~24 km/h and caused ~30 % day
- * swings between phones.
- *
- * Before summing, samples are collapsed to about [PATH_COMPARE_INTERVAL_MS]
- * so a 10–20 s phone cannot rack up 68→89 style km from extra curve detail
- * and GPS jitter versus a 60 s phone on the same drive.
+ * Without (2), a phone that lands more fixes (Samsung fused / weak Doze)
+ * still out-rolls a quieter phone by tens of km of lateral jitter even after
+ * 60 s thinning — the 73 vs 66 / 84 vs 59 class of day gaps.
  *
  * [meaningfulSegment] remains for callers that still want the strict
  * activity band (tests / future UI); SpeedStats no longer uses it.
@@ -64,6 +59,13 @@ object TrackMotion {
      * comparable chords (still keeps the day start/end pins).
      */
     const val PATH_COMPARE_INTERVAL_MS = 60_000L
+
+    /**
+     * Douglas–Peucker tolerance. Lateral GPS error on a moving phone is
+     * often 20–60 m; collapsing wiggles under this keeps day km stable
+     * across OEMs without erasing real city blocks (~80 m+).
+     */
+    const val PATH_SIMPLIFY_EPSILON_M = 55.0
 
     /** Keep in sync with [JumpFilter.MAX_SPEED_KMH] so stats match accept rules. */
     const val MAX_REALISTIC_SPEED_KMH = JumpFilter.MAX_SPEED_KMH
@@ -134,11 +136,181 @@ object TrackMotion {
     }
 
     /**
-     * Path legs for daily km / active time. Anchors → segment filter →
-     * cancel short reverse pairs (courtyard cloud).
+     * Smooth + Douglas–Peucker on continuous runs only — never across a
+     * gap/jump so airplane corridors are not “simplified” into fake distance.
+     */
+    fun pathSimplify(
+        points: List<TrackPoint>,
+        epsilonMeters: Double = PATH_SIMPLIFY_EPSILON_M,
+    ): List<TrackPoint> {
+        if (points.size < 3) return points
+        val out = ArrayList<TrackPoint>(points.size)
+        var runStart = 0
+        for (i in 1 until points.size) {
+            val prev = points[i - 1]
+            val cur = points[i]
+            val dt = cur.timeMillis - prev.lastTimeMillis
+            val dist = Geo.haversineMeters(prev.lat, prev.lon, cur.lat, cur.lon)
+            val breakRun = dt <= 0L ||
+                dt > MAX_SEGMENT_GAP_MS ||
+                dist >= RouteGaps.MAX_CONTINUOUS_METERS ||
+                JumpFilter.isJump(prev, cur)
+            if (breakRun) {
+                appendSimplifiedRun(points, runStart, i - 1, epsilonMeters, out)
+                runStart = i
+            }
+        }
+        appendSimplifiedRun(points, runStart, points.lastIndex, epsilonMeters, out)
+        return out
+    }
+
+    private fun appendSimplifiedRun(
+        points: List<TrackPoint>,
+        from: Int,
+        to: Int,
+        epsilonMeters: Double,
+        out: ArrayList<TrackPoint>,
+    ) {
+        if (from > to) return
+        if (from == to) {
+            out.add(points[from])
+            return
+        }
+        var run: List<TrackPoint> = points.subList(from, to + 1)
+        // Two light passes knock down ±40 m sawtooth GPS without erasing
+        // ~80 m city blocks (perp distance on a right-angle stays ~60 m).
+        run = smoothRun(run)
+        run = smoothRun(run)
+        val keep = BooleanArray(run.size)
+        keep[0] = true
+        keep[run.lastIndex] = true
+        rdpMark(run, 0, run.lastIndex, epsilonMeters, keep)
+        // Emit kept pins; if RDP left a span longer than the gap rule,
+        // interpolate quiet chord bridges (not the noisy originals).
+        val keptIdx = ArrayList<Int>()
+        for (i in run.indices) if (keep[i]) keptIdx.add(i)
+        for (k in keptIdx.indices) {
+            val idx = keptIdx[k]
+            if (k == 0) {
+                out.add(run[idx])
+                continue
+            }
+            val prev = out.last()
+            val next = run[idx]
+            appendChordBridges(prev, next, MAX_SEGMENT_GAP_MS, out)
+            out.add(next)
+        }
+    }
+
+    private fun smoothRun(run: List<TrackPoint>): List<TrackPoint> {
+        if (run.size < 3) return run
+        val out = ArrayList<TrackPoint>(run.size)
+        out.add(run.first())
+        for (i in 1 until run.lastIndex) {
+            val a = run[i - 1]
+            val b = run[i]
+            val c = run[i + 1]
+            out.add(
+                b.copy(
+                    lat = (a.lat + b.lat + c.lat) / 3.0,
+                    lon = (a.lon + b.lon + c.lon) / 3.0,
+                ),
+            )
+        }
+        out.add(run.last())
+        return out
+    }
+
+    /**
+     * Insert linear interpolations so consecutive emitted pins stay within
+     * [maxDtMs]. Bridges follow the quiet chord — reusing noisy GPS originals
+     * would undo Douglas–Peucker.
+     */
+    private fun appendChordBridges(
+        prev: TrackPoint,
+        next: TrackPoint,
+        maxDtMs: Long,
+        out: ArrayList<TrackPoint>,
+    ) {
+        val totalDt = next.timeMillis - prev.lastTimeMillis
+        if (totalDt <= maxDtMs) return
+        val steps = ((totalDt + maxDtMs - 1) / maxDtMs).toInt()
+        for (s in 1 until steps) {
+            val t = prev.lastTimeMillis + s * (totalDt / steps)
+            val frac = (t - prev.lastTimeMillis).toDouble() / totalDt.toDouble()
+            out.add(
+                TrackPoint(
+                    timeMillis = t,
+                    lat = prev.lat + (next.lat - prev.lat) * frac,
+                    lon = prev.lon + (next.lon - prev.lon) * frac,
+                    accuracyMeters = null,
+                    lastTimeMillis = t,
+                ),
+            )
+        }
+    }
+
+    private fun rdpMark(
+        run: List<TrackPoint>,
+        start: Int,
+        end: Int,
+        epsilonMeters: Double,
+        keep: BooleanArray,
+    ) {
+        if (end <= start + 1) return
+        val a = run[start]
+        val b = run[end]
+        var maxDist = 0.0
+        var maxIdx = -1
+        for (i in start + 1 until end) {
+            val d = perpendicularDistanceMeters(run[i], a, b)
+            if (d > maxDist) {
+                maxDist = d
+                maxIdx = i
+            }
+        }
+        if (maxIdx < 0 || maxDist <= epsilonMeters) return
+        keep[maxIdx] = true
+        rdpMark(run, start, maxIdx, epsilonMeters, keep)
+        rdpMark(run, maxIdx, end, epsilonMeters, keep)
+    }
+
+    /**
+     * Cross-track distance from [p] to segment [a]→[b], in meters.
+     * Degenerate segments fall back to distance-to-[a].
+     */
+    internal fun perpendicularDistanceMeters(
+        p: TrackPoint,
+        a: TrackPoint,
+        b: TrackPoint,
+    ): Double {
+        val ab = Geo.haversineMeters(a.lat, a.lon, b.lat, b.lon)
+        if (ab < 1.0) {
+            return Geo.haversineMeters(a.lat, a.lon, p.lat, p.lon)
+        }
+        // Equirectangular local frame around [a] (good for <2 km legs).
+        val cosLat = kotlin.math.cos(Math.toRadians(a.lat)).coerceAtLeast(1e-6)
+        val ax = 0.0
+        val ay = 0.0
+        val bx = (b.lon - a.lon) * cosLat * 111_320.0
+        val by = (b.lat - a.lat) * 110_540.0
+        val px = (p.lon - a.lon) * cosLat * 111_320.0
+        val py = (p.lat - a.lat) * 110_540.0
+        val abLen2 = bx * bx + by * by
+        val t = ((px * bx + py * by) / abLen2).coerceIn(0.0, 1.0)
+        val qx = ax + t * bx
+        val qy = ay + t * by
+        val dx = px - qx
+        val dy = py - qy
+        return kotlin.math.sqrt(dx * dx + dy * dy)
+    }
+
+    /**
+     * Path legs for daily km / active time. Anchors → simplify → segment
+     * filter → cancel short reverse pairs.
      */
     fun pathLegs(points: List<TrackPoint>): List<Segment> {
-        val anchors = pathAnchors(points)
+        val anchors = pathSimplify(pathAnchors(points))
         if (anchors.size < 2) return emptyList()
         val out = ArrayList<Segment>(anchors.size - 1)
         for (i in 1 until anchors.size) {

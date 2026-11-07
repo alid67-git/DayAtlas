@@ -60,7 +60,9 @@ class RangeStatsTest {
     }
 
     @Test
-    fun sumsCheckCountWhenGpsChecksExceedPins() {
+    fun sumsGeometryPinsNotStationaryCheckCount() {
+        // gpsCheckCount includes sit-still refreshes; range / routes totals
+        // use map pins so OEM poll rate cannot look like “2× GPS”.
         val day = DayRecord(
             date = "2026-09-01",
             title = "a",
@@ -69,7 +71,7 @@ class RangeStatsTest {
             gpsCheckCount = 15,
         )
         val summary = RangeStats.summarize(listOf(day))
-        assertEquals(15, summary.totalPoints)
+        assertEquals(1, summary.totalPoints)
     }
 
     @Test
