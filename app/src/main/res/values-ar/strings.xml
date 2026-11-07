@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.32 — مسافة Samsung/Redmi: احتساب القيادة الحضرية مع GPS المتكرر.</string>
+    <string name="build_note">الإصدار 1.1.34 — المسافة هندسية؛ السرعة/النشاط بفلتر منفصل.</string>
 </resources>

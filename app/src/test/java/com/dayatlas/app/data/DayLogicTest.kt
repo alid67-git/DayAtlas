@@ -2,6 +2,7 @@ package com.dayatlas.app.data
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDate
@@ -339,8 +340,7 @@ class SpeedStatsTest {
 
     @Test
     fun accuracyCircleHopDoesNotInflateDistance() {
-        // ~90 m in 60 s with 50 m reported accuracy: above same-place (80 m)
-        // but inside max(25, 2×50)=100 m noise gate — must not count.
+        // ~90 m in 60 s ≈ 5.4 km/h — courtyard cloud for pathSegment.
         val a = TrackPoint(0L, 41.0, 29.0, 50f)
         val b = TrackPoint(60_000L, 41.0, 29.00081, 50f) // ~90 m
         assertEquals(100.0, TrackMotion.accuracyNoiseGateMeters(50f), 1e-9)
@@ -348,11 +348,10 @@ class SpeedStatsTest {
     }
 
     @Test
-    fun terribleAccuracyIsCappedSoUrbanHopsStillCount() {
-        // Redmi-class: reported accuracy 80 m → uncapped gate was 160 m and
-        // wiped ~126 m city hops. Cap keeps the gate at 100 m.
+    fun terribleAccuracyDoesNotErasePathDistance() {
+        // Path length ignores the activity accuracy gate — ~126 m / 15 s
+        // city hop must count even with 80 m reported accuracy.
         assertEquals(100.0, TrackMotion.accuracyNoiseGateMeters(80f), 1e-9)
-        // ~126 m in 15 s ≈ 30 km/h — clear driving, must count.
         val a = TrackPoint(0L, 41.0, 29.0, 80f)
         val b = TrackPoint(15_000L, 41.0, 29.0015, 80f)
         assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 100.0)
@@ -360,11 +359,19 @@ class SpeedStatsTest {
 
     @Test
     fun frequentSampleCityDrivingStillCounts() {
-        // 15 s × ~30 km/h ≈ 126 m — used to die under the blanket GPS_HOP
-        // (<150 m && ≥8 km/h) and under-count Redmi vs 30 s Samsung samples.
+        // 15 s × ~30 km/h ≈ 126 m — path distance must follow geometry.
         val a = TrackPoint(0L, 41.0, 29.0, null)
         val b = TrackPoint(15_000L, 41.0, 29.0015, null)
         assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 100.0)
+    }
+
+    @Test
+    fun slowUrbanCrawlCountsForDistanceNotActivity() {
+        // ~90 m in 16 s ≈ 20 km/h — real crawl; path counts, activity band drops it.
+        val a = TrackPoint(0L, 41.0, 29.0, null)
+        val b = TrackPoint(16_000L, 41.0, 29.001072, null)
+        assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 80.0)
+        assertNull(TrackMotion.meaningfulSegment(a, b))
     }
 
     @Test
