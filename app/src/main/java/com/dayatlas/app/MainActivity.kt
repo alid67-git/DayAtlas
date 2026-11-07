@@ -17,6 +17,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dayatlas.app.data.DayNoteDialog
 import com.dayatlas.app.data.DayPhotoAdd
@@ -439,13 +441,30 @@ class MainActivity : DayAtlasActivity() {
         binding.fullscreenPrevDay.visibility = fullscreenChrome
         binding.fullscreenNextDay.visibility = fullscreenChrome
         dayStatsAdapter.setTwoRowLayout(enabled)
-        // Tighter top padding when only the stats strip remains above the map.
+        applyDailyHeaderFullscreenPadding(enabled)
+        if (refreshMapAfter) refresh()
+    }
+
+    /**
+     * In fullscreen the brand toolbar (which carries status-bar inset) is
+     * hidden, so [dailyHeader] would sit under the clock. Pad it by the
+     * status/cutout inset instead of the old 4 dp “tight” top.
+     */
+    private fun applyDailyHeaderFullscreenPadding(fullscreen: Boolean) {
+        val header = binding.dailyHeader
         val density = resources.displayMetrics.density
         val padH = (12 * density).toInt()
-        val padTop = if (enabled) (4 * density).toInt() else (12 * density).toInt()
         val padBottom = (4 * density).toInt()
-        binding.dailyHeader.setPadding(padH, padTop, padH, padBottom)
-        if (refreshMapAfter) refresh()
+        if (!fullscreen) {
+            header.setPadding(padH, (12 * density).toInt(), padH, padBottom)
+            return
+        }
+        val bars = ViewCompat.getRootWindowInsets(header)?.getInsets(
+            WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout(),
+        )
+        val padTop = (bars?.top ?: 0) + (8 * density).toInt()
+        header.setPadding(padH, padTop, padH, padBottom)
+        ViewCompat.requestApplyInsets(header)
     }
 
     private fun shiftMapDay(delta: Int) {

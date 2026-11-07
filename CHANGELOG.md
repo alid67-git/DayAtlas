@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.40 — 2026-11-08
+
+- **Tam ekran üst boşluk:** Tam ekranda istatistik şeridi status bar’ın
+  altına iner (saat/ikonlarla çakışmaz).
+
 ## 1.1.39 — 2026-11-08
 
 - **Tam ekran harita:** Üstte seçili günün istatistikleri 2 satır (4+3);
