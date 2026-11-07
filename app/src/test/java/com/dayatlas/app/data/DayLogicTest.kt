@@ -348,9 +348,29 @@ class SpeedStatsTest {
     }
 
     @Test
+    fun terribleAccuracyIsCappedSoUrbanHopsStillCount() {
+        // Redmi-class: reported accuracy 80 m → uncapped gate was 160 m and
+        // wiped ~126 m city hops. Cap keeps the gate at 100 m.
+        assertEquals(100.0, TrackMotion.accuracyNoiseGateMeters(80f), 1e-9)
+        // ~126 m in 15 s ≈ 30 km/h — clear driving, must count.
+        val a = TrackPoint(0L, 41.0, 29.0, 80f)
+        val b = TrackPoint(15_000L, 41.0, 29.0015, 80f)
+        assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 100.0)
+    }
+
+    @Test
+    fun frequentSampleCityDrivingStillCounts() {
+        // 15 s × ~30 km/h ≈ 126 m — used to die under the blanket GPS_HOP
+        // (<150 m && ≥8 km/h) and under-count Redmi vs 30 s Samsung samples.
+        val a = TrackPoint(0L, 41.0, 29.0, null)
+        val b = TrackPoint(15_000L, 41.0, 29.0015, null)
+        assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 100.0)
+    }
+
+    @Test
     fun samePlacePinWanderDoesNotInflateDistance() {
         // New pins every ~85 m (just outside same-place collapse) at 30 s —
-        // courtyard GPS cloud with a tight sample interval. Must not sum.
+        // courtyard GPS cloud (~10 km/h) in the ambiguous band. Must not sum.
         val points = listOf(
             TrackPoint(0L, 41.0, 29.0, null),
             TrackPoint(30_000L, 41.0, 29.001, null),

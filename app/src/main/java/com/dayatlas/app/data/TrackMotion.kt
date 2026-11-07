@@ -12,12 +12,15 @@ object TrackMotion {
     const val MIN_SEGMENT_METERS = Geo.SAME_PLACE_RADIUS_M
 
     /**
-     * Short hops that are too fast for a walk are almost always GPS cloud
-     * bounce (e.g. 85 m in 30 s ≈ 10 km/h). Real walking over the same
-     * distance is slower (~5 km/h over a minute).
+     * Short hops in the "fast walk / slow crawl" band are usually GPS cloud
+     * bounce (e.g. 85 m in 30 s ≈ 10 km/h). Clear driving (≥ [GPS_HOP_DRIVE_SPEED_KMH])
+     * must still count — frequent samples on a Redmi (10–20 s) only cover
+     * ~100–150 m at city speed and used to be wiped by a blanket &lt;150 m rule,
+     * under-counting vs a Samsung on a 30 s interval.
      */
     const val GPS_HOP_MAX_METERS = 150.0
     const val GPS_HOP_MIN_SPEED_KMH = 8.0
+    const val GPS_HOP_DRIVE_SPEED_KMH = 25.0
 
     /** Walking floor — below this, treat as stationary jitter. */
     const val STATIONARY_SPEED_KMH = 3.0
@@ -46,9 +49,9 @@ object TrackMotion {
         if (distM < MIN_SEGMENT_METERS) return null
         if (distM >= RouteGaps.MAX_CONTINUOUS_METERS) return null
         if (JumpFilter.isJump(prev, cur)) return null
-        // Cheap phones often claim ~8–15 m accuracy while hopping 20–80 m
-        // indoors / under canopy — that inflated Redmi vs Samsung distance.
-        // Treat a hop still inside max(25 m, 2× reported accuracy) as noise.
+        // Cheap phones often claim ~8–40 m accuracy while hopping indoors.
+        // Cap the gate so a Redmi reporting 60–80 m accuracy cannot erase
+        // every urban hop under ~160 m (that halved Phuket day distance).
         val noiseGate = maxOf(
             accuracyNoiseGateMeters(prev.accuracyMeters),
             accuracyNoiseGateMeters(cur.accuracyMeters),
@@ -56,20 +59,32 @@ object TrackMotion {
         if (noiseGate > 0.0 && distM <= noiseGate) return null
         val speedKmh = (distM / (dtMs / 1000.0)) * 3.6
         if (speedKmh < STATIONARY_SPEED_KMH || speedKmh > MAX_REALISTIC_SPEED_KMH) return null
-        // Courtyard GPS: new pins just outside same-place, sampled tightly.
-        if (distM < GPS_HOP_MAX_METERS && speedKmh >= GPS_HOP_MIN_SPEED_KMH) return null
+        // Courtyard / ambiguous band only — not clear city driving.
+        if (distM < GPS_HOP_MAX_METERS &&
+            speedKmh >= GPS_HOP_MIN_SPEED_KMH &&
+            speedKmh < GPS_HOP_DRIVE_SPEED_KMH
+        ) {
+            return null
+        }
         return Segment(distM, speedKmh, dtMs)
     }
 
     /**
      * RideAtlas-style accuracy circle. Missing/invalid accuracy → 0 (no gate).
+     * Result is capped at [ACCURACY_NOISE_CAP_M] so terrible reported accuracy
+     * cannot blank out real urban segments.
      */
     fun accuracyNoiseGateMeters(accuracyMeters: Float?): Double {
         if (accuracyMeters == null || !accuracyMeters.isFinite() || accuracyMeters <= 0f) {
             return 0.0
         }
-        return maxOf(ACCURACY_NOISE_FLOOR_M, 2.0 * accuracyMeters.toDouble())
+        return minOf(
+            ACCURACY_NOISE_CAP_M,
+            maxOf(ACCURACY_NOISE_FLOOR_M, 2.0 * accuracyMeters.toDouble()),
+        )
     }
 
     const val ACCURACY_NOISE_FLOOR_M = 25.0
+    /** Must stay ≥ [MIN_SEGMENT_METERS] or the gate never fires after pin collapse. */
+    const val ACCURACY_NOISE_CAP_M = 100.0
 }

@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.31 — मानचित्र +/- छिपा; अंग्रेज़ी/लैटिन लेबल।</string>
+    <string name="build_note">संस्करण 1.1.32 — Samsung/Redmi दूरी: बारंबार GPS पर असली शहर ड्राइव गिने।</string>
 </resources>
