@@ -1,16 +1,25 @@
 import CoreLocation
 import SwiftUI
+import UniformTypeIdentifiers
 import UIKit
 
 /// Mirrors SettingsActivity.kt: daily mode toggle, interval picker,
-/// permission shortcuts, and — since iOS has no BOOT_COMPLETED equivalent —
-/// an explicit explanation of what "auto-resume after reboot" actually
-/// requires on this platform.
+/// permission shortcuts, Android backup restore, and — since iOS has no
+/// BOOT_COMPLETED equivalent — an explicit explanation of reboot resume.
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject private var locationTracker = LocationTracker.shared
     @State private var dailyMode = AppPrefs.shared.dailyMode
     @State private var interval = AppPrefs.shared.intervalMinutes
+    @State private var showImporter = false
+    @State private var pendingCandidates: [DayRestore.Candidate] = []
+    @State private var showConflictConfirm = false
+    @State private var statusMessage: String?
+    @State private var statusIsError = false
+
+    private var gpxType: UTType {
+        UTType(filenameExtension: "gpx") ?? .xml
+    }
 
     var body: some View {
         NavigationView {
@@ -56,6 +65,21 @@ struct SettingsView: View {
                     }
                 }
 
+                Section {
+                    Button("JSON veya GPX seç…") {
+                        showImporter = true
+                    }
+                    if let statusMessage {
+                        Text(statusMessage)
+                            .font(.footnote)
+                            .foregroundColor(statusIsError ? .red : .secondary)
+                    }
+                } header: {
+                    Text("Android / yedek geri yükle")
+                } footer: {
+                    Text("Android Drive yedeğindeki yyyy-MM-dd.gpx veya .json dosyalarını seç. Aynı gün telefonda varsa üzerine yazılır.")
+                }
+
                 Section("Reboot sonrası devam etme — iOS kısıtları") {
                     Text("""
                     1) "Her Zaman" izni reboot'tan önce verilmiş olmalı.
@@ -79,6 +103,27 @@ struct SettingsView: View {
                     Button("Kapat") { dismiss() }
                 }
             }
+            .fileImporter(
+                isPresented: $showImporter,
+                allowedContentTypes: [.json, gpxType],
+                allowsMultipleSelection: true
+            ) { result in
+                handleImport(result)
+            }
+            .alert("Mevcut günlerin üzerine yazılsın mı?", isPresented: $showConflictConfirm) {
+                Button("İptal", role: .cancel) {
+                    pendingCandidates = []
+                }
+                Button("Üzerine yaz", role: .destructive) {
+                    finishImport(pendingCandidates.map(\.incoming))
+                    pendingCandidates = []
+                }
+            } message: {
+                let conflicts = pendingCandidates.filter(\.hasLocalTrack)
+                let labels = conflicts.prefix(5).map(\.dateIso).joined(separator: ", ")
+                let more = conflicts.count > 5 ? "…" : ""
+                Text("\(conflicts.count) günde zaten rota var (\(labels)\(more)). Devam edersen Android yedeği geçerli olur.")
+            }
         }
     }
 
@@ -92,6 +137,39 @@ struct SettingsView: View {
         @unknown default: return "Bilinmiyor"
         }
     }
+
+    private func handleImport(_ result: Result<[URL], Error>) {
+        switch result {
+        case .failure(let error):
+            statusIsError = true
+            statusMessage = "Seçim iptal / hata: \(error.localizedDescription)"
+        case .success(let urls):
+            let candidates = DayRestore.candidates(fromFileURLs: urls)
+            if candidates.isEmpty {
+                statusIsError = true
+                statusMessage = "Geçerli gün dosyası bulunamadı (yyyy-MM-dd.gpx / .json)."
+                return
+            }
+            let conflicts = candidates.filter(\.hasLocalTrack)
+            if conflicts.isEmpty {
+                finishImport(candidates.map(\.incoming))
+            } else {
+                pendingCandidates = candidates
+                showConflictConfirm = true
+            }
+        }
+    }
+
+    private func finishImport(_ records: [DayRecord]) {
+        let count = DayRestore.apply(records)
+        statusIsError = false
+        statusMessage = "\(count) gün geri yüklendi."
+        NotificationCenter.default.post(name: .dayAtlasDaysDidChange, object: nil)
+    }
+}
+
+extension Notification.Name {
+    static let dayAtlasDaysDidChange = Notification.Name("dayAtlasDaysDidChange")
 }
 
 #Preview {

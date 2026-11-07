@@ -70,6 +70,18 @@ Xcode açılınca:
    düşmeli. Düşmezse yukarıdaki 3 şarttan biri sağlanmamıştır — bu beklenen
    iOS davranışıdır, hata değildir.
 
+## Android yedeğini geri yükleme
+
+Ayarlar → **Android / yedek geri yükle** → `JSON veya GPX seç…`.
+
+Android Drive klasöründeki `yyyy-MM-dd.gpx` (veya `.json`) dosyalarını
+çoklu seç; iOS bunları `Documents/days/` altına yazar. Aynı gün telefonda
+zaten varsa onay sorulur, üzerine yazılır.
+
+Dosyalar uygulamasından DayAtlas klasörüne de kopyalayabilirsiniz
+(`UIFileSharingEnabled`); geri yükleme seçici Drive / İndirilenler’den
+doğrudan da çalışır.
+
 ## Dağıtım / güncelleme
 
 Android'deki gibi bir "sessiz APK indir/kur" akışı iOS'ta **mümkün değil** —

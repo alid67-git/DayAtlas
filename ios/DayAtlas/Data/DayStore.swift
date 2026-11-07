@@ -35,6 +35,20 @@ final class DayStore {
         return load(day.iso) ?? DayRecord.empty(dateIso: day.iso, title: DayTitle.format(day))
     }
 
+    /// Overwrites a calendar day (restore / import). Writes both JSON and GPX.
+    func replaceDay(_ record: DayRecord) {
+        lock.lock()
+        defer { lock.unlock() }
+        let distance = Geo.pathLengthMeters(record.points)
+        let normalized = DayRecord(
+            date: record.date,
+            title: record.title.isEmpty ? record.date : record.title,
+            points: record.points,
+            distanceMeters: distance,
+        )
+        persistUnlocked(normalized)
+    }
+
     @discardableResult
     func append(location: CLLocation, timeZone: TimeZone = .current) -> DayRecord {
         lock.lock()

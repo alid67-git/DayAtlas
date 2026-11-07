@@ -1,5 +1,10 @@
 # Changelog
 
+## iOS 0.2.0 — 2026-11-08
+
+- **Android yedek geri yükleme:** Ayarlar’dan `yyyy-MM-dd.gpx` / `.json`
+  seçilerek Drive yedeği iPhone’a alınır; çakışmada üzerine yazma onayı.
+
 ## 1.1.40 — 2026-11-08
 
 - **Tam ekran üst boşluk:** Tam ekranda istatistik şeridi status bar’ın

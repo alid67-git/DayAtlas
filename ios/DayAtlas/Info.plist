@@ -33,6 +33,12 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 
+	<!-- Dosyalar uygulamasında Documents/days görünür; Android yedeği buraya da konabilir. -->
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+
 	<!--
 	 Konum izin metinleri: DayAtlas seyrek, tek noktalık örnekler alır; canlı
 	 harita veya sürekli takip yoktur. "Her Zaman" izni yalnızca günlük mod
