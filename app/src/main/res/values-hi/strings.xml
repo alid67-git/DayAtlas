@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.39 — फुलस्क्रीन सांख्यिकी+तीर; मैप शेवरॉन दिखते हैं।</string>
+    <string name="build_note">संस्करण 1.1.40 — फुलस्क्रीन सांख्यिकी स्टेटस बार के नीचे।</string>
 </resources>
