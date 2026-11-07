@@ -1,5 +1,10 @@
 package com.dayatlas.app.data
 
+/**
+ * Speed / active-time cards. Uses the same [TrackMotion.pathLegs] rules as
+ * daily km so sample-rate differences cannot shrink “aktif süre” while
+ * distance stays high (or the reverse).
+ */
 object SpeedStats {
     data class Stats(
         val maxSpeedKmh: Double,
@@ -16,8 +21,7 @@ object SpeedStats {
         var maxSpeed = 0.0
         var activeMillis = 0L
         var movingDistanceM = 0.0
-        for (i in 1 until points.size) {
-            val seg = TrackMotion.meaningfulSegment(points[i - 1], points[i]) ?: continue
+        for (seg in TrackMotion.pathLegs(points)) {
             if (seg.speedKmh > maxSpeed) maxSpeed = seg.speedKmh
             activeMillis += seg.dtMs
             movingDistanceM += seg.distanceMeters

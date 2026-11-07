@@ -3,13 +3,18 @@ package com.dayatlas.app.data
 /**
  * Shared rules for GPS segments.
  *
- * **Distance** ([pathSegment]) stays close to the polyline geometry: only
- * drop teleports, long gaps, tiny noise, and slow courtyard cloud. Sample
- * rate must not erase real city hops — that caused 30–50 % phone-to-phone
- * gaps that corner-cutting alone cannot explain.
+ * **Distance + active time + avg/max speed** use [pathLegs]: polyline
+ * geometry with teleport / long-gap / near-stationary cuts, plus a short
+ * back-and-forth damper so courtyard GPS cloud does not sum. Keeping
+ * activity on the old stricter [meaningfulSegment] recreated the same
+ * phone-to-phone skew on “aktif süre” that we fixed for km.
  *
- * **Active time / speeds** ([meaningfulSegment]) stay stricter so home
- * jitter does not inflate “driving” stats.
+ * Absolute “short hop + under 15 km/h” courtyards are intentionally gone —
+ * they erased real 15 s city samples under ~24 km/h and caused ~30 % day
+ * swings between phones.
+ *
+ * [meaningfulSegment] remains for callers that still want the strict
+ * activity band (tests / future UI); SpeedStats no longer uses it.
  */
 object TrackMotion {
     /**
@@ -20,23 +25,34 @@ object TrackMotion {
 
     /**
      * Short hops in the "fast walk / slow crawl" band are usually GPS cloud
-     * bounce for *activity* stats. Distance uses a milder courtyard rule
-     * ([PATH_COURTYARD_MAX_METERS] / [PATH_COURTYARD_MAX_SPEED_KMH]) so
-     * frequent 10–20 s city samples are not wiped.
+     * bounce for *activity* stats ([meaningfulSegment] only).
      */
     const val GPS_HOP_MAX_METERS = 150.0
     const val GPS_HOP_MIN_SPEED_KMH = 8.0
     const val GPS_HOP_DRIVE_SPEED_KMH = 25.0
 
-    /** Distance-only: slow short cloud, not 20+ km/h urban crawl. */
-    const val PATH_COURTYARD_MAX_METERS = 100.0
-    const val PATH_COURTYARD_MAX_SPEED_KMH = 15.0
-
     /** Tiny hop floor for path length (below same-place collapse noise). */
     const val PATH_NOISE_FLOOR_M = 15.0
 
+    /**
+     * Paired back-and-forth under this length (each leg) is treated as
+     * courtyard oscillation, not driven distance. Larger than same-place
+     * radius so ~85 m pin wander still cancels.
+     */
+    const val PATH_OSCILLATION_MAX_METERS = 120.0
+
+    /** Dot product of unit step vectors below this ⇒ reverse hop. */
+    const val PATH_OSCILLATION_DOT = -0.3
+
     /** Walking floor — below this, treat as stationary jitter (activity). */
     const val STATIONARY_SPEED_KMH = 3.0
+
+    /**
+     * Path / active-time floor. Slightly above [STATIONARY_SPEED_KMH] so
+     * ~50 m courtyard bounce (~3 km/h) never becomes “aktif süre”, while a
+     * real 5 km/h walk still counts.
+     */
+    const val PATH_STATIONARY_SPEED_KMH = 4.0
 
     /** Keep in sync with [JumpFilter.MAX_SPEED_KMH] so stats match accept rules. */
     const val MAX_REALISTIC_SPEED_KMH = JumpFilter.MAX_SPEED_KMH
@@ -51,11 +67,13 @@ object TrackMotion {
         val distanceMeters: Double,
         val speedKmh: Double,
         val dtMs: Long,
+        val dLat: Double = 0.0,
+        val dLon: Double = 0.0,
     )
 
     /**
-     * Geometry for daily km. No accuracy gate and no 8–25 km/h activity band —
-     * those punished frequent samplers far beyond polyline densification.
+     * Single-leg geometry check (no oscillation context). Prefer [pathLegs]
+     * for day totals so A↔B courtyard cloud cancels.
      */
     fun pathSegment(prev: TrackPoint, cur: TrackPoint): Segment? {
         val dtMs = cur.timeMillis - prev.lastTimeMillis
@@ -65,13 +83,49 @@ object TrackMotion {
         if (distM >= RouteGaps.MAX_CONTINUOUS_METERS) return null
         if (JumpFilter.isJump(prev, cur)) return null
         val speedKmh = (distM / (dtMs / 1000.0)) * 3.6
-        if (speedKmh > MAX_REALISTIC_SPEED_KMH) return null
-        // Courtyard cloud only (slow + short). Real crawl/drive still counts.
-        if (distM < PATH_COURTYARD_MAX_METERS && speedKmh < PATH_COURTYARD_MAX_SPEED_KMH) {
+        if (speedKmh < PATH_STATIONARY_SPEED_KMH || speedKmh > MAX_REALISTIC_SPEED_KMH) {
             return null
         }
-        return Segment(distM, speedKmh, dtMs)
+        return Segment(
+            distanceMeters = distM,
+            speedKmh = speedKmh,
+            dtMs = dtMs,
+            dLat = cur.lat - prev.lat,
+            dLon = cur.lon - prev.lon,
+        )
     }
+
+    /**
+     * Path legs for daily km / active time. Drops near-stationary noise and
+     * cancels short reverse pairs (courtyard cloud) without punishing dense
+     * 15 s city sampling.
+     */
+    fun pathLegs(points: List<TrackPoint>): List<Segment> {
+        if (points.size < 2) return emptyList()
+        val out = ArrayList<Segment>(points.size - 1)
+        for (i in 1 until points.size) {
+            val seg = pathSegment(points[i - 1], points[i]) ?: continue
+            val last = out.lastOrNull()
+            if (last != null && isCourtyardOscillation(last, seg)) {
+                out.removeAt(out.lastIndex)
+                continue
+            }
+            out.add(seg)
+        }
+        return out
+    }
+
+    private fun isCourtyardOscillation(a: Segment, b: Segment): Boolean {
+        if (a.distanceMeters > PATH_OSCILLATION_MAX_METERS) return false
+        if (b.distanceMeters > PATH_OSCILLATION_MAX_METERS) return false
+        val aLen = hypot(a.dLat, a.dLon)
+        val bLen = hypot(b.dLat, b.dLon)
+        if (aLen < 1e-12 || bLen < 1e-12) return false
+        val dot = (a.dLat * b.dLat + a.dLon * b.dLon) / (aLen * bLen)
+        return dot <= PATH_OSCILLATION_DOT
+    }
+
+    private fun hypot(x: Double, y: Double): Double = kotlin.math.sqrt(x * x + y * y)
 
     /** Activity / speed cards — stricter than [pathSegment]. */
     fun meaningfulSegment(prev: TrackPoint, cur: TrackPoint): Segment? {
