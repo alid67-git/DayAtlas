@@ -13,6 +13,10 @@ package com.dayatlas.app.data
  * they erased real 15 s city samples under ~24 km/h and caused ~30 % day
  * swings between phones.
  *
+ * Before summing, samples are collapsed to about [PATH_COMPARE_INTERVAL_MS]
+ * so a 10–20 s phone cannot rack up 68→89 style km from extra curve detail
+ * and GPS jitter versus a 60 s phone on the same drive.
+ *
  * [meaningfulSegment] remains for callers that still want the strict
  * activity band (tests / future UI); SpeedStats no longer uses it.
  */
@@ -53,6 +57,13 @@ object TrackMotion {
      * real 5 km/h walk still counts.
      */
     const val PATH_STATIONARY_SPEED_KMH = 4.0
+
+    /**
+     * Target spacing for distance / active-time anchors. Finer GPS streams
+     * are thinned to this so phone A at 15 s and phone B at 60 s measure
+     * comparable chords (still keeps the day start/end pins).
+     */
+    const val PATH_COMPARE_INTERVAL_MS = 60_000L
 
     /** Keep in sync with [JumpFilter.MAX_SPEED_KMH] so stats match accept rules. */
     const val MAX_REALISTIC_SPEED_KMH = JumpFilter.MAX_SPEED_KMH
@@ -96,15 +107,42 @@ object TrackMotion {
     }
 
     /**
-     * Path legs for daily km / active time. Drops near-stationary noise and
-     * cancels short reverse pairs (courtyard cloud) without punishing dense
-     * 15 s city sampling.
+     * Thin a dense stream to ~[PATH_COMPARE_INTERVAL_MS] anchors. Sparse
+     * days (already ≥ interval) pass through unchanged aside from always
+     * keeping the first and last pin.
+     */
+    fun pathAnchors(points: List<TrackPoint>): List<TrackPoint> {
+        if (points.size < 3) return points
+        val out = ArrayList<TrackPoint>(points.size)
+        out.add(points.first())
+        val lastIndex = points.lastIndex
+        for (i in 1 until lastIndex) {
+            val p = points[i]
+            val dt = p.timeMillis - out.last().lastTimeMillis
+            if (dt >= PATH_COMPARE_INTERVAL_MS) {
+                out.add(p)
+            }
+        }
+        val end = points.last()
+        if (out.last().timeMillis != end.timeMillis ||
+            out.last().lat != end.lat ||
+            out.last().lon != end.lon
+        ) {
+            out.add(end)
+        }
+        return out
+    }
+
+    /**
+     * Path legs for daily km / active time. Anchors → segment filter →
+     * cancel short reverse pairs (courtyard cloud).
      */
     fun pathLegs(points: List<TrackPoint>): List<Segment> {
-        if (points.size < 2) return emptyList()
-        val out = ArrayList<Segment>(points.size - 1)
-        for (i in 1 until points.size) {
-            val seg = pathSegment(points[i - 1], points[i]) ?: continue
+        val anchors = pathAnchors(points)
+        if (anchors.size < 2) return emptyList()
+        val out = ArrayList<Segment>(anchors.size - 1)
+        for (i in 1 until anchors.size) {
+            val seg = pathSegment(anchors[i - 1], anchors[i]) ?: continue
             val last = out.lastOrNull()
             if (last != null && isCourtyardOscillation(last, seg)) {
                 out.removeAt(out.lastIndex)

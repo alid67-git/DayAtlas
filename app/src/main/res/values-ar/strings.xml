@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">آخر نسخة احتياطية: %1$s</string>
-    <string name="build_note">الإصدار 1.1.35 — الوقت النشط كالمسافة؛ فناء مستقل عن معدل العينة.</string>
+    <string name="build_note">الإصدار 1.1.36 — كم على مرساة ~60 ث؛ يضيق فرق 68↔89 بين الهواتف.</string>
 </resources>
