@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.32 — 2026-11-07
+
+- **Samsung / Redmi mesafe farkı:** Sık GPS örneklemesinde (&lt;150 m hop)
+  gerçek şehir sürüşü mesafe/aktif süreden düşülüyordu; artık yalnızca
+  8–25 km/sa avlu bandı elenir. Aşırı kötü accuracy kapısı 100 m ile
+  sınırlandı — ucuz telefonda gün mesafesi yarıya inmesin.
+
 ## 1.1.31 — 2026-11-06
 
 - **Harita +/- gizlendi:** Pinch-zoom yeterli; tam ekran (ve normal) görünümde
