@@ -341,6 +341,27 @@ class SpeedStatsTest {
     }
 
     @Test
+    fun windingRouteDenseAndSparseStayClose() {
+        // Manhattan blocks every 15 s (~85 m). Sparse keeps every 4th pin
+        // (60 s). Raw polylines differ a lot; pathAnchors must keep day km
+        // within ~10 % (the 68 vs 89 class of gap).
+        val dense = mutableListOf(TrackPoint(0L, 41.0, 29.0, null))
+        var lat = 41.0
+        var lon = 29.0
+        var t = 0L
+        repeat(24) { i ->
+            t += 15_000L
+            if (i % 2 == 0) lon += 0.001 else lat += 0.0008
+            dense.add(TrackPoint(t, lat, lon, null))
+        }
+        val sparse = dense.filterIndexed { idx, _ -> idx % 4 == 0 || idx == dense.lastIndex }
+        val denseKm = Geo.pathLengthMeters(dense)
+        val sparseKm = Geo.pathLengthMeters(sparse)
+        val rel = kotlin.math.abs(denseKm - sparseKm) / maxOf(denseKm, sparseKm)
+        assertTrue("denseKm=$denseKm sparseKm=$sparseKm rel=$rel", rel < 0.10)
+    }
+
+    @Test
     fun stationaryJitterDoesNotCountAsActive() {
         val points = listOf(
             TrackPoint(0L, 41.0, 29.0, null),

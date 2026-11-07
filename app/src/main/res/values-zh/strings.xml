@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">上次备份：%1$s</string>
-    <string name="build_note">版本 1.1.35 — 活跃时长与距离同规则；庭院滤波与采样率无关。</string>
+    <string name="build_note">版本 1.1.35 — 活跃=距离规则；公里按约60秒锚点跨机对齐。</string>
 </resources>

@@ -9,6 +9,10 @@
   GPS’te yavaş şehir hop’larını siliyordu (~%30 gün farkı). Yerine düşük
   hız tabanı + kısa geri-ileri salınım iptali var; yoğun/seyrek örnekleme
   aynı yolculukta yakın km ve aktif süre verir.
+- **68 vs 89 km sınıfı:** Virajlı günde sık nokta daha uzun polyline + GPS
+  titremesi biriktiriyordu. Mesafe/aktif süre artık ~60 sn çapaya inceltilip
+  toplanıyor — iki telefon aynı sürüşü yakın kirişlerle ölçer. (Doze’da
+  tamamen kaçan segment hâlâ düşük kalır; o kayıt eksikliği, filtre değil.)
 
 ## 1.1.34 — 2026-11-07
 

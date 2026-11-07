@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Letzte Sicherung: %1$s</string>
-    <string name="build_note">Version 1.1.35 — Aktivzeit = Distanzregeln; Hof-Filter abtastratenstabil.</string>
+    <string name="build_note">Version 1.1.35 — Aktiv=Distanz; km auf ~60-s-Anker über Geräte.</string>
 </resources>
