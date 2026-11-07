@@ -15,16 +15,14 @@ import com.dayatlas.app.databinding.ItemDayStatBinding
 import kotlin.math.ceil
 
 /**
- * Day-stat tiles in a **2-2-3** pattern when 7 are visible (6-column grid:
- * four tiles span 3, three span 2). Other counts keep even rows. Long-press
- * drags to reorder within the visible set.
+ * Day-stat tiles.
  *
- * Typography follows the **slot**, not the kind: pair-row tiles (span 3) use
- * larger type; the bottom trio (span 2) uses smaller, centered type — so a
- * card dragged into the trio shrinks, and one dragged up grows.
+ * Normal: **2-2-3** on a 6-column grid (pair rows larger; bottom trio
+ * compact/centered). Fullscreen: **4+3** on a 12-column grid (two rows,
+ * all compact) so the map keeps most of the screen.
  *
- * Height is capped at [R.integer.day_stat_max_visible_rows] so the map below
- * keeps room; with the 2-2-3 layout that cap is 3 rows.
+ * Typography follows the **slot**, not the kind — dragging into/out of a
+ * compact slot rebinds size.
  */
 class DayStatsAdapter(
     private val onReordered: (List<DayStatKind>) -> Unit,
@@ -32,6 +30,8 @@ class DayStatsAdapter(
 
     private val items = mutableListOf<Pair<DayStatKind, String>>()
     private var gridLayoutManager: GridLayoutManager? = null
+    private var twoRowLayout = false
+    private var boundRecycler: RecyclerView? = null
 
     fun submit(newItems: List<Pair<DayStatKind, String>>) {
         items.clear()
@@ -49,12 +49,31 @@ class DayStatsAdapter(
         notifyItemChanged(index)
     }
 
+    /** Switch between normal 2-2-3 and fullscreen 4+3. */
+    fun setTwoRowLayout(enabled: Boolean) {
+        if (twoRowLayout == enabled) return
+        twoRowLayout = enabled
+        val glm = gridLayoutManager ?: return
+        glm.spanCount = activeSpanCount()
+        glm.spanSizeLookup.invalidateSpanIndexCache()
+        // Drop any height cap from the previous mode so wrap_content remeasures.
+        boundRecycler?.layoutParams?.let { lp ->
+            if (lp.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                boundRecycler?.layoutParams = lp
+            }
+        }
+        notifyDataSetChanged()
+        boundRecycler?.let { capHeightAfterFirstLayout(it, glm.spanCount) }
+    }
+
     fun attachTo(recyclerView: RecyclerView, spanCount: Int = GRID_SPAN) {
+        boundRecycler = recyclerView
         val span = spanCount.coerceAtLeast(1)
         val glm = GridLayoutManager(recyclerView.context, span)
         glm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int =
-                spanSizeFor(position, items.size, span)
+                spanSizeFor(position, items.size, glm.spanCount, twoRowLayout)
         }
         gridLayoutManager = glm
         recyclerView.layoutManager = glm
@@ -66,10 +85,17 @@ class DayStatsAdapter(
         capHeightAfterFirstLayout(recyclerView, span)
     }
 
+    private fun activeSpanCount(): Int =
+        if (twoRowLayout) GRID_SPAN_TWO_ROW else GRID_SPAN
+
     private fun capHeightAfterFirstLayout(recyclerView: RecyclerView, span: Int) {
         recyclerView.doOnPreDraw {
-            val maxRows = recyclerView.resources.getInteger(R.integer.day_stat_max_visible_rows)
-            val rowCount = rowCountFor(items.size, span)
+            val maxRows = if (twoRowLayout) {
+                2
+            } else {
+                recyclerView.resources.getInteger(R.integer.day_stat_max_visible_rows)
+            }
+            val rowCount = rowCountFor(items.size, span, twoRowLayout)
             if (rowCount <= maxRows) return@doOnPreDraw
             val rowHeight = recyclerView.getChildAt(0)?.height ?: return@doOnPreDraw
             if (rowHeight <= 0) return@doOnPreDraw
@@ -94,7 +120,7 @@ class DayStatsAdapter(
         holder.binding.statIcon.setColorFilter(
             ContextCompat.getColor(ctx, kind.iconTintRes),
         )
-        val compact = isCompactSlot(position, items.size)
+        val compact = isCompactSlot(position, items.size, activeSpanCount(), twoRowLayout)
         applySlotStyle(holder.binding, compact)
     }
 
@@ -140,7 +166,6 @@ class DayStatsAdapter(
             viewHolder.itemView.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(120).start()
             viewHolder.itemView.elevation = 0f
             onReordered(items.map { it.first })
-            // Spans / pair-vs-trio typography follow position — rebind all.
             gridLayoutManager?.spanSizeLookup?.invalidateSpanIndexCache()
             notifyDataSetChanged()
         }
@@ -149,10 +174,18 @@ class DayStatsAdapter(
     companion object {
         private const val DRAG_ELEVATION_PX = 16f
         const val GRID_SPAN = 6
+        /** 12-col grid: four tiles ×3 + three tiles ×4 = two rows. */
+        const val GRID_SPAN_TWO_ROW = 12
 
-        /** Pair-row tiles are span 3; the bottom trio is span 2 (compact). */
-        fun isCompactSlot(position: Int, count: Int, gridSpan: Int = GRID_SPAN): Boolean =
-            spanSizeFor(position, count, gridSpan) < 3
+        fun isCompactSlot(
+            position: Int,
+            count: Int,
+            gridSpan: Int = GRID_SPAN,
+            twoRow: Boolean = false,
+        ): Boolean {
+            if (twoRow) return true
+            return spanSizeFor(position, count, gridSpan, twoRow = false) < 3
+        }
 
         private fun applySlotStyle(binding: ItemDayStatBinding, compact: Boolean) {
             val ctx = binding.root.context
@@ -184,10 +217,26 @@ class DayStatsAdapter(
         }
 
         /**
-         * 7 → 2-2-3 (four half-width, then a trio); 6 → 2-2-2; 5 → 2-3; etc.
+         * Normal (span 6): 7 → 2-2-3.
+         * Two-row (span 12): 7 → 4+3.
          */
-        fun spanSizeFor(position: Int, count: Int, gridSpan: Int = GRID_SPAN): Int {
+        fun spanSizeFor(
+            position: Int,
+            count: Int,
+            gridSpan: Int = GRID_SPAN,
+            twoRow: Boolean = false,
+        ): Int {
             if (count <= 0 || gridSpan <= 0) return 1
+            if (twoRow && gridSpan == GRID_SPAN_TWO_ROW) {
+                return when (count) {
+                    7 -> if (position < 4) 3 else 4
+                    6, 4, 2 -> gridSpan / 2
+                    5 -> if (position < 2) 6 else 4
+                    3 -> 4
+                    1 -> gridSpan
+                    else -> 3
+                }
+            }
             return when (count) {
                 7 -> if (position < 4) 3 else 2
                 6, 4, 2 -> 3
@@ -198,12 +247,19 @@ class DayStatsAdapter(
             }
         }
 
-        fun rowCountFor(count: Int, gridSpan: Int = GRID_SPAN): Int = when (count) {
-            0 -> 0
-            1, 2, 3 -> 1
-            4, 5, 6 -> 2
-            7 -> 3
-            else -> ceil(count * 2.0 / gridSpan).toInt().coerceAtLeast(1)
+        fun rowCountFor(
+            count: Int,
+            gridSpan: Int = GRID_SPAN,
+            twoRow: Boolean = false,
+        ): Int {
+            if (twoRow && count == 7) return 2
+            return when (count) {
+                0 -> 0
+                1, 2, 3 -> 1
+                4, 5, 6 -> 2
+                7 -> 3
+                else -> ceil(count * 2.0 / gridSpan.coerceAtLeast(1)).toInt().coerceAtLeast(1)
+            }
         }
     }
 }
