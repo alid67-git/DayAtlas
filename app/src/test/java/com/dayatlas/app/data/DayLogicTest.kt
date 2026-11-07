@@ -297,7 +297,7 @@ class SpeedStatsTest {
 
     @Test
     fun steadyWalkGivesConsistentMaxAndAvgSpeed() {
-        // ~85 m every 60 s ≈ 5.1 km/h, three legs.
+        // Progressive ~85 m every 60 s ≈ 5.1 km/h — not an A↔B oscillation.
         val points = listOf(
             TrackPoint(0L, 41.0, 29.000, null),
             TrackPoint(60_000L, 41.0, 29.001, null),
@@ -308,6 +308,36 @@ class SpeedStatsTest {
         assertTrue("maxSpeed=${stats.maxSpeedKmh}", stats.maxSpeedKmh in 3.0..8.0)
         assertTrue("avgSpeed=${stats.avgSpeedKmh}", stats.avgSpeedKmh in 3.0..8.0)
         assertEquals(180_000L, stats.activeMillis)
+    }
+
+    @Test
+    fun activeTimeMatchesPathSegmentsAcrossSampleRates() {
+        // Same trip in space+time: sparse corners only vs dense midpoints.
+        // Active time must track wall-clock motion, not sample count.
+        val sparse = listOf(
+            TrackPoint(0L, 41.0, 29.0000, null),
+            TrackPoint(60_000L, 41.0, 29.0015, null),
+            TrackPoint(120_000L, 41.0, 29.0030, null),
+            TrackPoint(180_000L, 41.0, 29.0045, null),
+            TrackPoint(240_000L, 41.0, 29.0060, null),
+        )
+        val dense = mutableListOf<TrackPoint>()
+        for (i in 0..16) {
+            val t = i * 15_000L
+            val lon = 29.0 + i * (0.0060 / 16.0)
+            dense.add(TrackPoint(t, 41.0, lon, null))
+        }
+        val denseStats = SpeedStats.compute(dense)
+        val sparseStats = SpeedStats.compute(sparse)
+        val denseKm = Geo.pathLengthMeters(dense)
+        val sparseKm = Geo.pathLengthMeters(sparse)
+        assertTrue("denseKm=$denseKm sparseKm=$sparseKm", kotlin.math.abs(denseKm - sparseKm) / sparseKm < 0.08)
+        assertTrue(
+            "denseActive=${denseStats.activeMillis} sparseActive=${sparseStats.activeMillis}",
+            kotlin.math.abs(denseStats.activeMillis - sparseStats.activeMillis).toDouble() /
+                sparseStats.activeMillis < 0.08,
+        )
+        assertEquals(240_000L, sparseStats.activeMillis)
     }
 
     @Test
@@ -339,12 +369,13 @@ class SpeedStatsTest {
     }
 
     @Test
-    fun accuracyCircleHopDoesNotInflateDistance() {
-        // ~90 m in 60 s ≈ 5.4 km/h — courtyard cloud for pathSegment.
+    fun accuracyCircleDoesNotGatePathDistance() {
+        // Path length ignores the activity accuracy gate — a progressive
+        // ~90 m / 60 s walk (~5.4 km/h) still counts.
         val a = TrackPoint(0L, 41.0, 29.0, 50f)
-        val b = TrackPoint(60_000L, 41.0, 29.00081, 50f) // ~90 m
+        val b = TrackPoint(60_000L, 41.0, 29.001072, 50f) // ~90 m
         assertEquals(100.0, TrackMotion.accuracyNoiseGateMeters(50f), 1e-9)
-        assertTrue(Geo.pathLengthMeters(listOf(a, b)) < 1.0)
+        assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 80.0)
     }
 
     @Test
@@ -366,18 +397,21 @@ class SpeedStatsTest {
     }
 
     @Test
-    fun slowUrbanCrawlCountsForDistanceNotActivity() {
-        // ~90 m in 16 s ≈ 20 km/h — real crawl; path counts, activity band drops it.
+    fun slowUrbanCrawlCountsForDistanceAndActiveTime() {
+        // ~90 m in 16 s ≈ 20 km/h — pathSegment (and thus SpeedStats) counts it;
+        // the old meaningfulSegment activity band still drops it.
         val a = TrackPoint(0L, 41.0, 29.0, null)
         val b = TrackPoint(16_000L, 41.0, 29.001072, null)
         assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 80.0)
         assertNull(TrackMotion.meaningfulSegment(a, b))
+        assertEquals(16_000L, SpeedStats.compute(listOf(a, b)).activeMillis)
     }
 
     @Test
     fun samePlacePinWanderDoesNotInflateDistance() {
         // New pins every ~85 m (just outside same-place collapse) at 30 s —
-        // courtyard GPS cloud (~10 km/h) in the ambiguous band. Must not sum.
+        // courtyard GPS cloud (~10 km/h). Reverse pairs cancel even when the
+        // zig-zag ends mid-swing.
         val points = listOf(
             TrackPoint(0L, 41.0, 29.0, null),
             TrackPoint(30_000L, 41.0, 29.001, null),
@@ -385,8 +419,10 @@ class SpeedStatsTest {
             TrackPoint(90_000L, 41.0, 29.001, null),
             TrackPoint(120_000L, 41.0, 29.0, null),
             TrackPoint(150_000L, 41.0, 29.001, null),
+            TrackPoint(180_000L, 41.0, 29.0, null),
         )
         assertTrue(Geo.pathLengthMeters(points) < 1.0)
+        assertEquals(0L, SpeedStats.compute(points).activeMillis)
     }
 
     @Test

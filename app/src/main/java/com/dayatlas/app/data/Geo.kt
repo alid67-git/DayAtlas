@@ -33,15 +33,13 @@ object Geo {
     }
 
     /**
-     * Sum of [TrackMotion.pathSegment] lengths — polyline distance with only
-     * teleport / gap / courtyard-cloud cuts. Activity filters stay in
-     * [TrackMotion.meaningfulSegment] for speed cards.
+     * Sum of [TrackMotion.pathLegs] lengths — same geometry rules as
+     * [com.dayatlas.app.data.SpeedStats] active time (sample-rate stable).
      */
     fun pathLengthMeters(points: List<TrackPoint>): Double {
         if (points.size < 2) return 0.0
         var sum = 0.0
-        for (i in 1 until points.size) {
-            val seg = TrackMotion.pathSegment(points[i - 1], points[i]) ?: continue
+        for (seg in TrackMotion.pathLegs(points)) {
             sum += seg.distanceMeters
         }
         return sum

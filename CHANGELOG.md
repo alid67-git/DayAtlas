@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.35 — 2026-11-07
+
+- **Aktif süre = mesafe kuralları:** Hız / aktif süre kartları artık günlük
+  km ile aynı `pathLegs` geometrisini kullanıyor — bir telefonda 1,5 saat,
+  diğerinde ~2 saat gibi örnekleme kaynaklı sapma kapanır.
+- **Avlu eşiği örnekleme-bağımsız:** “&lt;100 m ve &lt;15 km/sa” kuralı sık
+  GPS’te yavaş şehir hop’larını siliyordu (~%30 gün farkı). Yerine düşük
+  hız tabanı + kısa geri-ileri salınım iptali var; yoğun/seyrek örnekleme
+  aynı yolculukta yakın km ve aktif süre verir.
+
 ## 1.1.34 — 2026-11-07
 
 - **Mesafe ≠ aktif filtre:** Günlük km artık polyline geometrisine yakın
