@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.37 — km suavizado+RDP; Rutas = pines, no spam de checks.</string>
+    <string name="build_note">Versión 1.1.38 — Revierte el corte de km de 1.1.37; otra vez anclas ~60 s.</string>
 </resources>

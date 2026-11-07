@@ -362,41 +362,27 @@ class SpeedStatsTest {
     }
 
     @Test
-    fun noisyDensePhoneDoesNotOutrollQuietPhone() {
-        // Same 60 s road pins. Noisy phone adds ±~45 m lateral GPS cloud on
-        // every pin (and denser mid-samples) — raw polyline out-rolls; after
-        // simplify day km must stay within ~8 % (73 vs 66 class).
-        val quiet = mutableListOf(TrackPoint(0L, 41.0, 29.0, null))
+    fun anchoredPolylineDoesNotCollapseLongDrive() {
+        // 1.1.37 RDP halved real days (~350 → ~190). Anchors alone must keep
+        // a straight ~4 km / 40 min drive within a few percent of raw length.
+        val points = mutableListOf(TrackPoint(0L, 41.0, 29.0, null))
         var lon = 29.0
         var t = 0L
         repeat(40) {
             t += 60_000L
-            lon += 0.0012
-            quiet.add(TrackPoint(t, 41.0, lon, null))
+            lon += 0.0012 // ~100 m
+            points.add(TrackPoint(t, 41.0, lon, null))
         }
-        val noisy = mutableListOf<TrackPoint>()
-        for (i in quiet.indices) {
-            val p = quiet[i]
-            val wobble = if (i % 2 == 0) 0.00040 else -0.00040 // ~44 m
-            noisy.add(TrackPoint(p.timeMillis, p.lat + wobble, p.lon, null))
-            if (i < quiet.lastIndex) {
-                val n = quiet[i + 1]
-                val midT = (p.timeMillis + n.timeMillis) / 2
-                noisy.add(
-                    TrackPoint(
-                        midT,
-                        (p.lat + n.lat) / 2.0 + wobble * 0.5,
-                        (p.lon + n.lon) / 2.0,
-                        null,
-                    ),
-                )
-            }
+        var raw = 0.0
+        for (i in 1 until points.size) {
+            raw += Geo.haversineMeters(
+                points[i - 1].lat, points[i - 1].lon,
+                points[i].lat, points[i].lon,
+            )
         }
-        val quietKm = Geo.pathLengthMeters(quiet)
-        val noisyKm = Geo.pathLengthMeters(noisy)
-        assertTrue("quietKm=$quietKm", quietKm > 1_000.0)
-        val rel = kotlin.math.abs(noisyKm - quietKm) / quietKm
-        assertTrue("quietKm=$quietKm noisyKm=$noisyKm rel=$rel", rel < 0.08)
+        val counted = Geo.pathLengthMeters(points)
+        assertTrue("raw=$raw counted=$counted", counted > raw * 0.92)
+        assertTrue("counted=$counted", counted > 3_500.0)
     }
 
     @Test
