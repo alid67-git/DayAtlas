@@ -71,8 +71,9 @@
             android:background="@drawable/bg_map_nav_chip"
             android:contentDescription="@string/route_previous_day"
             android:elevation="6dp"
+            android:padding="12dp"
             android:src="@drawable/ic_chevron_left"
-            app:tint="@color/md_theme_on_surface" />
+            android:tint="@color/map_nav_icon" />
 
         <ImageButton
             android:id="@+id/nextDay"
@@ -83,8 +84,9 @@
             android:background="@drawable/bg_map_nav_chip"
             android:contentDescription="@string/route_next_day"
             android:elevation="6dp"
+            android:padding="12dp"
             android:src="@drawable/ic_chevron_right"
-            app:tint="@color/md_theme_on_surface" />
+            android:tint="@color/map_nav_icon" />
 
         <ImageButton
             android:id="@+id/mapJumpsButton"

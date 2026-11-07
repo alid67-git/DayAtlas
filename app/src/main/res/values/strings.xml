@@ -243,5 +243,5 @@
     <string name="paywall_promo_button">Kodu Kullan</string>
     <string name="paywall_promo_success">30 günlük erişim açıldı!</string>
     <string name="paywall_promo_invalid">Geçersiz kod</string>
-    <string name="build_note">Sürüm 1.1.32 — Samsung/Redmi mesafe: sık örneklemede gerçek sürüş sayılsın.</string>
+    <string name="build_note">Sürüm 1.1.33 — Tam ekran istatistik+oklar; harita chevron’ları görünür.</string>
 </resources>
