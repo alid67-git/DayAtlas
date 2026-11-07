@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.37 — 2026-11-07
+
+- **Samsung vs diğer (73↔66 / 84↔59):** Yoğun GPS yanal titremesi polyline’ı
+  şişiriyordu; mesafe artık yumuşatma + Douglas–Peucker (~55 m) ile
+  sadeleştirilip toplanıyor. Rotalar/istatistik “nokta” sayıları oturma
+  yenilemelerini değil harita pin’lerini gösterir — “2× GPS” yanılsaması
+  kalkar. (Diğer telefonda Doze ile hiç yazılmayan parça hâlâ eksik kalır.)
+
 ## 1.1.36 — 2026-11-07
 
 - **68 vs 89 km sınıfı:** Virajlı günde sık nokta daha uzun polyline + GPS

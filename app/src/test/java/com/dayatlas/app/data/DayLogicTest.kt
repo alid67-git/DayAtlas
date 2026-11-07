@@ -362,6 +362,44 @@ class SpeedStatsTest {
     }
 
     @Test
+    fun noisyDensePhoneDoesNotOutrollQuietPhone() {
+        // Same 60 s road pins. Noisy phone adds ±~45 m lateral GPS cloud on
+        // every pin (and denser mid-samples) — raw polyline out-rolls; after
+        // simplify day km must stay within ~8 % (73 vs 66 class).
+        val quiet = mutableListOf(TrackPoint(0L, 41.0, 29.0, null))
+        var lon = 29.0
+        var t = 0L
+        repeat(40) {
+            t += 60_000L
+            lon += 0.0012
+            quiet.add(TrackPoint(t, 41.0, lon, null))
+        }
+        val noisy = mutableListOf<TrackPoint>()
+        for (i in quiet.indices) {
+            val p = quiet[i]
+            val wobble = if (i % 2 == 0) 0.00040 else -0.00040 // ~44 m
+            noisy.add(TrackPoint(p.timeMillis, p.lat + wobble, p.lon, null))
+            if (i < quiet.lastIndex) {
+                val n = quiet[i + 1]
+                val midT = (p.timeMillis + n.timeMillis) / 2
+                noisy.add(
+                    TrackPoint(
+                        midT,
+                        (p.lat + n.lat) / 2.0 + wobble * 0.5,
+                        (p.lon + n.lon) / 2.0,
+                        null,
+                    ),
+                )
+            }
+        }
+        val quietKm = Geo.pathLengthMeters(quiet)
+        val noisyKm = Geo.pathLengthMeters(noisy)
+        assertTrue("quietKm=$quietKm", quietKm > 1_000.0)
+        val rel = kotlin.math.abs(noisyKm - quietKm) / quietKm
+        assertTrue("quietKm=$quietKm noisyKm=$noisyKm rel=$rel", rel < 0.08)
+    }
+
+    @Test
     fun stationaryJitterDoesNotCountAsActive() {
         val points = listOf(
             TrackPoint(0L, 41.0, 29.0, null),
