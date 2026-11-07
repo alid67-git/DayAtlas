@@ -1,11 +1,49 @@
 # Changelog
 
-## 1.1.33 — 2026-11-07
+## 1.1.39 — 2026-11-08
 
 - **Tam ekran harita:** Üstte seçili günün istatistikleri 2 satır (4+3);
   sağ/sol oklarla önceki/sonraki güne geçiş.
 - **Harita ok ikonları:** Koyu temada sağ/sol chevron’lar beyaz chip üzerinde
   görünür (sabit koyu tint).
+
+## 1.1.38 — 2026-11-07
+
+- **1.1.37 km yarıya inmesin:** Douglas–Peucker / yumuşatma gerçek yolu da
+  kesiyordu (~350 → ~190, ~73 → ~50). Mesafe yine ~60 sn çapa + salınım
+  iptali; Rotalar’daki pin sayısı düzeltmesi duruyor.
+
+## 1.1.37 — 2026-11-07
+
+- **Samsung vs diğer (73↔66 / 84↔59):** Yoğun GPS yanal titremesi polyline’ı
+  şişiriyordu; mesafe artık yumuşatma + Douglas–Peucker (~55 m) ile
+  sadeleştirilip toplanıyor. Rotalar/istatistik “nokta” sayıları oturma
+  yenilemelerini değil harita pin’lerini gösterir — “2× GPS” yanılsaması
+  kalkar. (Diğer telefonda Doze ile hiç yazılmayan parça hâlâ eksik kalır.)
+
+## 1.1.36 — 2026-11-07
+
+- **68 vs 89 km sınıfı:** Virajlı günde sık nokta daha uzun polyline + GPS
+  titremesi biriktiriyordu. Mesafe/aktif süre artık ~60 sn çapaya inceltilip
+  toplanıyor — iki telefon aynı sürüşü yakın kirişlerle ölçer. (Doze’da
+  tamamen kaçan segment hâlâ düşük kalır; o kayıt eksikliği, filtre değil.)
+
+## 1.1.35 — 2026-11-07
+
+- **Aktif süre = mesafe kuralları:** Hız / aktif süre kartları artık günlük
+  km ile aynı `pathLegs` geometrisini kullanıyor — bir telefonda 1,5 saat,
+  diğerinde ~2 saat gibi örnekleme kaynaklı sapma kapanır.
+- **Avlu eşiği örnekleme-bağımsız:** “&lt;100 m ve &lt;15 km/sa” kuralı sık
+  GPS’te yavaş şehir hop’larını siliyordu (~%30 gün farkı). Yerine düşük
+  hız tabanı + kısa geri-ileri salınım iptali var; yoğun/seyrek örnekleme
+  aynı yolculukta yakın km ve aktif süre verir.
+
+## 1.1.34 — 2026-11-07
+
+- **Mesafe ≠ aktif filtre:** Günlük km artık polyline geometrisine yakın
+  (atlama / uzun boşluk / yavaş avlu bulutu hariç). Accuracy ve 8–25 km/sa
+  aktivite bandı sadece hız/aktif süre kartlarında — sık örnekleyen
+  telefonda km’nin %10+ düşmesi engellenir.
 
 ## 1.1.32 — 2026-11-07
 

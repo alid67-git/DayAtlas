@@ -1,8 +1,19 @@
 package com.dayatlas.app.data
 
 /**
- * Shared rules for which consecutive GPS fixes count as real movement
- * (distance, speed, active time). Home courtyard jitter is filtered out.
+ * Shared rules for GPS segments.
+ *
+ * **Distance + active time + avg/max speed** use [pathLegs]:
+ * 1. Thin to ~[PATH_COMPARE_INTERVAL_MS] anchors (sample-rate fair),
+ * 2. Drop teleports / long gaps / near-stationary, cancel short A↔B pairs.
+ *
+ * A Douglas–Peucker / smooth pass (1.1.37) collapsed real road curves and
+ * cut day km roughly in half (e.g. ~350 → ~190). Do not put geometry
+ * simplification back on the distance path without a fixture that proves
+ * long highway + city days stay within ~10 % of the raw anchored polyline.
+ *
+ * [meaningfulSegment] remains for callers that still want the strict
+ * activity band (tests / future UI); SpeedStats no longer uses it.
  */
 object TrackMotion {
     /**
@@ -13,17 +24,41 @@ object TrackMotion {
 
     /**
      * Short hops in the "fast walk / slow crawl" band are usually GPS cloud
-     * bounce (e.g. 85 m in 30 s ≈ 10 km/h). Clear driving (≥ [GPS_HOP_DRIVE_SPEED_KMH])
-     * must still count — frequent samples on a Redmi (10–20 s) only cover
-     * ~100–150 m at city speed and used to be wiped by a blanket &lt;150 m rule,
-     * under-counting vs a Samsung on a 30 s interval.
+     * bounce for *activity* stats ([meaningfulSegment] only).
      */
     const val GPS_HOP_MAX_METERS = 150.0
     const val GPS_HOP_MIN_SPEED_KMH = 8.0
     const val GPS_HOP_DRIVE_SPEED_KMH = 25.0
 
-    /** Walking floor — below this, treat as stationary jitter. */
+    /** Tiny hop floor for path length (below same-place collapse noise). */
+    const val PATH_NOISE_FLOOR_M = 15.0
+
+    /**
+     * Paired back-and-forth under this length (each leg) is treated as
+     * courtyard oscillation, not driven distance. Larger than same-place
+     * radius so ~85 m pin wander still cancels.
+     */
+    const val PATH_OSCILLATION_MAX_METERS = 120.0
+
+    /** Dot product of unit step vectors below this ⇒ reverse hop. */
+    const val PATH_OSCILLATION_DOT = -0.3
+
+    /** Walking floor — below this, treat as stationary jitter (activity). */
     const val STATIONARY_SPEED_KMH = 3.0
+
+    /**
+     * Path / active-time floor. Slightly above [STATIONARY_SPEED_KMH] so
+     * ~50 m courtyard bounce (~3 km/h) never becomes “aktif süre”, while a
+     * real 5 km/h walk still counts.
+     */
+    const val PATH_STATIONARY_SPEED_KMH = 4.0
+
+    /**
+     * Target spacing for distance / active-time anchors. Finer GPS streams
+     * are thinned to this so phone A at 15 s and phone B at 60 s measure
+     * comparable chords (still keeps the day start/end pins).
+     */
+    const val PATH_COMPARE_INTERVAL_MS = 60_000L
 
     /** Keep in sync with [JumpFilter.MAX_SPEED_KMH] so stats match accept rules. */
     const val MAX_REALISTIC_SPEED_KMH = JumpFilter.MAX_SPEED_KMH
@@ -31,8 +66,6 @@ object TrackMotion {
     /**
      * Gaps longer than this are reconnects after airplane / Doze / signal
      * loss — not driven distance. Kept in sync with [RouteGaps.GAP_MS].
-     * (Previously 20 min, which still counted Phuket-scale teleports after a
-     * ~8–15 min radio outage as ~100–160 km/h "driving".)
      */
     const val MAX_SEGMENT_GAP_MS = RouteGaps.GAP_MS
 
@@ -40,8 +73,94 @@ object TrackMotion {
         val distanceMeters: Double,
         val speedKmh: Double,
         val dtMs: Long,
+        val dLat: Double = 0.0,
+        val dLon: Double = 0.0,
     )
 
+    /**
+     * Single-leg geometry check (no oscillation context). Prefer [pathLegs]
+     * for day totals so A↔B courtyard cloud cancels.
+     */
+    fun pathSegment(prev: TrackPoint, cur: TrackPoint): Segment? {
+        val dtMs = cur.timeMillis - prev.lastTimeMillis
+        if (dtMs <= 0L || dtMs > MAX_SEGMENT_GAP_MS) return null
+        val distM = Geo.haversineMeters(prev.lat, prev.lon, cur.lat, cur.lon)
+        if (distM < PATH_NOISE_FLOOR_M) return null
+        if (distM >= RouteGaps.MAX_CONTINUOUS_METERS) return null
+        if (JumpFilter.isJump(prev, cur)) return null
+        val speedKmh = (distM / (dtMs / 1000.0)) * 3.6
+        if (speedKmh < PATH_STATIONARY_SPEED_KMH || speedKmh > MAX_REALISTIC_SPEED_KMH) {
+            return null
+        }
+        return Segment(
+            distanceMeters = distM,
+            speedKmh = speedKmh,
+            dtMs = dtMs,
+            dLat = cur.lat - prev.lat,
+            dLon = cur.lon - prev.lon,
+        )
+    }
+
+    /**
+     * Thin a dense stream to ~[PATH_COMPARE_INTERVAL_MS] anchors. Sparse
+     * days (already ≥ interval) pass through unchanged aside from always
+     * keeping the first and last pin.
+     */
+    fun pathAnchors(points: List<TrackPoint>): List<TrackPoint> {
+        if (points.size < 3) return points
+        val out = ArrayList<TrackPoint>(points.size)
+        out.add(points.first())
+        val lastIndex = points.lastIndex
+        for (i in 1 until lastIndex) {
+            val p = points[i]
+            val dt = p.timeMillis - out.last().lastTimeMillis
+            if (dt >= PATH_COMPARE_INTERVAL_MS) {
+                out.add(p)
+            }
+        }
+        val end = points.last()
+        if (out.last().timeMillis != end.timeMillis ||
+            out.last().lat != end.lat ||
+            out.last().lon != end.lon
+        ) {
+            out.add(end)
+        }
+        return out
+    }
+
+    /**
+     * Path legs for daily km / active time. Anchors → segment filter →
+     * cancel short reverse pairs (courtyard cloud).
+     */
+    fun pathLegs(points: List<TrackPoint>): List<Segment> {
+        val anchors = pathAnchors(points)
+        if (anchors.size < 2) return emptyList()
+        val out = ArrayList<Segment>(anchors.size - 1)
+        for (i in 1 until anchors.size) {
+            val seg = pathSegment(anchors[i - 1], anchors[i]) ?: continue
+            val last = out.lastOrNull()
+            if (last != null && isCourtyardOscillation(last, seg)) {
+                out.removeAt(out.lastIndex)
+                continue
+            }
+            out.add(seg)
+        }
+        return out
+    }
+
+    private fun isCourtyardOscillation(a: Segment, b: Segment): Boolean {
+        if (a.distanceMeters > PATH_OSCILLATION_MAX_METERS) return false
+        if (b.distanceMeters > PATH_OSCILLATION_MAX_METERS) return false
+        val aLen = hypot(a.dLat, a.dLon)
+        val bLen = hypot(b.dLat, b.dLon)
+        if (aLen < 1e-12 || bLen < 1e-12) return false
+        val dot = (a.dLat * b.dLat + a.dLon * b.dLon) / (aLen * bLen)
+        return dot <= PATH_OSCILLATION_DOT
+    }
+
+    private fun hypot(x: Double, y: Double): Double = kotlin.math.sqrt(x * x + y * y)
+
+    /** Activity / speed cards — stricter than [pathSegment]. */
     fun meaningfulSegment(prev: TrackPoint, cur: TrackPoint): Segment? {
         val dtMs = cur.timeMillis - prev.lastTimeMillis
         if (dtMs <= 0L || dtMs > MAX_SEGMENT_GAP_MS) return null
@@ -49,9 +168,6 @@ object TrackMotion {
         if (distM < MIN_SEGMENT_METERS) return null
         if (distM >= RouteGaps.MAX_CONTINUOUS_METERS) return null
         if (JumpFilter.isJump(prev, cur)) return null
-        // Cheap phones often claim ~8–40 m accuracy while hopping indoors.
-        // Cap the gate so a Redmi reporting 60–80 m accuracy cannot erase
-        // every urban hop under ~160 m (that halved Phuket day distance).
         val noiseGate = maxOf(
             accuracyNoiseGateMeters(prev.accuracyMeters),
             accuracyNoiseGateMeters(cur.accuracyMeters),
@@ -59,7 +175,6 @@ object TrackMotion {
         if (noiseGate > 0.0 && distM <= noiseGate) return null
         val speedKmh = (distM / (dtMs / 1000.0)) * 3.6
         if (speedKmh < STATIONARY_SPEED_KMH || speedKmh > MAX_REALISTIC_SPEED_KMH) return null
-        // Courtyard / ambiguous band only — not clear city driving.
         if (distM < GPS_HOP_MAX_METERS &&
             speedKmh >= GPS_HOP_MIN_SPEED_KMH &&
             speedKmh < GPS_HOP_DRIVE_SPEED_KMH
@@ -70,9 +185,8 @@ object TrackMotion {
     }
 
     /**
-     * RideAtlas-style accuracy circle. Missing/invalid accuracy → 0 (no gate).
-     * Result is capped at [ACCURACY_NOISE_CAP_M] so terrible reported accuracy
-     * cannot blank out real urban segments.
+     * RideAtlas-style accuracy circle for activity filters only.
+     * Missing/invalid accuracy → 0 (no gate). Capped at [ACCURACY_NOISE_CAP_M].
      */
     fun accuracyNoiseGateMeters(accuracyMeters: Float?): Double {
         if (accuracyMeters == null || !accuracyMeters.isFinite() || accuracyMeters <= 0f) {

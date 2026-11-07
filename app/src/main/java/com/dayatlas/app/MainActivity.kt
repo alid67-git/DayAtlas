@@ -462,18 +462,21 @@ class MainActivity : DayAtlasActivity() {
             if (record.points.isEmpty()) return@mapNotNull null
             val speed = SpeedStats.compute(record.points)
             val distanceM = Geo.pathLengthMeters(record.points)
+            // Geometry pins only — gpsCheckCount includes stationary refreshes
+            // and made Samsung look like “2× GPS” next to a Doze-quiet phone.
+            val pinCount = record.points.size
             val meta = if (speed.activeMillis > 0) {
                 getString(
                     R.string.routes_day_meta,
                     DayTitle.formatDistance(distanceM),
-                    record.checkCount,
+                    pinCount,
                     DayTitle.formatDuration(speed.activeMillis),
                 )
             } else {
                 getString(
                     R.string.routes_day_meta_short,
                     DayTitle.formatDistance(distanceM),
-                    record.checkCount,
+                    pinCount,
                 )
             }
             RouteDayRow(

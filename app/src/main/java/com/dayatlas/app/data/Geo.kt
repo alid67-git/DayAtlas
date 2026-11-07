@@ -33,14 +33,13 @@ object Geo {
     }
 
     /**
-     * Sum of [TrackMotion]-qualified segment lengths so home GPS jitter does
-     * not inflate daily distance.
+     * Sum of [TrackMotion.pathLegs] lengths — same geometry rules as
+     * [com.dayatlas.app.data.SpeedStats] active time (sample-rate stable).
      */
     fun pathLengthMeters(points: List<TrackPoint>): Double {
         if (points.size < 2) return 0.0
         var sum = 0.0
-        for (i in 1 until points.size) {
-            val seg = TrackMotion.meaningfulSegment(points[i - 1], points[i]) ?: continue
+        for (seg in TrackMotion.pathLegs(points)) {
             sum += seg.distanceMeters
         }
         return sum

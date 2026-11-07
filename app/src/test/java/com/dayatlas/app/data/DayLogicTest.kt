@@ -2,6 +2,7 @@ package com.dayatlas.app.data
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDate
@@ -296,7 +297,7 @@ class SpeedStatsTest {
 
     @Test
     fun steadyWalkGivesConsistentMaxAndAvgSpeed() {
-        // ~85 m every 60 s ≈ 5.1 km/h, three legs.
+        // Progressive ~85 m every 60 s ≈ 5.1 km/h — not an A↔B oscillation.
         val points = listOf(
             TrackPoint(0L, 41.0, 29.000, null),
             TrackPoint(60_000L, 41.0, 29.001, null),
@@ -307,6 +308,81 @@ class SpeedStatsTest {
         assertTrue("maxSpeed=${stats.maxSpeedKmh}", stats.maxSpeedKmh in 3.0..8.0)
         assertTrue("avgSpeed=${stats.avgSpeedKmh}", stats.avgSpeedKmh in 3.0..8.0)
         assertEquals(180_000L, stats.activeMillis)
+    }
+
+    @Test
+    fun activeTimeMatchesPathSegmentsAcrossSampleRates() {
+        // Same trip in space+time: sparse corners only vs dense midpoints.
+        // Active time must track wall-clock motion, not sample count.
+        val sparse = listOf(
+            TrackPoint(0L, 41.0, 29.0000, null),
+            TrackPoint(60_000L, 41.0, 29.0015, null),
+            TrackPoint(120_000L, 41.0, 29.0030, null),
+            TrackPoint(180_000L, 41.0, 29.0045, null),
+            TrackPoint(240_000L, 41.0, 29.0060, null),
+        )
+        val dense = mutableListOf<TrackPoint>()
+        for (i in 0..16) {
+            val t = i * 15_000L
+            val lon = 29.0 + i * (0.0060 / 16.0)
+            dense.add(TrackPoint(t, 41.0, lon, null))
+        }
+        val denseStats = SpeedStats.compute(dense)
+        val sparseStats = SpeedStats.compute(sparse)
+        val denseKm = Geo.pathLengthMeters(dense)
+        val sparseKm = Geo.pathLengthMeters(sparse)
+        assertTrue("denseKm=$denseKm sparseKm=$sparseKm", kotlin.math.abs(denseKm - sparseKm) / sparseKm < 0.08)
+        assertTrue(
+            "denseActive=${denseStats.activeMillis} sparseActive=${sparseStats.activeMillis}",
+            kotlin.math.abs(denseStats.activeMillis - sparseStats.activeMillis).toDouble() /
+                sparseStats.activeMillis < 0.08,
+        )
+        assertEquals(240_000L, sparseStats.activeMillis)
+    }
+
+    @Test
+    fun windingRouteDenseAndSparseStayClose() {
+        // Manhattan blocks every 15 s (~85 m). Sparse keeps every 4th pin
+        // (60 s). Raw polylines differ a lot; pathAnchors must keep day km
+        // within ~10 % (the 68 vs 89 class of gap).
+        val dense = mutableListOf(TrackPoint(0L, 41.0, 29.0, null))
+        var lat = 41.0
+        var lon = 29.0
+        var t = 0L
+        repeat(24) { i ->
+            t += 15_000L
+            if (i % 2 == 0) lon += 0.001 else lat += 0.0008
+            dense.add(TrackPoint(t, lat, lon, null))
+        }
+        val sparse = dense.filterIndexed { idx, _ -> idx % 4 == 0 || idx == dense.lastIndex }
+        val denseKm = Geo.pathLengthMeters(dense)
+        val sparseKm = Geo.pathLengthMeters(sparse)
+        val rel = kotlin.math.abs(denseKm - sparseKm) / maxOf(denseKm, sparseKm)
+        assertTrue("denseKm=$denseKm sparseKm=$sparseKm rel=$rel", rel < 0.10)
+    }
+
+    @Test
+    fun anchoredPolylineDoesNotCollapseLongDrive() {
+        // 1.1.37 RDP halved real days (~350 → ~190). Anchors alone must keep
+        // a straight ~4 km / 40 min drive within a few percent of raw length.
+        val points = mutableListOf(TrackPoint(0L, 41.0, 29.0, null))
+        var lon = 29.0
+        var t = 0L
+        repeat(40) {
+            t += 60_000L
+            lon += 0.0012 // ~100 m
+            points.add(TrackPoint(t, 41.0, lon, null))
+        }
+        var raw = 0.0
+        for (i in 1 until points.size) {
+            raw += Geo.haversineMeters(
+                points[i - 1].lat, points[i - 1].lon,
+                points[i].lat, points[i].lon,
+            )
+        }
+        val counted = Geo.pathLengthMeters(points)
+        assertTrue("raw=$raw counted=$counted", counted > raw * 0.92)
+        assertTrue("counted=$counted", counted > 3_500.0)
     }
 
     @Test
@@ -338,21 +414,20 @@ class SpeedStatsTest {
     }
 
     @Test
-    fun accuracyCircleHopDoesNotInflateDistance() {
-        // ~90 m in 60 s with 50 m reported accuracy: above same-place (80 m)
-        // but inside max(25, 2×50)=100 m noise gate — must not count.
+    fun accuracyCircleDoesNotGatePathDistance() {
+        // Path length ignores the activity accuracy gate — a progressive
+        // ~90 m / 60 s walk (~5.4 km/h) still counts.
         val a = TrackPoint(0L, 41.0, 29.0, 50f)
-        val b = TrackPoint(60_000L, 41.0, 29.00081, 50f) // ~90 m
+        val b = TrackPoint(60_000L, 41.0, 29.001072, 50f) // ~90 m
         assertEquals(100.0, TrackMotion.accuracyNoiseGateMeters(50f), 1e-9)
-        assertTrue(Geo.pathLengthMeters(listOf(a, b)) < 1.0)
+        assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 80.0)
     }
 
     @Test
-    fun terribleAccuracyIsCappedSoUrbanHopsStillCount() {
-        // Redmi-class: reported accuracy 80 m → uncapped gate was 160 m and
-        // wiped ~126 m city hops. Cap keeps the gate at 100 m.
+    fun terribleAccuracyDoesNotErasePathDistance() {
+        // Path length ignores the activity accuracy gate — ~126 m / 15 s
+        // city hop must count even with 80 m reported accuracy.
         assertEquals(100.0, TrackMotion.accuracyNoiseGateMeters(80f), 1e-9)
-        // ~126 m in 15 s ≈ 30 km/h — clear driving, must count.
         val a = TrackPoint(0L, 41.0, 29.0, 80f)
         val b = TrackPoint(15_000L, 41.0, 29.0015, 80f)
         assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 100.0)
@@ -360,17 +435,28 @@ class SpeedStatsTest {
 
     @Test
     fun frequentSampleCityDrivingStillCounts() {
-        // 15 s × ~30 km/h ≈ 126 m — used to die under the blanket GPS_HOP
-        // (<150 m && ≥8 km/h) and under-count Redmi vs 30 s Samsung samples.
+        // 15 s × ~30 km/h ≈ 126 m — path distance must follow geometry.
         val a = TrackPoint(0L, 41.0, 29.0, null)
         val b = TrackPoint(15_000L, 41.0, 29.0015, null)
         assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 100.0)
     }
 
     @Test
+    fun slowUrbanCrawlCountsForDistanceAndActiveTime() {
+        // ~90 m in 16 s ≈ 20 km/h — pathSegment (and thus SpeedStats) counts it;
+        // the old meaningfulSegment activity band still drops it.
+        val a = TrackPoint(0L, 41.0, 29.0, null)
+        val b = TrackPoint(16_000L, 41.0, 29.001072, null)
+        assertTrue(Geo.pathLengthMeters(listOf(a, b)) > 80.0)
+        assertNull(TrackMotion.meaningfulSegment(a, b))
+        assertEquals(16_000L, SpeedStats.compute(listOf(a, b)).activeMillis)
+    }
+
+    @Test
     fun samePlacePinWanderDoesNotInflateDistance() {
         // New pins every ~85 m (just outside same-place collapse) at 30 s —
-        // courtyard GPS cloud (~10 km/h) in the ambiguous band. Must not sum.
+        // courtyard GPS cloud (~10 km/h). Reverse pairs cancel even when the
+        // zig-zag ends mid-swing.
         val points = listOf(
             TrackPoint(0L, 41.0, 29.0, null),
             TrackPoint(30_000L, 41.0, 29.001, null),
@@ -378,8 +464,10 @@ class SpeedStatsTest {
             TrackPoint(90_000L, 41.0, 29.001, null),
             TrackPoint(120_000L, 41.0, 29.0, null),
             TrackPoint(150_000L, 41.0, 29.001, null),
+            TrackPoint(180_000L, 41.0, 29.0, null),
         )
         assertTrue(Geo.pathLengthMeters(points) < 1.0)
+        assertEquals(0L, SpeedStats.compute(points).activeMillis)
     }
 
     @Test

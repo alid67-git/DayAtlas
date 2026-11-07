@@ -82,7 +82,7 @@ object RangeStats {
             // hops do not skew totals / bars.
             val dayDistance = Geo.pathLengthMeters(record.points)
             totalDistance += dayDistance
-            totalPoints += record.checkCount
+            totalPoints += record.points.size
             daily.add(record.date to dayDistance)
             if (dayDistance >= bestDistance) {
                 bestDistance = dayDistance
