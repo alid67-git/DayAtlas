@@ -45,6 +45,7 @@ import com.dayatlas.app.location.TrackingController
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.route.DayStatKind
 import com.dayatlas.app.route.DayStatsAdapter
+import com.dayatlas.app.route.MapTiles
 import com.dayatlas.app.route.RouteDayRow
 import com.dayatlas.app.route.RouteMapController
 import com.dayatlas.app.route.RoutesAdapter
@@ -59,7 +60,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import android.view.LayoutInflater
 import android.widget.TextView
 
@@ -190,11 +190,7 @@ class MainActivity : DayAtlasActivity() {
         setContentView(binding.root)
         prefs = AppPrefs(this)
 
-        binding.routeMap.setTileSource(TileSourceFactory.MAPNIK)
-        binding.routeMap.setMultiTouchControls(true)
-        binding.routeMap.isTilesScaledToDpi = true
-        // Avoid a pure-white “hole” while tiles / first camera fit settle.
-        binding.routeMap.setBackgroundColor(0xFFE8EEF4.toInt())
+        MapTiles.configure(binding.routeMap)
 
         onBackPressedDispatcher.addCallback(this, mapFullscreenBackCallback)
         binding.mapExitFullscreen.setOnClickListener { setMapFullscreen(false) }

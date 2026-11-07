@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.31 — 2026-11-06
+
+- **Harita +/- gizlendi:** Pinch-zoom yeterli; tam ekran (ve normal) görünümde
+  artı/eksi düğmeleri yok.
+- **Harita yazıları İngilizce/Latin:** Yerel yazı (Tayca vb.) yerine Latin /
+  İngilizce adı tercih eden OSM.de karoları — anahtar gerekmez.
+
 ## 1.1.30 — 2026-11-05
 
 - **Harita tam ekran:** Günlük haritaya dokununca chrome gizlenir, harita

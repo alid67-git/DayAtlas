@@ -28,12 +28,12 @@ import com.dayatlas.app.export.GpxExportDialog
 import com.dayatlas.app.prefs.AppPrefs
 import com.dayatlas.app.route.DayStatKind
 import com.dayatlas.app.route.DayStatsAdapter
+import com.dayatlas.app.route.MapTiles
 import com.dayatlas.app.route.RouteMapController
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 
 /**
  * Full-detail view for a single past day (Routes list or Statistics bar).
@@ -91,10 +91,7 @@ class DayDetailActivity : DayAtlasActivity() {
         binding = ActivityDayDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.routeMap.setTileSource(TileSourceFactory.MAPNIK)
-        binding.routeMap.setMultiTouchControls(true)
-        binding.routeMap.isTilesScaledToDpi = true
-        binding.routeMap.setBackgroundColor(0xFFE8EEF4.toInt())
+        MapTiles.configure(binding.routeMap)
 
         binding.toolbar.title = DayTitle.format(date)
         binding.toolbar.setNavigationOnClickListener { navigateBack() }

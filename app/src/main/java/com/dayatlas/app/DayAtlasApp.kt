@@ -38,7 +38,8 @@ class DayAtlasApp : Application() {
         // Required so the tile provider / cache paths are fully initialized;
         // without load(), some devices show an empty MapView despite overlays.
         config.load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
-        config.userAgentValue = packageName
+        // OSM tile policy wants a meaningful UA (not a bare package name).
+        config.userAgentValue = "DayAtlas/${BuildConfig.VERSION_NAME} (${packageName})"
         val base = getDir("osmdroid", MODE_PRIVATE)
         config.osmdroidBasePath = base
         config.osmdroidTileCache = File(base, "tiles")
