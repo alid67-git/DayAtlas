@@ -47,4 +47,30 @@ final class DayJsonTests: XCTestCase {
         XCTAssertEqual(41.01, parsed.points[0].lat, accuracy: 1e-6)
         XCTAssertTrue(DayJson.toGpx(record).contains("<trkpt"))
     }
+
+    func testFromGpxRoundTrip() {
+        let record = DayRecord(
+            date: "2026-11-07",
+            title: "Günlük 7 Kas 2026",
+            points: [
+                TrackPoint(timeMillis: 1_699_344_000_000, lat: 7.88, lon: 98.38, acc: 8),
+                TrackPoint(timeMillis: 1_699_344_060_000, lat: 7.89, lon: 98.39, acc: nil),
+            ],
+            distanceMeters: 0,
+        )
+        let gpx = DayJson.toGpx(record)
+        let parsed = DayJson.fromGpx(dateIso: "2026-11-07", raw: gpx)
+        XCTAssertNotNil(parsed)
+        XCTAssertEqual(2, parsed?.points.count)
+        XCTAssertEqual(7.88, parsed?.points[0].lat ?? 0, accuracy: 1e-6)
+        XCTAssertEqual("2026-11-07", parsed?.date)
+    }
+}
+
+final class DayRestoreTests: XCTestCase {
+    func testDateIsoFromFileName() {
+        XCTAssertEqual("2026-11-07", DayRestore.dateIsoFromFileName("2026-11-07.gpx"))
+        XCTAssertEqual("2026-11-07", DayRestore.dateIsoFromFileName("/tmp/2026-11-07.json"))
+        XCTAssertNil(DayRestore.dateIsoFromFileName("notes.txt"))
+    }
 }
