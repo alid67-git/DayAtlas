@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.42 — 2026-11-16
+
+- **Tam ekran gün tarihi:** Sağ/sol okla gezerken üstte seçili günün tarihi
+  görünür (önceden gizleniyordu).
+- **Rota yakınlaştırma:** Harita, GPS sıçrama noktalarını dışarıda bırakarak
+  rotayı alana sığdırır; önceki aşırı uzak zoom kalktı.
+
 ## 1.1.41 — 2026-11-15
 
 - **Hareketliyken 10 sn GPS:** Ayarlarda 1–5 dk seçili olsa bile yoldayken
