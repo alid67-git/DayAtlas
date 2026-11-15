@@ -5,17 +5,23 @@ import com.dayatlas.app.prefs.AppPrefs
 
 /**
  * After [STREAK_TO_STEP] consecutive fixes within [TOLERANCE_METERS] of a fixed
- * anchor, step the effective sampling interval one notch coarser (never finer
- * than the user's settings base, never coarser than [MAX_BACKOFF_INTERVAL_SECONDS]
- * unless the user base itself is already coarser).
+ * anchor, step the effective sampling interval one notch coarser (never
+ * coarser than [MAX_BACKOFF_INTERVAL_SECONDS] unless the user base itself is
+ * already coarser).
+ *
+ * While moving, the effective interval drops to [MOTION_INTERVAL_SECONDS]
+ * (10 s) regardless of the Settings base — so a user who picked 3 min for
+ * battery still gets dense samples on the road (mountain curves vs continuous
+ * trackers). Sitting still still climbs the ladder from that fine rate back
+ * toward the user base / 5 min cap.
  *
  * Home GPS often wanders tens of meters while you sit still. Comparing each
  * fix to the previous fix (and resetting on any >25 m hop) made the interval
  * speed back up. Instead we keep the **anchor** fixed while you stay inside
  * the tolerance circle, and only treat real departure after
  * [MOVEMENT_STREAK_TO_RESET] consecutive fixes outside that circle. The first
- * off-circle fix still tips the effective interval back to the user base so
- * the next alarm is fine-grained even before confirmation.
+ * off-circle fix still tips to the motion rate so the next alarm is fine-
+ * grained even before confirmation.
  */
 object StationaryBackoff {
     /** Radius around the sit-still anchor; typical indoor/yard GPS wander. */
@@ -25,20 +31,24 @@ object StationaryBackoff {
     const val MOVEMENT_STREAK_TO_RESET = 2
 
     /**
+     * While driving / walking off the sit-still circle, sample this often
+     * even if Settings base is 1–5 min. Must stay in
+     * [AppPrefs.ALLOWED_INTERVAL_SECONDS].
+     */
+    const val MOTION_INTERVAL_SECONDS = 10
+
+    /**
      * Ceiling for adaptive coarsening when the user base is finer than this
-     * (typical ladder: 30 s → 1 → 3 → 5 min). [MotionWakeTrigger] tips back
-     * to the user base on significant motion so a long sit does not delay
-     * the start of a real trip by a full 5 minutes on devices that expose
-     * that sensor. If the user picked 3/5 min in Settings, that base already
-     * wins via [coerceAtLeast] on the base.
+     * (typical ladder: 10 s → 20 → 30 → 1 → 3 → 5 min). [MotionWakeTrigger]
+     * tips back to the motion rate on significant motion so a long sit does
+     * not delay the start of a real trip by a full 5 minutes.
      */
     const val MAX_BACKOFF_INTERVAL_SECONDS = 300
 
     /**
      * When true (default), [recordSample] steps the effective interval
-     * coarser while you sit still (e.g. 30 s → 1 → 3 → 5 min). Kept as a
-     * flag so a future diagnostic build can temporarily freeze the interval
-     * without deleting the backoff math or its tests.
+     * coarser while you sit still. Kept as a flag so a future diagnostic
+     * build can temporarily freeze the interval without deleting the math.
      */
     const val COARSENING_ENABLED = true
 
@@ -80,19 +90,18 @@ object StationaryBackoff {
     }
 
     /**
-     * Significant-motion (or similar) hint: drop back to the user base
-     * interval without clearing the sit-still anchor. The next GPS fix still
-     * decides whether this was real movement; a false alarm only costs a
-     * short burst of fine-grained samples before coarsening climbs again.
+     * Significant-motion hint: drop to [MOTION_INTERVAL_SECONDS] without
+     * clearing the sit-still anchor. The next GPS fix still decides lasting
+     * movement; a false alarm only costs a short fine-grained burst.
      */
     fun speedUpForSuspectedMotion(prefs: AppPrefs) {
-        val base = prefs.intervalSeconds
+        val motion = motionIntervalSeconds(prefs.intervalSeconds)
         val state = read(prefs)
-        if (state.effectiveIntervalSeconds <= base) return
+        if (state.effectiveIntervalSeconds <= motion) return
         write(
             prefs,
             state.copy(
-                effectiveIntervalSeconds = base,
+                effectiveIntervalSeconds = motion,
                 stationaryStreak = 0,
             ),
         )
@@ -109,6 +118,19 @@ object StationaryBackoff {
         )
     }
 
+    /** Interval used while off the sit-still circle (always ≤ user base). */
+    fun motionIntervalSeconds(
+        userBaseSeconds: Int,
+        allowed: IntArray = AppPrefs.ALLOWED_INTERVAL_SECONDS,
+    ): Int {
+        val base = clampToAllowed(userBaseSeconds, allowed)
+        // Prefer the dedicated motion rate; if the user already chose 10 s,
+        // keep it. Never go coarser than the motion floor while moving.
+        return minOf(base, MOTION_INTERVAL_SECONDS).let { candidate ->
+            if (candidate in allowed) candidate else MOTION_INTERVAL_SECONDS
+        }
+    }
+
     /**
      * @return updated state after considering the new fix. While stationary,
      * the anchor ([State.lastLat]/[State.lastLon]) stays put so jitter does
@@ -123,6 +145,7 @@ object StationaryBackoff {
         coarseningEnabled: Boolean = true,
     ): State {
         val base = clampToAllowed(userBaseSeconds, allowed)
+        val motion = motionIntervalSeconds(userBaseSeconds, allowed)
         val prevLat = state.lastLat
         val prevLon = state.lastLon
         if (prevLat == null || prevLon == null) {
@@ -137,27 +160,26 @@ object StationaryBackoff {
 
         val distance = Geo.haversineMeters(prevLat, prevLon, lat, lon)
         var effective = clampToAllowed(state.effectiveIntervalSeconds, allowed)
-        if (effective < base) effective = base
         val coarseCap = coarseCapFor(base)
         if (effective > coarseCap) effective = coarseCap
 
         if (distance > TOLERANCE_METERS) {
             val moveStreak = state.movingStreak + 1
             if (moveStreak < MOVEMENT_STREAK_TO_RESET) {
-                // Tentative departure: tip to user base immediately so the
-                // *next* alarm is not stuck at the coarse end, but keep the
-                // anchor until a second off-circle fix confirms real movement.
+                // Tentative departure: tip to motion rate immediately so the
+                // *next* alarm is not stuck at 3–5 min, but keep the anchor
+                // until a second off-circle fix confirms real movement.
                 return State(
-                    effectiveIntervalSeconds = base,
+                    effectiveIntervalSeconds = motion,
                     stationaryStreak = 0,
                     lastLat = prevLat,
                     lastLon = prevLon,
                     movingStreak = moveStreak,
                 )
             }
-            // Confirmed departure — new anchor, back to user base rate.
+            // Confirmed departure — new anchor, stay on the motion rate.
             return State(
-                effectiveIntervalSeconds = base,
+                effectiveIntervalSeconds = motion,
                 stationaryStreak = 0,
                 lastLat = lat,
                 lastLon = lon,
@@ -179,6 +201,9 @@ object StationaryBackoff {
         val nextRaw = if (coarseningEnabled) nextCoarser(effective, allowed) else null
         val next = nextRaw?.coerceAtMost(coarseCap)
         return if (next != null && next > effective) {
+            // Floor at the user Settings base once coarsening past the
+            // motion burst — don't linger at 10/20 s while parked if the
+            // user asked for 1–5 min at rest.
             State(
                 effectiveIntervalSeconds = next.coerceAtLeast(base),
                 stationaryStreak = 0,
@@ -188,7 +213,7 @@ object StationaryBackoff {
             )
         } else {
             State(
-                effectiveIntervalSeconds = effective,
+                effectiveIntervalSeconds = effective.coerceAtLeast(base),
                 stationaryStreak = 0,
                 lastLat = prevLat,
                 lastLon = prevLon,

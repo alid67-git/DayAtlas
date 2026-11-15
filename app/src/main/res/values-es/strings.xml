@@ -57,7 +57,7 @@
     <string name="sample_status_success_never">Último guardado: ninguno (intento sin fix)</string>
     <string name="settings_daily_mode_summary">Si está activado, la grabación de hoy se inicia o continúa sin preguntar cada vez que se abre la app o el teléfono.</string>
     <string name="settings_interval">Intervalo de muestreo</string>
-    <string name="settings_interval_hint">Tras 3 lecturas en el mismo lugar (~80 m), el intervalo aumenta un nivel (30 s → 1 → 3 → 5 min). Con movimiento real (2 lecturas seguidas fuera de esa zona) vuelve al intervalo elegido — las vibraciones del GPS en casa no aceleran el muestreo de nuevo.</string>
+    <string name="settings_interval_hint">Tu intervalo vale al estar parado. En movimiento baja a 10 s. Tras 3 lecturas en el mismo lugar (~80 m) sube (10 → 20 → 30 s → 1 → 3 → 5 min). El movimiento real vuelve a 10 s.</string>
     <string name="settings_dwell_stops">Paradas de 15 min+</string>
     <string name="settings_dwell_stops_summary">Si está activo, los sitios de más de 15 minutos aparecen en el mapa (gris = sin nota/foto; azul = anotado). Toque para duración, nota y foto.</string>
     <string name="dwell_stop_title">Parada</string>
@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Última copia: %1$s</string>
-    <string name="build_note">Versión 1.1.40 — Stats a pantalla completa bajo la barra de estado.</string>
+    <string name="build_note">Versión 1.1.41 — En movimiento, GPS a 10 s.</string>
 </resources>

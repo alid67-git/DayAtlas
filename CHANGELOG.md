@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.41 — 2026-11-15
+
+- **Hareketliyken 10 sn GPS:** Ayarlarda 1–5 dk seçili olsa bile yoldayken
+  örnekleme otomatik 10 sn’ye iner (dağ/viraj km kaybını azaltır). Durunca
+  yine kademeli seyreltilir.
+
 ## iOS 0.2.0 — 2026-11-08
 
 - **Android yedek geri yükleme:** Ayarlar’dan `yyyy-MM-dd.gpx` / `.json`

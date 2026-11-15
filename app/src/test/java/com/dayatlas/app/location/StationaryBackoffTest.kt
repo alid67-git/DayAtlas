@@ -91,10 +91,11 @@ class StationaryBackoffTest {
         }
         // Cap is max(base, 300) = 300 — from 180 base can still climb to 300.
         assertEquals(300, state.effectiveIntervalSeconds)
+        // Moving drops to the motion rate (10 s), not the 3 min Settings base.
         state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
-        assertEquals(180, state.effectiveIntervalSeconds)
+        assertEquals(10, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.1, 29.1, 180, state, allowed)
-        assertEquals(180, state.effectiveIntervalSeconds)
+        assertEquals(10, state.effectiveIntervalSeconds)
     }
 
     @Test
@@ -108,7 +109,7 @@ class StationaryBackoffTest {
     }
 
     @Test
-    fun movementTipsToUserBaseOnFirstOffCircle() {
+    fun movementTipsToMotionRateOnFirstOffCircle() {
         var state = StationaryBackoff.reset(30)
         state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         repeat(6) {
@@ -116,10 +117,22 @@ class StationaryBackoffTest {
         }
         assertEquals(180, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
-        assertEquals(30, state.effectiveIntervalSeconds)
+        assertEquals(10, state.effectiveIntervalSeconds)
         assertEquals(1, state.movingStreak)
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
-        assertEquals(30, state.effectiveIntervalSeconds)
+        assertEquals(10, state.effectiveIntervalSeconds)
+        assertEquals(0, state.movingStreak)
+    }
+
+    @Test
+    fun threeMinuteSettingsStillSamplesTenSecondsWhileMoving() {
+        var state = StationaryBackoff.reset(180)
+        state = StationaryBackoff.onSample(41.0, 29.0, 180, state, allowed)
+        // Drive ~100 m east twice — confirmed motion at 10 s.
+        state = StationaryBackoff.onSample(41.0, 29.0012, 180, state, allowed)
+        assertEquals(10, state.effectiveIntervalSeconds)
+        state = StationaryBackoff.onSample(41.0, 29.0024, 180, state, allowed)
+        assertEquals(10, state.effectiveIntervalSeconds)
         assertEquals(0, state.movingStreak)
     }
 
@@ -147,11 +160,13 @@ class StationaryBackoffTest {
         }
         assertEquals(180, state.effectiveIntervalSeconds)
         state = StationaryBackoff.onSample(41.01, 29.0, 30, state, allowed)
-        assertEquals(30, state.effectiveIntervalSeconds)
+        assertEquals(10, state.effectiveIntervalSeconds)
+        // Back inside the circle — coarsen from the motion burst toward base+.
         repeat(3) {
             state = StationaryBackoff.onSample(41.0, 29.0, 30, state, allowed)
         }
-        assertEquals(60, state.effectiveIntervalSeconds)
+        // nextCoarser(10)=20, coerceAtLeast(30)=30
+        assertEquals(30, state.effectiveIntervalSeconds)
     }
 
     @Test
