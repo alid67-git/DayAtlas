@@ -34,16 +34,16 @@ import kotlin.math.abs
  */
 object RouteMapController {
     /**
-     * Extra padding around a day’s track so start/end markers stay clear of
-     * the floating day-nav strip at the bottom of the map pane.
+     * Padding around a day’s track so edge markers stay clear of map chrome
+     * without leaving the route a tiny scribble in a country-scale view.
      */
-    private const val DEFAULT_ZOOM_BORDER_PX = 200
+    private const val DEFAULT_ZOOM_BORDER_PX = 96
     private const val MIN_ZOOM_INNER_PX = 48
     private const val MIN_REFIT_DELTA_PX = 24
     private const val MAX_ZOOM = 18.0
     private const val MIN_ZOOM = 3.0
-    /** Pull back one-and-a-half levels after fit so edge pins aren’t clipped. */
-    private const val FIT_ZOOM_OUT_LEVELS = 1.5
+    /** Slight pull-back after fit so edge pins aren’t clipped by the border. */
+    private const val FIT_ZOOM_OUT_LEVELS = 0.35
 
     private var boundMap: WeakReference<MapView>? = null
     private var shownDateIso: String? = null
@@ -355,27 +355,23 @@ object RouteMapController {
         jumps: List<JumpFilter.Jump>,
         animateZoom: Boolean,
     ) {
-        val focus = jumps.lastOrNull()?.let { GeoPoint(it.point.lat, it.point.lon) }
-        val box = boundingBoxOf(geoPoints)
+        // Jump outliers can sit hundreds of km away; fitting to every raw pin
+        // left a Phuket day looking like a speck over Thailand+Malaysia.
+        val fitPoints = fitPointsExcludingJumps(geoPoints, jumps)
+        val box = boundingBoxOf(fitPoints)
         val degenerate = box.latitudeSpan < 1e-6 && box.longitudeSpan < 1e-6
         if (degenerate) {
             // Single-point day: neighborhood, not street-level.
             map.controller.setZoom(16.0)
-            map.controller.setCenter(geoPoints.last())
-        } else if (focus != null && jumps.size == 1) {
-            map.controller.setZoom(12.0)
-            map.controller.setCenter(focus)
+            map.controller.setCenter(fitPoints.last())
         } else {
             val border = safeZoomBorder(map.width, map.height)
             map.zoomToBoundingBox(box, animateZoom, border)
             val zoom = map.zoomLevelDouble
             if (!zoom.isFinite() || zoom < MIN_ZOOM) {
-                map.controller.setZoom(11.0)
+                map.controller.setZoom(13.0)
                 map.controller.setCenter(box.centerWithDateLine)
             } else {
-                // Pull back from a bare bounding-box fit — long day tracks
-                // were opening too tight, and bottom markers sat under the
-                // floating day-nav strip.
                 val wider = (zoom - FIT_ZOOM_OUT_LEVELS).coerceIn(MIN_ZOOM, MAX_ZOOM)
                 map.controller.setZoom(wider)
                 map.controller.setCenter(box.centerWithDateLine)
@@ -385,6 +381,21 @@ object RouteMapController {
         // this, a fit done at minHeight can leave a tall white pane with a tile strip.
         map.controller.setCenter(map.mapCenter)
         map.invalidate()
+    }
+
+    /**
+     * Camera fit points: drop jump outliers so a teleport does not force
+     * country-scale zoom. Falls back to all points if every pin is a jump.
+     * Exposed for unit tests.
+     */
+    internal fun fitPointsExcludingJumps(
+        geoPoints: List<GeoPoint>,
+        jumps: List<JumpFilter.Jump>,
+    ): List<GeoPoint> {
+        if (geoPoints.isEmpty() || jumps.isEmpty()) return geoPoints
+        val jumpIdx = jumps.map { it.index }.toHashSet()
+        val kept = geoPoints.filterIndexed { index, _ -> index !in jumpIdx }
+        return kept.ifEmpty { geoPoints }
     }
 
     /**
