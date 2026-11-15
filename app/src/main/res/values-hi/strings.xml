@@ -57,7 +57,7 @@
     <string name="sample_status_success_never">अंतिम सहेजना: अभी नहीं (प्रयास हुआ, fix नहीं)</string>
     <string name="settings_daily_mode_summary">चालू होने पर, ऐप या फ़ोन खुलते ही आज की रिकॉर्डिंग बिना पूछे शुरू या जारी रहती है।</string>
     <string name="settings_interval">नमूना अंतराल</string>
-    <string name="settings_interval_hint">एक ही स्थान पर (~80 मीटर के भीतर) लगातार 3 रीडिंग के बाद, अंतराल स्वतः एक स्तर बढ़ जाता है (30 सेकंड → 1 → 3 → 5 मिनट); वास्तविक गति (उस क्षेत्र से बाहर लगातार 2 रीडिंग) होने पर आपके चुने अंतराल पर वापस आ जाता है — घर पर GPS की हल्की उतार-चढ़ाव अंतराल को फिर से तेज़ नहीं करती।</string>
+    <string name="settings_interval_hint">आपका चुना अंतराल रुकने पर लागू। चलते समय स्वतः 10 से। एक जगह (~80 मी) 3 रीडिंग बाद: 10 → 20 → 30 से → 1 → 3 → 5 मि. असली गति फिर 10 से।</string>
     <string name="settings_dwell_stops">15 मि+ रुकने के बिंदु</string>
     <string name="settings_dwell_stops_summary">चालू होने पर 15 मिनट से अधिक रुके स्थान मानचित्र पर दिखेंगे (धूसर = नोट/फ़ोटो नहीं; नीला = जोड़ा गया)। अवधि, नोट और फ़ोटो के लिए टैप करें।</string>
     <string name="dwell_stop_title">रुकना</string>
@@ -226,5 +226,5 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">अंतिम बैकअप: %1$s</string>
-    <string name="build_note">संस्करण 1.1.40 — फुलस्क्रीन सांख्यिकी स्टेटस बार के नीचे।</string>
+    <string name="build_note">संस्करण 1.1.41 — चलते समय GPS 10 सेकंड।</string>
 </resources>

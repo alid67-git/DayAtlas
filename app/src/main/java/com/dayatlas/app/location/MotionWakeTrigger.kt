@@ -21,7 +21,7 @@ import com.dayatlas.app.prefs.AppPrefs
  * of Doze.
  *
  * When it fires while the interval is coarsened, we:
- * 1. Tip [StationaryBackoff] back to the user base rate (keep the anchor),
+ * 1. Tip [StationaryBackoff] to the motion rate (10 s; keep the anchor),
  * 2. Re-arm the next alarm in a few seconds (not 5 minutes),
  * 3. Kick an out-of-schedule GPS sample immediately.
  *

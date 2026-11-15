@@ -57,7 +57,7 @@
     <string name="sample_status_success_never">Last save: none yet (attempted but no fix written)</string>
     <string name="settings_daily_mode_summary">When on, today\'s recording starts or continues without asking whenever the app or phone opens.</string>
     <string name="settings_interval">Sampling interval</string>
-    <string name="settings_interval_hint">After 3 readings in the same place (~80 m), the interval steps up (30 s → 1 → 3 → 5 min). Significant motion or two off-circle fixes returns to your chosen interval — home GPS jitter does not speed sampling back up.</string>
+    <string name="settings_interval_hint">Your chosen interval applies while parked. While moving, sampling drops to 10 s automatically. After 3 same-place (~80 m) fixes it steps up (10 → 20 → 30 s → 1 → 3 → 5 min). Significant motion or two off-circle fixes return to 10 s.</string>
     <string name="settings_dwell_stops">15 min+ stop markers</string>
     <string name="settings_dwell_stops_summary">When on, places you stayed longer than 15 minutes appear on the map (gray = no note/photo yet; blue = annotated). Tap to add duration, note, and photo.</string>
     <string name="dwell_stop_title">Stop</string>
@@ -233,7 +233,7 @@
     <string name="language_fr">Français</string>
     <string name="language_ar">العربية</string>
     <string name="drive_last_backup">Last backup: %1$s</string>
-    <string name="build_note">Version 1.1.40 — Fullscreen stats clear the status bar.</string>
+    <string name="build_note">Version 1.1.41 — While moving, GPS drops to 10 s.</string>
     <string name="paywall_title">DayAtlas Pro</string>
     <string name="paywall_description">Try free for 7 days, then %1$s / month.</string>
     <string name="paywall_description_fallback">Try free for 7 days, then continues as a paid monthly subscription.</string>
